@@ -16,7 +16,7 @@
 golem::fill_desc(
   pkg_name = "MODifieRWeb", # The Name of the package containing the App 
   pkg_title = "Web MODifieR", # The Title of the package containing the App 
-  pkg_description = "Shint interface to MODifieR.", # The Description of the package containing the App 
+  pkg_description = "Shiny interface to MODifieR.", # The Description of the package containing the App 
   author_first_name = "AUTHOR_FIRST", # Your First Name
   author_last_name = "AUTHOR_LAST", # Your Last Name
   author_email = "AUTHOR@MAIL.COM", # Your Email
