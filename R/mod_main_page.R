@@ -33,7 +33,6 @@ mod_main_page_server <- function(input, output, session){
       upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1")
       observeEvent(upload_ui_1$module, {
        MODifieR_module <- upload_ui_1$module
-       print(summary(MODifieR_module))
       })
     }
   }, ignoreNULL = TRUE, ignoreInit = TRUE)
