@@ -10,9 +10,12 @@
 mod_main_page_v2_ui <- function(id){
   ns <- NS(id)
   tagList(
- navbarPage(title = "MODifieRWeb",
-            tabPanel("Input"))
-  )
+    
+    mod_upload_ui(ns("upload_ui_1")),
+  
+   
+
+)
 }
     
 #' main_page_v2 Server Function
@@ -20,7 +23,13 @@ mod_main_page_v2_ui <- function(id){
 #' @noRd 
 mod_main_page_v2_server <- function(input, output, session){
   ns <- session$ns
- 
+  
+    
+      upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1")
+      observeEvent(upload_ui_1$module, {
+        MODifieR_module <- upload_ui_1$module})
+
+  
 }
     
 ## To be copied in the UI
