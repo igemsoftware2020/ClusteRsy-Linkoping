@@ -10,9 +10,10 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # List the first level UI elements here 
     fluidPage(
-      h1("MODifieRWeb"),
-      mod_main_page_ui("main_page_ui_1"),
-      theme = shinytheme("flatly")
+      #h1("MODifieRWeb"),
+      #mod_main_page_ui("main_page_ui_1"),
+      theme = shinytheme("flatly"),
+      mod_main_page_v2_ui("main_page_v2_ui_1")
     )
   )
 }
