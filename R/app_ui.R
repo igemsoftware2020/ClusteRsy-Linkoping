@@ -11,7 +11,8 @@ app_ui <- function(request) {
     # List the first level UI elements here 
     fluidPage(
       h1("MODifieRWeb"),
-      mod_main_page_ui("main_page_ui_1")
+      mod_main_page_ui("main_page_ui_1"),
+      shinytheme("flatly")
     )
   )
 }
