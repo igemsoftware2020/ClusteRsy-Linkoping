@@ -12,8 +12,9 @@ mod_main_page_v2_ui <- function(id){
   tagList(
     navbarPage(title =  "MODifieRWeb",
                      tabPanel("Input data", mod_upload_ui(ns("upload_ui_1"))),
-                     tabPanel("Visualization"))
-)
+                     tabPanel("Visualization", mod_visual_ui(ns("visual_ui_1")))
+    )
+  )
 }
     
 #' main_page_v2 Server Function
@@ -22,12 +23,14 @@ mod_main_page_v2_ui <- function(id){
 mod_main_page_v2_server <- function(input, output, session){
   ns <- session$ns
   
-    
-      upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1")
-      observeEvent(upload_ui_1$module, {
-        MODifieR_module <- upload_ui_1$module})
+  upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1")
+  observeEvent(upload_ui_1$module, {
+    MODifieR_module <- upload_ui_1$module
+  }
+ )
 
-  
+  visual_ui_1 <- callModule(mod_visual_server, "visual_ui_1")
+ 
 }
     
 ## To be copied in the UI

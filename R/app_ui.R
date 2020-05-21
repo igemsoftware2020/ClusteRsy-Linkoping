@@ -10,11 +10,11 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # List the first level UI elements here 
     fluidPage(
-      mod_main_page_v2_ui("main_page_v2_ui_1"),
+      mod_main_page_v2_ui("main_page_v2_ui_1")
       # Change background color
-      setBackgroundColor(
-        color = c("#ecf0f1")
-      )
+      #setBackgroundColor(
+      #  color = c("#ecf0f1")
+      #)
     )
   )
 }
