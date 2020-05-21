@@ -10,11 +10,9 @@
 mod_main_page_v2_ui <- function(id){
   ns <- NS(id)
   tagList(
-    
-    mod_upload_ui(ns("upload_ui_1")),
-  
-   
-
+    navbarPage(title =  "MODifieRWeb",
+                     tabPanel("Input data", mod_upload_ui(ns("upload_ui_1"))),
+                     tabPanel("Visualization"))
 )
 }
     
