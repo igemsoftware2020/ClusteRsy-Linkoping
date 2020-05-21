@@ -12,7 +12,7 @@ app_ui <- function(request) {
     fluidPage(
       h1("MODifieRWeb"),
       mod_main_page_ui("main_page_ui_1"),
-      shinytheme("flatly")
+      theme = shinytheme("flatly")
     )
   )
 }
