@@ -13,7 +13,11 @@ app_ui <- function(request) {
       #h1("MODifieRWeb"),
       #mod_main_page_ui("main_page_ui_1"),
       theme = shinytheme("flatly"),
-      mod_main_page_v2_ui("main_page_v2_ui_1")
+      mod_main_page_v2_ui("main_page_v2_ui_1"),
+      # Change background color
+      setBackgroundColor(
+        color = c("#ecf0f1")
+      )
     )
   )
 }
