@@ -22,24 +22,8 @@ mod_main_page_v2_ui <- function(id){
                                                             )
                                                          )
                                                ),
-                                      tags$div(`class`="col-sm-4",
-                                               tags$form(class = "well",
-                                                         `style`="background-color:#ecf0f1;",
-                                                         tags$h2(class = "text-center",
-                                                           tags$span(
-                                                             class="label label-warning", "2")
-                                                           )
-                                                         )
-                                               ),
-                                      tags$div(`class`="col-sm-4",
-                                               tags$form(class = "well",
-                                                         `style`="background-color:#ecf0f1;",
-                                                         tags$h2(class = "text-center",
-                                                           tags$span(
-                                                             class="label label-warning", "3")
-                                                           )
-                                                          )
-                                               )
+                                      htmlOutput(ns("algorithm")
+                                                 )
                                       ),
                                   
                               tags$div(`class`="row",
@@ -50,16 +34,8 @@ mod_main_page_v2_ui <- function(id){
                                                                         )
                                                           )
                                                 ),
-                                       tags$div(`class`="col-sm-4",
-                                                tags$form(class = "well",
-                                                          `style`="background-color:orange;"
-                                                          )
-                                                ),
-                                       tags$div(`class`="col-sm-4",
-                                                tags$form(class = "well",
-                                                          `style`="background-color:orange;"
-                                                          )
-                                                )
+                                       htmlOutput(ns("algorithm1")
+                                                  )
                                        )
                               ),
                      tabPanel("Visualization", mod_visual_ui(ns("visual_ui_1")
@@ -80,7 +56,38 @@ mod_main_page_v2_server <- function(input, output, session){
     MODifieR_module <- upload_ui_1$module
   }
  )
-
+  
+  upload_algorithm <- reactive({
+    req((upload_ui_1$module))
+    if (is.null(upload_ui_1$module)){
+      
+      return(NULL)
+    }
+  })
+  
+  output$algorithm <- renderUI({
+    algoirthm_matrix <- upload_algorithm()
+    tags$div(`class`="col-sm-4",
+              tags$form(class = "well",
+                        `style`="background-color:#ecf0f1;",
+                        tags$h2(class = "text-center",
+                                tags$span(
+                                class="label label-warning", "2")
+                     )
+           )
+  )
+  }
+)
+  output$algorithm1 <- renderUI({
+    algoirthm_matrix <- upload_algorithm()
+    tags$div(`class`="col-sm-4",
+           tags$form(class = "well",
+                     `style`="background-color:orange;"
+           )
+  )
+  }
+)
+  
   visual_ui_1 <- callModule(mod_visual_server, "visual_ui_1")
  
 }
