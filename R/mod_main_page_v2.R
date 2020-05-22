@@ -11,10 +11,62 @@ mod_main_page_v2_ui <- function(id){
   ns <- NS(id)
   tagList(
     navbarPage(title =  "MODifieRWeb",
-                     tabPanel("Input data", mod_upload_ui(ns("upload_ui_1"))),
-                     tabPanel("Visualization", mod_visual_ui(ns("visual_ui_1")))
+                     tabPanel("Input data",
+                              tags$div(`class`="row",
+                                      tags$div(`class`="col-sm-4",
+                                               tags$form(class = "well",
+                                                         `style`="background-color:#ecf0f1;",
+                                                          tags$h2(class = "text-center",
+                                                            tags$span(
+                                                              class="label label-warning", "1")
+                                                            )
+                                                         )
+                                               ),
+                                      tags$div(`class`="col-sm-4",
+                                               tags$form(class = "well",
+                                                         `style`="background-color:#ecf0f1;",
+                                                         tags$h2(class = "text-center",
+                                                           tags$span(
+                                                             class="label label-warning", "2")
+                                                           )
+                                                         )
+                                               ),
+                                      tags$div(`class`="col-sm-4",
+                                               tags$form(class = "well",
+                                                         `style`="background-color:#ecf0f1;",
+                                                         tags$h2(class = "text-center",
+                                                           tags$span(
+                                                             class="label label-warning", "3")
+                                                           )
+                                                          )
+                                               )
+                                      ),
+                                  
+                              tags$div(`class`="row",
+                                       tags$div(`class`="col-sm-4",
+                                                tags$form(class = "well",
+                                                          `style`="background-color:orange;",
+                                                          mod_upload_ui(ns("upload_ui_1")
+                                                                        )
+                                                          )
+                                                ),
+                                       tags$div(`class`="col-sm-4",
+                                                tags$form(class = "well",
+                                                          `style`="background-color:orange;"
+                                                          )
+                                                ),
+                                       tags$div(`class`="col-sm-4",
+                                                tags$form(class = "well",
+                                                          `style`="background-color:orange;"
+                                                          )
+                                                )
+                                       )
+                              ),
+                     tabPanel("Visualization", mod_visual_ui(ns("visual_ui_1")
+                                                             )
+                              )
+               )
     )
-  )
 }
     
 #' main_page_v2 Server Function

@@ -10,19 +10,9 @@
 mod_upload_ui <- function(id){
   ns <- NS(id)
   tagList(
-    fluidRow(
-    sidebarPanel(
     fileInput(ns("expression_matrix"), label = "Upload an expression matrix"),
     uiOutput(ns("sample_chooser"))
-                ),
-    sidebarPanel(
-      textOutput(ns('test1'), container = tags$li)
-    ),
-    sidebarPanel(
-      textOutput(ns("test2"))
-    )
   )
-)
 }
 
 #' upload Server Function
@@ -30,15 +20,6 @@ mod_upload_ui <- function(id){
 #' @noRd 
 mod_upload_server <- function(input, output, session, input_object){
   ns <- session$ns
-  
-  output$test1 <- renderText("Hello Word!")
-  output$test2 <- renderText("Hello Word!")
-  
-  # Create pipeline
-  
-  
-  
-  # Create input
   
   MODifieR_module <- reactiveValues()
 
@@ -120,9 +101,6 @@ mod_upload_server <- function(input, output, session, input_object){
 
   return(MODifieR_module)
 }
-
-
-  # Create chooose Algorithm
 
 ## To be copied in the UI
 # mod_upload_ui("upload_ui_1")
