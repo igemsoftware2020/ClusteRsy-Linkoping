@@ -23,7 +23,7 @@ mod_main_page_v2_ui <- function(id){
                                                             )
                                                          )
                                                ),
-                                      htmlOutput(ns("algorithm")
+                                                          htmlOutput(ns("algorithm")
                                                  )
                                       ),
                                   
@@ -35,7 +35,7 @@ mod_main_page_v2_ui <- function(id){
                                                                         )
                                                           )
                                                 ),
-                                       htmlOutput(ns("algorithm1")
+                                                          htmlOutput(ns("algorithm1")
                                                   )
                                        )
                               ),
