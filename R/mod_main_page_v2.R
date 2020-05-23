@@ -15,7 +15,7 @@ mod_main_page_v2_ui <- function(id){
                               tags$div(`class`="row",
                                       tags$div(`class`="col-sm-4",
                                                tags$form(class = "well",
-                                                         `style`="background-color:#ecf0f1;",
+                                                         `style`="background-color:#ecf0f1",
                                                           tags$h2(class = "text-center",
                                                             tags$span(
                                                               class="label label-warning", "1",
@@ -30,7 +30,7 @@ mod_main_page_v2_ui <- function(id){
                               tags$div(`class`="row",
                                        tags$div(`class`="col-sm-4",
                                                 tags$form(class = "well",
-                                                          `style`="background-color:orange;",
+                                                          `style`="background-color:#2c3e50;",
                                                           mod_upload_ui(ns("upload_ui_1")
                                                                         )
                                                           )
