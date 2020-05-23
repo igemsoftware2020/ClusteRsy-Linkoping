@@ -19,7 +19,7 @@ mod_main_page_v2_ui <- function(id){
                                                           tags$h2(class = "text-center",
                                                             tags$span(
                                                               class="label label-warning", "1",
-                                                              style = "border-radius: 100%;")
+                                                              style = "border-radius: 100%;background-color:#ffbd40")
                                                             )
                                                          )
                                                ),
@@ -74,7 +74,7 @@ mod_main_page_v2_server <- function(input, output, session){
                         tags$h2(class = "text-center",
                                 tags$span(
                                 class="label label-warning", "2",
-                                style = "border-radius: 100%;")
+                                style = "border-radius: 100%;background-color:#ffbd40")
                      )
            )
   )
