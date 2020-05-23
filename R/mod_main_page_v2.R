@@ -73,7 +73,8 @@ mod_main_page_v2_server <- function(input, output, session){
                         `style`="background-color:#ecf0f1;",
                         tags$h2(class = "text-center",
                                 tags$span(
-                                class="label label-warning", "2")
+                                class="label label-warning", "2",
+                                style = "border-radius: 100%;")
                      )
            )
   )
