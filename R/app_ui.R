@@ -13,7 +13,7 @@ app_ui <- function(request) {
       mod_main_page_v2_ui("main_page_v2_ui_1"),
       # Change background color
       setBackgroundColor(
-        color = c("#2C3E50")
+        color = c("#ecf0f1")
       )
     )
   )
