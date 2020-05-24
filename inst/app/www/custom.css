@@ -6910,14 +6910,12 @@ a.list-group-item-danger.active:focus {
 
 .right {
     color: black;
-    overflow: hidden;
     width: 80px;
     background-color: #ecf0f1;
 }
 
 .left {
     color: black;
-    overflow: hidden;
     width: 80px;
 }
 

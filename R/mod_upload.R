@@ -49,7 +49,7 @@ mod_upload_server <- function(input, output, session, input_object){
                           colnames(expression_matrix), c(), size = 10, multiple = TRUE),
              verbatimTextOutput(ns("current_groups")),
              prettySwitch(ns("adjusted_pvalue"), label = "Pvalue", value = TRUE, status = "warning"),
-             prettySwitch(ns("quantile_normalization"), label = "Quantile", value = FALSE, status = "default"),
+             prettySwitch(ns("quantile_normalization"), label = "Quantile", value = FALSE, status = "warning"),
              actionButton(ns("create_input"), "Create input object")
     )
   })
