@@ -15,7 +15,7 @@ mod_main_page_v2_ui <- function(id){
                               tags$div(`class`="row",
                                       tags$div(`class`="col-sm-4",
                                                tags$form(class = "well",
-                                                         `style`="background-color:#ecf0f1",
+                                                         `style`="background-color:inherit",
                                                           tags$h2(class = "text-center",
                                                             tags$span(
                                                               class="label", "1",
@@ -70,7 +70,7 @@ mod_main_page_v2_server <- function(input, output, session){
     algoirthm_matrix <- upload_algorithm()
     tags$div(`class`="col-sm-4",
               tags$form(class = "well",
-                        `style`="background-color:#ecf0f1;",
+                        `style`="background-color:inherit;",
                         tags$h2(class = "text-center",
                                 tags$span(
                                 class="label", "2",
