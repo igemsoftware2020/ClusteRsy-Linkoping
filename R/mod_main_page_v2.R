@@ -10,7 +10,7 @@
 mod_main_page_v2_ui <- function(id){
   ns <- NS(id)
   tagList(
-    navbarPage(title =  "MODifieRWeb",
+    navbarPage(title =  "MODifieRWeb", collapsable = TRUE,
                      tabPanel("Input data",
                               
                               # Number coantiners
