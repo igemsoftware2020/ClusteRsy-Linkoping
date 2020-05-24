@@ -12,10 +12,11 @@ mod_main_page_v2_ui <- function(id){
   tagList(
     navbarPage(title =  "MODifieRWeb",
                      tabPanel("Input data",
+                              
+                              # Number coantiners
                               tags$div(`class`="row",
                                       tags$div(`class`="col-sm-4",
                                                tags$form(class = "well",
-                                                         `style`="background-color:inherit",
                                                           tags$h2(class = "text-center",
                                                             tags$span(
                                                               class="label", "1",
@@ -26,7 +27,8 @@ mod_main_page_v2_ui <- function(id){
                                                           htmlOutput(ns("algorithm")
                                                  )
                                       ),
-                                  
+                            
+                              # Module containers          
                               tags$div(`class`="row",
                                        tags$div(`class`="col-sm-4",
                                                 tags$form(class = "well",
@@ -66,11 +68,11 @@ mod_main_page_v2_server <- function(input, output, session){
     }
   })
   
+  # Number conainters
   output$algorithm <- renderUI({
     algoirthm_matrix <- upload_algorithm()
     tags$div(`class`="col-sm-4",
               tags$form(class = "well",
-                        `style`="background-color:inherit;",
                         tags$h2(class = "text-center",
                                 tags$span(
                                 class="label", "2",
@@ -80,11 +82,13 @@ mod_main_page_v2_server <- function(input, output, session){
   )
   }
 )
+  
+  # Module conatiners
   output$algorithm1 <- renderUI({
     algoirthm_matrix <- upload_algorithm()
     tags$div(`class`="col-sm-4",
            tags$form(class = "well",
-                     `style`="background-color:orange;"
+                     `style`="background-color:#2c3e50;"
            )
   )
   }

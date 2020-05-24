@@ -3,6 +3,9 @@
 #' @param request Internal parameter for `{shiny}`. 
 #'     DO NOT REMOVE.
 #' @import shiny
+#' 
+#' @import shinyWidgets
+#' 
 #' @noRd
 app_ui <- function(request) {
   tagList(
