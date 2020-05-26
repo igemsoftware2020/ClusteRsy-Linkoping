@@ -12,7 +12,7 @@ mod_upload_ui <- function(id){
   tagList(
     fileInput(ns("expression_matrix"), label = "Upload an expression matrix"),
     uiOutput(ns("sample_chooser"))
-  ) 
+  )
 }
 
 #' upload Server Function
@@ -48,8 +48,8 @@ mod_upload_server <- function(input, output, session, input_object){
              chooserInput(ns("sample_groups"), "Available frobs", "Selected frobs", 
                           colnames(expression_matrix), c(), size = 10, multiple = TRUE),
              verbatimTextOutput(ns("current_groups")),
-             shinyWidgets::materialSwitch(ns("adjusted_pvalue"), label = "Pvalue?", value = TRUE, status = "default"),
-             shinyWidgets::materialSwitch(ns("quantile_normalization"), label = "quantile?", value = FALSE, status = "default"),
+             prettySwitch(ns("adjusted_pvalue"), label = "Pvalue", value = TRUE, status = "warning"),
+             prettySwitch(ns("quantile_normalization"), label = "Quantile", value = FALSE, status = "warning"),
              actionButton(ns("create_input"), "Create input object")
     )
   })
