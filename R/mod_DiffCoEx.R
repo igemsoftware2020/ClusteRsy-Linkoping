@@ -22,9 +22,10 @@ mod_DiffCoEx_ui <- function(id){
                    "average",
                    "mcquitty",
                    "median",
-                   "centroid"
-                 )   
-  )
+                   "centroid",
+                   plotOutput("clusterPlot"))
+    )
+    )
   )
 }
     
@@ -43,11 +44,27 @@ mod_DiffCoEx_server <- function(input, output, session){
     ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
     selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks)
   })
+  
+  {
+    output$clusterPlot <- renderPlot({
+      dist <- switch(input$clustermethod,
+                     ward = ward,
+                     single = single,
+                     complete = complete,
+                     average = average,
+                     mcquitty = mcquitty,
+                     median = median,
+                     centroid = centroid
+                     )
+      
+      hist(clustermethod(500))
+    })
+  }
   observeEvent(input$load_input, {
     module_object <- MODifieRDB::diffcoex(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
                                           deg_cutoff = .98,
-                                          cluster_method = output$clustermethod,
+                                          cluster_method = ,
                                           module_name = input$module_name,
                                           con = con)
     
