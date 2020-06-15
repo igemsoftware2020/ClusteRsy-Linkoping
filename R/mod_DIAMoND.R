@@ -12,6 +12,7 @@ mod_DIAMoND_ui <- function(id){
   tagList(
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
+    sliderInput(ns("output_genes"), label= "Select maximum number of genes to be included", min = 0, max = 500, value = 250),
     textInput(ns("module_name"), "Module object name"),
     actionButton(ns("load_input"), "Infer DIAMoND module"),
   )
@@ -35,7 +36,8 @@ mod_DIAMoND_server <- function(input, output, session){
   observeEvent(input$load_input, {
     module_object <- MODifieRDB::diamond_db(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
-                                          deg_cutoff = .98, 
+                                          deg_cutoff = .98,
+                                          n_output_genes = input$output_genes,
                                           module_name = input$module_name,
                                           con = con)
     
