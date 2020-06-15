@@ -10,6 +10,7 @@
 mod_visual_ui <- function(id){
   ns <- NS(id)
   tagList(
+    callModule(mod_DiffCoEx_server, "DiffCoEx_ui_1")
     tags$div(`class`="jumbotron",
              tags$h1("Hello,world!",class="display-3"),
              tags$hr(class="my-4"),
