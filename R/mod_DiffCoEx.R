@@ -14,7 +14,17 @@ mod_DiffCoEx_ui <- function(id){
     uiOutput(ns("ppi_choice")),
     textInput(ns("module_name"), "Module object name"),
     actionButton(ns("load_input"), "Infer DiffCoEx module"),
- 
+    fluidPage(theme = shinytheme("flatly"),
+    radioButtons(clustermethod, "Select a cluster method:", 
+                 c("ward",
+                   "single",
+                   "complete",
+                   "average",
+                   "mcquitty",
+                   "median",
+                   "centroid"
+                 )   
+  )
   )
 }
     
@@ -36,7 +46,8 @@ mod_DiffCoEx_server <- function(input, output, session){
   observeEvent(input$load_input, {
     module_object <- MODifieRDB::diffcoex(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
-                                          deg_cutoff = .98, 
+                                          deg_cutoff = .98,
+                                          cluster_method = output$clustermethod,
                                           module_name = input$module_name,
                                           con = con)
     
