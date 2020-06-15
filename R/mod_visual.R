@@ -28,7 +28,7 @@ mod_visual_ui <- function(id){
 #' @noRd 
 mod_visual_server <- function(input, output, session){
   ns <- session$ns
-  
+
 }
 
 ## To be copied in the UI
