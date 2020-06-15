@@ -20,6 +20,9 @@ mod_DIAMoND_ui <- function(id){
 mod_DIAMoND_server <- function(input, output, session){
   ns <- session$ns
  
+  ppi_network <- MODifieR::ppi_network
+  
+  
 }
     
 ## To be copied in the UI
