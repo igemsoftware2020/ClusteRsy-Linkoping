@@ -13,6 +13,8 @@ mod_Modulediscoverer_ui <- function(id){
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
     textInput(ns("module_name"), "Module object name"),
+    sliderInput(ns("repeats"), label = "Repeats", min = 0, max = 30, value = 15),
+    sliderInput(ns("clique_cutoff"), label = "P-value cutoff for significant cliques", min = 0, max = 1, value = 0.01),
     actionButton(ns("load_input"), "Infer Module discoverer module")
  
   )
@@ -37,6 +39,8 @@ mod_Modulediscoverer_server <- function(input, output, session){
                                           ppi_name = input$ppi_object, 
                                           permutations = 100,
                                           deg_cutoff = 0.05,
+                                          repeats = input$repeats,
+                                          clique_cutoff = input$clique_cutoff,
                                           module_name = input$module_name,
                                           repeats = 3)
     
