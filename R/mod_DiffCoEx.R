@@ -14,7 +14,6 @@ mod_DiffCoEx_ui <- function(id){
     uiOutput(ns("ppi_choice")),
     textInput(ns("module_name"), "Module object name"),
     actionButton(ns("load_input"), "Infer DiffCoEx module"),
-    fluidPage(theme = shinytheme("flatly"),
     radioButtons(clustermethod, "Select a cluster method:", 
                  c("ward",
                    "single",
@@ -26,7 +25,6 @@ mod_DiffCoEx_ui <- function(id){
                    plotOutput("clusterPlot"))
     )
     )
-  )
 }
     
 #' DiffCoEx Server Function
