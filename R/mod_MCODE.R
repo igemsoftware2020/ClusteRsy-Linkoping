@@ -12,6 +12,13 @@ mod_MCODE_ui <- function(id){
   tagList(
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
+    radioButtons(
+        ns("hierarchy"),
+        label = "Hierarchy",
+        choices = c(0, 1, 2),
+        selected = 1,
+        inline = T,
+    ),
     textInput(ns("module_name"), "Module object name"),
     actionButton(ns("load_input"), "Infer MCODE module"),
   )
@@ -35,7 +42,13 @@ mod_MCODE_server <- function(input, output, session){
   observeEvent(input$load_input, {
     module_object <- MODifieRDB::mcode_db(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
-                                          deg_cutoff = .98, 
+                                          hierarchy = input$hierarchy,
+                                          vwp = input$vwp,
+                                          haircut = input$haircut,
+                                          fdt = input$fdt,
+                                          loops = input$loops,
+                                          module_cutoff = input$module_cutoff,
+                                          deg_cutoff = input$deg_cutoff, 
                                           module_name = input$module_name,
                                           con = con)
     

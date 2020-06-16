@@ -33,7 +33,7 @@ mod_MODA_server <- function(input, output, session){
     selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks)
   })
   observeEvent(input$load_input, {
-    module_object <- MODifieRDB::mcode_db(input_name = input$input_object, 
+    module_object <- MODifieRDB::moda_db(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
                                           deg_cutoff = .98, 
                                           module_name = input$module_name,
