@@ -6917,6 +6917,7 @@ a.list-group-item-danger.active:focus {
 .left {
     color: black;
     width: 80px;
+    background-color: #ecf0f1;
 }
 
 
@@ -6943,3 +6944,6 @@ a.list-group-item-danger.active:focus {
   background: #555; 
 }
 
+div#main_page_v2_ui_1-upload_ui_1-sample_groups{
+  text-align:center;
+}
