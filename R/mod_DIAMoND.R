@@ -12,8 +12,14 @@ mod_DIAMoND_ui <- function(id){
   tagList(
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
+    
+    sliderInput(ns("seed_weight"), label = "Select Seed Weight", min = 0, max = 50, value = 25),
+    sliderInput(ns("deg_cutoff"), label = "P-value cutoff", min = 0, max = 1, value = 0.05),
+    prettySwitch(ns("Include_seed"), label = "Include seed", value = FALSE, status = "warning"),
     sliderInput(ns("output_genes"), label= "Select maximum number of genes to be included", min = 0, max = 500, value = 250),
     textInput(ns("module_name"), "Module object name"),
+    
+    
     actionButton(ns("load_input"), "Infer DIAMoND module"),
   )
 }
@@ -23,6 +29,7 @@ mod_DIAMoND_ui <- function(id){
 #' @noRd 
 mod_DIAMoND_server <- function(input, output, session){
   ns <- session$ns
+  
   
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
@@ -36,8 +43,10 @@ mod_DIAMoND_server <- function(input, output, session){
   observeEvent(input$load_input, {
     module_object <- MODifieRDB::diamond_db(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
-                                          deg_cutoff = .98,
+                                          deg_cutoff = input$deg_cutoff,
                                           n_output_genes = input$output_genes,
+                                          seed_weight = input$seed_weight,
+                                          include_seed = input$include_seed,
                                           module_name = input$module_name,
                                           con = con)
     

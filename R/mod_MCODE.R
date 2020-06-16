@@ -19,6 +19,64 @@ mod_MCODE_ui <- function(id){
         selected = 1,
         inline = T,
     ),
+    sliderInput(
+      ns("vwp"),
+      label = "Vertex weight percentage",
+      min = 0.0,
+      max = 1.0,
+      value = 0.5,
+      step = 0.01,
+      round = T,
+      ticks = T
+    ),
+    sliderInput(
+      ns("fdt"),
+      label = "Clust density cutoff",
+      min = 0.0,
+      max = 1.0,
+      value = 0.5,
+      step = 0.01,
+      round = T,
+      ticks = T
+    ),
+    sliderInput(
+      ns("deg_cutoff"),
+      label = "P-value cutoff",
+      min = 0.0,
+      max = 1.0,
+      value = 0.5,
+      step = 0.01,
+      round = T,
+      ticks = T
+    ),
+    sliderInput(
+      ns("module_cutoff"),
+      label = "Minimal score for a module to be returned",
+      min = 0.0,
+      max = 1.0,
+      value = 0.5,
+      step = 0.01,
+      round = T,
+      ticks = T
+    ),
+    prettySwitch(
+      ns("haircut"),
+      label = "Haircut",
+      value = FALSE,
+      status = "warning"
+    ),
+    prettySwitch(
+      ns("fluff"),
+      label = "Fluff",
+      value = FALSE,
+      status = "warning"
+    ),
+    prettySwitch(
+      ns("loops"),
+      label = "Loops",
+      value = FALSE,
+      status = "warning"
+    ),
     textInput(ns("module_name"), "Module object name"),
     actionButton(ns("load_input"), "Infer MCODE module"),
   )
@@ -48,8 +106,7 @@ mod_MCODE_server <- function(input, output, session){
                                           fdt = input$fdt,
                                           loops = input$loops,
                                           module_cutoff = input$module_cutoff,
-                                          deg_cutoff = input$deg_cutoff, 
-                                          module_name = input$module_name,
+                                          deg_cutoff = input$deg_cutoff,
                                           con = con)
     
     
