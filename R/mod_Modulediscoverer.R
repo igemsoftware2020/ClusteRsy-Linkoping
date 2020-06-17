@@ -38,15 +38,16 @@ mod_Modulediscoverer_server <- function(input, output, session){
     ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
     selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks)
   })
-  observeEvent(input$load_input, {
+ 
+   observeEvent(input$load_input, {
     module_object <- MODifieRDB::modulediscoverer(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
-                                          permutations = 100,
-                                          deg_cutoff = 0.05,
+                                          permutations = input$permutations,
+                                          deg_cutoff = input$deg_cutoff,
                                           repeats = input$repeats,
                                           clique_cutoff = input$clique_cutoff,
                                           module_name = input$module_name,
-                                          repeats = 3)
+                                          repeats = input$repeats)
     
     
   })
