@@ -43,7 +43,7 @@ mod_MODA_ui <- function(id){
 #' MODA Server Function
 #'
 #' @noRd 
-mod_MODA_server <- function(input, output, session){
+mod_MODA_server <- function(input, output, session, con){
   ns <- session$ns
  
   output$input_choice <- renderUI({

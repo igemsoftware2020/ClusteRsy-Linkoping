@@ -85,7 +85,7 @@ mod_MCODE_ui <- function(id){
 #' MCODE Server Function
 #'
 #' @noRd 
-mod_MCODE_server <- function(input, output, session){
+mod_MCODE_server <- function(input, output, session, con){
   ns <- session$ns
  
   output$input_choice <- renderUI({

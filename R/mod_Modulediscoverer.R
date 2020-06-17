@@ -27,7 +27,7 @@ mod_Modulediscoverer_ui <- function(id){
 #' Modulediscoverer Server Function
 #'
 #' @noRd 
-mod_Modulediscoverer_server <- function(input, output, session){
+mod_Modulediscoverer_server <- function(input, output, session, con){
   ns <- session$ns
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)

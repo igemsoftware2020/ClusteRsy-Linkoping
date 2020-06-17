@@ -30,7 +30,7 @@ mod_CClique_ui <- function(id){
 #' CClique Server Function
 #'
 #' @noRd 
-mod_CClique_server <- function(input, output, session){
+mod_CClique_server <- function(input, output, session, con){
   ns <- session$ns
  
    output$input_choice <- renderUI({
