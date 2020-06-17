@@ -12,9 +12,32 @@ mod_MODA_ui <- function(id){
   tagList(
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
+    
+    radioButtons(
+      ns("group_of_intrest"),
+      label = "Group of Intrest",
+      choices = c( 1, 2),
+      selected = 1,
+      inline = T,
+    ),
+    
+    radioButtons(
+      ns("cutmethod"),
+      label = "Cutmethod",
+      choices = list("Density" = 1, "Modularity" = 2),
+      selected = 1,
+      inline = T,
+    ),
+    
+    sliderInput(ns("specificTheta"), label = "Select specific theta", min = 0, max = 1, value = 0.5),
+    
+    sliderInput(ns("conservedTheta"), label = "Select conserved theta", min = 0, max = 1, value = 0.5),
+    
     textInput(ns("module_name"), "Module object name"),
-    actionButton(ns("load_input"), "Infer MODA module"),
+    
+    actionButton(ns("load_input"), "Infer MODA module")
   )
+  
 }
     
 #' MODA Server Function
@@ -36,6 +59,10 @@ mod_MODA_server <- function(input, output, session){
     module_object <- MODifieRDB::moda_db(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
                                           deg_cutoff = .98, 
+                                          group_of_interest = input$group_of_intrest,
+                                          cutmethod = input$cutmethod,
+                                          specificTheta = input$specificTheta,
+                                          conservedTheta = input$conservedTheta,
                                           module_name = input$module_name,
                                           con = con)
     
