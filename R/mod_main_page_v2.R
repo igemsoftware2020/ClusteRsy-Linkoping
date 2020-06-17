@@ -70,7 +70,7 @@ mod_main_page_v2_server <- function(input, output, session){
   
   # Number conainters
   output$algorithm <- renderUI({
-    algoirthm_matrix <- upload_algorithm()
+    upload_algorithm()
     tags$div(`class`="col-sm-4",
               tags$form(class = "well",
                         tags$h2(class = "text-center",
@@ -88,14 +88,15 @@ mod_main_page_v2_server <- function(input, output, session){
     algoirthm_matrix <- upload_algorithm()
     tags$div(`class`="col-sm-4",
            tags$form(class = "well",
-                     `style`="background-color:#2c3e50;"
+                     `style`="background-color:#2c3e50;",
+                     mod_Description_ui(ns("Description_ui_1"))
            )
   )
   }
 )
   
-  visual_ui_1 <- callModule(mod_visual_server, "visual_ui_1")
- 
+  callModule(mod_visual_server, "visual_ui_1")
+  callModule(mod_Description_server, "Description_ui_1")
 }
     
 ## To be copied in the UI
