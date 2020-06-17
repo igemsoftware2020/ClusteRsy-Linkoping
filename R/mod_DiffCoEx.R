@@ -12,7 +12,6 @@ mod_DiffCoEx_ui <- function(id){
   tagList(
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
-   
     textInput(ns("module_name"), "Module object name"),
     radioButtons(ns("clustermethod"), "Select a cluster method:", 
                  choices = c("ward",

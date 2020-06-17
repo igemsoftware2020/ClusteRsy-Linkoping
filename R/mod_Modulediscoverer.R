@@ -12,7 +12,6 @@ mod_Modulediscoverer_ui <- function(id){
   tagList(
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
-
     textInput(ns("module_name"), "Module object name"), 
     sliderInput(ns("permutations"), label= "Permutations", min = 0, max = 10000, value = 5000),
     sliderInput(ns("deg_cutoff"), label = "P-value cutoff for differentialy expressed genes", min = 0, max = 1, value = 0.05),

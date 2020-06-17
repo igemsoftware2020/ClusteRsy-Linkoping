@@ -12,6 +12,7 @@ mod_MCODE_ui <- function(id){
   tagList(
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
+    textInput(ns("module_name"), "Module object name"),
     radioButtons(
         ns("hierarchy"),
         label = "Hierarchy",
@@ -77,7 +78,6 @@ mod_MCODE_ui <- function(id){
       value = FALSE,
       status = "warning"
     ),
-    textInput(ns("module_name"), "Module object name"),
     actionButton(ns("load_input"), "Infer MCODE module"),
   )
 }

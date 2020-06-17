@@ -12,7 +12,7 @@ mod_CClique_ui <- function(id){
   tagList(
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
-    
+    textInput(ns("module_name"), "Module object name"),
     sliderInput(ns("frequency_cutoff"), label = "Select frequency cutoff", min = 0, max = 100, value = 50),
     sliderInput(ns("fraction_of_interactions"), label = "Fraction of interactions", min = 0, max = 1, value = 0.4),
     sliderInput(ns("deg_cutoff"), label = "P-value cutoff", min = 0, max = 1, value = 0.05),
@@ -21,7 +21,6 @@ mod_CClique_ui <- function(id){
     numericInput(ns("iteration"), label = "Number of iterations", value = 50, max = 100, min = 0),
     numericInput(ns("n_cores"), label = "Number of cores", value = 3, max = 50, min = 0),
     prettySwitch(ns("multiple_cores"), label = "Parallellize iterations", value = TRUE, status = "warning"),
-    textInput(ns("module_name"), "Module object name"),
     actionButton(ns("load_input"), "Infer Correlation clique module"),
     
   )
