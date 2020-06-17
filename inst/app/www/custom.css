@@ -6947,3 +6947,45 @@ a.list-group-item-danger.active:focus {
 div#main_page_v2_ui_1-upload_ui_1-sample_groups{
   text-align:center;
 }
+
+/* Slider color */
+
+.irs-bar{
+  border-top: #ffbd40 !important;
+  border-bottom: #ffbd40 !important;
+  background: #ffbd40 !important;
+}
+
+.irs-bar-edge {
+  border: 1px solid #ffbd40 !important;
+  background: #ffbd40 !important;
+}
+
+.irs-slider {
+  background: #ffbd40 !important;
+  border: 1px solid #ffd27f !important;
+}
+
+.irs-bar-edge {
+  border: 1px solid #ffbd40 !important;
+  background: #ffbd40 !important;
+}
+
+.irs-max, .irs-min {
+    color: #ffbd40 !important;
+}
+
+.irs-form, .irs-to, .irs-single {
+    color: #ffbd40 !important;
+    background: #333 !important;
+}
+
+#irs-active-slider, .irs-slider:hover {
+    background: #ffd27f !important;
+}
+
+/* Hypertext */
+button.link {
+  background: none;
+  border: none;
+}

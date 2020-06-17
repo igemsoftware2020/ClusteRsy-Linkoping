@@ -10,7 +10,6 @@
 mod_visual_ui <- function(id){
   ns <- NS(id)
   tagList(
-    mod_DiffCoEx_ui(ns("DiffCoEx_ui_1")),
     tags$div(`class`="jumbotron",
              tags$h1("Hello,world!",class="display-3"),
              tags$hr(class="my-4"),
@@ -29,7 +28,6 @@ mod_visual_ui <- function(id){
 #' @noRd 
 mod_visual_server <- function(input, output, session){
   ns <- session$ns
-  callModule(mod_DiffCoEx_server, "DiffCoEx_ui_1")
 }
 
 ## To be copied in the UI
