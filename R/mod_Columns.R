@@ -32,9 +32,9 @@ mod_Columns_ui <- function(id){
 #' Columns Server Function
 #'
 #' @noRd 
-mod_Columns_server <- function(input, output, session){
+mod_Columns_server <- function(input, output, session, con){
   ns <- session$ns
-  upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1")
+  upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1", con = con)
   observeEvent(upload_ui_1$module, {
     MODifieR_module <- upload_ui_1$module
   }

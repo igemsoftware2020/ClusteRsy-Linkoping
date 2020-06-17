@@ -14,12 +14,13 @@ mod_input_overview_ui <- function(id){
     DT::dataTableOutput(ns("input_overview"))
   )
 }
-    
+
 #' input_overview Server Function
 #'
 #' @noRd 
 mod_input_overview_server <- function(input, output, session, con){
   ns <- session$ns
+  
   input_objects <- MODifieRDB::get_available_input_objects(con)
   
   output$input_overview <- DT::renderDataTable(input_objects)
@@ -29,11 +30,12 @@ mod_input_overview_server <- function(input, output, session, con){
     
     output$input_overview <- DT::renderDataTable(input_objects)
   })
+  
 }
-    
+
 ## To be copied in the UI
 # mod_input_overview_ui("input_overview_ui_1")
-    
+
 ## To be copied in the server
 # callModule(mod_input_overview_server, "input_overview_ui_1")
  

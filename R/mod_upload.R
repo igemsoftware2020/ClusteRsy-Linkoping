@@ -43,17 +43,18 @@ mod_upload_server <- function(input, output, session, input_object, con){
   
   output$sample_chooser <- renderUI({
     expression_matrix <- upload_expression()
-    tagList( textInput(ns("input_name"), "Input object name"),
-             textInput(ns("group1"), "Group 1 label"),
-             textInput(ns("group2"), "Group 2 label"),
-             chooserInput(ns("sample_groups"), "Available frobs", "Selected frobs", 
-                          colnames(expression_matrix), c(), size = 10, multiple = TRUE),
-             verbatimTextOutput(ns("current_groups")),
-             prettySwitch(ns("adjusted_pvalue"), label = "Pvalue", value = TRUE, status = "warning"),
-             prettySwitch(ns("quantile_normalization"), label = "Quantile", value = FALSE, status = "warning"),
-             tags$div(style = "text-align: right",
-                      actionButton(ns("create_input"), "Create input object")
-             )
+    tagList( 
+      textInput(ns("input_name"), "Input object name"),
+      textInput(ns("group1"), "Group 1 label"),
+      textInput(ns("group2"), "Group 2 label"),
+      chooserInput(ns("sample_groups"), "Available frobs", "Selected frobs", 
+                   colnames(expression_matrix), c(), size = 10, multiple = TRUE),
+      verbatimTextOutput(ns("current_groups")),
+      shinyWidgets::prettySwitch(ns("adjusted_pvalue"), label = "Pvalue", value = TRUE, status = "warning"),
+      shinyWidgets::prettySwitch(ns("quantile_normalization"), label = "Quantile", value = FALSE, status = "warning"),
+      tags$div(style = "text-align:right",
+      actionButton(ns("create_input"), "Create input object")
+      )
     )
   })
   
@@ -109,7 +110,6 @@ mod_upload_server <- function(input, output, session, input_object, con){
   outputOptions(output, 'fileUploaded', suspendWhenHidden=FALSE)
   
   return(MODifieR_module)
-  
 }
 
 ## To be copied in the UI

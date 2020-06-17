@@ -16,12 +16,14 @@ mod_ppi_networks_ui <- function(id){
     DT::dataTableOutput(ns("ppi_overview"))
   )
 }
-    
+
 #' ppi_networks Server Function
 #'
 #' @noRd 
 mod_ppi_networks_server <- function(input, output, session, con){
   ns <- session$ns
+  
+  
   upload_ppi <- reactive({
     req(input$ppi_network)
     infile <- (input$ppi_network$datapath)
@@ -64,10 +66,9 @@ mod_ppi_networks_server <- function(input, output, session, con){
     
   })
 }
-    
+
 ## To be copied in the UI
 # mod_ppi_networks_ui("ppi_networks_ui_1")
-    
+
 ## To be copied in the server
 # callModule(mod_ppi_networks_server, "ppi_networks_ui_1")
- 

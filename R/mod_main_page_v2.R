@@ -28,8 +28,8 @@ mod_main_page_v2_ui <- function(id){
 mod_main_page_v2_server <- function(input, output, session){
   ns <- session$ns
   con <- MODifieRDB::connect_to_db("/Users/HoangPham/Documents/R/testdb.db")
-  callModule(mod_Columns_server, "Columns_ui_1")
   callModule(mod_visual_server, "visual_ui_1")
+  callModule(mod_Columns_server, "Columns_ui_1", con = con)
   callModule(mod_input_overview_server, "input_overview_ui_1", con = con)
   callModule(mod_module_overview_server, "module_overview_ui_1", con = con)
   callModule(mod_ppi_networks_server, "ppi_networks_ui_1", con = con)
