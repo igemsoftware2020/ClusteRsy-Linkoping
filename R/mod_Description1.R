@@ -15,17 +15,7 @@ mod_Description1_ui <- function(id){
     ),
     htmlOutput(ns("description")),
     tags$br(),
-    tags$div(style = "text-align: right",
-             actionButton(ns("load_method"), "Select Inference Method", onclick = "removeDescription()")
-    ),
-    htmlOutput(ns("method")),
-    tags$script(HTML("function removeDescription(){
-       var description = document.getElementById('method');
-       description.remove();}
-        
-       document.getElementById('Inference_method').addEventListener('click', 
-                              function(){document.getElementById('main_page_v2_ui_1-Columns_ui_1-Description1_ui_1-method').innerHTML = '';})"
-    ))
+    htmlOutput(ns("method"))
   )
 }
 
@@ -73,7 +63,7 @@ mod_Description1_server <- function(input, output, session, con){
     )
   })
   
-  observeEvent(input$load_method, {
+  observeEvent(input$Inference_method, {
     method <- input$Inference_method
     
     if(method == "Clique Sum"){
@@ -84,48 +74,49 @@ mod_Description1_server <- function(input, output, session, con){
     if(method == "WGCNA"){
       output$method <- renderUI({mod_WGCNA_ui(ns("WGCNA_ui_1"))
       })
+      print("Hello World")
+      callModule(mod_WGCNA_server, "WGCNA_ui_1", con = con)
     }
     
     if(method == "DIAMoND"){
       output$method <- renderUI({mod_DIAMoND_ui(ns("DIAMoND_ui_1"))
       })
+      callModule(mod_DIAMoND_server, "DIAMoND_ui_1", con = con)
     }
     
     if(method == "DiffCoEx"){
       output$method <- renderUI({mod_DiffCoEx_ui(ns("DiffCoEx_ui_1"))
       })
+      callModule(mod_DiffCoEx_server, "DiffCoEx_ui_1", con = con)
     }
     
     if(method == "MCODE"){
       output$method <- renderUI({mod_MCODE_ui(ns("MCODE_ui_1"))
       })
+      callModule(mod_MCODE_server, "MCODE_ui_1", con = con)
     }
     
     if(method == "MODA"){
       output$method <- renderUI({mod_MODA_ui(ns("MODA_ui_1"))
       })
+      callModule(mod_MODA_server, "MODA_ui_1", con = con)
     }
     
     if(method == "Module Discoverer"){
       output$method <- renderUI({mod_Modulediscoverer_ui(ns("Modulediscoverer_ui_1"))
       })
+      callModule(mod_Modulediscoverer_server, "Modulediscoverer_ui_1", con = con)
     }
     
     if(method == "Correlation Clique"){
       output$method <- renderUI({mod_CClique_ui(ns("CClique_ui_1"))
       })
+      callModule(mod_CClique_server, "CClique_ui_1", con = con)
     }
   }
   )
   
   #  callModule(mod_Cliquesum_server, "Cliquesum_ui_1")
-  callModule(mod_WGCNA_server, "WGCNA_ui_1", con = con)
-  callModule(mod_DIAMoND_server, "DIAMoND_ui_1", con = con)
-  callModule(mod_DiffCoEx_server, "DiffCoEx_ui_1", con = con)
-  callModule(mod_MCODE_server, "MCODE_ui_1", con = con)
-  callModule(mod_MODA_server, "MODA_ui_1", con = con)
-  callModule(mod_Modulediscoverer_server, "Modulediscoverer_ui_1", con = con)
-  callModule(mod_CClique_server, "CClique_ui_1", con = con)
 }
 
 
