@@ -12,8 +12,14 @@ mod_main_page_v2_ui <- function(id){
   tagList(
     navbarPage(title =  "MODifieRWeb", collapsible = TRUE,
                tabPanel("Input data", mod_Columns_ui(ns("Columns_ui_1"))),
-               tabPanel("Visualization", mod_visual_ui(ns("visual_ui_1")))
-               ))
+               tabPanel("Visualization", mod_visual_ui(ns("visual_ui_1"))),
+                tabPanel("Input objects", mod_input_overview_ui(ns("input_overview_ui_1"))
+               ),
+               tabPanel("Module objects", mod_module_overview_ui(ns("module_overview_ui_1"))
+               ),
+               tabPanel("PPI networks", mod_ppi_networks_ui(ns("ppi_networks_ui_1"))
+               ) 
+                ))
 }
     
 #' main_page_v2 Server Function
@@ -23,6 +29,7 @@ mod_main_page_v2_server <- function(input, output, session){
   ns <- session$ns
   callModule(mod_Columns_server, "Columns_ui_1")
   callModule(mod_visual_server, "visual_ui_1")
+  con <- MODifieRDB::connect_to_db("/home/dirk/testdb.db")
 }
     
 ## To be copied in the UI
