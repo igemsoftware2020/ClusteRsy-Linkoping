@@ -14,12 +14,9 @@ mod_DiffCoEx_ui <- function(id){
     uiOutput(ns("ppi_choice")),
    
     textInput(ns("module_name"), "Module object name"),
-<<<<<<< HEAD
-    selectInput(ns("cluster_method"), "Select an agglomeration method", 
-=======
+    selectInput(ns("cluster_method"), "Select an agglomeration method"), 
     actionButton(ns("load_input"), "Infer DiffCoEx module"),
     radioButtons(clustermethod, "Select a cluster method:", 
->>>>>>> 97d09f791b2578dc0d775698bbf5543b5f0aae0f
                  c("ward",
                    "single",
                    "complete",
@@ -53,10 +50,7 @@ mod_DiffCoEx_ui <- function(id){
     sliderInput(ns("pval_cutoff"), label = "p-value cut-off", min = 0, max = 1, value = 0.05),
     actionButton(ns("load_input"), "Infer DiffCoEx module")
     )
-<<<<<<< HEAD
-  
-=======
->>>>>>> 97d09f791b2578dc0d775698bbf5543b5f0aae0f
+
 }
     
 #' DiffCoEx Server Function
