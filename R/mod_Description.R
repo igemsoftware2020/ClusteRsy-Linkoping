@@ -205,15 +205,14 @@ mod_Description_server <- function(input, output, session){
   )
   
   callModule(mod_MCODE_server, "MCODE_ui_1")
-  callModule(mod_MCODE_server, "Cliquesum_ui_1")
-  callModule(mod_MCODE_server, "WGCNA_ui_1")
-  callModule(mod_MCODE_server, "DIAMoND_ui_1")
-  callModule(mod_MCODE_server, "DiffCoEx_ui_1")
+#  callModule(mod_Cliquesum_server, "Cliquesum_ui_1")
+  callModule(mod_WGCNA_server, "WGCNA_ui_1")
+  callModule(mod_DIAMoND_server, "DIAMoND_ui_1")
+  callModule(mod_DiffCoEx_server, "DiffCoEx_ui_1")
   callModule(mod_MCODE_server, "MCODE_ui_1")
-  callModule(mod_MCODE_server, "MODA_ui_1")
-  callModule(mod_MCODE_server, "Modulediscoverer_ui_1")
-  callModule(mod_MCODE_server, "MCODE_ui_1")
-  callModule(mod_MCODE_server, "CClique_ui_1")
+  callModule(mod_MODA_server, "MODA_ui_1")
+  callModule(mod_Modulediscoverer_server, "Modulediscoverer_ui_1")
+  callModule(mod_CClique_server, "CClique_ui_1")
 }
 
   
