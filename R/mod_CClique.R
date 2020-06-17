@@ -16,6 +16,7 @@ mod_CClique_ui <- function(id){
     sliderInput(ns("frequency_cutoff"), label = "Select frequency cutoff", min = 0, max = 100, value = 50),
     sliderInput(ns("fraction_of_interactions"), label = "Fraction of interactions", min = 0, max = 1, value = 0.4),
     sliderInput(ns("deg_cutoff"), label = "P-value cutoff", min = 0, max = 1, value = 0.05),
+    sliderInput(ns("clique_significance"), label = "Cutoff for Fisher exact test for cliques", min = 0, max = 1, value = 0.05),
     prettySwitch(ns("to_db"), label = "Save result in database", value = TRUE, status = "warning"),
     numericInput(ns("iteration"), label = "Number of iterations", value = 50, max = 100, min = 0),
     numericInput(ns("n_cores"), label = "Number of cores", value = 3, max = 50, min = 0),
@@ -47,7 +48,10 @@ mod_CClique_server <- function(input, output, session){
                                             to_db = input$to_db,
                                             fraction_of_interactions = input$fraction_of_interactions,
                                             deg_cutoff = input$deg_cutoff,
+                                            iteration = input$iteration,
+                                            n_cores = input$n_cores,
                                             multiple_cores = input$multiple_cores,
+                                            clique_significance = input$clique_significance,
                                             con = con)
     
     

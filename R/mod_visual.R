@@ -10,6 +10,7 @@
 mod_visual_ui <- function(id){
   ns <- NS(id)
   tagList(
+
     tags$div(`class`="jumbotron",
              tags$h1("Hello,world!",class="display-3"),
              tags$hr(class="my-4"),
@@ -28,6 +29,7 @@ mod_visual_ui <- function(id){
 #' @noRd 
 mod_visual_server <- function(input, output, session){
   ns <- session$ns
+
 }
 
 ## To be copied in the UI
