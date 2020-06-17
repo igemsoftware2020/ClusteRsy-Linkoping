@@ -83,25 +83,32 @@ mod_upload_server <- function(input, output, session, input_object){
     group2_label <- group2_label_r()
     use_adjusted <- input$adjusted_pvalue
     normalize_quantiles <- input$quantile_normalization
-    parameters <- list(count_matrix, 
-                       group1_indici, 
-                       group2_indici, 
-                       group1_label, 
-                       group2_label, 
-                       use_adjusted, 
-                       normalize_quantiles )
- 
+    
     on.exit(removeNotification(id), add = TRUE)
     
-    input_object <- do.call(MODifieR::"create_input_rnaseq", parameters)
+    input_object <- MODifieR::create_input_rnaseq(count_matrix = count_matrix, 
+                                                  group1_indici = group1_indici, 
+                                                  group2_indici = group2_indici, 
+                                                  group1_label = group1_label, 
+                                                  group2_label = group2_label, 
+                                                  use_adjusted = use_adjusted, 
+                                                  normalize_quantiles = normalize_quantiles)
+    
+    input_name <- input$input_name
+    
+    MODifieRDB::MODifieR_object_to_db(MODifieR_object = input_object,
+                                      object_name = input_name,
+                                      con = con)
+    
     
     MODifieR_module$module <- input_object
   })
   
-
+  
   outputOptions(output, 'fileUploaded', suspendWhenHidden=FALSE)
-
+  
   return(MODifieR_module)
+
 }
 
 ## To be copied in the UI
