@@ -22,14 +22,14 @@ mod_upload_server <- function(input, output, session, input_object){
   ns <- session$ns
   
   MODifieR_module <- reactiveValues()
-
+  
   registerInputHandler("shinyjsexamples.chooser", function(data, ...) {
     if (is.null(data))
       NULL
     else
       list(left=as.character(data$left), right=as.character(data$right))
   }, force = TRUE)
-
+  
   upload_expression <- reactive({
     req((input$expression_matrix))
     infile <- (input$expression_matrix$datapath)
@@ -40,7 +40,7 @@ mod_upload_server <- function(input, output, session, input_object){
     
     read.table(file = infile, header = T)
   })
- 
+  
   output$sample_chooser <- renderUI({
     expression_matrix <- upload_expression()
     tagList( textInput(ns("group1"), "Group 1 label"),
@@ -51,7 +51,7 @@ mod_upload_server <- function(input, output, session, input_object){
              prettySwitch(ns("adjusted_pvalue"), label = "Pvalue", value = TRUE, status = "warning"),
              prettySwitch(ns("quantile_normalization"), label = "Quantile", value = FALSE, status = "warning"),
              tags$div(style = "text-align: right",
-             actionButton(ns("create_input"), "Create input object")
+                      actionButton(ns("create_input"), "Create input object")
              )
     )
   })
@@ -108,7 +108,7 @@ mod_upload_server <- function(input, output, session, input_object){
   outputOptions(output, 'fileUploaded', suspendWhenHidden=FALSE)
   
   return(MODifieR_module)
-
+  
 }
 
 ## To be copied in the UI
@@ -116,4 +116,3 @@ mod_upload_server <- function(input, output, session, input_object){
 
 ## To be copied in the server
 # callModule(mod_upload_server, "upload_ui_1")
-
