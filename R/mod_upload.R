@@ -18,7 +18,7 @@ mod_upload_ui <- function(id){
 #' upload Server Function
 #'
 #' @noRd 
-mod_upload_server <- function(input, output, session, input_object){
+mod_upload_server <- function(input, output, session, input_object, con){
   ns <- session$ns
   
   MODifieR_module <- reactiveValues()
@@ -43,7 +43,8 @@ mod_upload_server <- function(input, output, session, input_object){
  
   output$sample_chooser <- renderUI({
     expression_matrix <- upload_expression()
-    tagList( textInput(ns("group1"), "Group 1 label"),
+    tagList( textInput(ns("input_name"), "Input object name"),
+             textInput(ns("group1"), "Group 1 label"),
              textInput(ns("group2"), "Group 2 label"),
              chooserInput(ns("sample_groups"), "Available frobs", "Selected frobs", 
                           colnames(expression_matrix), c(), size = 10, multiple = TRUE),

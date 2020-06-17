@@ -18,7 +18,7 @@ mod_module_overview_ui <- function(id){
 #' module_overview Server Function
 #'
 #' @noRd 
-mod_module_overview_server <- function(input, output, session){
+mod_module_overview_server <- function(input, output, session, con){
   ns <- session$ns
   output$module_overview <- DT::renderDataTable(module_objects)
   

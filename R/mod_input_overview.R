@@ -18,7 +18,7 @@ mod_input_overview_ui <- function(id){
 #' input_overview Server Function
 #'
 #' @noRd 
-mod_input_overview_server <- function(input, output, session){
+mod_input_overview_server <- function(input, output, session, con){
   ns <- session$ns
   input_objects <- MODifieRDB::get_available_input_objects(con)
   

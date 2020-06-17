@@ -20,7 +20,7 @@ mod_ppi_networks_ui <- function(id){
 #' ppi_networks Server Function
 #'
 #' @noRd 
-mod_ppi_networks_server <- function(input, output, session){
+mod_ppi_networks_server <- function(input, output, session, con){
   ns <- session$ns
   upload_ppi <- reactive({
     req(input$ppi_network)
