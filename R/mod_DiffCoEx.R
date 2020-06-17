@@ -14,40 +14,36 @@ mod_DiffCoEx_ui <- function(id){
     uiOutput(ns("ppi_choice")),
    
     textInput(ns("module_name"), "Module object name"),
-    selectInput(ns("cluster_method"), "Select an agglomeration method"), 
-    actionButton(ns("load_input"), "Infer DiffCoEx module"),
-    radioButtons(clustermethod, "Select a cluster method:", 
-                 c("ward",
-                   "single",
-                   "complete",
-                   "average",
-                   "mcquitty",
-                   "median",
-                   "centroid"),
+    radioButtons(ns("clustermethod"), "Select a cluster method:", 
+                 choices = c("ward",
+                             "single",
+                             "complete",
+                             "average",
+                             "mcquitty",
+                             "median",
+                             "centroid"),
                 selected = "ward",
-                multiple = FALSE,
-                selectize = TRUE,
                 width = NULL),
     selectInput(ns("cor_method"), "Select an correlation coefficent",
-                c("pearson",
-                  "kendall",
-                  "spearman"),
+                choices = c("pearson",
+                            "kendall",
+                            "spearman"),
                 selected = "pearson",
                 multiple = FALSE,
                 selectize = TRUE,
                 width = NULL),
     selectInput(ns("cuttree_method"), "Select a method to use",
-                c("hybrid",
-                  "tree"),
+                choices = c("hybrid",
+                            "tree"),
                 multiple = FALSE,
                 selectize = TRUE,
                 width = NULL),
    
-    htmlOutput(ns("method")),   
-    
-    sliderInput(ns("minClusterSize"), label = "minimum cluster size", min = 0, max = 100, value = 5),
-    sliderInput(ns("cut_height"), label = "maximum joining heights", min = 0, max = 1, value = 0.1),
-    sliderInput(ns("pval_cutoff"), label = "p-value cut-off", min = 0, max = 1, value = 0.05),
+    htmlOutput(ns("para")),   
+    numericInput(ns("beta"), label = "Soft thresholding power (%)", value = 99, max = 100, min = 0),
+    sliderInput(ns("minClusterSize"), label = "Minimum cluster size", min = 0, max = 100, value = 5),
+    sliderInput(ns("cut_height"), label = "Maximum joining heights", min = 0, max = 1, value = 0.1),
+    sliderInput(ns("pval_cutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05),
     actionButton(ns("load_input"), "Infer DiffCoEx module")
     )
 
@@ -60,18 +56,17 @@ mod_DiffCoEx_server <- function(input, output, session){
   ns <- session$ns
  
   observeEvent(input$cuttree_method, {
-               if (input$cuttree_method == "hybrid") {output$method <- 
-    renderUI({
+    if (input$cuttree_method == "hybrid") {
+    output$para <- renderUI({
       tagList(
-      sliderInput(ns("deepSplit"), label = "sensitivity to cluster splitting", min = 1, max = 4, value = 0.1),
-      numericInput(ns("beta"), label = "soft thresholding power (%)", value = 99, max = 100, min = 0),
+      radioButtons(ns("deepSplit"), label = "Sensitivity to cluster splitting", choices = c(1, 2, 3, 4), selected = 2,
+                     inline = T),
       prettySwitch(ns("pamRespectsDendro"), label = "PAM respects dendrogram", value = FALSE, status = "warning"))})}
-    else {output$method <- 
-      renderUI({
+    else {
+    output$para <- renderUI({
       tagList(
-      prettySwitch(ns("deepSplit"), label = "sensitivity to cluster splitting", value = FALSE, status = "warning"),
-      numericInput(ns("beta"), label = "soft thresholding power (%)", value = 0.99, max = 100, min = 0))})}
-    })
+      prettySwitch(ns("deepSplit"), label = "Sensitivity to cluster splitting", value = FALSE, status = "warning"))})}
+  })
     
     
    output$input_choice <- renderUI({
@@ -96,7 +91,6 @@ mod_DiffCoEx_server <- function(input, output, session){
                                           cut_height = input$cut_height,
                                           pval_cutoff = input$pval_cutoff,
                                           beta = input$beta,
-                                          
                                           module_name = input$module_name,
                                           con = con)
     
