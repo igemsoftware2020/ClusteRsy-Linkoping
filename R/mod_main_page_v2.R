@@ -29,7 +29,7 @@ mod_main_page_v2_server <- function(input, output, session){
   ns <- session$ns
   callModule(mod_Columns_server, "Columns_ui_1")
   callModule(mod_visual_server, "visual_ui_1")
-  con <- MODifieRDB::connect_to_db("/home/dirk/testdb.db")
+  con <- MODifieRDB::connect_to_db("/Users/lucasporcile/Library/R/3.6/library")
 }
     
 ## To be copied in the UI
