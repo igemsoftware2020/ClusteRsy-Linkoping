@@ -6983,3 +6983,9 @@ div#main_page_v2_ui_1-upload_ui_1-sample_groups{
 #irs-active-slider, .irs-slider:hover {
     background: #ffd27f !important;
 }
+
+/* Hypertext */
+button.link {
+  background: none;
+  border: none;
+}

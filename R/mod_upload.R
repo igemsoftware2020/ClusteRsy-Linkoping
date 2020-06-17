@@ -50,7 +50,9 @@ mod_upload_server <- function(input, output, session, input_object){
              verbatimTextOutput(ns("current_groups")),
              prettySwitch(ns("adjusted_pvalue"), label = "Pvalue", value = TRUE, status = "warning"),
              prettySwitch(ns("quantile_normalization"), label = "Quantile", value = FALSE, status = "warning"),
+             tags$div(style = "text-align: right",
              actionButton(ns("create_input"), "Create input object")
+             )
     )
   })
   
