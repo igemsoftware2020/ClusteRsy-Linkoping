@@ -21,6 +21,7 @@ mod_CClique_ui <- function(id){
     numericInput(ns("iteration"), label = "Number of iterations", value = 50, max = 100, min = 0),
     numericInput(ns("n_cores"), label = "Number of cores", value = 3, max = 50, min = 0),
     prettySwitch(ns("multiple_cores"), label = "Parallellize iterations", value = TRUE, status = "warning"),
+    textInput(ns("module_name"), "Module object name"),
     actionButton(ns("load_input"), "Infer Correlation clique module"),
     
   )
@@ -52,6 +53,7 @@ mod_CClique_server <- function(input, output, session){
                                             n_cores = input$n_cores,
                                             multiple_cores = input$multiple_cores,
                                             clique_significance = input$clique_significance,
+                                            module_name = input$module_name,
                                             con = con)
     
     
