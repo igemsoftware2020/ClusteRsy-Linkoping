@@ -43,7 +43,7 @@ mod_DiffCoEx_ui <- function(id){
                 selectize = TRUE,
                 width = NULL),
    
-     htmlOutput(ns("method")),   
+    htmlOutput(ns("method")),   
     
     sliderInput(ns("minClusterSize"), label = "minimum cluster size", min = 0, max = 100, value = 5),
     sliderInput(ns("cut_height"), label = "maximum joining heights", min = 0, max = 1, value = 0.1),
