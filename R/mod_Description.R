@@ -26,7 +26,7 @@ mod_Description_ui <- function(id){
        document.getElementById('Inference_method').addEventListener('click', 
                               function(){document.getElementById('main_page_v2_ui_1-Columns_ui_1-Description_ui_1-method').innerHTML = '';})
                      
-      function showDescription(){ 
+        function showDescription(){ 
                   var str = document.getElementById('method').innerHTML;
                   
                   if (str.indexOf('Clique Sum') >= 0){
@@ -61,8 +61,12 @@ mod_Description_ui <- function(id){
                     var res = str.replace ('Click me to learn more about Correlation Clique', 'Correlation Clique\\'s description');
                   }
                   
+                  else {
+                  }
                   
-                  document.getElementById('method').innerHTML = res;}"
+                  document.getElementById('method').innerHTML = res;
+                  document.getElementById('method').disabled = true;}
+                  "
     ))
   )
 }
@@ -85,64 +89,64 @@ mod_Description_server <- function(input, output, session){
     if (method == "Clique Sum"){
       description <- tags$button("Click me to learn more about Clique Sum",
                             id = "method",
-                            class = 'link',
-                            onclick = 'showDescription()')
+                            class = "link",
+                            onclick = "showDescription()")
       return(description)
     }
     
     if (method == "WGCNA"){
       description <- tags$button("Click me to learn more about WGCNA",
                                  id = "method",
-                                 class = 'link',
-                                 onclick = 'showDescription()')
+                                 class = "link",
+                                 onclick = "showDescription()")
       return(description)
     }
     
     if (method == "DIAMoND"){
       description <- tags$button("Click me to learn more about DIAMoND",
                                  id = "method",
-                                 class = 'link',
-                                 onclick = 'showDescription()')
+                                 class = "link",
+                                 onclick = "showDescription()")
       return(description)
     }
     
     if (method == "DiffCoEx"){
       description <- tags$button("Click me to learn more about DiffCoEx",
                                  id = "method",
-                                 class = 'link',
-                                 onclick = 'showDescription()')
+                                 class = "link",
+                                 onclick = "showDescription()")
       return(description)
     }
     
     if (method == "MCODE"){
       description <- tags$button("Click me to learn more about MCODE",
                                  id = "method",
-                                 class = 'link',
-                                 onclick = 'showDescription()')
+                                 class = "link",
+                                 onclick = "showDescription()")
       return(description)
     }
     
     if (method == "MODA"){
       description <- tags$button("Click me to learn more about MODA",
                                  id = "method",
-                                 class = 'link',
-                                 onclick = 'showDescription()')
+                                 class = "link",
+                                 onclick = "showDescription()")
       return(description)
     }
     
     if (method == "Module Discoverer"){
       description <- tags$button("Click me to learn more about Module Discoverer",
                                  id = "method",
-                                 class = 'link',
-                                 onclick = 'showDescription()')
+                                 class = "link",
+                                 onclick = "showDescription()")
       return(description)
     }
     
     if (method == "Correlation Clique"){
       description <- tags$button("Click me to learn more about Correlation Clique",
                                  id = "method",
-                                 class = 'link',
-                                 onclick = 'showDescription()')
+                                 class = "link",
+                                 onclick = "showDescription()")
       return(description)
     }
     
@@ -189,12 +193,12 @@ mod_Description_server <- function(input, output, session){
     }
     
     if(method == "Module Discoverer"){
-      output$method <- renderUI({mod_Modulediscovere_ui(ns("Modulediscoverer_ui_1"))
+      output$method <- renderUI({mod_Modulediscoverer_ui(ns("Modulediscoverer_ui_1"))
       })
     }
     
     if(method == "Correlation Clique"){
-      output$method <- renderUI({mod_Correlationclique_ui(ns("Correlationclique_ui_1"))
+      output$method <- renderUI({mod_CClique_ui(ns("CClique_ui_1"))
       })
     }
   }
@@ -209,7 +213,7 @@ mod_Description_server <- function(input, output, session){
   callModule(mod_MCODE_server, "MODA_ui_1")
   callModule(mod_MCODE_server, "Modulediscoverer_ui_1")
   callModule(mod_MCODE_server, "MCODE_ui_1")
-  callModule(mod_MCODE_server, "Correlationclique_ui_1")
+  callModule(mod_MCODE_server, "CClique_ui_1")
 }
 
   
