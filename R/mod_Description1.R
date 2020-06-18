@@ -11,7 +11,8 @@ mod_Description1_ui <- function(id){
   ns <- NS(id)
   tagList(
     tags$div(id = "Inference_method",
-             selectInput(ns("Inference_method"), label = "Inference method", choices = c("Clique Sum", "WGCNA", "DIAMoND", "DiffCoEx", "MCODE", "MODA", "Module Discoverer", "Correlation Clique"))
+             selectInput(ns("Inference_method"), label = "Inference method", choices = c("Clique Sum", "WGCNA", "DIAMoND", "DiffCoEx", "MCODE", "MODA", "Module Discoverer", "Correlation Clique"),
+                         tooltip = F)
     ),
     htmlOutput(ns("description")),
     tags$br(),
@@ -67,14 +68,14 @@ mod_Description1_server <- function(input, output, session, con){
     method <- input$Inference_method
     
     if(method == "Clique Sum"){
-      output$method <- renderUI({mod_Cliquesum_ui(ns("Cliquesum_ui_1"))
+      output$method <- renderUI({mod_CliqueSum_ui(ns("CliqueSum_ui_1"))
+      callModule(mod_CliqueSum_server, "CliqueSum_ui_1")  
       })
     }
     
     if(method == "WGCNA"){
       output$method <- renderUI({mod_WGCNA_ui(ns("WGCNA_ui_1"))
       })
-      print("Hello World")
       callModule(mod_WGCNA_server, "WGCNA_ui_1", con = con)
     }
     
@@ -116,7 +117,7 @@ mod_Description1_server <- function(input, output, session, con){
   }
   )
   
-  #  callModule(mod_Cliquesum_server, "Cliquesum_ui_1")
+  
 }
 
 
