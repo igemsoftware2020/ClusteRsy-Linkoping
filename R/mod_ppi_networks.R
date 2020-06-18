@@ -66,15 +66,26 @@ mod_ppi_networks_server <- function(input, output, session, con){
     
   })
   
- 
-  if (any(ppi_networks == "Default")) {
-    
+  #MODifieRDB::ppi_network_to_db(ppi_network = MODifieR::ppi_network,
+                                #ppi_name = "Default", 
+                                #con = con)
+  
+if (is.data.frame(ppi_networks) && nrow(ppi_networks)==0) {
+  MODifieRDB::ppi_network_to_db(ppi_network = MODifieR::ppi_network,
+                                ppi_name = "Default", 
+                                con = con)
+}
+  
+  else if (any(ppi_networks == "Default")) {
+   
     return()
-    }
-    else {
-      print(ppi_networks[])
-      MODifieRDB::ppi_network_to_db(ppi_network = MODifieR::ppi_network, ppi_name = "Default", con = con)
-    }
+  }
+    # else {
+    # 
+    #   MODifieRDB::ppi_network_to_db(ppi_network = MODifieR::ppi_network,
+    #                                 ppi_name = "Default", 
+    #                                 con = con)
+    # }
 
 }
 
