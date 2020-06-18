@@ -35,7 +35,7 @@ mod_CliqueSum_server <- function(input, output, session){
   })
   
   observeEvent(input$load_input, {
-    module_object <- MODifieRDB::DiffCoEx(input_name = input$input_object,
+    module_object <- MODifieRDB::clique_sum_db(input_name = input$input_object,
                                           ppi_name = input$ppi_object,
                                           n_iterations = input$n_iterations,
                                           deg_cutoff = input$deg_cutoff,
