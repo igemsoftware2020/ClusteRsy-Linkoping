@@ -10,10 +10,7 @@
 mod_CliqueSum_ui <- function(id){
   ns <- NS(id)
   tagList(
-    uiOutput(ns("input_choice")),
-    uiOutput(ns("ppi_choice")),
-    textInput(ns("module_name"), "Module object name")
-    
+        uiOutput(ns("parameters"))
   )
 }
     
@@ -24,8 +21,10 @@ mod_CliqueSum_server <- function(input, output, session){
   ns <- session$ns
  
   observeEvent(input$build_db, {
-    output$para <- renderUI({
+    output$parameters <- renderUI({
       tagList(
+        uiOutput(ns("input_choice")),
+        textInput(ns("module_name"), "Module object name"),
         sliderInput(ns("deg_cutoff"), label = "P-value cutoff for DEGs", min = 0, max = 1, value = 0.05),
         sliderInput(ns("clique_significance"), label = "Clique significance", min = 0, max = 1, value = 0.05),
         numericInput(ns("n_cores"), label = "Number of cores", value = 3, max = 50, min = 0),
