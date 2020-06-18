@@ -12,14 +12,8 @@ mod_CliqueSum_ui <- function(id){
   tagList(
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
-    textInput(ns("module_name"), "Module object name"),
-    sliderInput(ns("deg_cutoff"), label = "P-value cutoff for DEGs", min = 0, max = 1, value = 0.05),
-    sliderInput(ns("clique_significance"), label = "Clique significance", min = 0, max = 1, value = 0.05),
-    numericInput(ns("n_cores"), label = "Number of cores", value = 3, max = 50, min = 0),
-    numericInput(ns("min_clique_size"), label = "Minimal clique size", value = 2, max = 50, min = 2),
-    prettySwitch(ns("multiple_cores"), label = "Parallellize iterations", value = TRUE, status = "warning"),
-    numericInput(ns("n_iterations"), label = "Iterations", value = , max = 10000, min = 0),
-    prettySwitch(ns("to_db"), label = "Save result in database", value = TRUE, status = "warning"),
+    textInput(ns("module_name"), "Module object name")
+    
   )
 }
     
@@ -29,6 +23,22 @@ mod_CliqueSum_ui <- function(id){
 mod_CliqueSum_server <- function(input, output, session){
   ns <- session$ns
  
+  observeEvent(input$build_db, {
+    output$para <- renderUI({
+      tagList(
+        sliderInput(ns("deg_cutoff"), label = "P-value cutoff for DEGs", min = 0, max = 1, value = 0.05),
+        sliderInput(ns("clique_significance"), label = "Clique significance", min = 0, max = 1, value = 0.05),
+        numericInput(ns("n_cores"), label = "Number of cores", value = 3, max = 50, min = 0),
+        numericInput(ns("min_clique_size"), label = "Minimal clique size", value = 2, max = 50, min = 2),
+        prettySwitch(ns("multiple_cores"), label = "Multiple cores", value = TRUE, status = "warning"),
+        numericInput(ns("n_iterations"), label = "Iterations", value = , max = 10000, min = 0),
+        prettySwitch(ns("to_db"), label = "Save result in database", value = TRUE, status = "warning"),
+      )
+    
+    })
+     }
+  )
+  
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     selectInput(ns("input_object"), label = "Input object", choices = input_objects)
