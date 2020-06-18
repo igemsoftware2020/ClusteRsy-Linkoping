@@ -16,27 +16,24 @@ mod_main_page_v2_ui <- function(id){
                tabPanel("Input objects", mod_input_overview_ui(ns("input_overview_ui_1"))),
                tabPanel("Module objects", mod_module_overview_ui(ns("module_overview_ui_1"))),
                tabPanel("PPI networks", mod_ppi_networks_ui(ns("ppi_networks_ui_1")))
-               ))
+    ))
 }
-    
+
 #' main_page_v2 Server Function
 #'
 #' @noRd 
 mod_main_page_v2_server <- function(input, output, session){
   ns <- session$ns
-
-  con <- MODifieRDB::connect_to_db("/Users/lucasporcile/Library/R/3.6/library")
-
+  con <- MODifieRDB::connect_to_db("./../testdb.db")
   callModule(mod_visual_server, "visual_ui_1")
   callModule(mod_Columns_server, "Columns_ui_1", con = con)
   callModule(mod_input_overview_server, "input_overview_ui_1", con = con)
   callModule(mod_module_overview_server, "module_overview_ui_1", con = con)
   callModule(mod_ppi_networks_server, "ppi_networks_ui_1", con = con)
 }
-    
+
 ## To be copied in the UI
 # mod_main_page_v2_ui("main_page_v2_ui_1")
-    
+
 ## To be copied in the server
 # callModule(mod_main_page_v2_server, "main_page_v2_ui_1")
- 
