@@ -11,8 +11,20 @@ mod_WGCNA_ui <- function(id){
   ns <- NS(id)
   tagList(
     uiOutput(ns("input_choice")),
-    sliderInput(ns("output_groups"), label= "Select number of groups to be included", min = 0, max = 2, value = 1),
+    uiOutput(ns("ppi_choice")),
     textInput(ns("module_name"), "Module object name"),
+    radioButtons(ns("group_of_interest"), label= "Select group of interest", choiceNames=list("Group 1", "Group 2"), choiceValues = list(1, 2)),
+    sliderInput(ns("minModuleSize"), label= "Minimum module size", min=1, max=100, value=30),
+    sliderInput(ns("deepSplit"), label= "Integer value between 0 and 4", min=0, max=4, value=2),
+    prettySwitch(ns("pamRespectsDendro"), label= "Select pamStage", value=TRUE, status = "warning"),
+    sliderInput(ns("mergeCutHeight"), label = "Dendrogram cut height for module merging", min=0, max=1, value=0.1), 
+    radioButtons(ns("numericLabels"), label="Sholud the returned modules be labeled by color or numbers?", choices=list("Color", "Numbers")),
+    sliderInput(ns("pval_cutoff"), label="P-value cutoff for significant co-expression modules", min=0, max=1, value=0.05),
+    radioButtons(ns("corType"), label="Specify correlation", choiceNames = list("Pearson", "Bicor"), choiceValues = list(1, 2)),
+    sliderInput(ns("maxBlockSize"), label="Max block size", min=0, max=10000, value=5000),
+    selectInput(ns("TOMType"), label="Select TOMType", list("None", "Unsigned", "Signed", "Signes Nowick", "Unsigned 2", "Signed 2", "Signed Nowick 2")),
+    prettySwitch(ns("saveTOMs"), label= "Consensus topological overlap matrices saved and returned", value = TRUE, status = "warning"), 
+    sliderInput(ns("maxPOutliers"), label="Maimum percentile outlisers", min=0, max=1, value = 0.1),
     actionButton(ns("load_input"), "Infer WGCNA trait-based module"),
   )
 }
@@ -20,7 +32,7 @@ mod_WGCNA_ui <- function(id){
 #' WGCNA Server Function
 #'
 #' @noRd 
-mod_WGCNA_server <- function(input, output, session){
+mod_WGCNA_server <- function(input, output, session, con){
   ns <- session$ns
  
   output$input_choice <- renderUI({
@@ -28,12 +40,26 @@ mod_WGCNA_server <- function(input, output, session){
     selectInput(ns("input_object"), label = "Input object", choices = input_objects)
   })
   
+  output$ppi_choice <- renderUI({
+    ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
+    selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks)
+  })
+  
   observeEvent(input$load_input, {
     module_object <- MODifieRDB::wgcna_db(input_name = input$input_object, 
-                                            n_output_groups = input$output_groups,
-                                            module_name = input$module_name)
-    
-    
+                                          group_of_interest = input$group_of_interest,
+                                          minModuleSize = input$minModuleSize,
+                                          deepSplit = input$deepSplit,
+                                          pamRespectsDendro = input$pamRespectsDendro,
+                                          mergeCutHeight = input$mergeCutHeight, 
+                                          numericLabels = input$numericLabels,
+                                          pval_cutoff = input$pval_cutoff,
+                                          corType = input$corType,
+                                          maxBlockSize = input$maxBlockSize,
+                                          TOMType = input$TOMType, 
+                                          saveTOMs = input$saveTOMs,
+                                          maxPOutliers = input$maxPOutliers, 
+                                          module_name = input$module_name)
   })
   
   

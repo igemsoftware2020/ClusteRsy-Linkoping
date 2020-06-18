@@ -12,7 +12,6 @@ mod_DiffCoEx_ui <- function(id){
   tagList(
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
-   
     textInput(ns("module_name"), "Module object name"),
     radioButtons(ns("clustermethod"), "Select a cluster method:", 
                  choices = c("ward",
@@ -52,7 +51,7 @@ mod_DiffCoEx_ui <- function(id){
 #' DiffCoEx Server Function
 #'
 #' @noRd 
-mod_DiffCoEx_server <- function(input, output, session){
+mod_DiffCoEx_server <- function(input, output, session, con){
   ns <- session$ns
  
   observeEvent(input$cuttree_method, {

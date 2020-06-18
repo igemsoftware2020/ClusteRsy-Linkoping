@@ -65,10 +65,10 @@ mod_Columns_server <- function(input, output, session, con){
     tags$div(`class`="col-sm-4",
              tags$form(class = "well",
                        `style`="background-color:#2c3e50;",
-                       mod_Description_ui(ns("Description_ui_1"))))
+                       mod_Description1_ui(ns("Description1_ui_1"))))
 })
   
-  callModule(mod_Description_server, "Description_ui_1")
+  callModule(mod_Description1_server, "Description1_ui_1", con = con)
 } # Closes server function
     
 ## To be copied in the UI
