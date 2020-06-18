@@ -79,7 +79,7 @@ mod_DiffCoEx_server <- function(input, output, session, con){
   })
 
   observeEvent(input$load_input, {
-    module_object <- MODifieRDB::DiffCoEx(input_name = input$input_object, 
+    module_object <- MODifieRDB::diffcoex_db(input_name = input$input_object, 
                                           ppi_name = input$ppi_object,
                                           cluster_method = input$cluster_method,
                                           cor_method = input$cor_method,

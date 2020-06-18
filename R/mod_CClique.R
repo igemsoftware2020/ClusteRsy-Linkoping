@@ -42,7 +42,7 @@ mod_CClique_server <- function(input, output, session, con){
     selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks)
   })
   observeEvent(input$load_input, {
-    module_object <- MODifieRDB::diamond_db(input_name = input$input_object, 
+    module_object <- MODifieRDB::correlation_clique_db(input_name = input$input_object, 
                                             ppi_name = input$ppi_object, 
                                             frequency_cutoff = input$frequency_cutoff,
                                             to_db = input$to_db,
