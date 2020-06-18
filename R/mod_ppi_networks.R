@@ -67,11 +67,12 @@ mod_ppi_networks_server <- function(input, output, session, con){
   })
   
  
-  
-  if (ppi_networks == "Default") {
-    return(NULL)
+  if (any(ppi_networks == "Default")) {
+    print("hello")
+    return()
     }
     else {
+      print(ppi_networks[])
       MODifieRDB::ppi_network_to_db(ppi_network = MODifieR::ppi_network, ppi_name = "Default", con = con)
     }
 
