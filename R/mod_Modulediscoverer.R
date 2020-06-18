@@ -17,7 +17,7 @@ mod_Modulediscoverer_ui <- function(id){
     sliderInput(ns("deg_cutoff"), label = "P-value cutoff for differentialy expressed genes", min = 0, max = 1, value = 0.05),
     sliderInput(ns("repeats"), label = "Repeats", min = 0, max = 30, value = 15),
     sliderInput(ns("clique_cutoff"), label = "P-value cutoff for significant cliques", min = 0, max = 1, value = 0.01),
-    actionButton(ns("load_input"), "Infer Module discoverer module"),
+    actionButton(ns("load_input"), "Infer Module discoverer module")
 
 
   )

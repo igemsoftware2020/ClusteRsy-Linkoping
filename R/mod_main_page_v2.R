@@ -16,9 +16,9 @@ mod_main_page_v2_ui <- function(id){
                tabPanel("Input objects", mod_input_overview_ui(ns("input_overview_ui_1"))),
                tabPanel("Module objects", mod_module_overview_ui(ns("module_overview_ui_1"))),
                tabPanel("PPI networks", mod_ppi_networks_ui(ns("ppi_networks_ui_1")))
-               ))
+    ))
 }
-    
+
 #' main_page_v2 Server Function
 #'
 #' @noRd 
@@ -31,10 +31,9 @@ mod_main_page_v2_server <- function(input, output, session){
   callModule(mod_module_overview_server, "module_overview_ui_1", con = con)
   callModule(mod_ppi_networks_server, "ppi_networks_ui_1", con = con)
 }
-    
+
 ## To be copied in the UI
 # mod_main_page_v2_ui("main_page_v2_ui_1")
-    
+
 ## To be copied in the server
 # callModule(mod_main_page_v2_server, "main_page_v2_ui_1")
- 
