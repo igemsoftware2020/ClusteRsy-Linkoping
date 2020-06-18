@@ -65,6 +65,16 @@ mod_ppi_networks_server <- function(input, output, session, con){
     MODifieRDB::ppi_network_to_db(ppi_network = ppi, ppi_name = ppi_name, con = con)
     
   })
+  
+ 
+  
+  if (ppi_networks == "Default") {
+    return(NULL)
+    }
+    else {
+      MODifieRDB::ppi_network_to_db(ppi_network = MODifieR::ppi_network, ppi_name = "Default", con = con)
+    }
+
 }
 
 ## To be copied in the UI
