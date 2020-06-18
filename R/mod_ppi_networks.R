@@ -68,7 +68,7 @@ mod_ppi_networks_server <- function(input, output, session, con){
   
  
   if (any(ppi_networks == "Default")) {
-    print("hello")
+    
     return()
     }
     else {
