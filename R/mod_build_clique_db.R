@@ -22,16 +22,19 @@ mod_build_clique_db_ui <- function(id){
 mod_build_clique_db_server <- function(input, output, session, con){
   ns <- session$ns
   
-  con_clique_db <- MODifieRDB::connect_to_db("./../testdb.db")
   
   output$ppi_choice <- renderUI({
     ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
+    
     selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks)
   })
   
   observeEvent(input$build_db, {
-    clique_db <- MODifieRDB::build_clique_db( ppi_network = input$ppi_choice,
-                                              db_folder =  con_clique_db, #This should be connected to the db.
+    print(input$ppi_choice)
+    
+    print(input$db_name)
+    clique_db <- MODifieRDB::build_clique_db_db(ppi_name = input$ppi_object,
+                                              db_folder =  "." , #This should be connected to the db.
                                               db_name = input$db_name,
                                               con = con
                                               )
