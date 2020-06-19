@@ -102,7 +102,7 @@ mod_upload_server <- function(input, output, session, input_object, con){
                                       con = con)
     
     
-    MODifieR_module$module <- input_object
+    MODifieR_module$input_object <- input_object
   })
   
   
