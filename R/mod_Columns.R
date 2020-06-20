@@ -27,10 +27,6 @@ mod_Columns_ui <- function(id){
                       tags$form(class = "well",
                                 `style`="background-color:#2c3e50;",
                                 uiOutput(ns("input_choice")),
-                                tags$div(style = "text-align:right",
-                                         actionButton(ns("create_input"), "Create input object")
-                                ),
-                                tags$br(),
                                 mod_upload_ui(ns("upload_ui_1"))
                                 ),
                       ),
@@ -43,17 +39,17 @@ mod_Columns_ui <- function(id){
 mod_Columns_server <- function(input, output, session, con){
   ns <- session$ns
   
-  upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1", con = con)
-  
-  observeEvent(upload_ui_1$input_object, {
-    MODifieR_module <- upload_ui_1$input_object
-  }
-  )
-  
+  if (length(unlist((MODifieRDB::get_available_input_objects(con)$input_name))) != 0){
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
-    selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "Choose your input method")
+    tagList(
+    selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "Choose your input method"),
+    tags$div(style = "text-align:right",
+             actionButton(ns("create_input"), "Create input object")),
+    tags$br()
+    )
   })
+  }
   
   
   # Action button for creating input
@@ -61,6 +57,12 @@ mod_Columns_server <- function(input, output, session, con){
     upload_ui_1$input_object <- input$input_object
   })
   
+  upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1", con = con)
+  
+  observeEvent(upload_ui_1$input_object, {
+    MODifieR_module <- upload_ui_1$input_object
+  }
+  )
   
   upload_algorithm <- reactive({
     req(upload_ui_1$input_object) 

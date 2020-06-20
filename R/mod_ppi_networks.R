@@ -13,6 +13,8 @@ mod_ppi_networks_ui <- function(id){
     fileInput(ns("ppi_network"), label = "Upload a PPI network"),
     uiOutput(ns("ppi_name_chooser")),
     actionButton(ns("refresh"), "Refresh database"),
+    tags$br(),
+    tags$br(),
     DT::dataTableOutput(ns("ppi_overview"))
   )
 }

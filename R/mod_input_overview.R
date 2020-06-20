@@ -11,6 +11,8 @@ mod_input_overview_ui <- function(id){
   ns <- NS(id)
   tagList(
     actionButton(ns("refresh"), "Refresh database"),
+    tags$br(),
+    tags$br(),
     DT::dataTableOutput(ns("input_overview"))
   )
 }
