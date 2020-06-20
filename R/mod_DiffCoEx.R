@@ -11,7 +11,6 @@ mod_DiffCoEx_ui <- function(id){
   ns <- NS(id)
   tagList(
     uiOutput(ns("input_choice")),
-    uiOutput(ns("ppi_choice")),
     textInput(ns("module_name"), "Module object name"),
     radioButtons(ns("clustermethod"), "Select a cluster method:", 
                  choices = c("ward",
@@ -72,15 +71,9 @@ mod_DiffCoEx_server <- function(input, output, session, con){
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     selectInput(ns("input_object"), label = "Input object", choices = input_objects)
   })
-  
-  output$ppi_choice <- renderUI({
-    ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
-    selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks)
-  })
 
   observeEvent(input$load_input, {
-    module_object <- MODifieRDB::diffcoex_db(input_name = input$input_object, 
-                                          ppi_name = input$ppi_object,
+    module_object <- MODifieRDB::diffcoex_db(input_name = input$input_object,
                                           cluster_method = input$cluster_method,
                                           cor_method = input$cor_method,
                                           cuttree_method = input$cuttree_method,
