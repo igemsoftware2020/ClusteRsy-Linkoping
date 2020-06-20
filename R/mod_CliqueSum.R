@@ -31,9 +31,9 @@ if (nrow(MODifieRDB::get_available_db_networks(con)) != 0 ) {
       sliderInput(ns("clique_significance"), label = "Clique significance", min = 0, max = 1, value = 0.05),
       numericInput(ns("n_cores"), label = "Number of cores", value = 3, max = 50, min = 0),
       numericInput(ns("min_clique_size"), label = "Minimal clique size", value = 2, max = 50, min = 2),
-      prettySwitch(ns("multiple_cores"), label = "Multiple cores", value = TRUE, status = "warning"),
+      shinyWidgets::prettySwitch(ns("multiple_cores"), label = "Multiple cores", value = TRUE, status = "warning"),
       numericInput(ns("n_iterations"), label = "Iterations", value = 500, max = 10000, min = 0),
-      prettySwitch(ns("to_db"), label = "Save result in database", value = TRUE, status = "warning"),
+      shinyWidgets::prettySwitch(ns("to_db"), label = "Save result in database", value = TRUE, status = "warning"),
     )
   })
 } else {
@@ -75,9 +75,9 @@ if (nrow(MODifieRDB::get_available_db_networks(con)) != 0 ) {
         sliderInput(ns("clique_significance"), label = "Clique significance", min = 0, max = 1, value = 0.05),
         numericInput(ns("n_cores"), label = "Number of cores", value = 3, max = 50, min = 0),
         numericInput(ns("min_clique_size"), label = "Minimal clique size", value = 2, max = 50, min = 2),
-        prettySwitch(ns("multiple_cores"), label = "Multiple cores", value = TRUE, status = "warning"),
+        shinyWidgets::prettySwitch(ns("multiple_cores"), label = "Multiple cores", value = TRUE, status = "warning"),
         numericInput(ns("n_iterations"), label = "Iterations", value = , max = 10000, min = 0),
-        prettySwitch(ns("to_db"), label = "Save result in database", value = TRUE, status = "warning"),
+        shinyWidgets::prettySwitch(ns("to_db"), label = "Save result in database", value = TRUE, status = "warning"),
       )
     })
   }

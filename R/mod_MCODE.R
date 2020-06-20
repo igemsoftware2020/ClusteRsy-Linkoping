@@ -60,19 +60,19 @@ mod_MCODE_ui <- function(id){
       round = T,
       ticks = T
     ),
-    prettySwitch(
+    shinyWidgets::prettySwitch(
       ns("haircut"),
       label = "Haircut",
       value = FALSE,
       status = "warning"
     ),
-    prettySwitch(
+    shinyWidgets::prettySwitch(
       ns("fluff"),
       label = "Fluff",
       value = FALSE,
       status = "warning"
     ),
-    prettySwitch(
+    shinyWidgets::prettySwitch(
       ns("loops"),
       label = "Loops",
       value = FALSE,

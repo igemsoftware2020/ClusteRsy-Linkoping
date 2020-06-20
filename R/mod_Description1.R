@@ -144,8 +144,8 @@ mod_Description1_server <- function(input, output, session, con){
     
     if(method == "Clique Sum"){
       output$method <- renderUI({mod_CliqueSum_ui(ns("CliqueSum_ui_1"))
-      callModule(mod_CliqueSum_server, "CliqueSum_ui_1")  
       })
+      callModule(mod_CliqueSum_server, "CliqueSum_ui_1", con = con) 
     }
     
     if(method == "WGCNA"){

@@ -60,11 +60,11 @@ mod_DiffCoEx_server <- function(input, output, session, con){
       tagList(
       radioButtons(ns("deepSplit"), label = "Sensitivity to cluster splitting", choices = c(1, 2, 3, 4), selected = 2,
                      inline = T),
-      prettySwitch(ns("pamRespectsDendro"), label = "PAM respects dendrogram", value = FALSE, status = "warning"))})}
+      shinyWidgets::prettySwitch(ns("pamRespectsDendro"), label = "PAM respects dendrogram", value = FALSE, status = "warning"))})}
     else {
     output$para <- renderUI({
       tagList(
-      prettySwitch(ns("deepSplit"), label = "Sensitivity to cluster splitting", value = FALSE, status = "warning"))})}
+      shinyWidgets::prettySwitch(ns("deepSplit"), label = "Sensitivity to cluster splitting", value = FALSE, status = "warning"))})}
   })
     
     
