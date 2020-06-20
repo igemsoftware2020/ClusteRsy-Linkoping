@@ -11,8 +11,8 @@ mod_Description1_ui <- function(id){
   ns <- NS(id)
   tagList(
     tags$div(id = "Inference_method",
-             selectInput(ns("Inference_method"), label = "Inference method", choices = c("Clique Sum", "WGCNA", "DIAMoND", "DiffCoEx", "MCODE", "MODA", "Module Discoverer", "Correlation Clique"),
-                         tooltip = T)
+             selectInput(ns("Inference_method"), label = "Inference method", 
+                         choices = c("Clique Sum", "WGCNA", "DIAMoND", "DiffCoEx", "MCODE", "MODA", "Module Discoverer", "Correlation Clique"))
     ),
     htmlOutput(ns("description")),
     tags$br(),
@@ -71,36 +71,36 @@ mod_Description1_server <- function(input, output, session, con){
     # Method's link
     hyperlink <- function(method){
       if (method == "Clique Sum"){
-        description = "https://www.google.com/"
-        return(description)
+        link = "https://www.google.com/"
+        return(link)
       }
       if (method == "WGCNA"){
-        description = "https://www.google.com/"
-        return(description)
+        link = "https://www.google.com/"
+        return(link)
       }
       if (method == "DIAMoND"){
-        description = "https://www.google.com/"
-        return(description)
+        link = "https://www.google.com/"
+        return(link)
       }
       if (method == "DiffCoEx"){
-        description = "https://www.google.com/"
-        return(description)
+        link = "https://www.google.com/"
+        return(link)
       }
       if (method == "MCODE"){
-        description = "https://www.google.com/"
-        return(description)
+        link = "https://www.google.com/"
+        return(link)
       }
       if (method == "MODA"){
-        description = "https://www.google.com/"
-        return(description)
+        link = "https://www.google.com/"
+        return(link)
       }
       if (method == "Module Discoverer"){
-        description = "https://www.google.com/"
-        return(description)
+        link = "https://www.google.com/"
+        return(link)
       }
       if (method == "Correlation Clique"){
-        description = "https://www.google.com/"
-        return(description)
+        link = "https://www.google.com/"
+        return(link)
       }
     }
     

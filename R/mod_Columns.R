@@ -52,7 +52,7 @@ mod_Columns_server <- function(input, output, session, con){
   
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
-    selectInput(ns("input_object"), label = "Input object", choices = input_objects)
+    selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "Choose your input method")
   })
   
   
