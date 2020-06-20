@@ -16,9 +16,9 @@ mod_MCODE_ui <- function(id){
     radioButtons(
         ns("hierarchy"),
         label = "Hierarchy",
-        choices = c(0, 1, 2),
+        choices= c(1, 2, 3),
         selected = 1,
-        inline = T,
+        inline = T
     ),
     sliderInput(
       ns("vwp"),
@@ -97,10 +97,12 @@ mod_MCODE_server <- function(input, output, session, con){
     ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
     selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks)
   })
+  
   observeEvent(input$load_input, {
+    print(input$hierarchy)
     module_object <- MODifieRDB::mcode_db(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
-                                          hierarchy = input$hierarchy,
+                                          hierarchy = as.numeric(input$hierarchy),
                                           vwp = input$vwp,
                                           haircut = input$haircut,
                                           fdt = input$fdt,
