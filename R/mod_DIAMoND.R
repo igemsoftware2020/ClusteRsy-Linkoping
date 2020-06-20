@@ -38,13 +38,7 @@ mod_DIAMoND_server <- function(input, output, session, con){
     selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks)
   })
   observeEvent(input$load_input, {
-    print(input$input_object)
-    print(input$ppi_object)
-    print(input$deg_cutoff)
-    print(input$seed_weight)
-    print(input$include_seed)
-    print(input$module_name)
-    module_object <- MODifieRDB::diamond_db(input_name = input$input_object, 
+    error <- try(module_object <- MODifieRDB::diamond_db(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
                                           deg_cutoff = input$deg_cutoff,
                                           n_output_genes = input$output_genes,
@@ -52,7 +46,10 @@ mod_DIAMoND_server <- function(input, output, session, con){
                                           include_seed = input$include_seed,
                                           module_name = input$module_name,
                                           con = con)
-    
+        )
+    if (class(error) == "try-error"){
+      print("Please increase your P-value cutoff")
+    }
     
   })
  
