@@ -68,7 +68,7 @@ mod_upload_server <- function(input, output, session, input_object, con){
     if (any(MODifieRDB::get_available_input_objects(con)$input_name == i_name())){
     output$i_name <- renderUI({
       tags$script(HTML("element = document.getElementById('i_name');
-                       element.classList.toggle('has-error');"))
+                       element.classList.add('has-error');"))
       })
     output$error <- renderUI({
       tags$p(class = "text-danger", tags$b("Error:"), "This name has been taken. Please try again!")
