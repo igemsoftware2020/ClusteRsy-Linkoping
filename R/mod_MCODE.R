@@ -99,7 +99,6 @@ mod_MCODE_server <- function(input, output, session, con){
   })
   
   observeEvent(input$load_input, {
-    print(input$hierarchy)
     module_object <- MODifieRDB::mcode_db(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
                                           hierarchy = as.numeric(input$hierarchy),

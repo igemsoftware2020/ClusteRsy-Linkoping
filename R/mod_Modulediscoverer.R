@@ -15,6 +15,7 @@ mod_Modulediscoverer_ui <- function(id){
     textInput(ns("module_name"), "Module object name"), 
     sliderInput(ns("permutations"), label= "Permutations", min = 0, max = 10000, value = 5000),
     sliderInput(ns("deg_cutoff"), label = "P-value cutoff for differentialy expressed genes", min = 0, max = 1, value = 0.05),
+    uiOutput(ns("error")),
     sliderInput(ns("repeats"), label = "Repeats", min = 0, max = 30, value = 15),
     sliderInput(ns("clique_cutoff"), label = "P-value cutoff for significant cliques", min = 0, max = 1, value = 0.01),
     numericInput(ns("n_cores"), label = "N cores", value = 4, max = 10, min = 1),
@@ -40,6 +41,7 @@ mod_Modulediscoverer_server <- function(input, output, session, con){
   })
  
    observeEvent(input$load_input, {
+    output$error <- NULL # I CANNOT REMOVE THIS BUG, SO THIS IS A FEATURE NOW :)
     error <- try(module_object <- MODifieRDB::modulediscoverer_db(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
                                           permutations = input$permutations,
@@ -52,7 +54,9 @@ mod_Modulediscoverer_server <- function(input, output, session, con){
                  )
     
     if (class(error) == "try-error"){
-      print("Please increase your P-value cutoff")
+      output$error <- renderUI({
+        tags$p(style = "color:red;", tags$b("Error:"), "Please increase your P-value cutoff")
+      })
     }
     
   })

@@ -68,6 +68,7 @@ if (nrow(MODifieRDB::get_available_db_networks(con)) != 0 ) {
 }
 
   observeEvent(input$build_db, {
+    output$build_clique <- NULL
     output$parameters <- renderUI({
       tagList(
         uiOutput(ns("input_choice")),
