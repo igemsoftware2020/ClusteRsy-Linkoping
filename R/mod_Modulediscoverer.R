@@ -17,6 +17,7 @@ mod_Modulediscoverer_ui <- function(id){
     sliderInput(ns("deg_cutoff"), label = "P-value cutoff for differentialy expressed genes", min = 0, max = 1, value = 0.05),
     sliderInput(ns("repeats"), label = "Repeats", min = 0, max = 30, value = 15),
     sliderInput(ns("clique_cutoff"), label = "P-value cutoff for significant cliques", min = 0, max = 1, value = 0.01),
+    numericInput(ns("n_cores"), label = "N cores", value = 4, max = 10, min = 1),
     actionButton(ns("load_input"), "Infer Module discoverer module")
 
 
@@ -39,15 +40,20 @@ mod_Modulediscoverer_server <- function(input, output, session, con){
   })
  
    observeEvent(input$load_input, {
-    module_object <- MODifieRDB::modulediscoverer(input_name = input$input_object, 
+    error <- try(module_object <- MODifieRDB::modulediscoverer_db(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
                                           permutations = input$permutations,
                                           deg_cutoff = input$deg_cutoff,
                                           repeats = input$repeats,
                                           clique_cutoff = input$clique_cutoff,
                                           module_name = input$module_name,
-                                          repeats = input$repeats)
+                                          n_cores = input$n_cores,
+                                          con = con)
+                 )
     
+    if (class(error) == "try-error"){
+      print("Please increase your P-value cutoff")
+    }
     
   })
 }
