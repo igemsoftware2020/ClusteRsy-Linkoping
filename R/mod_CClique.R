@@ -62,7 +62,7 @@ mod_CClique_server <- function(input, output, session, con){
     
     if (class(error) == "try-error"){
       output$error <- renderUI({
-        tags$p(style = "color:red;", tags$b("Error:"), "Please increase your P-value cutoff")
+        tags$p(class = "text-danger", tags$b("Error:"), "Please increase your P-value cutoff")
       })
     }
   })

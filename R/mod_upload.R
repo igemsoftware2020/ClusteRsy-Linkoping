@@ -11,7 +11,8 @@ mod_upload_ui <- function(id){
   ns <- NS(id)
   tagList(
     fileInput(ns("expression_matrix"), label = "Upload an expression matrix"),
-    uiOutput(ns("sample_chooser"))
+    uiOutput(ns("sample_chooser")),
+    htmlOutput(ns("i_name"))
   )
 }
 
@@ -43,8 +44,10 @@ mod_upload_server <- function(input, output, session, input_object, con){
   
   output$sample_chooser <- renderUI({
     expression_matrix <- upload_expression()
-    tagList( 
-      textInput(ns("input_name"), "Input object name"),
+    tagList(
+      tags$div(id = "i_name",
+      textInput(ns("input_name"), "Input object name")),
+      htmlOutput(ns("error")),
       textInput(ns("group1"), "Group 1 label"),
       textInput(ns("group2"), "Group 2 label"),
       chooserInput(ns("sample_groups"), "Available frobs", "Selected frobs", 
@@ -57,6 +60,28 @@ mod_upload_server <- function(input, output, session, input_object, con){
     )
   })
   
+  i_name <- reactive({
+    input$input_name
+  })
+  
+  observe({
+    if (any(MODifieRDB::get_available_input_objects(con)$input_name == i_name())){
+    output$i_name <- renderUI({
+      tags$script(HTML("element = document.getElementById('i_name');
+                       element.classList.toggle('has-error');"))
+      })
+    output$error <- renderUI({
+      tags$p(class = "text-danger", tags$b("Error:"), "This name has been taken. Please try again!")
+    })
+    } else {
+      output$i_name <- renderUI({
+        tags$script(HTML("document.getElementById('i_name').classList.remove('has-error');"))
+      })
+      
+      output$error <- NULL
+  }
+    })
+  
   group1_label_r <- reactive({
     input$group1
   })
@@ -65,15 +90,11 @@ mod_upload_server <- function(input, output, session, input_object, con){
     input$group2
   })
   
-  output$current_groups <- renderPrint({
-    groups <- input$sample_groups
-    names(groups) <- c(group1_label_r(), group2_label_r())
-    groups
-  })
-  
   output$fileUploaded <- reactive({
     return(!is.null(upload_expression()))
   })
+  
+  
   
   observeEvent(input$create_input, {
     id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE)

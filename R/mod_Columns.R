@@ -40,7 +40,7 @@ mod_Columns_server <- function(input, output, session, con){
   ns <- session$ns
   
   if (length(unlist((MODifieRDB::get_available_input_objects(con)$input_name))) != 0){
-  output$input_choice <- renderUI({
+    output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     tagList(
     selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "Choose your input method"),
