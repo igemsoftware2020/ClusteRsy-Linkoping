@@ -42,7 +42,7 @@ mod_CClique_server <- function(input, output, session, con){
     selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks)
   })
   observeEvent(input$load_input, {
-    module_object <- MODifieRDB::correlation_clique_db(input_name = input$input_object, 
+    error <- try(module_object <- MODifieRDB::correlation_clique_db(input_name = input$input_object, 
                                             ppi_name = input$ppi_object, 
                                             frequency_cutoff = input$frequency_cutoff,
                                             to_db = input$to_db,
@@ -54,7 +54,11 @@ mod_CClique_server <- function(input, output, session, con){
                                             clique_significance = input$clique_significance,
                                             module_name = input$module_name,
                                             con = con)
+    )
     
+    if (class(error) == "try-error"){
+      print("Please increase your P-value cutoff")
+    }
     
   })
 }
