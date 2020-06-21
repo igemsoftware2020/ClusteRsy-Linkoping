@@ -42,7 +42,9 @@ mod_DiffCoEx_ui <- function(id){
     sliderInput(ns("minClusterSize"), label = "Minimum cluster size", min = 0, max = 100, value = 5),
     sliderInput(ns("cut_height"), label = "Maximum joining heights", min = 0, max = 1, value = 0.1),
     sliderInput(ns("pval_cutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05),
+    tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer DiffCoEx module")
+    )
     )
 
 }

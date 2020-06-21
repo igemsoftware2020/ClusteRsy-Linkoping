@@ -31,7 +31,9 @@ mod_MODA_ui <- function(id){
     sliderInput(ns("specificTheta"), label = "Select specific theta", min = 0, max = 1, value = 0.5),
     sliderInput(ns("conservedTheta"), label = "Select conserved theta", min = 0, max = 1, value = 0.5),
     
+    tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer MODA module")
+    )
   )
   
 }

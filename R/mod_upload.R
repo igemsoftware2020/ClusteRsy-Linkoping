@@ -51,7 +51,7 @@ mod_upload_server <- function(input, output, session, input_object, con){
                    colnames(expression_matrix), c(), size = 10, multiple = TRUE),
       shinyWidgets::prettySwitch(ns("adjusted_pvalue"), label = "Pvalue", value = TRUE, status = "warning"),
       shinyWidgets::prettySwitch(ns("quantile_normalization"), label = "Quantile", value = FALSE, status = "warning"),
-      tags$div(style = "text-align:right",
+      tags$div(style = "text-align:center",
       actionButton(ns("create_input"), "Create input object")
       )
     )

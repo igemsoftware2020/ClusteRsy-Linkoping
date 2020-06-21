@@ -18,7 +18,9 @@ mod_DIAMoND_ui <- function(id){
     uiOutput(ns("error")),
     shinyWidgets::prettySwitch(ns("include_seed"), label = "Include seed", value = FALSE, status = "warning"),
     sliderInput(ns("output_genes"), label= "Select maximum number of genes to be included", min = 0, max = 500, value = 250),
-    actionButton(ns("load_input"), "Infer DIAMoND module"),
+    tags$div(style = "text-align:center",
+    actionButton(ns("load_input"), "Infer DIAMoND module")
+    )
   )
 }
     

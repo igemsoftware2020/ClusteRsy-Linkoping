@@ -44,7 +44,7 @@ mod_Columns_server <- function(input, output, session, con){
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     tagList(
     selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "Choose your input method"),
-    tags$div(style = "text-align:right",
+    tags$div(style = "text-align:center",
              actionButton(ns("create_input"), "Create input object")),
     tags$br()
     )

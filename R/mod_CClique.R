@@ -22,8 +22,9 @@ mod_CClique_ui <- function(id){
     numericInput(ns("iteration"), label = "Number of iterations", value = 50, max = 100, min = 0),
     numericInput(ns("n_cores"), label = "Number of cores", value = 3, max = 50, min = 0),
     shinyWidgets::prettySwitch(ns("multiple_cores"), label = "Parallellize iterations", value = TRUE, status = "warning"),
-    actionButton(ns("load_input"), "Infer Correlation clique module"),
-    
+    tags$div(style = "text-align:center",
+    actionButton(ns("load_input"), "Infer Correlation clique module")
+    )
   )
 }
     

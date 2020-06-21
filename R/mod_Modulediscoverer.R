@@ -19,9 +19,9 @@ mod_Modulediscoverer_ui <- function(id){
     sliderInput(ns("repeats"), label = "Repeats", min = 0, max = 30, value = 15),
     sliderInput(ns("clique_cutoff"), label = "P-value cutoff for significant cliques", min = 0, max = 1, value = 0.01),
     numericInput(ns("n_cores"), label = "N cores", value = 4, max = 10, min = 1),
+    tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer Module discoverer module")
-
-
+    )
   )
 }
     

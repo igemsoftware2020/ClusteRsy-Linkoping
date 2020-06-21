@@ -25,7 +25,9 @@ mod_WGCNA_ui <- function(id){
     selectInput(ns("TOMType"), label="Select TOMType", c("None", "Unsigned", "Signed", "Signedtoup Nowick", "Unsigned 2", "Signed 2", "Signed Nowick 2")),
     shinyWidgets::prettySwitch(ns("saveTOMs"), label= "Consensus topological overlap matrices saved and returned", value = TRUE, status = "warning"), 
     sliderInput(ns("maxPOutliers"), label="Maimum percentile outlisers", min=0, max=1, value = 0.1),
-    actionButton(ns("load_input"), "Infer WGCNA trait-based module"),
+    tags$div(style = "text-align:center",
+    actionButton(ns("load_input"), "Infer WGCNA trait-based module")
+    )
   )
 }
     

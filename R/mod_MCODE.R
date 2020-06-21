@@ -78,7 +78,9 @@ mod_MCODE_ui <- function(id){
       value = FALSE,
       status = "warning"
     ),
-    actionButton(ns("load_input"), "Infer MCODE module"),
+    tags$div(style = "text-align:center",
+    actionButton(ns("load_input"), "Infer MCODE module")
+    )
   )
 }
     
