@@ -97,7 +97,7 @@ mod_upload_server <- function(input, output, session, input_object, con){
   
   
   observeEvent(input$create_input, {
-    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE)
+    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
     count_matrix <- as.matrix(upload_expression())
     group1_indici <- match(input$sample_groups[[1]], colnames(count_matrix))
     group2_indici <- match(input$sample_groups[[2]], colnames(count_matrix))
