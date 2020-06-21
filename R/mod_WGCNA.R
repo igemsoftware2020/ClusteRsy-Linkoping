@@ -51,7 +51,6 @@ mod_WGCNA_server <- function(input, output, session, con){
   })
   
   observeEvent(input$load_input, {
-    print(input$numericLabels)
     module_object <- MODifieRDB::wgcna_db(input_name = input$input_object, 
                                           group_of_interest = input$group_of_interest,
                                           minModuleSize = input$minModuleSize,
