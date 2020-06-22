@@ -96,6 +96,7 @@ mod_upload_server <- function(input, output, session, input_object, con){
                                                   normalize_quantiles = normalize_quantiles)
     
     input_name <- input$input_name
+    input_name <- unique(NULL, incomparables = FALSE, MARGIN = 1, fromLast = FALSE, ...)
     
     MODifieRDB::MODifieR_object_to_db(MODifieR_object = input_object,
                                       object_name = input_name,
