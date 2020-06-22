@@ -53,7 +53,7 @@ mod_DIAMoND_server <- function(input, output, session, con){
       output$error_name_js <- renderUI({
         tags$script(HTML("element = document.getElementById('error_name_DIAMoND_js');
                        element.classList.add('has-error');
-                       document.getElementById('main_page_v2_ui_1-Columns_ui_1-Description1_ui_1-DIAMoNDr_ui_1-load_input').disabled = true;"))
+                       document.getElementById('main_page_v2_ui_1-Columns_ui_1-Description1_ui_1-DIAMoND_ui_1-load_input').disabled = true;"))
       })
       output$error_name_descrip <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), "This name has been taken. Please try again!")
