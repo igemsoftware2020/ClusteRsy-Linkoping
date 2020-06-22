@@ -35,12 +35,9 @@ mod_input_overview_server <- function(input, output, session, con){
     print(output$input_overview)
   })
   output$download_module <- downloadHandler(
-    filename = function() {
-      paste(filename = input$input_name,
-            content = NULL,
-            
-            contentType = ".rds")
-    }
+    filename = input$input_name,
+    content = MODifieRDB::MODifieR_input_from_db(""),
+    contentType = ".rds"
   )
 }
 

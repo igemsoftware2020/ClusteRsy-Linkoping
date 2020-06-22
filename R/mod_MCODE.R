@@ -110,6 +110,7 @@ mod_MCODE_server <- function(input, output, session, con){
                                           loops = input$loops,
                                           module_cutoff = input$module_cutoff,
                                           deg_cutoff = input$deg_cutoff,
+                                          module_name = input$module_name,
                                           con = con)
     
     
