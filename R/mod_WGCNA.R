@@ -60,7 +60,7 @@ mod_WGCNA_server <- function(input, output, session, con){
   })
   
   observe({
-    if (any(MODifieRDB::get_available_module_objects(con)$input_name == module_name())){
+    if (any(MODifieRDB::get_available_module_objects(con)$module_name == module_name())){
       output$error_name_js <- renderUI({
         tags$script(HTML("element = document.getElementById('error_name_WGCNA_js');
                        element.classList.add('has-error');
