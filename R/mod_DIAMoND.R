@@ -61,7 +61,7 @@ mod_DIAMoND_server <- function(input, output, session, con){
     } else {
       output$error_name_js <- renderUI({
         tags$script(HTML("document.getElementById('error_name_DIAMoND_js').classList.remove('has-error');
-                         document.getElementById('main_page_v2_ui_1-Columns_ui_1-Description1_ui_1-MDIAMoND_ui_1-load_input').disabled = false;"))
+                         document.getElementById('main_page_v2_ui_1-Columns_ui_1-Description1_ui_1-DIAMoND_ui_1-load_input').disabled = false;"))
       })
       output$error_name_descrip <- NULL
     }
