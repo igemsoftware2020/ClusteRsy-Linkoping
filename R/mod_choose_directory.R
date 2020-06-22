@@ -19,7 +19,7 @@ mod_choose_directory_ui <- function(id){
 #' @noRd 
 mod_choose_directory_server <- function(input, output, session){
   ns <- session$ns
-  shinyDirChoose(input, 'folder', roots=c(wd='.'), filetypes=c('', 'txt'))
+  shinyDirChoose(input$choose_directory , 'folder', roots=c(wd='.'), filetypes=c('.RDS', 'txt'))
 }
     
 ## To be copied in the UI
