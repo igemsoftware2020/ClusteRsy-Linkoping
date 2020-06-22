@@ -38,9 +38,17 @@ mod_module_overview_server <- function(input, output, session, con){
     MODifieRDB::MODifieR_module_from_db(module_objects$module_name[input$module_overview_rows_selected], con = con)
   })
   
+  filename <- reactive({
+    module_objects$module_name[input$module_overview_rows_selected]
+  })
+  
   output$download_module <- downloadHandler(
-    filename = module_objects$module_name[input$module_overview_rows_selected],
-    content = write.csv(module(), file = "./test.rds"),
+    filename = function() {
+      paste(filename(), Sys.Date(), ".rds", sep="")
+    },
+    content = function(file) {
+      saveRDS(object = module(), file = "./.rds")
+    },
     contentType = ".rds"
   )
 }
