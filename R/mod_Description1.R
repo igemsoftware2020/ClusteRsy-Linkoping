@@ -12,7 +12,7 @@ mod_Description1_ui <- function(id){
   tagList(
     tags$div(id = "Inference_method",
              selectInput(ns("Inference_method"), label = "Inference method", 
-                         choices = c("Clique Sum", "WGCNA", "DIAMoND", "DiffCoEx", "MCODE", "MODA", "Module Discoverer", "Correlation Clique"))
+                         choices = c("Clique Sum", "Correlation Clique", "DIAMoND", "DiffCoEx", "MCODE", "MODA", "Module Discoverer", "WGCNA"))
     ),
     htmlOutput(ns("description")),
     tags$br(),

@@ -32,14 +32,7 @@ mod_module_overview_server <- function(input, output, session, con){
     module_objects <- MODifieRDB::get_available_module_objects(con)
     
     output$module_overview <- DT::renderDataTable(module_objects)
-    
-    module <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[input$module_overview_rows_selected], con = con)
-  
-    print(class(module))
   })
-  
-  #test <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[input$module_overview_rows_selected])
-  #test <- function(){module_objects$module_name[input$module_overview_rows_selected]}
   
   module <- reactive({
     MODifieRDB::MODifieR_module_from_db(module_objects$module_name[input$module_overview_rows_selected], con = con)
@@ -47,7 +40,7 @@ mod_module_overview_server <- function(input, output, session, con){
   
   output$download_module <- downloadHandler(
     filename = module_objects$module_name[input$module_overview_rows_selected],
-    content = saveRDS(object = module(), file = "./test.rds"),
+    content = write.csv(module(), file = "./test.rds"),
     contentType = ".rds"
   )
 }

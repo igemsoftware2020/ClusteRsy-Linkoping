@@ -11,7 +11,10 @@ mod_DiffCoEx_ui <- function(id){
   ns <- NS(id)
   tagList(
     uiOutput(ns("input_choice")),
-    textInput(ns("module_name"), "Module object name"),
+    tags$div(id = "error_name_DiffCoEx_js",
+    textInput(ns("module_name"), "Module object name")),
+    uiOutput(ns("error_name_descrip")),
+    uiOutput(ns("error_name_js")),
     radioButtons(ns("clustermethod"), "Select a cluster method:", 
                  choices = c("ward",
                              "single",
@@ -74,6 +77,30 @@ mod_DiffCoEx_server <- function(input, output, session, con){
     selectInput(ns("input_object"), label = "Input object", choices = input_objects)
   })
 
+   module_name <- reactive({
+     input$module_name
+   })
+   
+   observe({
+     if (any(MODifieRDB::get_available_module_objects(con)$input_name == module_name())){
+       output$error_name_js <- renderUI({
+         tags$script(HTML("element = document.getElementById('error_name_DiffCoEx_js');
+                       element.classList.add('has-error');
+                       document.getElementById('main_page_v2_ui_1-Columns_ui_1-Description1_ui_1-DiffCoEx_ui_1-load_input').disabled = true;"))
+       })
+       output$error_name_descrip <- renderUI({
+         tags$p(class = "text-danger", tags$b("Error:"), "This name has been taken. Please try again!")
+       })
+     } else {
+       output$error_name_js <- renderUI({
+         tags$script(HTML("document.getElementById('error_name_DiffCoEx_js').classList.remove('has-error');
+                         document.getElementById('main_page_v2_ui_1-Columns_ui_1-Description1_ui_1-DiffCoEx_ui_1-load_input').disabled = false;"))
+       })
+       output$error_name_descrip <- NULL
+     }
+   }) 
+   
+   
   observeEvent(input$load_input, {
     module_object <- MODifieRDB::diffcoex_db(input_name = input$input_object,
                                           cluster_method = input$cluster_method,
