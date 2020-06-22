@@ -14,7 +14,7 @@ mod_module_overview_ui <- function(id){
     tags$br(),
     tags$br(),
     DT::dataTableOutput(ns("module_overview")),
-    downloadButton(ns("download_module"), "Download"),
+    downloadButton(ns("download_module"), "Download")
   )
 }
 
@@ -44,12 +44,11 @@ mod_module_overview_server <- function(input, output, session, con){
   
   output$download_module <- downloadHandler(
     filename = function() {
-      paste(filename(), Sys.Date(), ".rds", sep="")
+      paste(filename(),"-", Sys.Date(), ".rds", sep="")
     },
     content = function(file) {
-      saveRDS(object = module(), file = "./.rds")
-    },
-    contentType = ".rds"
+      saveRDS(module(), file)
+    }
   )
 }
 
