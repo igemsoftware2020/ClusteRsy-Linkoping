@@ -18,14 +18,18 @@ mod_Columns_ui <- function(id){
                                         tags$span(
                                           class="label", "1",
                                           style = "border-radius: 100%;background-color:#ffbd40")))),
-             htmlOutput(ns("algorithm"))),
+             htmlOutput(ns("algorithm")),
+             ),
     
     # Module containers          
     tags$div(`class`="row",
              tags$div(`class`="col-sm-4",
                       tags$form(class = "well",
                                 `style`="background-color:#2c3e50;",
-                                mod_upload_ui(ns("upload_ui_1")))),
+                                uiOutput(ns("input_choice")),
+                                mod_upload_ui(ns("upload_ui_1"))
+                                ),
+                      ),
              htmlOutput(ns("algorithm1"))))
 }
     
@@ -34,20 +38,40 @@ mod_Columns_ui <- function(id){
 #' @noRd 
 mod_Columns_server <- function(input, output, session, con){
   ns <- session$ns
+  
+  if (length(unlist((MODifieRDB::get_available_input_objects(con)$input_name))) != 0){
+    output$input_choice <- renderUI({
+    input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
+    tagList(
+    selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "Choose your input method"),
+    tags$div(style = "text-align:center",
+             actionButton(ns("create_input"), "Create input object")),
+    tags$br()
+    )
+  })
+  }
+  
+  
+  # Action button for creating input
+  observeEvent(input$create_input, {
+    upload_ui_1$input_object <- input$input_object
+  })
+  
   upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1", con = con)
-  observeEvent(upload_ui_1$module, {
-    MODifieR_module <- upload_ui_1$module
+  
+  observeEvent(upload_ui_1$input_object, {
+    MODifieR_module <- upload_ui_1$input_object
   }
   )
   
   upload_algorithm <- reactive({
-    req((upload_ui_1$module))
-    if (is.null(upload_ui_1$module)){
-      
+    req(upload_ui_1$input_object) 
+    
+    if (is.null(upload_ui_1$input_object)){
       return(NULL)
     }
   })
-  
+
   # Number conainters
   output$algorithm <- renderUI({
     upload_algorithm()
@@ -61,7 +85,7 @@ mod_Columns_server <- function(input, output, session, con){
   
   # Module conatiners
   output$algorithm1 <- renderUI({
-    algoirthm_matrix <- upload_algorithm()
+    upload_algorithm()
     tags$div(`class`="col-sm-4",
              tags$form(class = "well",
                        `style`="background-color:#2c3e50;",

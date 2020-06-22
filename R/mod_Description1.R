@@ -11,7 +11,8 @@ mod_Description1_ui <- function(id){
   ns <- NS(id)
   tagList(
     tags$div(id = "Inference_method",
-             selectInput(ns("Inference_method"), label = "Inference method", choices = c("Clique Sum", "WGCNA", "DIAMoND", "DiffCoEx", "MCODE", "MODA", "Module Discoverer", "Correlation Clique"))
+             selectInput(ns("Inference_method"), label = "Inference method", 
+                         choices = c("Clique Sum", "WGCNA", "DIAMoND", "DiffCoEx", "MCODE", "MODA", "Module Discoverer", "Correlation Clique"))
     ),
     htmlOutput(ns("description")),
     tags$br(),
@@ -30,10 +31,85 @@ mod_Description1_server <- function(input, output, session, con){
   upload_description <- reactive({
     req((input$Inference_method))
     method <- input$Inference_method
+    
+    # Method's description
+    descrip <- function(method){
+      if (method == "Clique Sum"){
+        description = "This is Clique Sum"
+        return(description)
+      }
+      if (method == "WGCNA"){
+        description = "This is WGCNA"
+        return(description)
+      }
+      if (method == "DIAMoND"){
+        description = "This is DIAMoND"
+        return(description)
+      }
+      if (method == "DiffCoEx"){
+        description = "This is DiffCoEx"
+        return(description)
+      }
+      if (method == "MCODE"){
+        description = "This is MCODE"
+        return(description)
+      }
+      if (method == "MODA"){
+        description = "This is MODA"
+        return(description)
+      }
+      if (method == "Module Discoverer"){
+        description = "This is Module Discoverer"
+        return(description)
+      }
+      if (method == "Correlation Clique"){
+        description = "This is Correlation Clique"
+        return(description)
+      }
+    }
+    
+    # Method's link
+    hyperlink <- function(method){
+      if (method == "Clique Sum"){
+        link = "https://www.google.com/"
+        return(link)
+      }
+      if (method == "WGCNA"){
+        link = "https://www.google.com/"
+        return(link)
+      }
+      if (method == "DIAMoND"){
+        link = "https://www.google.com/"
+        return(link)
+      }
+      if (method == "DiffCoEx"){
+        link = "https://www.google.com/"
+        return(link)
+      }
+      if (method == "MCODE"){
+        link = "https://www.google.com/"
+        return(link)
+      }
+      if (method == "MODA"){
+        link = "https://www.google.com/"
+        return(link)
+      }
+      if (method == "Module Discoverer"){
+        link = "https://www.google.com/"
+        return(link)
+      }
+      if (method == "Correlation Clique"){
+        link = "https://www.google.com/"
+        return(link)
+      }
+    }
+    
+    
     if (is.null(method)){
       return(NULL)
     }
     
+    #Popup Modal
     if (method %in% c("Clique Sum", "WGCNA", "DIAMoND", "DiffCoEx", "MCODE", "MODA", "Module Discoverer", "Correlation Clique")){
       description <- tagList(tags$button(paste("Click me to learn more about ", method),
                                  id = "method",
@@ -48,10 +124,10 @@ mod_Description1_server <- function(input, output, session, con){
                                                                 tags$button("×", type = "button", class = "close", `data-dismiss` = "modal", `aria-hidden` = "true"),
                                                                 tags$h4(method ,class = "modal-title", style = "color: black")),
                                                         tags$div(`class` = "modal-body",
-                                                                  tags$p(paste(method,"'s description"), style = "color: black")),
+                                                                  tags$p(descrip(method = method), style = "color: black")),
                                                         tags$div(`class` = "modal-footer",
                                                                   tags$button("Close", class = "btn btn-default", `data-dismiss` = "modal"),
-                                                                  tags$a("Learn more", class= "btn btn-default", href="https://bootswatch.com/flatly/", style = "background-color: #2c3e50; border-color: #2c3e50"))))))
+                                                                  tags$a("Learn more", class= "btn btn-default", href=hyperlink(method = method), style = "background-color: #2c3e50; border-color: #2c3e50"))))))
       return(description)
     }
   }
@@ -67,14 +143,14 @@ mod_Description1_server <- function(input, output, session, con){
     method <- input$Inference_method
     
     if(method == "Clique Sum"){
-      output$method <- renderUI({mod_Cliquesum_ui(ns("Cliquesum_ui_1"))
+      output$method <- renderUI({mod_CliqueSum_ui(ns("CliqueSum_ui_1"))
       })
+      callModule(mod_CliqueSum_server, "CliqueSum_ui_1", con = con) 
     }
     
     if(method == "WGCNA"){
       output$method <- renderUI({mod_WGCNA_ui(ns("WGCNA_ui_1"))
       })
-      print("Hello World")
       callModule(mod_WGCNA_server, "WGCNA_ui_1", con = con)
     }
     
@@ -116,7 +192,7 @@ mod_Description1_server <- function(input, output, session, con){
   }
   )
   
-  #  callModule(mod_Cliquesum_server, "Cliquesum_ui_1")
+  
 }
 
 

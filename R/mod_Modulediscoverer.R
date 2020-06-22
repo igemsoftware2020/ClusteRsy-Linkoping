@@ -15,11 +15,13 @@ mod_Modulediscoverer_ui <- function(id){
     textInput(ns("module_name"), "Module object name"), 
     sliderInput(ns("permutations"), label= "Permutations", min = 0, max = 10000, value = 5000),
     sliderInput(ns("deg_cutoff"), label = "P-value cutoff for differentialy expressed genes", min = 0, max = 1, value = 0.05),
+    uiOutput(ns("error")),
     sliderInput(ns("repeats"), label = "Repeats", min = 0, max = 30, value = 15),
     sliderInput(ns("clique_cutoff"), label = "P-value cutoff for significant cliques", min = 0, max = 1, value = 0.01),
+    numericInput(ns("n_cores"), label = "N cores", value = 4, max = 10, min = 1),
+    tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer Module discoverer module")
-
-
+    )
   )
 }
     
@@ -39,15 +41,23 @@ mod_Modulediscoverer_server <- function(input, output, session, con){
   })
  
    observeEvent(input$load_input, {
-    module_object <- MODifieRDB::modulediscoverer(input_name = input$input_object, 
+    output$error <- NULL # I CANNOT REMOVE THIS BUG, SO THIS IS A FEATURE NOW :)
+    error <- try(module_object <- MODifieRDB::modulediscoverer_db(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
                                           permutations = input$permutations,
                                           deg_cutoff = input$deg_cutoff,
                                           repeats = input$repeats,
                                           clique_cutoff = input$clique_cutoff,
                                           module_name = input$module_name,
-                                          repeats = input$repeats)
+                                          n_cores = input$n_cores,
+                                          con = con)
+                 )
     
+    if (class(error) == "try-error"){
+      output$error <- renderUI({
+        tags$p(class = "text-danger", tags$b("Error:"), "Please increase your P-value cutoff")
+      })
+    }
     
   })
 }

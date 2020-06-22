@@ -5922,18 +5922,26 @@ button.close {
 .tooltip.top {
   padding: 5px 0;
   margin-top: -3px;
+  background-color: inherit;
+  width: fit-content;
 }
 .tooltip.right {
   padding: 0 5px;
   margin-left: 3px;
+  background-color: inherit;
+  width: fit-content;
 }
 .tooltip.bottom {
   padding: 5px 0;
   margin-top: 3px;
+  background-color: inherit;
+  width: fit-content;
 }
 .tooltip.left {
   padding: 0 5px;
   margin-left: -3px;
+  background-color: inherit;
+  width: fit-content;
 }
 .tooltip.top .tooltip-arrow {
   bottom: 0;

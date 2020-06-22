@@ -11,7 +11,8 @@ mod_upload_ui <- function(id){
   ns <- NS(id)
   tagList(
     fileInput(ns("expression_matrix"), label = "Upload an expression matrix"),
-    uiOutput(ns("sample_chooser"))
+    uiOutput(ns("sample_chooser")),
+    htmlOutput(ns("i_name"))
   )
 }
 
@@ -43,19 +44,43 @@ mod_upload_server <- function(input, output, session, input_object, con){
   
   output$sample_chooser <- renderUI({
     expression_matrix <- upload_expression()
-    tagList( 
-      textInput(ns("input_name"), "Input object name"),
+    tagList(
+      tags$div(id = "i_name",
+      textInput(ns("input_name"), "Input object name")),
+      htmlOutput(ns("error")),
       textInput(ns("group1"), "Group 1 label"),
       textInput(ns("group2"), "Group 2 label"),
       chooserInput(ns("sample_groups"), "Available frobs", "Selected frobs", 
                    colnames(expression_matrix), c(), size = 10, multiple = TRUE),
       shinyWidgets::prettySwitch(ns("adjusted_pvalue"), label = "Pvalue", value = TRUE, status = "warning"),
       shinyWidgets::prettySwitch(ns("quantile_normalization"), label = "Quantile", value = FALSE, status = "warning"),
-      tags$div(style = "text-align:right",
+      tags$div(style = "text-align:center",
       actionButton(ns("create_input"), "Create input object")
       )
     )
   })
+  
+  i_name <- reactive({
+    input$input_name
+  })
+  
+  observe({
+    if (any(MODifieRDB::get_available_input_objects(con)$input_name == i_name())){
+    output$i_name <- renderUI({
+      tags$script(HTML("element = document.getElementById('i_name');
+                       element.classList.add('has-error');"))
+      })
+    output$error <- renderUI({
+      tags$p(class = "text-danger", tags$b("Error:"), "This name has been taken. Please try again!")
+    })
+    } else {
+      output$i_name <- renderUI({
+        tags$script(HTML("document.getElementById('i_name').classList.remove('has-error');"))
+      })
+      
+      output$error <- NULL
+  }
+    })
   
   group1_label_r <- reactive({
     input$group1
@@ -65,18 +90,14 @@ mod_upload_server <- function(input, output, session, input_object, con){
     input$group2
   })
   
-  output$current_groups <- renderPrint({
-    groups <- input$sample_groups
-    names(groups) <- c(group1_label_r(), group2_label_r())
-    groups
-  })
-  
   output$fileUploaded <- reactive({
     return(!is.null(upload_expression()))
   })
   
+  
+  
   observeEvent(input$create_input, {
-    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE)
+    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
     count_matrix <- as.matrix(upload_expression())
     group1_indici <- match(input$sample_groups[[1]], colnames(count_matrix))
     group2_indici <- match(input$sample_groups[[2]], colnames(count_matrix))
@@ -102,7 +123,7 @@ mod_upload_server <- function(input, output, session, input_object, con){
                                       con = con)
     
     
-    MODifieR_module$module <- input_object
+    MODifieR_module$input_object <- input_object
   })
   
   

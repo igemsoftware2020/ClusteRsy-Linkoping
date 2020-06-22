@@ -11,11 +11,10 @@ mod_MODA_ui <- function(id){
   ns <- NS(id)
   tagList(
     uiOutput(ns("input_choice")),
-    uiOutput(ns("ppi_choice")),
     textInput(ns("module_name"), "Module object name"),
     radioButtons(
-      ns("group_of_intrest"),
-      label = "Group of Intrest",
+      ns("group_of_interest"),
+      label = "Group of Interest",
       choices = c( 1, 2),
       selected = 1,
       inline = T,
@@ -24,15 +23,17 @@ mod_MODA_ui <- function(id){
     radioButtons(
       ns("cutmethod"),
       label = "Cutmethod",
-      choices = list("Density" = 1, "Modularity" = 2),
-      selected = 1,
+      choices = c("Density", "Modularity"),
+      selected = "Density",
       inline = T,
     ),
     
     sliderInput(ns("specificTheta"), label = "Select specific theta", min = 0, max = 1, value = 0.5),
     sliderInput(ns("conservedTheta"), label = "Select conserved theta", min = 0, max = 1, value = 0.5),
     
+    tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer MODA module")
+    )
   )
   
 }
@@ -48,22 +49,14 @@ mod_MODA_server <- function(input, output, session, con){
     selectInput(ns("input_object"), label = "Input object", choices = input_objects)
   })
   
-  output$ppi_choice <- renderUI({
-    ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
-    selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks)
-  })
   observeEvent(input$load_input, {
     module_object <- MODifieRDB::moda_db(input_name = input$input_object, 
-                                          ppi_name = input$ppi_object, 
-                                          deg_cutoff = .98, 
-                                          group_of_interest = input$group_of_intrest,
+                                          group_of_interest = as.numeric(input$group_of_interest),
                                           cutmethod = input$cutmethod,
                                           specificTheta = input$specificTheta,
                                           conservedTheta = input$conservedTheta,
                                           module_name = input$module_name,
                                           con = con)
-    
-    
   })
 }
     
