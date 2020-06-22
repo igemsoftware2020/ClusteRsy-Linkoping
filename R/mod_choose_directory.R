@@ -10,7 +10,7 @@
 mod_choose_directory_ui <- function(id){
   ns <- NS(id)
   tagList(
-    shinyDirButton(ns("choose_directory"),'Save file', FALSE)
+    shinyDirButton(ns("choose_directory"), 'Save file', title = "Save file")
   )
 }
     
@@ -19,7 +19,7 @@ mod_choose_directory_ui <- function(id){
 #' @noRd 
 mod_choose_directory_server <- function(input, output, session){
   ns <- session$ns
-  shinyDirChoose(input$choose_directory , 'folder', roots=c(wd='.'), filetypes=c('.RDS', 'txt'))
+  shinyDirChoose(input, 'choose_directory', roots=c(wd='.'), filetypes=c('.RDS', 'txt'), session = session)
 }
     
 ## To be copied in the UI
