@@ -102,6 +102,8 @@ mod_DiffCoEx_server <- function(input, output, session, con){
    
    
   observeEvent(input$load_input, {
+    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
+    on.exit(removeNotification(id), add = TRUE)
     module_object <- MODifieRDB::diffcoex_db(input_name = input$input_object,
                                           cluster_method = input$cluster_method,
                                           cor_method = input$cor_method,
@@ -117,6 +119,7 @@ mod_DiffCoEx_server <- function(input, output, session, con){
     
     
   })
+
 }
     
 ## To be copied in the UI

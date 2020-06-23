@@ -77,6 +77,8 @@ mod_MODA_server <- function(input, output, session, con){
   
   
   observeEvent(input$load_input, {
+    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
+    on.exit(removeNotification(id), add = TRUE)
     module_object <- MODifieRDB::moda_db(input_name = input$input_object, 
                                           group_of_interest = as.numeric(input$group_of_interest),
                                           cutmethod = input$cutmethod,

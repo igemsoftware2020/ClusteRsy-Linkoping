@@ -48,11 +48,12 @@ mod_MCODE_ui <- function(id){
       label = "P-value cutoff",
       min = 0.0,
       max = 1.0,
-      value = 0.5,
+      value = 0.05,
       step = 0.01,
       round = T,
       ticks = T
     ),
+    uiOutput(ns("error_p_value")),
     sliderInput(
       ns("module_cutoff"),
       label = "Minimal score for a module to be returned",
@@ -125,9 +126,13 @@ mod_MCODE_server <- function(input, output, session, con){
       output$error_name_descrip <- NULL
     }
   })
+            
   
   observeEvent(input$load_input, {
-    module_object <- MODifieRDB::mcode_db(input_name = input$input_object, 
+    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
+    on.exit(removeNotification(id), add = TRUE)
+    output$error_p_value <- NULL 
+    module_object <- try(MODifieRDB::mcode_db(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
                                           hierarchy = as.numeric(input$hierarchy),
                                           vwp = input$vwp,
@@ -138,9 +143,17 @@ mod_MCODE_server <- function(input, output, session, con){
                                           deg_cutoff = input$deg_cutoff,
                                           module_name = input$module_name,
                                           con = con)
+                         )
+    if (class(module_object) == "try-error"){
+        output$error_p_value <- renderUI({
+          tags$p(class = "text-danger", tags$b("Error:"), module_object)
+        })
+      }
+    }
     
     
-  })
+  )
+
 }
     
 ## To be copied in the UI

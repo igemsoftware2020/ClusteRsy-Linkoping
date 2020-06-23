@@ -156,6 +156,8 @@ mod_WGCNA_server <- function(input, output, session, con){
   }) 
   
   observeEvent(input$load_input, {
+    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
+    on.exit(removeNotification(id), add = TRUE)
     module_object <- MODifieRDB::wgcna_db(input_name = input$input_object, 
                                           group_of_interest = input$group_of_interest,
                                           minModuleSize = input$minModuleSize,
@@ -172,8 +174,6 @@ mod_WGCNA_server <- function(input, output, session, con){
                                           module_name = input$module_name,
                                           con = con)
   })
-  
-  
   
 }
     

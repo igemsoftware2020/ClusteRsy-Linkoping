@@ -71,6 +71,8 @@ mod_CClique_server <- function(input, output, session, con){
   })
   
   observeEvent(input$load_input, {
+    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
+    on.exit(removeNotification(id), add = TRUE)
     output$error_p_value <- NULL # I CANNOT REMOVE THIS BUG, SO THIS IS A FEATURE NOW :)
     module_object <- try(MODifieRDB::correlation_clique_db(input_name = input$input_object, 
                                                           ppi_name = input$ppi_object, 
@@ -88,13 +90,12 @@ mod_CClique_server <- function(input, output, session, con){
     
     
     if (class(module_object) == "try-error"){
-      if(grepl("No differentially expressed genes below 0.05",module_object[1])){
       output$error_p_value <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), "Please increase your P-value cutoff")
+        tags$p(class = "text-danger", tags$b("Error:"), module_object)
       })
       }
       }
-  })
+  )
   }
     
 ## To be copied in the UI
