@@ -40,7 +40,7 @@ mod_WGCNA_ui <- function(id){
       value=2, 
       popup = "An integer value between 0 and 4 which provides a simplified control over the module detection sensitivity for the module splitting. 0 is the least sensitive and 4 is the most sensitive."),
     
-    shinyWidgets::prettySwitch(
+    prettySwitch(
       ns("pamRespectsDendro"), 
       label= "Select pamStage", 
       value=FALSE, status = "warning", 
@@ -90,7 +90,7 @@ mod_WGCNA_ui <- function(id){
       c("None", "Unsigned", "Signed", "Signedtoup Nowick", "Unsigned 2", "Signed 2", "Signed Nowick 2"), 
       popup = "The type of consensus topological overlap matrices."),
     
-    shinyWidgets::prettySwitch(
+    prettySwitch(
       ns("saveTOMs"), 
       label= "Consensus topological overlap matrices saved and returned", 
       value = FALSE, 
