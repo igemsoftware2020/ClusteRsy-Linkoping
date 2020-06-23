@@ -10,8 +10,8 @@
 mod_CliqueSum_ui <- function(id){
   ns <- NS(id)
   tagList(
-    uiOutput(ns("parameters")),
-    uiOutput(ns("build_clique"))
+          uiOutput(ns("parameters")),
+          uiOutput(ns("build_clique"))
   )
 }
 
@@ -37,7 +37,7 @@ mod_CliqueSum_server <- function(input, output, session, con){
         numericInput(ns("min_clique_size"), label = "Minimal clique size", value = 2, max = 50, min = 2),
         numericInput(ns("n_iterations"), label = "Iterations", value = 500, max = 10000, min = 0),
         tags$div(style = "text-align:center",
-        actionButton(ns("load_input"), label = "Infer Clique Sum module")
+                 actionButton(ns("load_input"), label = "Infer Clique Sum module")
         )
       )
     })
