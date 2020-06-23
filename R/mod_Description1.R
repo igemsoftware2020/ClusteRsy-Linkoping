@@ -39,7 +39,7 @@ mod_Description1_server <- function(input, output, session, con){
         return(description)
       }
       if (method == "WGCNA"){
-        description = "This is WGCNA"
+        description = "WGCNA trait-based is an implementation of WGCNA to correlate coexpression modules to disease."
         return(description)
       }
       if (method == "DIAMoND"){
