@@ -38,6 +38,12 @@ mod_MODA_ui <- function(id){
     actionButton(ns("load_input"), "Infer MODA module")
     )
   )
+  observeEvent(input$load_input, {
+    id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
+    on.exit(removeNotification(id), add = TRUE
+            
+    )}
+  )
   
 }
     

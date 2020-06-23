@@ -87,6 +87,12 @@ mod_Modulediscoverer_server <- function(input, output, session, con){
       }
     }
   })
+   observeEvent(input$load_input, {
+     id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
+     on.exit(removeNotification(id), add = TRUE
+             
+     )}
+   )
 }
     
 ## To be copied in the UI

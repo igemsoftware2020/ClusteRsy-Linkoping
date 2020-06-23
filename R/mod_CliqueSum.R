@@ -105,6 +105,13 @@ if (nrow(MODifieRDB::get_available_db_networks(con)) != 0 ) {
                                                 con = con)
     
   })
+  observeEvent(input$load_input, {
+    id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
+    on.exit(removeNotification(id), add = TRUE
+            
+    )}
+  )
+  
 }
     
 ## To be copied in the UI
