@@ -13,7 +13,7 @@ mod_MCODE_ui <- function(id){
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
     tags$div(id = "error_name_MCODE_js",
-    textInput(ns("module_name"), "Module object name")),
+    textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods.")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
     radioButtons(
@@ -21,7 +21,8 @@ mod_MCODE_ui <- function(id){
         label = "Hierarchy",
         choices= c(1, 2, 3),
         selected = 1,
-        inline = T
+        inline = T,
+        popup = "Indicates how many hierarchies are included in the network."
     ),
     sliderInput(
       ns("vwp"),
@@ -31,7 +32,8 @@ mod_MCODE_ui <- function(id){
       value = 0.5,
       step = 0.01,
       round = T,
-      ticks = T
+      ticks = T,
+      popup = "Threshold for the inclusion of vertices, as a percentage of the vertex with the maximum weight."
     ),
     sliderInput(
       ns("fdt"),
@@ -41,7 +43,8 @@ mod_MCODE_ui <- function(id){
       value = 0.5,
       step = 0.01,
       round = T,
-      ticks = T
+      ticks = T,
+      popup = "Threshold for cluster density cutoff."
     ),
     sliderInput(
       ns("deg_cutoff"),
@@ -51,7 +54,8 @@ mod_MCODE_ui <- function(id){
       value = 0.05,
       step = 0.01,
       round = T,
-      ticks = T
+      ticks = T,
+      popup = "P-value cutoff for differentially expressed genes."
     ),
     uiOutput(ns("error_p_value")),
     sliderInput(
@@ -62,25 +66,29 @@ mod_MCODE_ui <- function(id){
       value = 0.5,
       step = 0.01,
       round = T,
-      ticks = T
+      ticks = T,
+      popup = "Threshold for modules to be returned."
     ),
-    shinyWidgets::prettySwitch(
+    prettySwitch(
       ns("haircut"),
       label = "Haircut",
       value = FALSE,
-      status = "warning"
+      status = "warning",
+      popup = "Remove singly-connected nodes from clusters."
     ),
-    shinyWidgets::prettySwitch(
+    prettySwitch(
       ns("fluff"),
       label = "Fluff",
       value = FALSE,
-      status = "warning"
+      status = "warning",
+      popup = "Expand cluster shell outwards by one neighbour shell."
     ),
-    shinyWidgets::prettySwitch(
+    prettySwitch(
       ns("loops"),
       label = "Loops",
       value = FALSE,
-      status = "warning"
+      status = "warning",
+      popup = "Include self-loops."
     ),
     tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer MCODE module")
@@ -96,12 +104,12 @@ mod_MCODE_server <- function(input, output, session, con){
  
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
-    selectInput(ns("input_object"), label = "Input object", choices = input_objects)
+    selectInput(ns("input_object"), label = "Input object", choices = input_objects,popup = "The input used for analyzation.")
   })
   
   output$ppi_choice <- renderUI({
     ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
-    selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks)
+    selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks, popup = "Protein-Protein interaction network to overlay the differentially expressed genes on.")
   })
   
   module_name <- reactive({
