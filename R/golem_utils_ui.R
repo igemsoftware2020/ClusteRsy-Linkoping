@@ -295,7 +295,7 @@ col_1 <- function(...){
 }
 
 #' Modified shiny textInput func
-textInput1 <- function(inputId, label, value = "", width = NULL,
+textInput <- function(inputId, label, value = "", width = NULL,
          placeholder = NULL, tooltip = T, title = "?", popup = "Help tips", pos = "right") {
   
   value <- restoreInput(id = inputId, default = value)
@@ -325,7 +325,7 @@ textInput1 <- function(inputId, label, value = "", width = NULL,
 }
 
 #' Modified shiny numericInput func
-numericInput1 <- function(inputId, label, value, min = NA, max = NA, step = NA,
+numericInput <- function(inputId, label, value, min = NA, max = NA, step = NA,
                          width = NULL,  tooltip = T, title = "?", popup = "Help tips", pos = "right") {
   
   value <- restoreInput(id = inputId, default = value)
@@ -364,7 +364,7 @@ numericInput1 <- function(inputId, label, value, min = NA, max = NA, step = NA,
 }
 
 #' Modified shiny fileInput func
-fileInput1 <- function(inputId, label, multiple = FALSE, accept = NULL,
+fileInput <- function(inputId, label, multiple = FALSE, accept = NULL,
 width = NULL, buttonLabel = "Browse...", placeholder = "No file selected",
 tooltip = T, title = "?", popup = "Help tips", pos = "right") {
   
@@ -435,7 +435,7 @@ tooltip = T, title = "?", popup = "Help tips", pos = "right") {
 }
 
 #' Modified shiny radioButtons func
-radioButtons1 <- function(inputId, label, choices = NULL, selected = NULL,
+radioButtons <- function(inputId, label, choices = NULL, selected = NULL,
                          inline = FALSE, width = NULL, choiceNames = NULL, choiceValues = NULL,
                          tooltip = T, title = "?", popup = "Help tips", pos = "right") {
   
@@ -479,7 +479,7 @@ radioButtons1 <- function(inputId, label, choices = NULL, selected = NULL,
 }
 
 #' Modified shiny sliderInput func
-sliderInput1 <- function(inputId, label, min, max, value, step = NULL,
+sliderInput <- function(inputId, label, min, max, value, step = NULL,
                         round = FALSE, format = NULL, locale = NULL,
                         ticks = TRUE, animate = FALSE, width = NULL, sep = ",",
                         pre = NULL, post = NULL, timeFormat = NULL,
@@ -643,7 +643,7 @@ sliderInput1 <- function(inputId, label, min, max, value, step = NULL,
 }
 
 #' Modified shiny sliderInput func
-selectInput1 <- function(inputId, label, choices, selected = NULL,
+selectInput <- function(inputId, label, choices, selected = NULL,
                         multiple = FALSE, selectize = TRUE, width = NULL,
                         size = NULL,  tooltip = T, title = "?", popup = "Help tips", pos = "right") {
   
@@ -698,11 +698,48 @@ selectInput1 <- function(inputId, label, choices, selected = NULL,
   
   if (!selectize) return(res)
   
-  shiny:::selectizeIt(inputId, res, NULL, nonempty = !multiple && !("" %in% choices))
+  selectizeIt(inputId, res, NULL, nonempty = !multiple && !("" %in% choices))
 }
 
+selectizeIt <- function(inputId, select, options, nonempty = FALSE) {
+  res <- shiny:::checkAsIs(options)
+  
+  selectizeDep <- htmltools::htmlDependency(
+    "selectize", "0.11.2", c(href = "shared/selectize"),
+    stylesheet = "css/selectize.bootstrap3.css",
+    head = format(tagList(
+      HTML('<!--[if lt IE 9]>'),
+      tags$script(src = 'shared/selectize/js/es5-shim.min.js'),
+      HTML('<![endif]-->'),
+      tags$script(src = 'shared/selectize/js/selectize.min.js')
+    ))
+  )
+  
+  if ('drag_drop' %in% options$plugins) {
+    selectizeDep <- list(selectizeDep, htmltools::htmlDependency(
+      'jqueryui', '1.12.1', c(href = 'shared/jqueryui'),
+      script = 'jquery-ui.min.js'
+    ))
+  }
+  
+  
+  # Insert script on same level as <select> tag
+  select$children[[3]] <- tagAppendChild(
+    select$children[[3]],
+    tags$script(
+      type = 'application/json',
+      `data-for` = inputId, `data-nonempty` = if (nonempty) '',
+      `data-eval` = if (length(res$eval)) HTML(toJSON(res$eval)),
+      if (length(res$options)) HTML(toJSON(res$options)) else '{}'
+    )
+  )
+  
+  htmltools::attachDependencies(select, selectizeDep)
+}
+
+
 #' Modified shinyWidgets prettySwitch func
-prettySwitch1 <- function(inputId, label, value = FALSE, status = "default",
+prettySwitch <- function(inputId, label, value = FALSE, status = "default",
                          slim = FALSE, fill = FALSE, bigger = FALSE,
                          inline = FALSE, width = NULL,  tooltip = T, title = "?",
                          popup = "Help tips", pos = "right") {
