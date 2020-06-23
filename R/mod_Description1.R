@@ -99,7 +99,7 @@ mod_Description1_server <- function(input, output, session, con){
         return(link)
       }
       if (method == "Correlation Clique"){
-        link = "https://www.youtube.com/watch?v=oHg5SJYRHA0"
+        link = "https://www.google.com/"
         return(link)
       }
     }
