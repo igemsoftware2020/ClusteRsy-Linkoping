@@ -90,13 +90,12 @@ mod_CClique_server <- function(input, output, session, con){
     
     
     if (class(module_object) == "try-error"){
-      if(grepl("No differentially expressed genes below 0.05",module_object[1])){
       output$error_p_value <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), "Please increase your P-value cutoff")
+        tags$p(class = "text-danger", tags$b("Error:"), module_object)
       })
       }
       }
-  })
+  )
   }
     
 ## To be copied in the UI
