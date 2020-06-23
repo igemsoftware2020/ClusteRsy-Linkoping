@@ -48,7 +48,7 @@ mod_MCODE_ui <- function(id){
       label = "P-value cutoff",
       min = 0.0,
       max = 1.0,
-      value = 0.5,
+      value = 0.05,
       step = 0.01,
       round = T,
       ticks = T
