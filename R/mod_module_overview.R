@@ -34,22 +34,28 @@ mod_module_overview_server <- function(input, output, session, con){
     output$module_overview <- DT::renderDataTable(module_objects)
   })
   
-  module <- reactive({
-    MODifieRDB::MODifieR_module_from_db(module_objects$module_name[input$module_overview_rows_selected], con = con)
-  })
-  
-  filename <- reactive({
-    module_objects$module_name[input$module_overview_rows_selected]
-  })
-  
   output$download_module <- downloadHandler(
     filename = function() {
-      paste(filename(),"-", Sys.Date(), ".rds", sep="")
+      paste0("module_set", Sys.Date(), ".rds", sep="")
     },
     content = function(file) {
-      saveRDS(module(), file)
+      saveRDS(retrieve_module(), file)
     }
   )
+  
+  current_modules <- function() {
+    module_objects$module_name[input$module_overview_rows_selected]
+  }
+  
+  
+  retrieve_module <- function(){
+    if (length(input$module_overview_rows_selected) > 1){
+      lapply(current_modules(), MODifieRDB::MODifieR_module_from_db, con = con)
+    } else {
+      MODifieRDB::MODifieR_module_from_db(module_objects$module_name[input$module_overview_rows_selected], con = con)
+    }
+    
+  }
 }
 
 ## To be copied in the UI
