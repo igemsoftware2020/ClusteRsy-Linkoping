@@ -294,6 +294,463 @@ col_1 <- function(...){
   column(1, ...)
 }
 
+#' Modified shiny textInput func
+textInput1 <- function(inputId, label, value = "", width = NULL,
+         placeholder = NULL, tooltip = T, title = "?", popup = "Help tips", pos = "right") {
+  
+  value <- restoreInput(id = inputId, default = value)
+  
+  div(class = "form-group shiny-input-container",
+      style = if (!is.null(width)) paste0("width: ", validateCssUnit(width), ";"),
+      shiny:::shinyInputLabel(inputId, label),
+      if (tooltip){
+        tags$span(
+          tags$button(
+            style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; border:none",
+            class = "badge badge-pill badge-warning",
+            type = "button",
+            `data-toggle` = "tooltip",
+            `data-placement` = pos,
+            `data-original-title` = popup,
+            tabindex = "1",
+            title
+          ),
+          tags$script(HTML("
+    $('[data-toggle=\"tooltip\"]').tooltip(); 
+  ")))
+      },
+      tags$input(id = inputId, type="text", class="form-control", value=value,
+                 placeholder = placeholder)
+  )
+}
+
+#' Modified shiny numericInput func
+numericInput1 <- function(inputId, label, value, min = NA, max = NA, step = NA,
+                         width = NULL,  tooltip = T, title = "?", popup = "Help tips", pos = "right") {
+  
+  value <- restoreInput(id = inputId, default = value)
+  
+  # build input tag
+  inputTag <- tags$input(id = inputId, type = "number", class="form-control",
+                         value = shiny:::formatNoSci(value))
+  if (!is.na(min))
+    inputTag$attribs$min = min
+  if (!is.na(max))
+    inputTag$attribs$max = max
+  if (!is.na(step))
+    inputTag$attribs$step = step
+  
+  div(class = "form-group shiny-input-container",
+      style = if (!is.null(width)) paste0("width: ", validateCssUnit(width), ";"),
+      shiny:::shinyInputLabel(inputId, label),
+      if (tooltip){
+        tags$span(
+          tags$button(
+            style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; border:none",
+            class = "badge badge-pill badge-warning",
+            type = "button",
+            `data-toggle` = "tooltip",
+            `data-placement` = pos,
+            `data-original-title` = popup,
+            tabindex = "1",
+            title
+          ),
+          tags$script(HTML("
+    $('[data-toggle=\"tooltip\"]').tooltip(); 
+  ")))
+      },
+      inputTag
+  )
+}
+
+#' Modified shiny fileInput func
+fileInput1 <- function(inputId, label, multiple = FALSE, accept = NULL,
+width = NULL, buttonLabel = "Browse...", placeholder = "No file selected",
+tooltip = T, title = "?", popup = "Help tips", pos = "right") {
+  
+  restoredValue <- restoreInput(id = inputId, default = NULL)
+  
+  # Catch potential edge case - ensure that it's either NULL or a data frame.
+  if (!is.null(restoredValue) && !is.data.frame(restoredValue)) {
+    warning("Restored value for ", inputId, " has incorrect format.")
+    restoredValue <- NULL
+  }
+  
+  if (!is.null(restoredValue)) {
+    restoredValue <- toJSON(restoredValue, strict_atomic = FALSE)
+  }
+  
+  inputTag <- tags$input(
+    id = inputId,
+    name = inputId,
+    type = "file",
+    style = "display: none;",
+    `data-restore` = restoredValue
+  )
+  
+  if (multiple)
+    inputTag$attribs$multiple <- "multiple"
+  if (length(accept) > 0)
+    inputTag$attribs$accept <- paste(accept, collapse=',')
+  
+  
+  div(class = "form-group shiny-input-container",
+      style = if (!is.null(width)) paste0("width: ", validateCssUnit(width), ";"),
+      shiny:::shinyInputLabel(inputId, label),
+      if (tooltip){
+        tags$span(
+          tags$button(
+            style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; border:none",
+            class = "badge badge-pill badge-warning",
+            type = "button",
+            `data-toggle` = "tooltip",
+            `data-placement` = pos,
+            `data-original-title` = popup,
+            tabindex = "1",
+            title
+          ),
+          tags$script(HTML("
+    $('[data-toggle=\"tooltip\"]').tooltip(); 
+  ")))
+      },
+      
+      div(class = "input-group",
+          tags$label(class = "input-group-btn",
+                     span(class = "btn btn-default btn-file",
+                          buttonLabel,
+                          inputTag
+                     )
+          ),
+          tags$input(type = "text", class = "form-control",
+                     placeholder = placeholder, readonly = "readonly"
+          )
+      ),
+      
+      tags$div(
+        id=paste(inputId, "_progress", sep=""),
+        class="progress progress-striped active shiny-file-input-progress",
+        tags$div(class="progress-bar")
+      )
+  )
+}
+
+#' Modified shiny radioButtons func
+radioButtons1 <- function(inputId, label, choices = NULL, selected = NULL,
+                         inline = FALSE, width = NULL, choiceNames = NULL, choiceValues = NULL,
+                         tooltip = T, title = "?", popup = "Help tips", pos = "right") {
+  
+  args <- shiny:::normalizeChoicesArgs(choices, choiceNames, choiceValues)
+  
+  selected <- restoreInput(id = inputId, default = selected)
+  
+  # default value if it's not specified
+  selected <- if (is.null(selected)) args$choiceValues[[1]] else as.character(selected)
+  
+  if (length(selected) > 1) stop("The 'selected' argument must be of length 1")
+  
+  options <- shiny:::generateOptions(inputId, selected, inline,
+                             'radio', args$choiceNames, args$choiceValues)
+  
+  divClass <- "form-group shiny-input-radiogroup shiny-input-container"
+  if (inline) divClass <- paste(divClass, "shiny-input-container-inline")
+  
+  tags$div(id = inputId,
+           style = if (!is.null(width)) paste0("width: ", validateCssUnit(width), ";"),
+           class = divClass,
+           shiny:::shinyInputLabel(inputId, label),
+           if (tooltip){
+             tags$span(
+               tags$button(
+                 style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; border:none",
+                 class = "badge badge-pill badge-warning",
+                 type = "button",
+                 `data-toggle` = "tooltip",
+                 `data-placement` = pos,
+                 `data-original-title` = popup,
+                 tabindex = "1",
+                 title
+               ),
+               tags$script(HTML("
+    $('[data-toggle=\"tooltip\"]').tooltip(); 
+  ")))
+           },
+           options
+  )
+}
+
+#' Modified shiny sliderInput func
+sliderInput1 <- function(inputId, label, min, max, value, step = NULL,
+                        round = FALSE, format = NULL, locale = NULL,
+                        ticks = TRUE, animate = FALSE, width = NULL, sep = ",",
+                        pre = NULL, post = NULL, timeFormat = NULL,
+                        timezone = NULL, dragRange = TRUE,
+                        tooltip = T, title = "?", popup = "Help tips", pos = "right")
+{
+  if (!missing(format)) {
+    shiny:::shinyDeprecated(msg = "The `format` argument to sliderInput is deprecated. Use `sep`, `pre`, and `post` instead.",
+                    version = "0.10.2.2")
+  }
+  if (!missing(locale)) {
+    shiny:::shinyDeprecated(msg = "The `locale` argument to sliderInput is deprecated. Use `sep`, `pre`, and `post` instead.",
+                    version = "0.10.2.2")
+  }
+  
+  dataType <- shiny:::getSliderType(min, max, value)
+  
+  if (is.null(timeFormat)) {
+    timeFormat <- switch(dataType, date = "%F", datetime = "%F %T", number = NULL)
+  }
+  
+  # Restore bookmarked values here, after doing the type checking, because the
+  # restored value will be a character vector instead of Date or POSIXct, and we can do
+  # the conversion to correct type next.
+  value <- restoreInput(id = inputId, default = value)
+  
+  if (is.character(value)) {
+    # If we got here, the value was restored from a URL-encoded bookmark.
+    if (dataType == "date") {
+      value <- as.Date(value, format = "%Y-%m-%d")
+    } else if (dataType == "datetime") {
+      # Date-times will have a format like "2018-02-28T03:46:26Z"
+      value <- as.POSIXct(value, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
+    }
+  }
+  
+  step <- shiny:::findStepSize(min, max, step)
+  
+  if (dataType %in% c("date", "datetime")) {
+    # For Dates, this conversion uses midnight on that date in UTC
+    to_ms <- function(x) 1000 * as.numeric(as.POSIXct(x))
+    
+    # Convert values to milliseconds since epoch (this is the value JS uses)
+    # Find step size in ms
+    step  <- to_ms(max) - to_ms(max - step)
+    min   <- to_ms(min)
+    max   <- to_ms(max)
+    value <- to_ms(value)
+  }
+  
+  range <- max - min
+  
+  # Try to get a sane number of tick marks
+  if (ticks) {
+    n_steps <- range / step
+    
+    # Make sure there are <= 10 steps.
+    # n_ticks can be a noninteger, which is good when the range is not an
+    # integer multiple of the step size, e.g., min=1, max=10, step=4
+    scale_factor <- ceiling(n_steps / 10)
+    n_ticks <- n_steps / scale_factor
+    
+  } else {
+    n_ticks <- NULL
+  }
+  
+  sliderProps <- shiny:::dropNulls(list(
+    class = "js-range-slider",
+    id = inputId,
+    `data-type` = if (length(value) > 1) "double",
+    `data-min` = shiny:::formatNoSci(min),
+    `data-max` = shiny:::formatNoSci(max),
+    `data-from` = shiny:::formatNoSci(value[1]),
+    `data-to` = if (length(value) > 1) shiny:::formatNoSci(value[2]),
+    `data-step` = shiny:::formatNoSci(step),
+    `data-grid` = ticks,
+    `data-grid-num` = n_ticks,
+    `data-grid-snap` = FALSE,
+    `data-prettify-separator` = sep,
+    `data-prettify-enabled` = (sep != ""),
+    `data-prefix` = pre,
+    `data-postfix` = post,
+    `data-keyboard` = TRUE,
+    # This value is only relevant for range sliders; for non-range sliders it
+    # causes problems since ion.RangeSlider 2.1.2 (issue #1605).
+    `data-drag-interval` = if (length(value) > 1) dragRange,
+    # The following are ignored by the ion.rangeSlider, but are used by Shiny.
+    `data-data-type` = dataType,
+    `data-time-format` = timeFormat,
+    `data-timezone` = timezone
+  ))
+  
+  # Replace any TRUE and FALSE with "true" and "false"
+  sliderProps <- lapply(sliderProps, function(x) {
+    if (identical(x, TRUE)) "true"
+    else if (identical(x, FALSE)) "false"
+    else x
+  })
+  
+  sliderTag <- div(class = "form-group shiny-input-container",
+                   style = if (!is.null(width)) paste0("width: ", validateCssUnit(width), ";"),
+                   shiny:::shinyInputLabel(inputId, label),
+                   if (tooltip){
+                     tags$span(
+                       tags$button(
+                         style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; border:none",
+                         class = "badge badge-pill badge-warning",
+                         type = "button",
+                         `data-toggle` = "tooltip",
+                         `data-placement` = pos,
+                         `data-original-title` = popup,
+                         tabindex = "1",
+                         title
+                       ),
+                       tags$script(HTML("
+    $('[data-toggle=\"tooltip\"]').tooltip(); 
+  ")))
+                   },
+                   do.call(tags$input, sliderProps)
+  )
+  
+  # Add animation buttons
+  if (identical(animate, TRUE))
+    animate <- animationOptions()
+  
+  if (!is.null(animate) && !identical(animate, FALSE)) {
+    if (is.null(animate$playButton))
+      animate$playButton <- icon('play', lib = 'glyphicon')
+    if (is.null(animate$pauseButton))
+      animate$pauseButton <- icon('pause', lib = 'glyphicon')
+    
+    sliderTag <- tagAppendChild(
+      sliderTag,
+      tags$div(class='slider-animate-container',
+               tags$a(href='#',
+                      class='slider-animate-button',
+                      'data-target-id'=inputId,
+                      'data-interval'=animate$interval,
+                      'data-loop'=animate$loop,
+                      span(class = 'play', animate$playButton),
+                      span(class = 'pause', animate$pauseButton)
+               )
+      )
+    )
+  }
+  
+  dep <- list(
+    htmltools::htmlDependency("ionrangeslider", "2.1.6", c(href="shared/ionrangeslider"),
+                   script = "js/ion.rangeSlider.min.js",
+                   # ion.rangeSlider also needs normalize.css, which is already included in
+                   # Bootstrap.
+                   stylesheet = c("css/ion.rangeSlider.css",
+                                  "css/ion.rangeSlider.skinShiny.css")
+    ),
+    htmltools::htmlDependency("strftime", "0.9.2", c(href="shared/strftime"),
+                   script = "strftime-min.js"
+    )
+  )
+  
+  htmltools::attachDependencies(sliderTag, dep)
+}
+
+#' Modified shiny sliderInput func
+selectInput1 <- function(inputId, label, choices, selected = NULL,
+                        multiple = FALSE, selectize = TRUE, width = NULL,
+                        size = NULL,  tooltip = T, title = "?", popup = "Help tips", pos = "right") {
+  
+  selected <- restoreInput(id = inputId, default = selected)
+  
+  # resolve names
+  choices <- shiny:::choicesWithNames(choices)
+  
+  # default value if it's not specified
+  if (is.null(selected)) {
+    if (!multiple) selected <- shiny:::firstChoice(choices)
+  } else selected <- as.character(selected)
+  
+  if (!is.null(size) && selectize) {
+    stop("'size' argument is incompatible with 'selectize=TRUE'.")
+  }
+  
+  # create select tag and add options
+  selectTag <- tags$select(
+    id = inputId,
+    class = if (!selectize) "form-control",
+    size = size,
+    shiny:::selectOptions(choices, selected)
+  )
+  if (multiple)
+    selectTag$attribs$multiple <- "multiple"
+  
+  # return label and select tag
+  res <- div(
+    class = "form-group shiny-input-container",
+    
+    style = if (!is.null(width)) paste0("width: ", validateCssUnit(width), ";"),
+    shiny:::shinyInputLabel(inputId, label),
+    if (tooltip){
+      tags$span(
+        tags$button(
+          style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; border:none",
+          class = "badge badge-pill badge-warning",
+          type = "button",
+          `data-toggle` = "tooltip",
+          `data-placement` = pos,
+          `data-original-title` = popup,
+          tabindex = "1",
+          title
+        ),
+        tags$script(HTML("
+    $('[data-toggle=\"tooltip\"]').tooltip(); 
+  ")))
+    },
+    div(selectTag)
+  )
+  
+  if (!selectize) return(res)
+  
+  shiny:::selectizeIt(inputId, res, NULL, nonempty = !multiple && !("" %in% choices))
+}
+
+#' Modified shinyWidgets prettySwitch func
+prettySwitch1 <- function(inputId, label, value = FALSE, status = "default",
+                         slim = FALSE, fill = FALSE, bigger = FALSE,
+                         inline = FALSE, width = NULL,  tooltip = T, title = "?",
+                         popup = "Help tips", pos = "right") {
+  value <- shiny::restoreInput(id = inputId, default = value)
+  status <- match.arg(status, c("default", "primary", "success",
+                                "info", "danger", "warning"))
+  inputTag <- tags$input(id = inputId, type = "checkbox")
+  if (!is.null(value) && value)
+    inputTag$attribs$checked <- "checked"
+  if (fill & slim)
+    message("slim = TRUE & fill = TRUE don't work well together.")
+  switchTag <- tags$div(
+    class = "form-group shiny-input-container",
+    style = if (!is.null(width))  paste0("width: ",
+                                         htmltools::validateCssUnit(width), ";"),
+    class = if (inline) "shiny-input-container-inline",
+    style = if (inline) "display: inline-block; margin-right: 10px;",
+    tags$div(
+      class="pretty p-default p-switch", inputTag,
+      class=if(bigger) "p-bigger",
+      class=if(fill) "p-fill", class=if(slim) "p-slim",
+      tags$div(
+        class="state",
+        class=if(status != "default") paste0("p-", status),
+        tags$label(tags$span(label)),
+        if (tooltip){
+          tags$span(
+            tags$button(
+              style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; border:none",
+              class = "badge badge-pill badge-warning",
+              type = "button",
+              `data-toggle` = "tooltip",
+              `data-placement` = pos,
+              `data-original-title` = popup,
+              tabindex = "1",
+              title
+            ),
+            tags$script(HTML("
+    $('[data-toggle=\"tooltip\"]').tooltip(); 
+  ")))
+        }
+      )
+    )
+  )
+  shinyWidgets:::attachShinyWidgetsDep(switchTag, "pretty")
+}
+
+
 # UNCOMMENT AND USE 
 # 
 # usethis::use_package("markdown")
