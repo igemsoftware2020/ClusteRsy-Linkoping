@@ -13,14 +13,14 @@ mod_DIAMoND_ui <- function(id){
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
     tags$div(id = "error_name_DIAMoND_js",
-    textInput(ns("module_name"), "Module object name")),
+    textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods.")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
-    sliderInput(ns("seed_weight"), label = "Select Seed Weight", min = 0, max = 50, value = 25),
-    sliderInput(ns("deg_cutoff"), label = "P-value cutoff", min = 0, max = 1, value = 0.05),
+    sliderInput(ns("seed_weight"), label = "Select Seed Weight", min = 0, max = 50, value = 25, popup = "Additional numeric parameter to assign weight for the seed genes."),
+    sliderInput(ns("deg_cutoff"), label = "P-value cutoff", min = 0, max = 1, value = 0.05, popup = "P-value cutoff for differentially expressed genes."),
     uiOutput(ns("error_p_value")),
-    shinyWidgets::prettySwitch(ns("include_seed"), label = "Include seed", value = FALSE, status = "warning"),
-    sliderInput(ns("output_genes"), label= "Select maximum number of genes to be included", min = 0, max = 500, value = 250),
+    shinyWidgets::prettySwitch(ns("include_seed"), label = "Include seed", value = FALSE, status = "warning", popup = "Include seed genes in the output model."),
+    sliderInput(ns("output_genes"), label= "Select maximum number of genes to be included", min = 0, max = 500, value = 250, popup =  "Maximum number of genes to be included in the final module."),
     tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer DIAMoND module")
     )
@@ -36,12 +36,12 @@ mod_DIAMoND_server <- function(input, output, session, con){
   
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
-    selectInput(ns("input_object"), label = "Input object", choices = input_objects)
+    selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation.")
   })
   
   output$ppi_choice <- renderUI({
     ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
-    selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks)
+    selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks, popup = "Protein-Protein interaction network to overlay the differentially expressed genes on.")
   })
   
   module_name <- reactive({
