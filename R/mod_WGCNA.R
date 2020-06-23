@@ -12,7 +12,10 @@ mod_WGCNA_ui <- function(id){
   tagList(
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
-    textInput(ns("module_name"), "Module object name"),
+    tags$div(id = "error_name_WGCNA_js",
+    textInput(ns("module_name"), "Module object name")),
+    uiOutput(ns("error_name_descrip")),
+    uiOutput(ns("error_name_js")),
     radioButtons(ns("group_of_interest"), label= "Select group of interest", choiceNames=c("Group 1", "Group 2"), choiceValues = c(1, 2)),
     sliderInput(ns("minModuleSize"), label= "Minimum module size", min=1, max=100, value=30),
     sliderInput(ns("deepSplit"), label= "Integer value between 0 and 4", min=0, max=4, value=2),
@@ -51,6 +54,29 @@ mod_WGCNA_server <- function(input, output, session, con){
     ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
     selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks)
   })
+  
+  module_name <- reactive({
+    input$module_name
+  })
+  
+  observe({
+    if (any(MODifieRDB::get_available_module_objects(con)$module_name == module_name())){
+      output$error_name_js <- renderUI({
+        tags$script(HTML("element = document.getElementById('error_name_WGCNA_js');
+                       element.classList.add('has-error');
+                       document.getElementById('main_page_v2_ui_1-Columns_ui_1-Description1_ui_1-WGCNA_ui_1-load_input').disabled = true;"))
+      })
+      output$error_name_descrip <- renderUI({
+        tags$p(class = "text-danger", tags$b("Error:"), "This name has been taken. Please try again!")
+      })
+    } else {
+      output$error_name_js <- renderUI({
+        tags$script(HTML("document.getElementById('error_name_WGCNA_js').classList.remove('has-error');
+                         document.getElementById('main_page_v2_ui_1-Columns_ui_1-Description1_ui_1-WGCNA_ui_1-load_input').disabled = false;"))
+      })
+      output$error_name_descrip <- NULL
+    }
+  }) 
   
   observeEvent(input$load_input, {
     module_object <- MODifieRDB::wgcna_db(input_name = input$input_object, 

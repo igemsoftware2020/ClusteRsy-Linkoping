@@ -13,7 +13,7 @@ mod_input_overview_ui <- function(id){
     actionButton(ns("refresh"), "Refresh database"),
     tags$br(),
     tags$br(),
-    DT::dataTableOutput(ns("input_overview"))
+    DT::dataTableOutput(ns("input_overview")),
   )
 }
 
@@ -32,7 +32,7 @@ mod_input_overview_server <- function(input, output, session, con){
     
     output$input_overview <- DT::renderDataTable(input_objects)
   })
-  
+ 
 }
 
 ## To be copied in the UI

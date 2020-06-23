@@ -13,7 +13,8 @@ mod_module_overview_ui <- function(id){
     actionButton(ns("refresh"), "Refresh database"),
     tags$br(),
     tags$br(),
-    DT::dataTableOutput(ns("module_overview"))
+    DT::dataTableOutput(ns("module_overview")),
+    downloadButton(ns("download_module"), "Download")
   )
 }
 
@@ -32,6 +33,23 @@ mod_module_overview_server <- function(input, output, session, con){
     
     output$module_overview <- DT::renderDataTable(module_objects)
   })
+  
+  module <- reactive({
+    MODifieRDB::MODifieR_module_from_db(module_objects$module_name[input$module_overview_rows_selected], con = con)
+  })
+  
+  filename <- reactive({
+    module_objects$module_name[input$module_overview_rows_selected]
+  })
+  
+  output$download_module <- downloadHandler(
+    filename = function() {
+      paste(filename(),"-", Sys.Date(), ".rds", sep="")
+    },
+    content = function(file) {
+      saveRDS(module(), file)
+    }
+  )
 }
 
 ## To be copied in the UI
