@@ -13,20 +13,20 @@ mod_CClique_ui <- function(id){
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
     tags$div(id = "error_name_CClique_js",
-    textInput(ns("module_name"), "Module object name")),
+    textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
-    sliderInput(ns("frequency_cutoff"), label = "Select frequency cutoff", min = 0, max = 1, value = 0.5),
-    sliderInput(ns("fraction_of_interactions"), label = "Fraction of interactions", min = 0, max = 1, value = 0.4),
-    sliderInput(ns("deg_cutoff"), label = "P-value cutoff", min = 0, max = 1, value = 0.05),
+    sliderInput(ns("frequency_cutoff"), label = "Select frequency cutoff", min = 0, max = 1, value = 0.5, popup = "Fraction of the number of times a gene should be present in the iterations"),
+    sliderInput(ns("fraction_of_interactions"), label = "Fraction of interactions", min = 0, max = 1, value = 0.4, popup = "Fraction of interactions from the original network that will be used in each iteration"),
+    sliderInput(ns("deg_cutoff"), label = "P-value cutoff", min = 0, max = 1, value = 0.05, popup = "P-value cutoff for differentially expressed genes"),
     uiOutput(ns("error_p_value")),
-    sliderInput(ns("clique_significance"), label = "Cutoff for Fisher exact test for cliques", min = 0, max = 1, value = 0.05),
-    shinyWidgets::prettySwitch(ns("to_db"), label = "Save result in database", value = TRUE, status = "warning"),
-    numericInput(ns("iteration"), label = "Number of iterations", value = 50, max = 100, min = 0),
-    numericInput(ns("n_cores"), label = "Number of cores", value = 3, max = 50, min = 0),
-    shinyWidgets::prettySwitch(ns("multiple_cores"), label = "Parallellize iterations", value = TRUE, status = "warning"),
+    sliderInput(ns("clique_significance"), label = "Cutoff for Fisher exact test for cliques", min = 0, max = 1, value = 0.05, popup = "Cutoff for Fisher exact test for cliques"),
+    prettySwitch(ns("to_db"), label = "Save result in database", value = TRUE, status = "warning", popup = "Save the results in the local database"),
+    numericInput(ns("iteration"), label = "Number of iterations", value = 50, max = 100, min = 0, popup = "Number of iterations performed"),
+    numericInput(ns("n_cores"), label = "Number of cores", value = 3, max = 50, min = 0, popup = "If one parallellizes iteratios how many cores will the process be run on"),
+    prettySwitch(ns("multiple_cores"), label = "Parallellize iterations", value = TRUE, status = "warning", popup = "Should the process run parallel using multiple CPU cores?"),
     tags$div(style = "text-align:center",
-    actionButton(ns("load_input"), "Infer Correlation clique module")
+    actionButton(ns("load_input"), "Infer Correlation clique module") 
     )
   )
 }
@@ -39,12 +39,12 @@ mod_CClique_server <- function(input, output, session, con){
  
    output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
-    selectInput(ns("input_object"), label = "Input object", choices = input_objects)
+    selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation")
   })
   
   output$ppi_choice <- renderUI({
     ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
-    selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks)
+    selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks, popup = "Protein-Protein interaction network to overlay the differentially expressed genes on")
   })
   
   module_name <- reactive({
