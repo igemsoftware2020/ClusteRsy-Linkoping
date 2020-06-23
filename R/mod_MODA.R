@@ -12,7 +12,7 @@ mod_MODA_ui <- function(id){
   tagList(
     uiOutput(ns("input_choice")),
     tags$div(id = "error_name_MODA_js",
-    textInput(ns("module_name"), "Module object name")),
+    textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods.")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
     radioButtons(
@@ -21,6 +21,7 @@ mod_MODA_ui <- function(id){
       choices = c( 1, 2),
       selected = 1,
       inline = T,
+      popup = "Define the group with the gene of intrest."
     ),
     
     radioButtons(
@@ -29,10 +30,11 @@ mod_MODA_ui <- function(id){
       choices = c("Density", "Modularity"),
       selected = "Density",
       inline = T,
+      popup = "Decide whether the cut in the dendrogram should be calculated by using the maximal average density or the modularity."
     ),
     
-    sliderInput(ns("specificTheta"), label = "Select specific theta", min = 0, max = 1, value = 0.5),
-    sliderInput(ns("conservedTheta"), label = "Select conserved theta", min = 0, max = 1, value = 0.5),
+    sliderInput(ns("specificTheta"), label = "Select specific theta", min = 0, max = 1, value = 0.5, popup = "The lowest value assumed that can still be considered a condition specific module."),
+    sliderInput(ns("conservedTheta"), label = "Select conserved theta", min = 0, max = 1, value = 0.5, popup = "The highest value assumed that can still be considered a condition conserved module."),
     
     tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer MODA module")
@@ -49,7 +51,7 @@ mod_MODA_server <- function(input, output, session, con){
  
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
-    selectInput(ns("input_object"), label = "Input object", choices = input_objects)
+    selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation.")
   })
   
   module_name <- reactive({
