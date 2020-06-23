@@ -28,7 +28,6 @@ mod_CliqueSum_server <- function(input, output, session, con){
   })
   
   if (nrow(MODifieRDB::get_available_db_networks(con)) != 0 ) {
-    
     output$parameters <- renderUI({
       tagList(
         uiOutput(ns("input_choice")),
@@ -38,7 +37,7 @@ mod_CliqueSum_server <- function(input, output, session, con){
         numericInput(ns("min_clique_size"), label = "Minimal clique size", value = 2, max = 50, min = 2),
         numericInput(ns("n_iterations"), label = "Iterations", value = 500, max = 10000, min = 0),
         tags$div(style = "text-align:center",
-                 actionButton(ns("load_input"), label = "Infer Clique Sum module")
+        actionButton(ns("load_input"), label = "Infer Clique Sum module")
         )
       )
     })
@@ -49,6 +48,7 @@ mod_CliqueSum_server <- function(input, output, session, con){
         uiOutput(ns("ppi_choice")),
         textInput(ns("db_name"), "Clique database name"),
         actionButton(ns("build_db"), "Build clique database"),
+        
       )
     })
     
@@ -58,7 +58,7 @@ mod_CliqueSum_server <- function(input, output, session, con){
       id <- showNotification("Creating clique database", duration = NULL, closeButton = FALSE, type = "warning")
       
       clique_db <- MODifieRDB::build_clique_db_db(ppi_name = input$ppi_object,
-                                                  db_folder =  "." , #This should be connected to the db.
+                                                  db_folder =  "." , 
                                                   db_name = input$db_name,
                                                   con = con
       )
