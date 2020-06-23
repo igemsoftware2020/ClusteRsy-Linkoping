@@ -25,7 +25,7 @@ mod_CliqueSum_server <- function(input, output, session, con){
   output$ppi_choice <- renderUI({
     ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
     
-    selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks)
+    selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks, popup = "Protein-Protein interaction network to overlay the differentially expressed genes on")
   })
   
   
@@ -35,10 +35,10 @@ mod_CliqueSum_server <- function(input, output, session, con){
       tagList(
         uiOutput(ns("input_choice")),
         uiOutput(ns("ppi_choice")),
-        textInput(ns("module_name"), "Module object name"),
-        sliderInput(ns("clique_significance"), label = "Clique significance", min = 0, max = 1, value = 0.05),
-        numericInput(ns("min_clique_size"), label = "Minimal clique size", value = 2, max = 50, min = 2),
-        numericInput(ns("n_iterations"), label = "Iterations", value = 500, max = 10000, min = 0),
+        textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods"),
+        sliderInput(ns("clique_significance"), label = "Clique significance", min = 0, max = 1, value = 0.05, popup ="P-value for cliques to be considered significant"),
+        numericInput(ns("min_clique_size"), label = "Minimal clique size", value = 2, max = 50, min = 2, popup = "Minimal size of cliques"),
+        numericInput(ns("n_iterations"), label = "Iterations", value = 500, max = 10000, min = 0, popup = "Number of iterations to be performed for the permutation based P-value"),
         tags$div(style = "text-align:center",
                  actionButton(ns("load_input"), label = "Infer Clique Sum module")
         )
@@ -77,11 +77,13 @@ mod_CliqueSum_server <- function(input, output, session, con){
       tagList(
         uiOutput(ns("input_choice")),
         uiOutput(ns("ppi_choice")),
-        textInput(ns("module_name"), "Module object name"),
-        sliderInput(ns("clique_significance"), label = "Clique significance", min = 0, max = 1, value = 0.01),
-        numericInput(ns("min_clique_size"), label = "Minimal clique size", value = 2, max = 50, min = 2),
-        numericInput(ns("n_iterations"), label = "Iterations", value = 500, max = 10000, min = 0),
-        actionButton(ns("load_input"), label = "Infer Clique Sum module")
+        textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods"),
+        sliderInput(ns("clique_significance"), label = "Clique significance", min = 0, max = 1, value = 0.05, popup ="P-value for cliques to be considered significant"),
+        numericInput(ns("min_clique_size"), label = "Minimal clique size", value = 2, max = 50, min = 2, popup = "Minimal size of cliques"),
+        numericInput(ns("n_iterations"), label = "Iterations", value = 500, max = 10000, min = 0, popup = "Number of iterations to be performed for the permutation based P-value"),
+        tags$div(style = "text-align:center",
+                 actionButton(ns("load_input"), label = "Infer Clique Sum module")
+        )
       )
     })
   }
@@ -89,7 +91,7 @@ mod_CliqueSum_server <- function(input, output, session, con){
   
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
-    selectInput(ns("input_object"), label = "Input object", choices = input_objects)
+    selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation")
   })
 
   
