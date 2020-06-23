@@ -75,7 +75,7 @@ mod_Description1_server <- function(input, output, session, con){
         return(link)
       }
       if (method == "WGCNA"){
-        link = "https://www.google.com/"
+        link = "https://doi.org/10.1186/1471-2105-9-559"
         return(link)
       }
       if (method == "DIAMoND"){
