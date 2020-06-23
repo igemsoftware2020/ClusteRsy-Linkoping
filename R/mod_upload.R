@@ -11,25 +11,26 @@ mod_upload_ui <- function(id){
   ns <- NS(id)
   tagList(
     fileInput(ns("expression_matrix"), label = "Upload an expression matrix"),
-    uiOutput(ns("sample_chooser"))
+    uiOutput(ns("sample_chooser")),
+    htmlOutput(ns("error_name_js"))
   )
 }
 
 #' upload Server Function
 #'
 #' @noRd 
-mod_upload_server <- function(input, output, session, input_object){
+mod_upload_server <- function(input, output, session, input_object, con){
   ns <- session$ns
   
   MODifieR_module <- reactiveValues()
-
+  
   registerInputHandler("shinyjsexamples.chooser", function(data, ...) {
     if (is.null(data))
       NULL
     else
       list(left=as.character(data$left), right=as.character(data$right))
   }, force = TRUE)
-
+  
   upload_expression <- reactive({
     req((input$expression_matrix))
     infile <- (input$expression_matrix$datapath)
@@ -40,19 +41,48 @@ mod_upload_server <- function(input, output, session, input_object){
     
     read.table(file = infile, header = T)
   })
- 
+  
   output$sample_chooser <- renderUI({
     expression_matrix <- upload_expression()
-    tagList( textInput(ns("group1"), "Group 1 label"),
-             textInput(ns("group2"), "Group 2 label"),
-             chooserInput(ns("sample_groups"), "Available frobs", "Selected frobs", 
-                          colnames(expression_matrix), c(), size = 10, multiple = TRUE),
-             verbatimTextOutput(ns("current_groups")),
-             prettySwitch(ns("adjusted_pvalue"), label = "Pvalue", value = TRUE, status = "warning"),
-             prettySwitch(ns("quantile_normalization"), label = "Quantile", value = FALSE, status = "warning"),
-             actionButton(ns("create_input"), "Create input object")
+    tagList(
+      tags$div(id = "error_name_js",
+      textInput(ns("input_name"), "Input object name")),
+      htmlOutput(ns("error_name_descrip")),
+      textInput(ns("group1"), "Group 1 label"),
+      textInput(ns("group2"), "Group 2 label"),
+      chooserInput(ns("sample_groups"), "Available frobs", "Selected frobs", 
+                   colnames(expression_matrix), c(), size = 10, multiple = TRUE),
+      uiOutput(ns("error_empty_group")),
+      shinyWidgets::prettySwitch(ns("adjusted_pvalue"), label = "Pvalue", value = TRUE, status = "warning"),
+      shinyWidgets::prettySwitch(ns("quantile_normalization"), label = "Quantile", value = FALSE, status = "warning"),
+      tags$div(style = "text-align:center",
+      actionButton(ns("create_input"), "Create input object")
+      )
     )
   })
+  
+  input_name <- reactive({
+    input$input_name
+  })
+  
+  observe({
+    if (any(MODifieRDB::get_available_input_objects(con)$input_name == input_name())){
+    output$error_name_js <- renderUI({
+      tags$script(HTML("element = document.getElementById('error_name_js');
+                       element.classList.add('has-error');
+                       document.getElementById('main_page_v2_ui_1-Columns_ui_1-upload_ui_1-create_input').disabled = true;"))
+      })
+    output$error_name_descrip <- renderUI({
+      tags$p(class = "text-danger", tags$b("Error:"), "This name has been taken. Please try again!")
+    })
+    } else {
+      output$error_name_js <- renderUI({
+        tags$script(HTML("document.getElementById('error_name_js').classList.remove('has-error');
+                         document.getElementById('main_page_v2_ui_1-Columns_ui_1-upload_ui_1-create_input').disabled = false;"))
+      })
+      output$error_name_descrip <- NULL
+  }
+    })
   
   group1_label_r <- reactive({
     input$group1
@@ -62,18 +92,16 @@ mod_upload_server <- function(input, output, session, input_object){
     input$group2
   })
   
-  output$current_groups <- renderPrint({
-    groups <- input$sample_groups
-    names(groups) <- c(group1_label_r(), group2_label_r())
-    groups
-  })
-  
   output$fileUploaded <- reactive({
     return(!is.null(upload_expression()))
   })
   
+  
+  
   observeEvent(input$create_input, {
-    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE)
+    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
+    on.exit(removeNotification(id), add = TRUE)
+    
     count_matrix <- as.matrix(upload_expression())
     group1_indici <- match(input$sample_groups[[1]], colnames(count_matrix))
     group2_indici <- match(input$sample_groups[[2]], colnames(count_matrix))
@@ -81,24 +109,42 @@ mod_upload_server <- function(input, output, session, input_object){
     group2_label <- group2_label_r()
     use_adjusted <- input$adjusted_pvalue
     normalize_quantiles <- input$quantile_normalization
-    parameters <- list(count_matrix, 
-                       group1_indici, 
-                       group2_indici, 
-                       group1_label, 
-                       group2_label, 
-                       use_adjusted, 
-                       normalize_quantiles )
- 
-    on.exit(removeNotification(id), add = TRUE)
     
-    input_object <- do.call(MODifieR::"create_input_rnaseq", parameters)
     
-    MODifieR_module$module <- input_object
+    
+    output$error_empty_group <- NULL
+    
+    input_object <- try(MODifieR::create_input_rnaseq(count_matrix = count_matrix, 
+                                              group1_indici = group1_indici, 
+                                              group2_indici = group2_indici, 
+                                              group1_label = group1_label, 
+                                              group2_label = group2_label, 
+                                              use_adjusted = use_adjusted, 
+                                              normalize_quantiles = normalize_quantiles)
+                        )
+  
+    if(class(input_object) == "try-error"){
+      if (grepl("contrasts can be applied only to factors with 2 or more levels", input_object[1])){
+        output$error_empty_group <- renderUI({
+          tags$p(class = "text-danger", tags$b("Error:"), "A group cannot be empty")
+        })
+      }
+    }
+    else{
+    input_name <- input$input_name
+    
+    MODifieRDB::MODifieR_object_to_db(MODifieR_object = input_object,
+                                      object_name = input_name,
+                                      con = con)
+    
+    
+    MODifieR_module$input_object <- input_object
+    }
   })
   
-
+  
   outputOptions(output, 'fileUploaded', suspendWhenHidden=FALSE)
-
+  
   return(MODifieR_module)
 }
 
@@ -107,4 +153,3 @@ mod_upload_server <- function(input, output, session, input_object){
 
 ## To be copied in the server
 # callModule(mod_upload_server, "upload_ui_1")
-

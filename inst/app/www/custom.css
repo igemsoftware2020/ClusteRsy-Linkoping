@@ -5922,18 +5922,26 @@ button.close {
 .tooltip.top {
   padding: 5px 0;
   margin-top: -3px;
+  background-color: inherit;
+  width: fit-content;
 }
 .tooltip.right {
   padding: 0 5px;
   margin-left: 3px;
+  background-color: inherit;
+  width: fit-content;
 }
 .tooltip.bottom {
   padding: 5px 0;
   margin-top: 3px;
+  background-color: inherit;
+  width: fit-content;
 }
 .tooltip.left {
   padding: 0 5px;
   margin-left: -3px;
+  background-color: inherit;
+  width: fit-content;
 }
 .tooltip.top .tooltip-arrow {
   bottom: 0;
@@ -6908,6 +6916,8 @@ a.list-group-item-danger.active:focus {
 
 /* Extra resources*/
 
+
+/* Chooser Input*/
 .right {
     color: black;
     width: 80px;
@@ -6917,6 +6927,7 @@ a.list-group-item-danger.active:focus {
 .left {
     color: black;
     width: 80px;
+    background-color: #ecf0f1;
 }
 
 
@@ -6943,3 +6954,53 @@ a.list-group-item-danger.active:focus {
   background: #555; 
 }
 
+div#main_page_v2_ui_1-Columns_ui_1-upload_ui_1-sample_groups{
+  text-align:center;
+}
+
+/* Slider color */
+
+.irs-bar{
+  border-top: #ffbd40 !important;
+  border-bottom: #ffbd40 !important;
+  background: #ffbd40 !important;
+}
+
+.irs-bar-edge {
+  border: 1px solid #ffbd40 !important;
+  background: #ffbd40 !important;
+}
+
+.irs-slider {
+  background: #ffbd40 !important;
+  border: 1px solid #ffd27f !important;
+}
+
+.irs-bar-edge {
+  border: 1px solid #ffbd40 !important;
+  background: #ffbd40 !important;
+}
+
+.irs-max, .irs-min {
+    color: #ffbd40 !important;
+}
+
+.irs-form, .irs-to, .irs-single {
+    color: #ffbd40 !important;
+    background: #333 !important;
+}
+
+#irs-active-slider, .irs-slider:hover {
+    background: #ffd27f !important;
+}
+
+/* Hypertext */
+button.link {
+  background: none;
+  border: none;
+}
+
+/* Pretty switch*/
+.pretty input {
+  width:90% !important;
+}

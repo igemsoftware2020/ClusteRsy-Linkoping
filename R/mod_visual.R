@@ -26,9 +26,9 @@ mod_visual_ui <- function(id){
 #' create_input Server Function
 #'
 #' @noRd 
-mod_visual_server <- function(input, output, session){
+mod_visual_server <- function(input, output, session, con){
   ns <- session$ns
-  
+
 }
 
 ## To be copied in the UI

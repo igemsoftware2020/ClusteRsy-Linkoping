@@ -15,7 +15,7 @@ app_ui <- function(request) {
     fluidPage(
       mod_main_page_v2_ui("main_page_v2_ui_1"),
       # Change background color
-      setBackgroundColor(
+      shinyWidgets::setBackgroundColor(
         color = c("#ecf0f1")
       )
     )
