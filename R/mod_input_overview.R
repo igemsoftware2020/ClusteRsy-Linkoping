@@ -14,7 +14,6 @@ mod_input_overview_ui <- function(id){
     tags$br(),
     tags$br(),
     DT::dataTableOutput(ns("input_overview")),
-    downloadButton(ns("download_module"), "Download"),
   )
 }
 
@@ -32,13 +31,8 @@ mod_input_overview_server <- function(input, output, session, con){
     input_objects <- MODifieRDB::get_available_input_objects(con)
     
     output$input_overview <- DT::renderDataTable(input_objects)
-    print(output$input_overview)
   })
-  output$download_module <- downloadHandler(
-    filename = input$input_name,
-    content = MODifieRDB::MODifieR_input_from_db(""),
-    contentType = ".rds"
-  )
+ 
 }
 
 ## To be copied in the UI
