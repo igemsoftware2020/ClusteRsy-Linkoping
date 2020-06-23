@@ -92,6 +92,8 @@ if (nrow(MODifieRDB::get_available_db_networks(con)) != 0 ) {
   })
   
   observeEvent(input$load_input, {
+    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
+    on.exit(removeNotification(id), add = TRUE)
     module_object <- MODifieRDB::clique_sum_db(input_name = input$input_object,
                                                 ppi_name = input$ppi_object,
                                                 n_iterations = input$n_iterations,
@@ -105,13 +107,7 @@ if (nrow(MODifieRDB::get_available_db_networks(con)) != 0 ) {
                                                 con = con)
     
   })
-  observeEvent(input$load_input, {
-    id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
-    on.exit(removeNotification(id), add = TRUE
-            
-    )}
-  )
-  
+
 }
     
 ## To be copied in the UI
