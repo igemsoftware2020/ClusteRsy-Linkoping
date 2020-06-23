@@ -6999,3 +6999,8 @@ button.link {
   background: none;
   border: none;
 }
+
+/* Pretty switch*/
+.pretty input {
+  width:90% !important;
+}
