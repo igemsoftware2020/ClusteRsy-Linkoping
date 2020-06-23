@@ -21,11 +21,14 @@ mod_CliqueSum_ui <- function(id){
 mod_CliqueSum_server <- function(input, output, session, con){
   ns <- session$ns
   
+  
   output$ppi_choice <- renderUI({
     ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
     
     selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks)
   })
+  
+  
   
   if (nrow(MODifieRDB::get_available_db_networks(con)) != 0 ) {
     output$parameters <- renderUI({
@@ -88,11 +91,12 @@ mod_CliqueSum_server <- function(input, output, session, con){
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     selectInput(ns("input_object"), label = "Input object", choices = input_objects)
   })
+
   
   observeEvent(input$load_input, {
     id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
-    
-    module_object <- MODifieRDB::clique_sum_db(input_name = input$input_object,
+    output$error_p_value <- NULL # I CANNOT REMOVE THIS BUG, SO THIS IS A FEATURE NOW :)
+    module_object <- try(MODifieRDB::clique_sum_db(input_name = input$input_object,
                                                ppi_name = input$ppi_object,
                                                n_iterations = input$n_iterations,
                                                clique_significance = input$clique_significance,
@@ -101,9 +105,15 @@ mod_CliqueSum_server <- function(input, output, session, con){
                                                n_cores = 1,
                                                module_name = input$module_name,
                                                con = con)
+    )
     
     on.exit(removeNotification(id), add = TRUE)
     
+    if (class(module_object) == "try-error"){
+      output$error_p_value <- renderUI({
+        tags$p(class = "text-danger", tags$b("Error:"), module_object)
+      })
+    }
   })
   
   
