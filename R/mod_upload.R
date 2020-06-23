@@ -124,11 +124,9 @@ mod_upload_server <- function(input, output, session, input_object, con){
                         )
   
     if(class(input_object) == "try-error"){
-      if (grepl("contrasts can be applied only to factors with 2 or more levels", input_object[1])){
         output$error_empty_group <- renderUI({
-          tags$p(class = "text-danger", tags$b("Error:"), "A group cannot be empty")
+          tags$p(class = "text-danger", tags$b("Error:"), input_object)
         })
-      }
     }
     else{
     input_name <- input$input_name
