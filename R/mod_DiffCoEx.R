@@ -12,39 +12,42 @@ mod_DiffCoEx_ui <- function(id){
   tagList(
     uiOutput(ns("input_choice")),
     tags$div(id = "error_name_DiffCoEx_js",
-    textInput(ns("module_name"), "Module object name")),
+    textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
     radioButtons(ns("clustermethod"), "Select a cluster method:", 
-                 choices = c("ward",
-                             "single",
-                             "complete",
-                             "average",
-                             "mcquitty",
-                             "median",
-                             "centroid"),
+                 choices = c("Ward",
+                             "Single",
+                             "Complete",
+                             "Average",
+                             "Mcquitty",
+                             "Median",
+                             "Centroid"),
                 selected = "ward",
-                width = NULL),
+                width = NULL,
+                popup = "The agglomeration method to be used"),
     selectInput(ns("cor_method"), "Select an correlation coefficent",
-                choices = c("pearson",
-                            "kendall",
-                            "spearman"),
-                selected = "pearson",
+                choices = c("Pearson",
+                            "Kendall",
+                            "Spearman"),
+                selected = "Pearson",
                 multiple = FALSE,
                 selectize = TRUE,
-                width = NULL),
+                width = NULL,
+                popup = "Decide which correlation (or covariance) coefficient to be computed"),
     selectInput(ns("cuttree_method"), "Select a method to use",
-                choices = c("hybrid",
-                            "tree"),
+                choices = c("Hybrid",
+                            "Tree"),
                 multiple = FALSE,
                 selectize = TRUE,
-                width = NULL),
+                width = NULL,
+                popup = "Which method will be used to cut the dendrogram"),
    
     htmlOutput(ns("para")),   
-    numericInput(ns("beta"), label = "Soft thresholding power (%)", value = 99, max = 100, min = 0),
-    sliderInput(ns("minClusterSize"), label = "Minimum cluster size", min = 0, max = 100, value = 5),
-    sliderInput(ns("cut_height"), label = "Maximum joining heights", min = 0, max = 1, value = 0.1),
-    sliderInput(ns("pval_cutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05),
+    numericInput(ns("beta"), label = "Soft thresholding power (%)", value = 99, max = 100, min = 0, popup = "A soft threshold defined by the user"),
+    sliderInput(ns("minClusterSize"), label = "Minimum cluster size", min = 0, max = 100, value = 5, popup = "Minimum cluster size"),
+    sliderInput(ns("cut_height"), label = "Maximum joining heights", min = 0, max = 1, value = 0.1, popup = "Maximum height of joins in the dendrogram that will be considered"),
+    sliderInput(ns("pval_cutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "P-value cutoff for significant co-expression modules"),
     tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer DiffCoEx module")
     )
@@ -74,7 +77,7 @@ mod_DiffCoEx_server <- function(input, output, session, con){
     
    output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
-    selectInput(ns("input_object"), label = "Input object", choices = input_objects)
+    selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation")
   })
 
    module_name <- reactive({
