@@ -11,7 +11,7 @@ mod_Description1_ui <- function(id){
   ns <- NS(id)
   tagList(
     tags$div(id = "Inference_method",
-             selectInput(ns("Inference_method"), label = "Inference method", 
+             selectInput(ns("Inference_method"), label = "Inference method", popup = "Network-based approaches to create disease modules",
                          choices = c("Clique Sum", "Correlation Clique", "DIAMoND", "DiffCoEx", "MCODE", "MODA", "Module Discoverer", "WGCNA"))
     ),
     htmlOutput(ns("description")),
@@ -35,7 +35,7 @@ mod_Description1_server <- function(input, output, session, con){
     # Method's description
     descrip <- function(method){
       if (method == "Clique Sum"){
-        description = "This is Clique Sum"
+        description = "Method to determine if a clique is significantly enriched with differentially expressed genes."
         return(description)
       }
       if (method == "WGCNA"){
@@ -47,7 +47,7 @@ mod_Description1_server <- function(input, output, session, con){
         return(description)
       }
       if (method == "DiffCoEx"){
-        description = "This is DiffCoEx"
+        description = "A method for identifying correlation pattern changes. DiffCoEx builds on WGCNA-framework for coexpression analysis."
         return(description)
       }
       if (method == "MCODE"){
@@ -59,11 +59,11 @@ mod_Description1_server <- function(input, output, session, con){
         return(description)
       }
       if (method == "Module Discoverer"){
-        description = "This is Module Discoverer"
+        description = "A clique based algorithm to produce disease modules from differentially expressed genes."
         return(description)
       }
       if (method == "Correlation Clique"){
-        description = "This is Correlation Clique"
+        description = "A clique based method to find a disease module from correlated gene expression."
         return(description)
       }
     }
@@ -71,7 +71,7 @@ mod_Description1_server <- function(input, output, session, con){
     # Method's link
     hyperlink <- function(method){
       if (method == "Clique Sum"){
-        link = "https://www.google.com/"
+        link = "https://doi.org/10.1186/gm534"
         return(link)
       }
       if (method == "WGCNA"){
@@ -83,7 +83,7 @@ mod_Description1_server <- function(input, output, session, con){
         return(link)
       }
       if (method == "DiffCoEx"){
-        link = "https://www.google.com/"
+        link = "https://doi.org/10.1186/1471-2105-11-497"
         return(link)
       }
       if (method == "MCODE"){
@@ -95,11 +95,11 @@ mod_Description1_server <- function(input, output, session, con){
         return(link)
       }
       if (method == "Module Discoverer"){
-        link = "https://www.google.com/"
+        link = "https://doi.org/10.1038/s41598-017-18370-2"
         return(link)
       }
       if (method == "Correlation Clique"){
-        link = "https://www.google.com/"
+        link = "https://www.youtube.com/watch?v=oHg5SJYRHA0"
         return(link)
       }
     }
