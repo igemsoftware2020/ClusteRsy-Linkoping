@@ -19,7 +19,7 @@ mod_DIAMoND_ui <- function(id){
     sliderInput(ns("seed_weight"), label = "Select Seed Weight", min = 0, max = 50, value = 25, popup = "Additional numeric parameter to assign weight for the seed genes."),
     sliderInput(ns("deg_cutoff"), label = "P-value cutoff", min = 0, max = 1, value = 0.05, popup = "P-value cutoff for differentially expressed genes."),
     uiOutput(ns("error_p_value")),
-    shinyWidgets::prettySwitch(ns("include_seed"), label = "Include seed", value = FALSE, status = "warning", popup = "Include seed genes in the output model."),
+    prettySwitch(ns("include_seed"), label = "Include seed", value = FALSE, status = "warning", popup = "Include seed genes in the output model."),
     sliderInput(ns("output_genes"), label= "Select maximum number of genes to be included", min = 0, max = 500, value = 250, popup =  "Maximum number of genes to be included in the final module."),
     tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer DIAMoND module")
