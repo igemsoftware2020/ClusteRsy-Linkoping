@@ -35,7 +35,10 @@ mod_CliqueSum_server <- function(input, output, session, con){
       tagList(
         uiOutput(ns("input_choice")),
         uiOutput(ns("ppi_choice")),
-        textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods"),
+        tags$div(id = "error_name_DiffCoEx_js",
+                 textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods")),
+        uiOutput(ns("error_name_descrip")),
+        uiOutput(ns("error_name_js")),
         sliderInput(ns("clique_significance"), label = "Clique significance", min = 0, max = 1, value = 0.05, popup ="P-value for cliques to be considered significant"),
         numericInput(ns("min_clique_size"), label = "Minimal clique size", value = 2, max = 50, min = 2, popup = "Minimal size of cliques"),
         numericInput(ns("n_iterations"), label = "Iterations", value = 500, max = 10000, min = 0, popup = "Number of iterations to be performed for the permutation based P-value"),
@@ -77,7 +80,10 @@ mod_CliqueSum_server <- function(input, output, session, con){
       tagList(
         uiOutput(ns("input_choice")),
         uiOutput(ns("ppi_choice")),
-        textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods"),
+        tags$div(id = "error_name_DiffCoEx_js",
+                 textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods")),
+        uiOutput(ns("error_name_descrip")),
+        uiOutput(ns("error_name_js")),
         sliderInput(ns("clique_significance"), label = "Clique significance", min = 0, max = 1, value = 0.05, popup ="P-value for cliques to be considered significant"),
         numericInput(ns("min_clique_size"), label = "Minimal clique size", value = 2, max = 50, min = 2, popup = "Minimal size of cliques"),
         numericInput(ns("n_iterations"), label = "Iterations", value = 500, max = 10000, min = 0, popup = "Number of iterations to be performed for the permutation based P-value"),
@@ -88,6 +94,29 @@ mod_CliqueSum_server <- function(input, output, session, con){
     })
   }
   )
+  
+  module_name <- reactive({
+    input$module_name
+  })
+  
+  observe({
+    if (any(MODifieRDB::get_available_module_objects(con)$module_name == module_name())){
+      output$error_name_js <- renderUI({
+        tags$script(HTML("element = document.getElementById('error_name_DiffCoEx_js');
+                       element.classList.add('has-error');
+                       document.getElementById('main_page_v2_ui_1-Columns_ui_1-Description1_ui_1-DiffCoEx_ui_1-load_input').disabled = true;"))
+      })
+      output$error_name_descrip <- renderUI({
+        tags$p(class = "text-danger", tags$b("Error:"), "This name has been taken. Please try again!")
+      })
+    } else {
+      output$error_name_js <- renderUI({
+        tags$script(HTML("document.getElementById('error_name_DiffCoEx_js').classList.remove('has-error');
+                         document.getElementById('main_page_v2_ui_1-Columns_ui_1-Description1_ui_1-DiffCoEx_ui_1-load_input').disabled = false;"))
+      })
+      output$error_name_descrip <- NULL
+    }
+  }) 
   
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
