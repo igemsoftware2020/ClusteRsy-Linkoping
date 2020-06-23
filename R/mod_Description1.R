@@ -43,7 +43,7 @@ mod_Description1_server <- function(input, output, session, con){
         return(description)
       }
       if (method == "DIAMoND"){
-        description = "This is DIAMoND"
+        description = "A seed gene based algorithm to identify disease modules from differentially expressed genes."
         return(description)
       }
       if (method == "DiffCoEx"){
@@ -51,11 +51,11 @@ mod_Description1_server <- function(input, output, session, con){
         return(description)
       }
       if (method == "MCODE"){
-        description = "This is MCODE"
+        description = "An algorithm to identify disease modules from differentially expressed."
         return(description)
       }
       if (method == "MODA"){
-        description = "This is MODA"
+        description = "An algorithm to understand gene expression patterns under different conditions."
         return(description)
       }
       if (method == "Module Discoverer"){
@@ -79,7 +79,7 @@ mod_Description1_server <- function(input, output, session, con){
         return(link)
       }
       if (method == "DIAMoND"){
-        link = "https://www.google.com/"
+        link = "https://doi.org/10.1371/journal.pcbi.1004120"
         return(link)
       }
       if (method == "DiffCoEx"){
@@ -87,11 +87,11 @@ mod_Description1_server <- function(input, output, session, con){
         return(link)
       }
       if (method == "MCODE"){
-        link = "https://www.google.com/"
+        link = "https://doi.org/10.1186/1471-2105-4-2"
         return(link)
       }
       if (method == "MODA"){
-        link = "https://www.google.com/"
+        link = "https://doi.org/10.1101/053496"
         return(link)
       }
       if (method == "Module Discoverer"){
