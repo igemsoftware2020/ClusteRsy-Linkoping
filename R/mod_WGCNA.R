@@ -13,21 +13,98 @@ mod_WGCNA_ui <- function(id){
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
     tags$div(id = "error_name_WGCNA_js",
-    textInput(ns("module_name"), "Module object name")),
+    textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
-    radioButtons(ns("group_of_interest"), label= "Select group of interest", choiceNames=c("Group 1", "Group 2"), choiceValues = c(1, 2)),
-    sliderInput(ns("minModuleSize"), label= "Minimum module size", min=1, max=100, value=30),
-    sliderInput(ns("deepSplit"), label= "Integer value between 0 and 4", min=0, max=4, value=2),
-    shinyWidgets::prettySwitch(ns("pamRespectsDendro"), label= "Select pamStage", value=TRUE, status = "warning"),
-    sliderInput(ns("mergeCutHeight"), label = "Dendrogram cut height for module merging", min=0, max=1, value=0.1), 
-    radioButtons(ns("numericLabels"), label="Sholud the returned modules be labeled by color or numbers?", choiceNames=c("Color", "Numbers"), choiceValues = c(F,T)),
-    sliderInput(ns("pval_cutoff"), label="P-value cutoff for significant co-expression modules", min=0, max=1, value=0.05),
-    radioButtons(ns("corType"), label="Specify correlation", choiceNames = c("Pearson", "Bicor"), choiceValues = c("pearson", "bicor")),
-    sliderInput(ns("maxBlockSize"), label="Max block size", min=0, max=10000, value=5000),
-    selectInput(ns("TOMType"), label="Select TOMType", c("None", "Unsigned", "Signed", "Signedtoup Nowick", "Unsigned 2", "Signed 2", "Signed Nowick 2")),
-    shinyWidgets::prettySwitch(ns("saveTOMs"), label= "Consensus topological overlap matrices saved and returned", value = TRUE, status = "warning"), 
-    sliderInput(ns("maxPOutliers"), label="Maimum percentile outlisers", min=0, max=1, value = 0.1),
+    
+    radioButtons(
+      ns("group_of_interest"), 
+      label= "Select group of interest", 
+      choiceNames=c("Group 1", "Group 2"), 
+      choiceValues = c(1, 2), 
+      popup = "A numeric value indicating if group 1 or group 2 contains the condition of interest."),
+    
+    sliderInput(
+      ns("minModuleSize"), 
+      label= "Minimum module size", 
+      min=1, 
+      max=100, 
+      value=30, 
+      popup = "The minimum model size for module detection."),
+    
+    sliderInput(
+      ns("deepSplit"), 
+      label= "Integer value between 0 and 4", 
+      min=0, 
+      max=4, 
+      value=2, 
+      popup = "An integer value between 0 and 4 which provides a simplified control over the module detection sensitivity for the module splitting. 0 is the least sensitive and 4 is the most sensitive."),
+    
+    shinyWidgets::prettySwitch(
+      ns("pamRespectsDendro"), 
+      label= "Select pamStage", 
+      value=FALSE, status = "warning", 
+      popup = "This is only used if pamStage is TRUE. If so then the PAM stage will respect the dendrogram."),
+    
+    sliderInput(
+      ns("mergeCutHeight"), 
+      label = "Dendrogram cut height for module merging", 
+      min=0, 
+      max=1, 
+      value=0.1, 
+      popup = "Module merging dendrogram cut height."), 
+    
+    radioButtons(
+      ns("numericLabels"), 
+      label="Sholud the returned modules be labeled by color or numbers?", 
+      choiceNames=c("Color", "Numbers"), 
+      choiceValues = c(F,T), 
+      popup = "If the returned modules should be labeled by numbers or by colors."),
+    
+    sliderInput(
+      ns("pval_cutoff"), 
+      label="P-value cutoff for significant co-expression modules", 
+      min=0, 
+      max=1, 
+      value=0.05,
+      popup = "The significant co-expression modules p-value cutoff."),
+    
+    radioButtons(
+      ns("corType"), 
+      label="Specify correlation", 
+      choiceNames = c("Pearson", "Bicor"), 
+      choiceValues = c("pearson", "bicor"), 
+      popup = "Specifying the correlation to be used. “Pearson'' indicates Pearson midcorrelation and “Bicor'' indicates bidweight midcorrelation."),
+    
+    sliderInput(
+      ns("maxBlockSize"), 
+      label="Max block size", 
+      min=0, 
+      max=10000, 
+      value=5000, 
+      popup = "The maximum block size for module detection."),
+    
+    selectInput(
+      ns("TOMType"), 
+      label="Select TOMType", 
+      c("None", "Unsigned", "Signed", "Signedtoup Nowick", "Unsigned 2", "Signed 2", "Signed Nowick 2"), 
+      popup = "The type of consensus topological overlap matrices."),
+    
+    shinyWidgets::prettySwitch(
+      ns("saveTOMs"), 
+      label= "Consensus topological overlap matrices saved and returned", 
+      value = FALSE, 
+      status = "warning", 
+      popup = "Save and return the consensus topological overlap matrices for each block?"), 
+    
+    sliderInput(
+      ns("maxPOutliers"), 
+      label="Maimum percentile outlisers", 
+      min=0, 
+      max=1, 
+      value = 0.1, 
+      popup = "This is only used when the corType is Bicor. Specifies maximum percentile of the separate outliers data on either side of the median."),
+    
     tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer WGCNA trait-based module")
     )
@@ -47,12 +124,12 @@ mod_WGCNA_server <- function(input, output, session, con){
   
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
-    selectInput(ns("input_object"), label = "Input object", choices = input_objects)
+    selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation")
   })
   
   output$ppi_choice <- renderUI({
     ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
-    selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks)
+    selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks, popup = "Protein-Protein interaction network to overlay the differentially expressed genes on")
   })
   
   module_name <- reactive({
