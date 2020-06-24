@@ -11,6 +11,7 @@ mod_main_page_v2_ui <- function(id){
   ns <- NS(id)
   tagList(
     navbarPage(title =  "MODifieRWeb", collapsible = TRUE,
+               tabPanel(title = tags$i(class="fa fa-home"), mod_welcoming_page_ui(ns("welcoming_page_ui_1"))),
                tabPanel("Input data", mod_Columns_ui(ns("Columns_ui_1"))),
                tabPanel("Visualization", mod_visual_ui(ns("visual_ui_1"))),
                tabPanel("Input objects", mod_input_overview_ui(ns("input_overview_ui_1"))),
@@ -25,6 +26,7 @@ mod_main_page_v2_ui <- function(id){
 mod_main_page_v2_server <- function(input, output, session){
   ns <- session$ns
   con <- MODifieRDB::connect_to_db("./../testdb.db")
+  callModule(mod_welcoming_page_server, "welcoming_page_ui_1")
   callModule(mod_visual_server, "visual_ui_1", con = con)
   callModule(mod_Columns_server, "Columns_ui_1", con = con)
   callModule(mod_input_overview_server, "input_overview_ui_1", con = con)
