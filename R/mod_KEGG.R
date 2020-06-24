@@ -11,6 +11,7 @@ mod_KEGG_ui <- function(id){
   ns <- NS(id)
   tagList(
           uiOutput(ns("module_input")),
+          uiOutput(ns("error_p_value")),
           selectInput(ns("keytype"), 
                       label = "Select key type",
                       choices = c("kegg",
@@ -51,7 +52,9 @@ mod_KEGG_server <- function(input, output, session, con){
   })
   
   observeEvent(input$load_input, {
-    kegg_enrichment_object <- clusterProfiler::enrichKEGG(gene = input$module_object,
+    id <- showNotification("Creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
+    on.exit(removeNotification(id), add = TRUE)
+    enrichment_object <- try(clusterProfiler::enrichKEGG(gene = input$module_object,
                                                           organism = "hsa", #Homo sapiens set as default.
                                                           keyType = input$keytype,
                                                           pvalueCutoff = input$deg_cutoff,
@@ -63,6 +66,12 @@ mod_KEGG_server <- function(input, output, session, con){
                                                           use_internal_data = FALSE,
                                                           
                                                   )
+    )
+    if (class(enrichment_object) == "try-error"){
+      output$error_p_value <- renderUI({
+        tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
+      })
+    }
   })
   
  
