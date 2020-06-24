@@ -21,7 +21,7 @@ chooserInput <- function(inputId, leftLabel, rightLabel, leftChoices, rightChoic
             tags$select(class="left", size=size, multiple=multiple, leftChoices,
                         style = "color: black; width: 255px;background-color: #ecf0f1; border-radius: 8px;")
         ),
-        div(class="chooser-container chooser-center-container", style = "position: relative; bottom: 5px;",
+        div(class="chooser-container chooser-center-container", style = "position: relative; bottom: 5px; left: 1px;",
             icon("arrow-circle-o-right", "right-arrow fa-3x"),
             tags$br(),
             icon("arrow-circle-o-left", "left-arrow fa-3x")

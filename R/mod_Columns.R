@@ -75,7 +75,7 @@ mod_Columns_server <- function(input, output, session, con){
   # Number conainters
   output$algorithm <- renderUI({
     upload_algorithm()
-    tags$div(`class`="col-sm-4",
+    tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
              tags$form(class = "well",
                        tags$h2(class = "text-center",
                                tags$span(
@@ -86,7 +86,7 @@ mod_Columns_server <- function(input, output, session, con){
   # Module conatiners
   output$algorithm1 <- renderUI({
     upload_algorithm()
-    tags$div(`class`="col-sm-4",
+    tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
              tags$form(class = "well",
                        `style`="background-color:#2c3e50;",
                        mod_Description1_ui(ns("Description1_ui_1"))))

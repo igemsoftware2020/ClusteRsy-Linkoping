@@ -19,7 +19,7 @@ mod_upload_ui <- function(id){
 #' upload Server Function
 #'
 #' @noRd 
-mod_upload_server <- function(input, output, session, input_object, con){
+mod_upload_server <- function(input, output, session, con){
   ns <- session$ns
   
   MODifieR_module <- reactiveValues()

@@ -67,16 +67,16 @@ mod_ppi_networks_server <- function(input, output, session, con){
     MODifieRDB::ppi_network_to_db(ppi_network = ppi, ppi_name = ppi_name, con = con)
     
   })
-  
-if (is.data.frame(ppi_networks) && nrow(ppi_networks)==0) {
-  MODifieRDB::ppi_network_to_db(ppi_network = MODifieR::ppi_network,
-                                ppi_name = "Default", 
-                                con = con)
-}
-  else if (any(ppi_networks == "Default")) {
-    return()
+    
+  if (is.data.frame(ppi_networks) && nrow(ppi_networks)==0) {
+    MODifieRDB::ppi_network_to_db(ppi_network = MODifieR::ppi_network,
+                                  ppi_name = "Default", 
+                                  con = con)
   }
-}
+    else if (any(ppi_networks == "Default")) {
+      return()
+    }
+  }
 
 ## To be copied in the UI
 # mod_ppi_networks_ui("ppi_networks_ui_1")
