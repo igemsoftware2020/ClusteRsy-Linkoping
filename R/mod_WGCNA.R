@@ -144,7 +144,8 @@ mod_WGCNA_server <- function(input, output, session, con){
                        document.getElementById('main_page_v2_ui_1-Columns_ui_1-Description1_ui_1-WGCNA_ui_1-load_input').disabled = true;"))
       })
       output$error_name_descrip <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), "This name has been taken. Please try again!")
+        tags$p(class = "text-danger", tags$b("Error:"), "This name has been taken. Please try again!",
+               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
       })
     } else {
       output$error_name_js <- renderUI({
