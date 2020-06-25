@@ -46,19 +46,15 @@ mod_KEGG_server <- function(input, output, session, con){
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
   })
   
-  output$background_genes <- renderUI({
-    print(input$module_object)
-    ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
-    selectInput(ns("ppi_object"), label = "Background genes", choices = ppi_networks, popup = "The background genes are all the genes present in the PPI network")
-  })
   
   observeEvent(input$load_input, {
     id <- showNotification("Creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
-    background_genes <- unique(unlist(input$ppi_object))
+    ppi_name <- as.character(MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$settings$ppi_network)
+    background_genes <- unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
     module_genes <- MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$module_genes
     enrichment_object <- try(clusterProfiler::enrichKEGG(gene = module_genes,
-                                                          organism = "hsa", #Homo sapiens set as default.
+                                                          organism = 'hsa', #Homo sapiens set as default.
                                                           keyType = input$keytype,
                                                           pvalueCutoff = input$deg_cutoff,
                                                           pAdjustMethod = input$padj_method,
@@ -66,7 +62,7 @@ mod_KEGG_server <- function(input, output, session, con){
                                                           minGSSize = input$mingssize,
                                                           maxGSSize = input$maxgssize,
                                                           qvalueCutoff = input$qvalue_cutoff,
-                                                          use_internal_data = FALSE,
+                                                          use_internal_data = FALSE
                                                           
                                                   )
     )
