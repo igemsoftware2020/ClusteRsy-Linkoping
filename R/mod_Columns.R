@@ -49,12 +49,12 @@ mod_Columns_ui <- function(id){
              tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
                       tags$form(class = "well faded",
                                 id = "mod_contain_2",
-                                `style`="background-color:#2c3e50;",
+                                `style`="background-color:#2c3e50; pointer-events :none;",
                                 mod_Description1_ui(ns("Description1_ui_1")))),
              tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
                       tags$form(class = "well faded",
                                 id = "mod_contain_3",
-                                `style`="background-color:#2c3e50;"))
+                                `style`="background-color:#2c3e50; pointer-events :none;"))
              ),
     htmlOutput(ns("fadein"))
   )
