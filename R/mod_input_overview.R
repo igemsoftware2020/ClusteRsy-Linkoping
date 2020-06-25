@@ -36,7 +36,7 @@ mod_input_overview_server <- function(input, output, session, con){
     read.table(file = infile, header = T)
   })
   
-  output$module_name_chooser <- renderUI({
+  output$input_name_chooser <- renderUI({
     input <- upload_input()
     tagList( 
       textInput(ns("input_name"), "Input object name"),
@@ -50,7 +50,9 @@ mod_input_overview_server <- function(input, output, session, con){
     input_name <- input$input_name
     on.exit(removeNotification(id), add = TRUE)
     
-    #MODifieRDB::ppi_network_to_db(ppi_network = ppi, ppi_name = ppi_name, con = con) 
+    MODifieRDB::MODifieR_object_to_db(MODifieR_object = input,
+                                      object_name = input_name,
+                                      con = con)
     ## Need to implement in the package
     
   })

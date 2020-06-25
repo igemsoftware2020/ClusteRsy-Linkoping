@@ -7043,4 +7043,25 @@ border-radius:5px;
 70% {transform: rotate(0deg);left:1000px;}
 100% {transform: rotate(-360deg);left:0px;}
 }
+
+dash {
+   width: 30%;
+   border: 1px solid #ffbd40;
+   border-radius: 10px;
+   line-height: 0.1em;
+   display:block;
+   position: absolute;
+}    
+
+.no1 {
+   border: 1px dashed #ffbd40;
+}                      
+
+.no2 {
+   border: 1px solid #ffbd40;
+}
+
+.faded {
+  opacity: 0.5;
+}
                        
