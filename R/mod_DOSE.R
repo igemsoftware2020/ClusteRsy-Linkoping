@@ -12,15 +12,12 @@ mod_DOSE_ui <- function(id){
   tagList(
     uiOutput(ns("module_input")),
     uiOutput(ns("error_p_value")),
-    radioButtons(ns("enrich"), "Choose a method", 
+    selectInput(ns("enrich"), "Choose a method", 
                  choices = c("Disease Ontology (DO)",
                              "Network of Cancer Gene (NCG)",
-                             "DisGeNET (DGN)"),
-                 htmlOutput(ns("para"))
- 
-  ))
-  
-}
+                             "DisGeNET (DGN)")),
+    htmlOutput(ns("para"))
+)}
     
 #' DOSE Server Function
 #'
@@ -89,44 +86,46 @@ mod_DOSE_server <- function(input, output, session, con){
       output$error_p_value <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), enrichment_objectONE)
       })
-    }
-    module_genes <- MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$module_genes
-    enrichment_objectTWO <- try(DOSE::gseDO(geneList = module_genes,
-                                                       ont ="DO",
-                                                       exponent = 1,
-                                                       nperm = input$nperm,
-                                                       pvalueCutoff = input$deg_cutoff,
-                                                       pAdjustMethod = input$padj_method,
-                                                       minGSSize = input$mingssize,
-                                                       maxGSSize = input$maxgssize,
-                                                       qvalueCutoff = input$qvalue_cutoff,
-                                                       by = input$by,
-                                                       seed = FALSE,
-                                                       verbose = FALSE,
-                                                       
-    )
-    )
-    if (class(enrichment_objectTWO) == "try-error"){
-      output$error_p_value <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), enrichment_objectTWO)
-      })
-    }
-  })
-  #these two are the remaining ones
-   observeEvent(input$enrich, {
-     if (input$enrich == "Network of Cancer Gene (NCG)") {
-       renderUI({
-         tagList()
-       })}})
-     
-     observeEvent(input$enrich, {
-       if (input$enrich == "DisGeNET (DGN)") {
-         renderUI({
-           tagList()
-         })}})
- 
-     
+    }})
 }
+    
+  #   module_genes <- MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$module_genes
+  #   enrichment_objectTWO <- try(DOSE::gseDO(geneList = module_genes,
+  #                                                      ont ="DO",
+  #                                                      exponent = 1,
+  #                                                      nperm = input$nperm,
+  #                                                      pvalueCutoff = input$deg_cutoff,
+  #                                                      pAdjustMethod = input$padj_method,
+  #                                                      minGSSize = input$mingssize,
+  #                                                      maxGSSize = input$maxgssize,
+  #                                                      qvalueCutoff = input$qvalue_cutoff,
+  #                                                      by = input$by,
+  #                                                      seed = FALSE,
+  #                                                      verbose = FALSE,
+  #                                                      
+  #   )
+  #   )
+  #   if (class(enrichment_objectTWO) == "try-error"){
+  #     output$error_p_value <- renderUI({
+  #       tags$p(class = "text-danger", tags$b("Error:"), enrichment_objectTWO)
+  #     })
+  #   }
+  # })
+  # #these two are the remaining ones
+  #  observeEvent(input$enrich, {
+  #    if (input$enrich == "Network of Cancer Gene (NCG)") {
+  #      renderUI({
+  #        tagList()
+  #      })}})
+  #    
+  #    observeEvent(input$enrich, {
+  #      if (input$enrich == "DisGeNET (DGN)") {
+  #        renderUI({
+  #          tagList()
+  #        })}})
+  # 
+  #    
+  # }
     
 ## To be copied in the UI
 # mod_DOSE_ui("DOSE_ui_1")
