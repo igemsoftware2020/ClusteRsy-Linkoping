@@ -10,7 +10,14 @@
 mod_input_overview_ui <- function(id){
   ns <- NS(id)
   tagList(
-    fileInput(ns("input_object"), label = "Upload an input object"),
+    tags$div(`class`="row", # COL-SM-4 is defined by the grid system. You can read more about it here: https://www.w3schools.com/bootstrap/bootstrap_grid_system.asp
+             tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s; 
+                                                   -o-animation: fadein 1s; animation: fadein 1s;", 
+                     tags$form(class = "well", style = "background-color: #2c3e50", # Change the background color
+                               fileInput(ns("input_object"), label = "Upload an input object")
+                     )
+             )
+             ),
     uiOutput(ns("input_name_chooser")),
     actionButton(ns("refresh"), "Refresh database"),
     tags$br(),
