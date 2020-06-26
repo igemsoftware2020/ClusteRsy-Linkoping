@@ -10,13 +10,15 @@
 mod_module_overview_ui <- function(id){
   ns <- NS(id)
   tagList(
-    fileInput(ns("module_object"), label = "Upload a module object"),
-    uiOutput(ns("module_name_chooser")),
-    actionButton(ns("refresh"), "Refresh database"),
-    tags$br(),
-    tags$br(),
     DT::dataTableOutput(ns("module_overview")),
-    downloadButton(ns("download_module"), "Download")
+    tags$div(`class`="row",
+             tags$div(`class`="col-sm-8", style = "color:black",
+             fileInput(ns("module_object"), label = "Upload a module object"),
+             uiOutput(ns("module_name_chooser"))),
+             tags$br(),
+             tags$div(`class`="col-sm-4", style = "text-align:right",
+                      actionButton(ns("refresh"), "Refresh database"),
+                      downloadButton(ns("download_module"), "Download")))
   )
 }
 

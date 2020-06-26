@@ -47,7 +47,8 @@ mod_CliqueSum_server <- function(input, output, session, con){
       tagList(
         uiOutput(ns("ppi_choice")),
         textInput(ns("db_name"), "Clique database name"),
-        actionButton(ns("build_db"), "Build clique database"),
+        tags$div(style = "text-align:center",
+        actionButton(ns("build_db"), "Build clique database")),
         
       )
     })

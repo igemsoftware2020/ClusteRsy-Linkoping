@@ -12,7 +12,7 @@ mod_main_page_v2_ui <- function(id){
   tagList(
     navbarPage(id = ns("navbar"), title = actionLink(ns("title"), tags$i(class = "fa fa-home", `aria-hidden`="true"), 
                                                      type = "heading", style="left: 9px; position: relative;"), 
-               collapsible = TRUE,
+               collapsible = TRUE, selected = " ",
                tabPanel("Input data", mod_Columns_ui(ns("Columns_ui_1"))),
                tabPanel("Visualization", mod_visual_ui(ns("visual_ui_1"))),
                tabPanel("Input objects", mod_input_overview_ui(ns("input_overview_ui_1"))),
