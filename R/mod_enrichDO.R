@@ -44,30 +44,24 @@ mod_enrichDO_server <- function(input, output, session, con){
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
   })
-  
-  #Unnecessary code? {
-  # output$background_genes <- renderUI({
-  #   print(input$module_object)
-  #   ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
-  #   selectInput(ns("ppi_object"), label = "Background genes", choices = ppi_networks, popup = "The background genes are all the genes present in the PPI network")
-  # })
-  # } Unneccessary code ?
+ 
   
   
   observeEvent(input$load_inputDO, {
     id <- showNotification("Identifying disease assosciation and creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     module_genes <- MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$module_genes
+    ppi_name <- as.character(MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$settings$ppi_network)
     background_genes <- unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
     enrichment_objectONE <- try(DOSE::enrichDO(gene = module_genes,
                                                ont = "DO",
                                                pvalueCutoff = input$pvalueCutoff,
-                                               pAdjustMethod = input$padj_method,
+                                               pAdjustMethod = input$pAdjustMethod,
                                                universe = background_genes,
                                                minGSSize = input$mingssize,
                                                maxGSSize = input$maxgssize,
-                                               qvalueCutoff = input$qvalue_cutoff,
-                                               readable = FALSE,
+                                               qvalueCutoff = input$qvalueCutoff,
+                                               readable = FALSE
                                                
     )
     )
@@ -83,4 +77,4 @@ mod_enrichDO_server <- function(input, output, session, con){
 # mod_DOSE_ui("enrichDO_ui_1")
 
 ## To be copied in the server
-# callModule(mod_enrichDO_server, "enrich_ui_1")
+# callModule(mod_enrichDO_server, "enrichDO_ui_1")

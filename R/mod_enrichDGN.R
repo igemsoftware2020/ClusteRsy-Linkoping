@@ -57,15 +57,16 @@ mod_enrichDGN_server <- function(input, output, session, con){
     id <- showNotification("Identifying disease assosciation and creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     module_genes <- MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$module_genes
+    ppi_name <- as.character(MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$settings$ppi_network)
     background_genes <- unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
     enrichment_objectONE <- try(DOSE::enrichDGN(gene = module_genes,
                                                 pvalueCutoff = input$pvalueCutoff,
-                                                pAdjustMethod = input$padj_method,
+                                                pAdjustMethod = input$pAdjustMethod,
                                                 universe = background_genes,
                                                 minGSSize = input$mingssize,
                                                 maxGSSize = input$maxgssize,
-                                                qvalueCutoff = input$qvalue_cutoff,
-                                                readable = FALSE,
+                                                qvalueCutoff = input$qvalueCutoff,
+                                                readable = FALSE
                                                 
     )
     )
