@@ -120,7 +120,7 @@ mod_DiffCoEx_server <- function(input, output, session, con){
                                           beta = input$beta,
                                           module_name = input$module_name,
                                           con = con)
-    
+    updateTextInput(session, "module_name", value = character(0))
     
   })
 

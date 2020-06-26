@@ -86,7 +86,9 @@ mod_DIAMoND_server <- function(input, output, session, con){
           tags$p(class = "text-danger", tags$b("Error:"), module_object,
                  style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
         })
-      }
+    } else {
+      updateTextInput(session, "module_name", value = character(0))
+    }
     }
   )
 

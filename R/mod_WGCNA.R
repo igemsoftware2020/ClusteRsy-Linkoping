@@ -174,6 +174,7 @@ mod_WGCNA_server <- function(input, output, session, con){
                                           maxPOutliers = input$maxPOutliers, 
                                           module_name = input$module_name,
                                           con = con)
+    updateTextInput(session, "module_name", value = character(0))
   })
   
 }

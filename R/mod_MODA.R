@@ -89,6 +89,7 @@ mod_MODA_server <- function(input, output, session, con){
                                           conservedTheta = input$conservedTheta,
                                           module_name = input$module_name,
                                           con = con)
+    updateTextInput(session, "module_name", value = character(0))
   })
 }
     

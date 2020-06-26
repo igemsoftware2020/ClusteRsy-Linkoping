@@ -123,7 +123,7 @@ mod_CliqueSum_server <- function(input, output, session, con){
                                                n_cores = 1,
                                                module_name = input$module_name,
                                                con = con)
-    
+    updateTextInput(session, "module_name", value = character(0))
     on.exit(removeNotification(id), add = TRUE)
     
 
