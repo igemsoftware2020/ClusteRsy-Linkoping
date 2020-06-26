@@ -13,7 +13,8 @@ function unfade(element) {
 unfade(document.getElementById('num_contain_2'))
 unfade(document.getElementById('mod_contain_2'))
 document.getElementById('mod_contain_2').style.pointerEvents = "auto";
-document.getElementById('mod_contain_2').style.cursor = "default";
+document.getElementById('mod_contain_2').style.cursor = "default"; /* form cursor */
+document.getElementById('mod2').style.cursor = "default"; /* div cursor */
 document.getElementById('arrow1').classList.remove('no1');
 document.getElementById('arrow1').classList.add('no2');
 
