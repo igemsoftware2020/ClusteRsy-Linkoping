@@ -7020,7 +7020,7 @@ option:checked {
   background: #c7c7c7 linear-gradient(0deg, #c7c7c7 0%, #c7c7c7 100%);
 }
 
-/* Testing*/
+/* Animation */
 #animated_div {
 position: relative;
 height: 100px;
@@ -7044,8 +7044,10 @@ border-radius:5px;
 100% {transform: rotate(-360deg);left:0px;}
 }
 
-/* Testing*/
+/* Animation */
 
+
+/* Arrow */
 dash {
    width: 30%;
    border: 1px solid #ffbd40;
@@ -7066,4 +7068,12 @@ dash {
 .faded {
   opacity: 0.5;
 }
-                       
+
+/* tag <a> */
+a[type="heading"]{
+  color: #ffbd40;
+}
+
+a[type="heading"]:hover, a[type="heading"]:focus{
+  text-decoration:none
+}
