@@ -52,12 +52,11 @@ mod_gseKEGG_server <- function(input, output, session, con){
     
     input_name <- as.character(MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$settings$MODifieR_input)
     input_data <- MODifieRDB::MODifieR_input_from_db(input_name, con = con)$diff_genes
-    module_genes <- as.numeric(MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$module_genes)
+    module_genes <- MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$module_genes
   
-    gene_id <- as.numeric(input_data$gene)
-    gene_list <- subset(input_data, gene_id %in% module_genes) #Error in this one: undefined columns selected.
+    gene_list <- subset(input_data, input_data$gene %in% module_genes )
     
-    gene_list_sorted <- gene_list[with(gene_list, order(pvalue)),]
+    gene_list_sorted <- gene_list[with(gene_list, order(gene_list$pval)),]
 
     enrichment_object <- try(clusterProfiler::gseKEGG(geneList = gene_list_sorted,
                                                       organism = 'hsa',
@@ -72,13 +71,14 @@ mod_gseKEGG_server <- function(input, output, session, con){
                                                       seed = input$include_seed
     )
     )
-    
+
     if (class(enrichment_object) == "try-error"){
       output$error_p_value <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
       })
     }
   })
+  
 }
     
 ## To be copied in the UI
