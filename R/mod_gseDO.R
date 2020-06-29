@@ -12,14 +12,15 @@ mod_gseDO_ui <- function(id){
   tagList(
     uiOutput(ns("module_input")),
     uiOutput(ns("error_p_value")),
-    numericInput(ns("exponent"), label = "Exponent", value = 5, max = 100, min = 0),
-    numericInput(ns("minGSSize"), label = "Minimum size of genes", value = 5, max = 100, min = 0),
-    numericInput(ns("maxGSSize"), label = "Maximal size each geneSet", value = 500, max = 5000, min = 0),
-    sliderInput(ns("nperm"), label = "Permutation number", min = 0, max = 1000, value = 50),
+    numericInput(ns("exponent"), label = "Exponent", value = 5, max = 100, min = 0, popup = "Weight of each step"),
+    numericInput(ns("minGSSize"), label = "Minimum size of genes", value = 5, max = 100, min = 0, popup = "Minimal size of genes for testing"),
+    numericInput(ns("maxGSSize"), label = "Maximal size each geneSet", value = 500, max = 5000, min = 0, popup = "Maximal size of each geneSet for analyzing"),
+    sliderInput(ns("nPerm"), label = "Permutation number", min = 0, max = 1000, value = 50, popup = "Number of permutations"),
     selectInput(ns("by"), label = "Select algorithm",
                 choices = c("fgsea",
-                            "DOSE")),
-    sliderInput(ns("pvalueCutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05),
+                            "DOSE"),
+                popup = "Algorithm used for the gene set enrichment analysis"),
+    sliderInput(ns("pvalueCutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value"),
     selectInput(ns("pAdjustMethod"), "Select an adjustment method",
                 choices = c("holm",
                             "hochberg",
@@ -28,8 +29,10 @@ mod_gseDO_ui <- function(id){
                             "BH",
                             "BY",
                             "fdr",
-                            "none")),
-    actionButton(ns("load_input"), label = "Create enrichment analysis object")
+                            "none"),
+                multiple = FALSE,
+                popup = "Correction methods used to control p-values and q-values"),
+    actionButton(ns("load_input"), label = "Enrich")
   )
 }
     
@@ -57,8 +60,8 @@ mod_gseDO_server <- function(input, output, session, con){
   
   gse_object <- try(DOSE::gseDO(
                  geneList = gene_list,
-                 exponent = inpur$exponent,
-                 nperm = input$nperm,
+                 exponent = input$exponent,
+                 nPerm = input$nperm,
                  pvalueCutoff = input$deg_cutoff,
                  pAdjustMethod = input$padj_method,
                  minGSSize = input$mingssize,

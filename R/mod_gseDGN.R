@@ -15,7 +15,7 @@ mod_gseDGN_ui <- function(id){
     numericInput(ns("exponent"), label = "Exponent", value = 5, max = 100, min = 0),
     numericInput(ns("minGSSize"), label = "Minimum size of genes", value = 5, max = 100, min = 0),
     numericInput(ns("maxGSSize"), label = "Maximal size each geneSet", value = 500, max = 5000, min = 0),
-    sliderInput(ns("nperm"), label = "Permutation number", min = 0, max = 1000, value = 50),
+    sliderInput(ns("nPerm"), label = "Permutation number", min = 0, max = 1000, value = 50),
     selectInput(ns("by"), label = "Select algorithm",
                 choices = c("fgsea",
                             "DOSE")),
@@ -56,8 +56,8 @@ mod_gseDGN_server <- function(input, output, session, con){
     
     gse_object <- try(DOSE::gseDGN(
       geneList = gene_list,
-      exponent = inpur$exponent,
-      nperm = input$nperm,
+      exponent = input$exponent,
+      nPerm = input$nperm,
       pvalueCutoff = input$deg_cutoff,
       pAdjustMethod = input$padj_method,
       minGSSize = input$mingssize,
