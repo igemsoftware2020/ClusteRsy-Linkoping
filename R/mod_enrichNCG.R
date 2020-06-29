@@ -10,10 +10,9 @@
 mod_enrichNCG_ui <- function(id){
   ns <- NS(id)
   tagList(
+    #Description of the method "Enrichment analysis based on the Network of Cancer Genes database"
     uiOutput(ns("module_input")),
     uiOutput(ns("error_p_value")),
-    
-    #Description of the method "Enrichment analysis based on the Network of Cancer Genes database"
     sliderInput(ns("pvalueCutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "P-value cutoff"),
     selectInput(ns("pAdjustMethod"), "Select an adjustment method",
                 choices = c("holm",
@@ -29,7 +28,9 @@ mod_enrichNCG_ui <- function(id){
     sliderInput(ns("mingssize"), label = "Minimum size of genes", min = 0, max = 100, value = 10, popup = "Minimal size of genes for testing"),
     sliderInput(ns("maxgssize"), label = "Maximal size each gene set", min = 0,  max = 5000, value = 500, popup = "Maximal size of each geneSet for analyzing"),
     sliderInput(ns("qvalueCutoff"), label = "Q-value cut-off", min = 0, max = 1, value = 0.05, popup = "Q-value cutoff"),
-    actionButton(ns("load_inputDO"), label = "Use method") #I want this button to be in the middle
+    tags$div( style = "text-align:center",
+              actionButton(ns("load_inputDO"), label = "Use method") 
+    )
     
   )}
 
@@ -44,14 +45,7 @@ mod_enrichNCG_server <- function(input, output, session, con){
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
   })
   
-  #Unnecessary code? {
-  # output$background_genes <- renderUI({
-  #   print(input$module_object)
-  #   ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
-  #   selectInput(ns("ppi_object"), label = "Background genes", choices = ppi_networks, popup = "The background genes are all the genes present in the PPI network")
-  # })
-  # } Unneccessary code ?
-  
+ 
   
   observeEvent(input$load_inputDO, {
     id <- showNotification("Identifying disease assosciation and creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
@@ -79,7 +73,7 @@ mod_enrichNCG_server <- function(input, output, session, con){
 
 
 ## To be copied in the UI
-# mod_DOSE_ui("enrichNCG_ui_1")
+# mod_enrichNCG_ui("enrichNCG_ui_1")
 
 ## To be copied in the server
 # callModule(mod_enrichNCG_server, "enrich_ui_1")

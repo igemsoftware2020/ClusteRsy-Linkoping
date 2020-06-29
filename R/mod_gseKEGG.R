@@ -52,15 +52,15 @@ mod_gseKEGG_server <- function(input, output, session, con){
     
     input_name <- as.character(MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$settings$MODifieR_input)
     input_data <- MODifieRDB::MODifieR_input_from_db(input_name, con = con)$diff_genes
-    module_genes <- sort(as.numeric(MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$module_genes))
-
-    input_data <- data.frame(gene = c(as.numeric(input_data$gene)), pval = c(input_data$pval))
-    input_data_sorted <- input_data[with(input_data, order(input_data$gene)),]
+    module_genes <- MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$module_genes
     
-    gene_list <- subset(input_data_sorted, input_data_sorted$gene %in% module_genes )
+    subset_genes <- input_data[(input_data$gene %in% module_genes), ]
     
+    genes <- subset_genes$pvalue
+    names(genes) <- subset_genes$gene
+    genes <- sort(genes, decreasing = T)
     
-    enrichment_object <- try(clusterProfiler::gseKEGG(geneList = gene_list,
+    enrichment_object <- try(clusterProfiler::gseKEGG(geneList = genes,
                                                       organism = 'hsa',
                                                       keyType = input$keytype,
                                                       exponent = input$exponent,

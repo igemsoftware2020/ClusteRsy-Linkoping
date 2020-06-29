@@ -29,7 +29,7 @@ mod_enrichDGN_ui <- function(id){
     sliderInput(ns("maxgssize"), label = "Maximal size each gene set", min = 0,  max = 5000, value = 500, popup = "Maximal size of each geneSet for analyzing"),
     sliderInput(ns("qvalueCutoff"), label = "Q-value cut-off", min = 0, max = 1, value = 0.05, popup = "Q-value cutoff"),
     tags$div( style = "text-align:center",
-      actionButton(ns("load_inputDO"), label = "Use method") #I want this button to be in the middle
+      actionButton(ns("load_inputDO"), label = "Use method") 
     )
     
     
