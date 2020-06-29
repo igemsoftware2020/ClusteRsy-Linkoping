@@ -10,11 +10,15 @@
 mod_module_overview_ui <- function(id){
   ns <- NS(id)
   tagList(
-    actionButton(ns("refresh"), "Refresh database"),
-    tags$br(),
-    tags$br(),
     DT::dataTableOutput(ns("module_overview")),
-    downloadButton(ns("download_module"), "Download")
+    tags$div(`class`="row",
+             tags$div(`class`="col-sm-8", style = "color:black",
+             fileInput(ns("module_object"), label = "Upload a module object"),
+             uiOutput(ns("module_name_chooser"))),
+             tags$br(),
+             tags$div(`class`="col-sm-4", style = "text-align:right",
+                      actionButton(ns("refresh"), "Refresh database"),
+                      downloadButton(ns("download_module"), "Download")))
   )
 }
 
@@ -23,6 +27,36 @@ mod_module_overview_ui <- function(id){
 #' @noRd 
 mod_module_overview_server <- function(input, output, session, con){
   ns <- session$ns
+  
+  upload_module <- reactive({
+    req(input$module_object)
+    infile <- (input$module_object$datapath)
+    if (is.null(infile)){
+      
+      return(NULL)
+    }
+    
+    read.table(file = infile, header = T)
+  })
+  
+  output$module_name_chooser <- renderUI({
+    module <- upload_module()
+    tagList( 
+      textInput(ns("module_name"), "Module object name"),
+      actionButton(ns("upload_module"), "Add module object to database")
+    )
+  })
+  
+  observeEvent(input$upload_module, {
+    id <- showNotification("Saving module object to database", duration = NULL, closeButton = FALSE)
+    module <- upload_module()
+    module_name <- input$module_name
+    on.exit(removeNotification(id), add = TRUE)
+    
+    #MODifieRDB::ppi_network_to_db(ppi_network = ppi, ppi_name = ppi_name, con = con) 
+    ## Need to implement in the package
+    
+  })
   
   module_objects <- MODifieRDB::get_available_module_objects(con)
   

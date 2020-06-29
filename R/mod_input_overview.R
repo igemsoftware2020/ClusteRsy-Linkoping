@@ -10,10 +10,14 @@
 mod_input_overview_ui <- function(id){
   ns <- NS(id)
   tagList(
-    actionButton(ns("refresh"), "Refresh database"),
-    tags$br(),
-    tags$br(),
     DT::dataTableOutput(ns("input_overview")),
+    tags$div(`class`="row",
+             tags$div(`class`="col-sm-8", style = "color:black",
+             fileInput(ns("input_object"), label = "Upload an input object"),
+             uiOutput(ns("input_name_chooser"))),
+             tags$br(),
+             tags$div(`class`="col-sm-4", style = "text-align:right",
+                      actionButton(ns("refresh"), "Refresh database")))
   )
 }
 
@@ -22,6 +26,38 @@ mod_input_overview_ui <- function(id){
 #' @noRd 
 mod_input_overview_server <- function(input, output, session, con){
   ns <- session$ns
+  
+  upload_input <- reactive({
+    req(input$input_object)
+    infile <- (input$input_object$datapath)
+    if (is.null(infile)){
+      
+      return(NULL)
+    }
+    
+    read.table(file = infile, header = T)
+  })
+  
+  output$input_name_chooser <- renderUI({
+    input <- upload_input()
+    tagList( 
+      textInput(ns("input_name"), "Input object name"),
+      actionButton(ns("upload_input"), "Add input object to database")
+    )
+  })
+  
+  observeEvent(input$upload_input, {
+    id <- showNotification("Saving input object to database", duration = NULL, closeButton = FALSE)
+    input <- upload_input()
+    input_name <- input$input_name
+    on.exit(removeNotification(id), add = TRUE)
+    
+    MODifieRDB::MODifieR_object_to_db(MODifieR_object = input,
+                                      object_name = input_name,
+                                      con = con)
+    ## Need to implement in the package
+    
+  })
   
   input_objects <- MODifieRDB::get_available_input_objects(con)
   

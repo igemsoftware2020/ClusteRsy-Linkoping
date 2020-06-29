@@ -10,12 +10,14 @@
 mod_ppi_networks_ui <- function(id){
   ns <- NS(id)
   tagList(
-    fileInput(ns("ppi_network"), label = "Upload a PPI network"),
-    uiOutput(ns("ppi_name_chooser")),
-    actionButton(ns("refresh"), "Refresh database"),
-    tags$br(),
-    tags$br(),
-    DT::dataTableOutput(ns("ppi_overview"))
+    DT::dataTableOutput(ns("ppi_overview")),
+    tags$div(`class`="row",
+             tags$div(`class`="col-sm-8", style = "color:black",
+             fileInput(ns("ppi_network"), label = "Upload a PPI network"),
+             uiOutput(ns("ppi_name_chooser"))),
+             tags$br(),
+             tags$div(`class`="col-sm-4", style = "text-align:right",
+                      actionButton(ns("refresh"), "Refresh database"))),
   )
 }
 
@@ -67,16 +69,16 @@ mod_ppi_networks_server <- function(input, output, session, con){
     MODifieRDB::ppi_network_to_db(ppi_network = ppi, ppi_name = ppi_name, con = con)
     
   })
-  
-if (is.data.frame(ppi_networks) && nrow(ppi_networks)==0) {
-  MODifieRDB::ppi_network_to_db(ppi_network = MODifieR::ppi_network,
-                                ppi_name = "Default", 
-                                con = con)
-}
-  else if (any(ppi_networks == "Default")) {
-    return()
+    
+  if (is.data.frame(ppi_networks) && nrow(ppi_networks)==0) {
+    MODifieRDB::ppi_network_to_db(ppi_network = MODifieR::ppi_network,
+                                  ppi_name = "Default", 
+                                  con = con)
   }
-}
+    else if (any(ppi_networks == "Default")) {
+      return()
+    }
+  }
 
 ## To be copied in the UI
 # mod_ppi_networks_ui("ppi_networks_ui_1")

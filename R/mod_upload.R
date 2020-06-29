@@ -19,7 +19,7 @@ mod_upload_ui <- function(id){
 #' upload Server Function
 #'
 #' @noRd 
-mod_upload_server <- function(input, output, session, input_object, con){
+mod_upload_server <- function(input, output, session, con){
   ns <- session$ns
   
   MODifieR_module <- reactiveValues()
@@ -51,7 +51,8 @@ mod_upload_server <- function(input, output, session, input_object, con){
       textInput(ns("group1"), "Group 1 label"),
       textInput(ns("group2"), "Group 2 label"),
       chooserInput(ns("sample_groups"), "Available frobs", "Selected frobs", 
-                   colnames(expression_matrix), c(), size = 10, multiple = TRUE),
+                   colnames(expression_matrix), c(), multiple = TRUE),
+      tags$br(),
       uiOutput(ns("error_empty_group")),
       shinyWidgets::prettySwitch(ns("adjusted_pvalue"), label = "Pvalue", value = TRUE, status = "warning"),
       shinyWidgets::prettySwitch(ns("quantile_normalization"), label = "Quantile", value = FALSE, status = "warning"),
@@ -73,7 +74,8 @@ mod_upload_server <- function(input, output, session, input_object, con){
                        document.getElementById('main_page_v2_ui_1-Columns_ui_1-upload_ui_1-create_input').disabled = true;"))
       })
     output$error_name_descrip <- renderUI({
-      tags$p(class = "text-danger", tags$b("Error:"), "This name has been taken. Please try again!")
+      tags$p(class = "text-danger", tags$b("Error:"), "This name has been taken. Please try again!",
+             style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
     })
     } else {
       output$error_name_js <- renderUI({
@@ -125,7 +127,8 @@ mod_upload_server <- function(input, output, session, input_object, con){
   
     if(class(input_object) == "try-error"){
         output$error_empty_group <- renderUI({
-          tags$p(class = "text-danger", tags$b("Error:"), input_object)
+          tags$p(class = "text-danger", tags$b("Error:"), input_object,
+                 style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
         })
     }
     else{

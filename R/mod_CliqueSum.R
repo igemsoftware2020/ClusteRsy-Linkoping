@@ -47,7 +47,8 @@ mod_CliqueSum_server <- function(input, output, session, con){
       tagList(
         uiOutput(ns("ppi_choice")),
         textInput(ns("db_name"), "Clique database name"),
-        actionButton(ns("build_db"), "Build clique database"),
+        tags$div(style = "text-align:center",
+        actionButton(ns("build_db"), "Build clique database")),
         
       )
     })
@@ -84,7 +85,8 @@ mod_CliqueSum_server <- function(input, output, session, con){
                        document.getElementById('main_page_v2_ui_1-Columns_ui_1-Description1_ui_1-CliqueSum_ui_1-load_input').disabled = true;"))
       })
       output$error_name_descrip <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), "This name has been taken. Please try again!")
+        tags$p(class = "text-danger", tags$b("Error:"), "This name has been taken. Please try again!",
+               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
       })
     } else {
       output$error_name_js <- renderUI({
@@ -122,7 +124,7 @@ mod_CliqueSum_server <- function(input, output, session, con){
                                                n_cores = 1,
                                                module_name = input$module_name,
                                                con = con)
-    
+    updateTextInput(session, "module_name", value = character(0))
     on.exit(removeNotification(id), add = TRUE)
     
 

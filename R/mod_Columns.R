@@ -10,27 +10,56 @@
 mod_Columns_ui <- function(id){
   ns <- NS(id)
   tagList(
-    # Number coantiners
-    tags$div(`class`="row",
-             tags$div(`class`="col-sm-4",
+    # Number container
+    tags$div(`class`="row", style = "position: relative;",
+             tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
                       tags$form(class = "well",
                                 tags$h2(class = "text-center",
                                         tags$span(
                                           class="label", "1",
                                           style = "border-radius: 100%;background-color:#ffbd40")))),
-             htmlOutput(ns("algorithm")),
+             tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
+                      tags$form(class = "well faded",
+                                id = "num_contain_2",
+                                tags$h2(class = "text-center",
+                                        tags$span(
+                                          class="label", "2",
+                                          style = "border-radius: 100%;background-color:#ffbd40")))),
+             tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
+                      tags$form(class = "well faded",
+                                id = "num_contain_3",
+                                tags$h2(class = "text-center",
+                                        tags$span(
+                                          class="label", "3",
+                                          style = "border-radius: 100%;background-color:#ffbd40")))),
+             HTML("<dash id='arrow1' class='no1' style='left: 18.4%;top: 47.8%;'></dash><dash id='arrow2' class='no1' style='left: 51.9%;top: 47.8%;'></dash>"),
+             tags$i(class = "fa fa-chevron-right", style="position: absolute;left: 48%;top: 42.8%;"),
+             tags$i(class = "fa fa-chevron-right", style="position: absolute;left: 81.5%;top: 42.8%;")
              ),
     
-    # Module containers          
+    # Module container         
     tags$div(`class`="row",
-             tags$div(`class`="col-sm-4",
+             tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
                       tags$form(class = "well",
                                 `style`="background-color:#2c3e50;",
                                 uiOutput(ns("input_choice")),
                                 mod_upload_ui(ns("upload_ui_1"))
                                 ),
                       ),
-             htmlOutput(ns("algorithm1"))))
+             tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;
+                       cursor: not-allowed;", id = "mod2",
+                      tags$form(class = "well faded",
+                                id = "mod_contain_2",
+                                `style`="background-color:#2c3e50; pointer-events :none;",
+                                mod_Description1_ui(ns("Description1_ui_1")))),
+             tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;
+                      cursor: not-allowed;", id = "mod3",
+                      tags$form(class = "well faded",
+                                id = "mod_contain_3",
+                                `style`="background-color:#2c3e50; pointer-events :none;"))
+             ),
+    htmlOutput(ns("fadein"))
+  )
 }
     
 #' Columns Server Function
@@ -71,26 +100,46 @@ mod_Columns_server <- function(input, output, session, con){
       return(NULL)
     }
   })
-
-  # Number conainters
-  output$algorithm <- renderUI({
-    upload_algorithm()
-    tags$div(`class`="col-sm-4",
-             tags$form(class = "well",
-                       tags$h2(class = "text-center",
-                               tags$span(
-                                 class="label", "2",
-                                 style = "border-radius: 100%;background-color:#ffbd40"))))
-})
   
-  # Module conatiners
-  output$algorithm1 <- renderUI({
+  output$fadein <- renderUI({
     upload_algorithm()
-    tags$div(`class`="col-sm-4",
-             tags$form(class = "well",
-                       `style`="background-color:#2c3e50;",
-                       mod_Description1_ui(ns("Description1_ui_1"))))
-})
+    tags$script(src = "www/fadein.js")
+  })
+
+#   # Number containter 2
+#   output$column2_number <- renderUI({
+#     tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
+#              tags$form(class = "well",
+#                        tags$h2(class = "text-center",
+#                                tags$span(
+#                                  class="label", "2",
+#                                  style = "border-radius: 100%;background-color:#ffbd40"))))
+# })
+  
+#   # Module contatiner 2
+#   output$column2_module <- renderUI({
+#     tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
+#              tags$form(class = "well",
+#                        `style`="background-color:#2c3e50;",
+#                        mod_Description1_ui(ns("Description1_ui_1"))))
+# })
+  
+  # # Number container 3
+  # output$column3_number <- renderUI({
+  #   tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
+  #            tags$form(class = "well",
+  #                      tags$h2(class = "text-center",
+  #                              tags$span(
+  #                                class="label", "3",
+  #                                style = "border-radius: 100%;background-color:#ffbd40"))))
+  # })
+  
+  # # Moudle container 3
+  # output$column3_module <- renderUI({
+  #   tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
+  #            tags$form(class = "well",
+  #                      `style`="background-color:#2c3e50;"))
+  # })
   
   callModule(mod_Description1_server, "Description1_ui_1", con = con)
 } # Closes server function
