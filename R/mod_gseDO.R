@@ -12,15 +12,16 @@ mod_gseDO_ui <- function(id){
   tagList(
     uiOutput(ns("module_input")),
     uiOutput(ns("error_p_value")),
-    numericInput(ns("exponent"), label = "Exponent", value = 5, max = 100, min = 0),
-    numericInput(ns("minGSSize"), label = "Minimum size of genes", value = 5, max = 100, min = 0),
-    numericInput(ns("maxGSSize"), label = "Maximal size each geneSet", value = 500, max = 5000, min = 0),
-    sliderInput(ns("nperm"), label = "Permutation number", min = 0, max = 1000, value = 50),
+    numericInput(ns("exponent"), label = "Exponent", value = 5, max = 100, min = 0, popup = "Weight of each step"),
+    numericInput(ns("mingssize"), label = "Minimum size of genes", value = 5, max = 100, min = 0, popup = "Minimal size of genes for testing"),
+    numericInput(ns("maxgssize"), label = "Maximal size each geneSet", value = 500, max = 5000, min = 0, popup = "Maximal size of each geneSet for analyzing"),
+    sliderInput(ns("nperm"), label = "Permutation number", min = 1, max = 1000, value = 500, popup = "Number of permutations"),
     selectInput(ns("by"), label = "Select algorithm",
                 choices = c("fgsea",
-                            "DOSE")),
-    sliderInput(ns("pvalueCutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05),
-    selectInput(ns("pAdjustMethod"), "Select an adjustment method",
+                            "DOSE"),
+                popup = "Algorithm used for the gene set enrichment analysis"),
+    sliderInput(ns("pvaluecutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value"),
+    selectInput(ns("padjustmethod"), "Select an adjustment method",
                 choices = c("holm",
                             "hochberg",
                             "hommel",
@@ -28,8 +29,10 @@ mod_gseDO_ui <- function(id){
                             "BH",
                             "BY",
                             "fdr",
-                            "none")),
-    actionButton(ns("load_input"), label = "Create enrichment analysis object")
+                            "none"),
+                multiple = FALSE,
+                popup = "Correction methods used to control p-values and q-values"),
+    actionButton(ns("load_input"), label = "Enrich")
   )
 }
     
@@ -50,17 +53,20 @@ mod_gseDO_server <- function(input, output, session, con){
 
   input_name <- as.character(MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$settings$MODifieR_input)
   input_data <- MODifieRDB::MODifieR_input_from_db(input_name, con = con)$diff_genes
-  module_genes <- sort(as.numeric(MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$module_genes))
-  input_data <- data.frame(gene = c(as.numeric(input_data$gene)), pval = c(input_data$pval))
-  input_data_sorted <- input_data[with(input_data, order(input_data$gene)),]
-  gene_list <- subset(input_data_sorted, input_data_sorted$gene %in% module_genes )
+  module_genes <- as.numeric(MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$module_genes)
   
-  gse_object <- try(DOSE::gseDO(
-                 geneList = gene_list,
-                 exponent = inpur$exponent,
-                 nperm = input$nperm,
-                 pvalueCutoff = input$deg_cutoff,
-                 pAdjustMethod = input$padj_method,
+  subset_genes <- input_data[(input_data$gene %in% module_genes), ]
+  
+  genes <- subset_genes$pvalue
+  names(genes) <- subset_genes$gene
+  genes <- sort(genes, decreasing = T)
+  
+  gseobject <- try(DOSE::gseDO(
+                 geneList = genes,
+                 exponent = input$exponent,
+                 nPerm = input$nperm,
+                 pvalueCutoff = input$pvaluecutoff,
+                 pAdjustMethod = input$padjustmethod,
                  minGSSize = input$mingssize,
                  maxGSSize = input$maxgssize,
                  by = input$by,
@@ -69,9 +75,9 @@ mod_gseDO_server <- function(input, output, session, con){
                 
   )
   )
-  if (class(gse_object) == "try-error"){
+  if (class(gseobject) == "try-error"){
     output$error_p_value <- renderUI({
-      tags$p(class = "text-danger", tags$b("Error:"), gse_object)
+      tags$p(class = "text-danger", tags$b("Error:"), gseobject)
     })
   }
   })
