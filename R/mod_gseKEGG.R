@@ -50,17 +50,10 @@ mod_gseKEGG_server <- function(input, output, session, con){
     id <- showNotification("Creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     
-    input_name <- as.character(MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$settings$MODifieR_input)
-    input_data <- MODifieRDB::MODifieR_input_from_db(input_name, con = con)$diff_genes
-    module_genes <- MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$module_genes
     
-    subset_genes <- input_data[(input_data$gene %in% module_genes), ]
+    gene_list <- get_sorted_module_genes(input$module_object, con = con)
     
-    genes <- subset_genes$pvalue
-    names(genes) <- subset_genes$gene
-    genes <- sort(genes, decreasing = T)
-    
-    enrichment_object <- try(clusterProfiler::gseKEGG(geneList = genes,
+    enrichment_object <- try(clusterProfiler::gseKEGG(geneList = gene_list,
                                                       organism = 'hsa',
                                                       keyType = input$keytype,
                                                       exponent = input$exponent,

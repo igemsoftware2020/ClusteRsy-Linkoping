@@ -50,9 +50,10 @@ mod_KEGG_server <- function(input, output, session, con){
   observeEvent(input$load_input, {
     id <- showNotification("Creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
-    ppi_name <- as.character(MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$settings$ppi_network)
-    background_genes <- unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
-    module_genes <- MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$module_genes
+    
+    module_genes <- get_module_genes(input$module_object, con = con)
+    background_genes <- get_background_genes(input$module_object, con = con)
+    
     enrichment_object <- try(clusterProfiler::enrichKEGG(gene = module_genes,
                                                           organism = 'hsa', #Homo sapiens set as default.
                                                           keyType = input$keytype,
