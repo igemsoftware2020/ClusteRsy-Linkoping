@@ -10,7 +10,7 @@
 mod_welcoming_page_ui <- function(id){
   ns <- NS(id)
   tagList(
-    tags$div(style="border-style: dashed; color:black; background-image: url('www/headline_img.jpg'); background-size: contain",
+    tags$div(style="border-style: dashed; color:black; background-image: url('www/headline_img.jpg'); background-size: contain; height: 60vh",
              tags$div(class = "headline", style="border-style: dashed; margin-top: 1.2%;",
                tags$p(class= "center", "Headline")
                 ),
@@ -22,8 +22,8 @@ mod_welcoming_page_ui <- function(id){
                 tags$p(class= "center", "Primary call to action"))
              ),
     tags$br(),
-    tags$div(style="border-style: dashed; color:black",
-             tags$p(class= "center", style="text-align:center", "Sub-headline"))
+    tags$div(style="border-style: dashed; color:black; height: 30vh",
+             tags$p(class= "center", style="text-align:center; padding: 8%;", "Sub-headline"))
   )
 }
     

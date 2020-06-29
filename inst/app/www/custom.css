@@ -7088,8 +7088,10 @@ width: 40%;
 text-align: center;
   
 color: black;
+
+height: 17vh;
 }
 
 .center{
-  margin: 26px 0px 27.5px;
+  padding: 9%;
 }
