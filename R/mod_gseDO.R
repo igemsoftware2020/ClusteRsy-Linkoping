@@ -47,8 +47,14 @@ mod_gseDO_server <- function(input, output, session, con){
   observeEvent(input$load_input, {
   id <- showNotification("Creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
   on.exit(removeNotification(id), add = TRUE)
-  input_name <- MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)
-  gene_list <- MODifieRDB::MODifieR_input_from_db(input_name, con = con)$diff_genes
+
+  input_name <- as.character(MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$settings$MODifieR_input)
+  input_data <- MODifieRDB::MODifieR_input_from_db(input_name, con = con)$diff_genes
+  module_genes <- sort(as.numeric(MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$module_genes))
+  input_data <- data.frame(gene = c(as.numeric(input_data$gene)), pval = c(input_data$pval))
+  input_data_sorted <- input_data[with(input_data, order(input_data$gene)),]
+  gene_list <- subset(input_data_sorted, input_data_sorted$gene %in% module_genes )
+  
   gse_object <- try(DOSE::gseDO(
                  geneList = gene_list,
                  exponent = inpur$exponent,
