@@ -10,8 +10,20 @@
 mod_welcoming_page_ui <- function(id){
   ns <- NS(id)
   tagList(
-    tags$div(),
-    tags$img(id = "animated_div", src="www/igem.jpg")
+    tags$div(style="border-style: dashed; color:black; background-image: url('www/headline_img.jpg'); background-size: contain",
+             tags$div(class = "headline", style="border-style: dashed; margin-top: 1.2%;",
+               tags$p(class= "center", "Headline")
+                ),
+             tags$br(),
+             tags$div(class = "headline", style="border-style: dashed;",
+                tags$p(class= "center", "Sub-headline")),
+             tags$br(),
+             tags$div(class = "headline", style="border-style: dashed; margin-bottom: 1.2%;",
+                tags$p(class= "center", "Primary call to action"))
+             ),
+    tags$br(),
+    tags$div(style="border-style: dashed; color:black",
+             tags$p(class= "center", style="text-align:center", "Sub-headline"))
   )
 }
     

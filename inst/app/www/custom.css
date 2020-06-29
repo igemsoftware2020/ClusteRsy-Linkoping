@@ -7077,3 +7077,19 @@ a[type="heading"]{
 a[type="heading"]:hover, a[type="heading"]:focus{
   text-decoration:none
 }
+
+/* Headline */
+.headline{
+  
+margin-left: 2%;
+  
+width: 40%;
+  
+text-align: center;
+  
+color: black;
+}
+
+.center{
+  margin: 26px 0px 27.5px;
+}
