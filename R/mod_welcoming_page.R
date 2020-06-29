@@ -10,20 +10,43 @@
 mod_welcoming_page_ui <- function(id){
   ns <- NS(id)
   tagList(
-    tags$div(style="border-style: dashed; color:black; background-image: url('www/headline_img.jpg'); background-size: contain; height: 60vh",
-             tags$div(class = "headline", style="border-style: dashed; margin-top: 1.2%;",
-               tags$p(class= "center", "Headline")
-                ),
-             tags$br(),
-             tags$div(class = "headline", style="border-style: dashed;",
-                tags$p(class= "center", "Sub-headline")),
-             tags$br(),
-             tags$div(class = "headline", style="border-style: dashed; margin-bottom: 1.2%;",
-                tags$p(class= "center", "Primary call to action"))
-             ),
-    tags$br(),
-    tags$div(style="border-style: dashed; color:black; height: 30vh",
-             tags$p(class= "center", style="text-align:center; padding: 8%;", "Sub-headline"))
+    tags$div(style="height:100vh",
+              tags$div(style="border-style: dashed; color:black; background-image: url('www/headline_img.jpg'); background-size: contain;",
+                       tags$div(class = "headline", style="border-style: dashed; margin-top: 1.2%;",
+                         tags$p(class= "center", "Headline")
+                          ),
+                       tags$br(),
+                       tags$div(class = "headline", style="border-style: dashed;",
+                          tags$p(class= "center", "Sub-headline")),
+                       tags$br(),
+                       tags$div(class = "headline", style="border-style: dashed; margin-bottom: 1.2%;",
+                          tags$p(class= "center", "Primary call to action"))
+                       ),
+              tags$br(),
+              tags$div(style="border-style: dashed; color:black; height: 39vh",
+                       tags$p(class= "center", style="text-align:center;", "Sub-headline"))),
+    
+              tags$div(style="height:100vh; padding-top: 1%;",
+                      tags$div(style="border-style: dashed; color:black; height: 10vh;",
+                               tags$p(class= "center", style="text-align:center;", "Benefist list")),
+                      tags$br(),
+                      tags$div(style="border-style: dashed; color:black; height: 26vh",
+                               tags$p(class= "center", style="text-align:center;", "Feature highlights")),
+                      tags$br(),
+                      tags$div(style="border-style: dashed; color:black; height: 26vh",
+                               tags$p(class= "center", style="text-align:center;", "Trust indicators")),
+                      tags$br(),
+                      tags$div(style="border-style: dashed; color:black; height: 26vh",
+                               tags$p(class= "center", style="text-align:center;", "Trust indicators"))),
+    
+              tags$div(style="height:100vh; padding-top: 1%;",
+                      tags$div(style="text-align:center; color:black",
+                               tags$span(`class`="col-sm-4", style="border-style: dashed; height:100vh",
+                                        tags$p("Useful contetn")),
+                               tags$span(`class`="col-sm-4", style="border-style: dashed; height:100vh",
+                                        tags$p("Company update")),
+                               tags$span(`class`="col-sm-4", style="border-style: dashed; height:100vh",
+                                        tags$p("Offers")),))
   )
 }
     
