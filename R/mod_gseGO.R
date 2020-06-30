@@ -15,74 +15,78 @@ mod_gseGO_ui <- function(id){
     selectInput(
       ns("ont"),
       label = "Select subontologies", 
-      choices= c("BP", "MF", "CC", "ALL")
+      choices= c("BP", "MF", "CC", "ALL"),
+      popup = "Either biological process (BP), cellular component (CC), molecular function (MF) or all."
     ),
     selectInput(
       ns("keyType"), 
-      label = "Select keyType of gene", 
-      choices = c(keytypes(org.Hs.eg.db::org.Hs.eg.db))
+      label = "Select the type of gene input", 
+      choices = c(keytypes(org.Hs.eg.db::org.Hs.eg.db)),
+      popup = "Select the type of the input data"
+    ),
+    sliderInput(
+      ns("pvalueCutoff"), 
+      label = "Pvalue cutoff", 
+      min = 0, 
+      max = 1, 
+      value = 0.05,
+      popup = "Rejecting the null hypothesis for any result with an equal or smaller value"
+    ), 
+    selectInput(
+      ns("pAdjustMethod"), 
+      label = "Select adjustment method", 
+      choices = c ("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none "),
+      popup = "Correction methods used to control p-values and q-values"
     ),
     sliderInput(
       ns("exponent"), 
       label = "Select weight of each step", 
       min = 0,
       max = 5, 
-      value = 1
+      value = 1,
+      popup = "Weight of each step"
     ),
+    sliderInput(
+      ns("minGSSize"),
+      label = "Select minimum size of each gene set",
+      min = 1,
+      max = 100, 
+      value = 10,
+      popup = "Minimum size of each gene set used for analyzing"
+    ),
+    sliderInput(
+      ns("maxGSSize"), 
+      label = "Select maximum size of each gene set", 
+      min = 100, 
+      max = 1000, 
+      value = 500,
+      popup = "Maximum size of each gene set used for analyzing"
+    ), 
     sliderInput(
       ns("nPerm"), 
       label = "Permutation numbers", 
       min = 1, 
       max = 5000, 
-      value = 1000
-    ), 
-    sliderInput(
-      ns("minGSSize"),
-      label = "Select minimal size of each geneSet",
-      min = 1,
-      max = 100, 
-      value = 10
-    ),
-    sliderInput(
-      ns("maxGSSize"), 
-      label = "Select maximal size of each geneSet", 
-      min = 100, 
-      max = 1000, 
-      value = 500
-    ), 
-    sliderInput(
-      ns("pvalueCutoff"), 
-      label = "Pvalue cutoff", 
-      min = 0, 
-      max = 1, 
-      value = 0.05
-    ), 
-    selectInput(
-      ns("pAdjustMethod"), 
-      label = "Select adjustment method", 
-      choices = c ("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none ")
-    ),
-    prettySwitch(
-      ns("verbose"), 
-      label = "Print messege or not", 
-      value = FALSE, 
-      status = "warning"
+      value = 1000,
+      popup = "Number of permutations that should be performed"
     ), 
     prettySwitch(
       ns("seed"), 
       label = "Logical",
       value = FALSE,
-      status = "warning"
+      status = "warning",
+      popup = "Get reproducible results"
     ), 
     selectInput(
       ns("by"), 
       label = "Select", 
-      choices = c("fgsea", "DOSE")
+      choices = c("fgsea", "DOSE"),
+      popup = "Algorithm used for the gene set enrichment analysis"
     ), 
     
-    #tags$div(style = "text-align:center",
-             actionButton(ns("load_input"), "Create gene set enrichment analysis object")
-    #)
+    tags$div( style = "text-align:center",
+              actionButton(ns("load_inputDO"), label = "Enrich") 
+    )
   )
 }
 
@@ -114,7 +118,7 @@ mod_gseGO_server <- function(input, output, session, con){
                                                     maxGSSize = input$maxGSSize, 
                                                     pvalueCutoff = input$pvalueCutoff, 
                                                     pAdjustMethod = input$pAdjustMethod, 
-                                                    verbose = input$verbose, 
+                                                    verbose = FALSE, 
                                                     seed = input$seed, 
                                                     by = input$by
     ))
