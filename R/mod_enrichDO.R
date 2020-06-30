@@ -13,11 +13,8 @@ mod_enrichDO_ui <- function(id){
     #Description of the method "Finds disease assosciations and creates enrichment analysis objects"
     uiOutput(ns("module_input")),
     uiOutput(ns("error_p_value")),
-    
-    #Description of the method "Finds disease assosciations and creates enrichment analysis objects"
-    #Question is to add the parameter ont,that could either be DO or DOlite, DO recommended by the author
     sliderInput(ns("pvalueCutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value"),
-    sliderInput(ns("pvalueCutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "P-value cutoff"),
+    sliderInput(ns("qvalueCutoff"), label = "Q-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value. Q-values are false discovery rate (FDR) adjusted p-values"),
     selectInput(ns("pAdjustMethod"), "Select an adjustment method",
                 choices = c("holm",
                             "hochberg",
@@ -29,10 +26,8 @@ mod_enrichDO_ui <- function(id){
                             "none"), popup = "Correction methods used to control p-values and q-values",
                 multiple = FALSE,
                 selectize = TRUE),
-    sliderInput(ns("mingssize"), label = "Minimum size of genes", min = 0, max = 100, value = 5, popup = "Minimal size of genes for testing"),
-    sliderInput(ns("maxgssize"), label = "Maximal size each gene set", min = 0,  max = 5000, value = 500, popup = "Maximal size of each geneSet for analyzing"),
-
-    sliderInput(ns("qvalueCutoff"), label = "Q-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value"),
+    sliderInput(ns("mingssize"), label = "Minimum size of genes", min = 0, max = 100, value = 5, popup = "Minimum size of each gene set for analyzing"),
+    sliderInput(ns("maxgssize"), label = "Maximal size each gene set", min = 0,  max = 5000, value = 500, popup = "Maximum size of each gene set for analyzing"),
     tags$div( style = "text-align:center",
               actionButton(ns("load_inputDO"), label = "Enrich") 
     )

@@ -13,7 +13,8 @@ mod_enrichNCG_ui <- function(id){
     #Description of the method "Enrichment analysis based on the Network of Cancer Genes database"
     uiOutput(ns("module_input")),
     uiOutput(ns("error_p_value")),
-    sliderInput(ns("pvalueCutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "P-value cutoff"),
+    sliderInput(ns("pvalueCutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value"),
+    sliderInput(ns("qvalueCutoff"), label = "Q-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value. Q-values are false discovery rate (FDR) adjusted p-values"),
     selectInput(ns("pAdjustMethod"), "Select an adjustment method",
                 choices = c("holm",
                             "hochberg",
@@ -25,9 +26,8 @@ mod_enrichNCG_ui <- function(id){
                             "none"), popup = "Correction methods used to control p-values and q-values",
                 multiple = FALSE,
                 selectize = TRUE),
-    sliderInput(ns("mingssize"), label = "Minimum size of genes", min = 0, max = 100, value = 10, popup = "Minimal size of genes for testing"),
-    sliderInput(ns("maxgssize"), label = "Maximal size each gene set", min = 0,  max = 5000, value = 500, popup = "Maximal size of each geneSet for analyzing"),
-    sliderInput(ns("qvalueCutoff"), label = "Q-value cut-off", min = 0, max = 1, value = 0.05, popup = "Q-value cutoff"),
+    sliderInput(ns("mingssize"), label = "Minimum size of genes", min = 0, max = 100, value = 10, popup = "Minimum size of each gene set for analyzing"),
+    sliderInput(ns("maxgssize"), label = "Maximal size each gene set", min = 0,  max = 5000, value = 500, popup = "Maximum size of each gene set for analyzing"),
     tags$div( style = "text-align:center",
               actionButton(ns("load_inputDO"), label = "Enrich") 
     )
