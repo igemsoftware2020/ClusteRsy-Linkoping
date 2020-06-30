@@ -1,4 +1,4 @@
-#' KEGG UI Function
+#' enrichKEGG UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,7 +7,7 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
-mod_KEGG_ui <- function(id){
+mod_enrichKEGG_ui <- function(id){
   ns <- NS(id)
   tagList(
           uiOutput(ns("module_input")),
@@ -37,15 +37,15 @@ mod_KEGG_ui <- function(id){
           sliderInput(ns("maxgssize"), label = "Maximum size of each gene set annotated", min = 100, max = 1000, value = 500, popup = "Maximum size of each gene set used for analyzing"),
           
           tags$div( style = "text-align:center",
-                    actionButton(ns("load_inputDO"), label = "Enrich") 
+                    actionButton(ns("load_input"), label = "Enrich") 
           )
   )
 }
     
-#' KEGG Server Function
+#' enrichKEGG Server Function
 #'
 #' @noRd 
-mod_KEGG_server <- function(input, output, session, con){
+mod_enrichKEGG_server <- function(input, output, session, con){
   ns <- session$ns
   
   output$module_input <- renderUI({
@@ -85,8 +85,8 @@ mod_KEGG_server <- function(input, output, session, con){
 }
     
 ## To be copied in the UI
-# mod_KEGG_ui("KEGG_ui_1")
+# mod_enrichKEGG_ui("enrichKEGG_ui_1")
     
 ## To be copied in the server
-# callModule(mod_KEGG_server, "KEGG_ui_1")
+# callModule(mod_enrichKEGG_server, "enrichKEGG_ui_1")
  
