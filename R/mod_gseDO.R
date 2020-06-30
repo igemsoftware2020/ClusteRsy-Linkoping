@@ -65,7 +65,7 @@ mod_gseDO_server <- function(input, output, session, con){
                                 minGSSize = input$mingssize,
                                 maxGSSize = input$maxgssize,
                                 by = input$by,
-                                seed = FALSE,
+                                seed = input$include_seed,
                                 verbose = FALSE  
                 
   )
