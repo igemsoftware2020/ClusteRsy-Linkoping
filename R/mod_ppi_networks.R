@@ -17,7 +17,8 @@ mod_ppi_networks_ui <- function(id){
              uiOutput(ns("ppi_name_chooser"))),
              tags$br(),
              tags$div(`class`="col-sm-4", style = "text-align:right",
-                      actionButton(ns("refresh"), "Refresh database"))),
+                      actionButton(ns("refresh"), HTML("<i class='fa fa-refresh' aria-hidden='true'></i> Refresh")),
+                      ))
   )
 }
 
@@ -27,7 +28,7 @@ mod_ppi_networks_ui <- function(id){
 mod_ppi_networks_server <- function(input, output, session, con){
   ns <- session$ns
   
-  
+  # Reactive function for file input
   upload_ppi <- reactive({
     req(input$ppi_network)
     infile <- (input$ppi_network$datapath)
@@ -40,24 +41,26 @@ mod_ppi_networks_server <- function(input, output, session, con){
   })
   
   output$ppi_name_chooser <- renderUI({
-    ppi <- upload_ppi()
+    ppi <- upload_ppi() # reactive
     tagList( 
       textInput(ns("ppi_name"), "PPI network name"),
       actionButton(ns("upload_ppi"), "Add PPI to database")
     )
   })
   
-  
   ppi_networks <- as.data.frame(MODifieRDB::get_available_networks(con))
   colnames(ppi_networks) <- "PPI networks"
-  output$ppi_overview <- DT::renderDataTable(ppi_networks)
   
+  # Render DT
+  output$ppi_overview <- DT::renderDataTable(ppi_networks,
+                                             selection = list(selected = c(1)))
+  
+  # Refresh DT
   observeEvent(input$refresh, {
     ppi_networks <- as.data.frame(MODifieRDB::get_available_networks(con)) 
     colnames(ppi_networks) <- "PPI networks"
-    
-    
-    output$ppi_overview <- DT::renderDataTable(ppi_networks)
+    output$ppi_overview <- DT::renderDataTable(ppi_networks,
+                                               selection = list(selected = c(1)))
   })
   
   observeEvent(input$upload_ppi, {

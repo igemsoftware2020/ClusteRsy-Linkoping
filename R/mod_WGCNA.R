@@ -11,7 +11,6 @@ mod_WGCNA_ui <- function(id){
   ns <- NS(id)
   tagList(
     uiOutput(ns("input_choice")),
-    uiOutput(ns("ppi_choice")),
     tags$div(id = "error_name_WGCNA_js",
     textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods")),
     uiOutput(ns("error_name_descrip")),
@@ -116,7 +115,8 @@ mod_WGCNA_ui <- function(id){
 #' @noRd 
 mod_WGCNA_server <- function(input, output, session, con){
   ns <- session$ns
- 
+  
+  # This function is used to make TOMType input valid
   decapitalize <- function(str){
     lo <- tolower(substring(str, 1, 1))
     return(paste(lo, substring(str, 2), sep = ""))
@@ -125,11 +125,6 @@ mod_WGCNA_server <- function(input, output, session, con){
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation")
-  })
-  
-  output$ppi_choice <- renderUI({
-    ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
-    selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks, popup = "Protein-Protein interaction network to overlay the differentially expressed genes on")
   })
   
   module_name <- reactive({
@@ -169,7 +164,7 @@ mod_WGCNA_server <- function(input, output, session, con){
                                           pval_cutoff = input$pval_cutoff,
                                           corType = input$corType,
                                           maxBlockSize = input$maxBlockSize,
-                                          TOMType = decapitalize(input$TOMType), 
+                                          TOMType = decapitalize(input$TOMType), # Used decapitalize function
                                           saveTOMs = input$saveTOMs,
                                           maxPOutliers = input$maxPOutliers, 
                                           module_name = input$module_name,
