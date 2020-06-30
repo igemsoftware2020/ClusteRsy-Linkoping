@@ -13,20 +13,20 @@ mod_gseGO_ui <- function(id){
     uiOutput(
       ns("module_input")),
     selectInput(
-      ns("ont"),
-      label = "Select subontologies", 
-      choices= c("BP", "MF", "CC", "ALL"),
-      popup = "Either biological process (BP), cellular component (CC), molecular function (MF) or all."
-    ),
-    selectInput(
       ns("keytype"), 
       label = "Select the type of gene input", 
       choices = c(keytypes(org.Hs.eg.db::org.Hs.eg.db)),
       popup = "Select the type of the input data"
     ),
+    selectInput(
+      ns("ont"),
+      label = "Select subontologies", 
+      choices= c("BP", "MF", "CC", "ALL"),
+      popup = "Either biological process (BP), cellular component (CC), molecular function (MF) or all."
+    ),
     sliderInput(
       ns("pvaluecutoff"), 
-      label = "Pvalue cutoff", 
+      label = "Select p-value cutoff", 
       min = 0, 
       max = 1, 
       value = 0.05,

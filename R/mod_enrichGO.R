@@ -14,60 +14,72 @@ mod_enrichGO_ui <- function(id){
       ns("module_input")),
     selectInput(
       ns("keytype"),
-      label = "Select keytype of input gene",
-      choices = c(keytypes(org.Hs.eg.db::org.Hs.eg.db))
+      label = "Select the type of gene input",
+      choices = c(keytypes(org.Hs.eg.db::org.Hs.eg.db)),
+      popup = "Select the type of the input data"
       ),
     selectInput(
       ns("ont"),
       label = "Select subontologies",
-      choices = c("BP", "MF", "CC", "ALL")
+      choices = c("BP", "MF", "CC", "ALL"),
+      popup = "Either biological process (BP), cellular component (CC), molecular function (MF) or all."
       ),
     sliderInput(
       ns("pvaluecutoff"),
       label = "Select p-value cutoff",
       min = 0, 
       max = 1, 
-      value = 0.05
+      value = 0.05,
+      popup = "Rejecting the null hypothesis for any result with an equal or smaller value"
       ), 
-    selectInput(
-      ns("padjustmethod"), 
-      label = "Select method", 
-      choices = c("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none ")
-      ),
     sliderInput(
       ns("qvaluecutoff"), 
       label = "Select q-value cutoff", 
       min = 0, 
       max = 1, 
-      value = 0.2
-      ), 
+      value = 0.2,
+      popup = "Rejecting the null hypothesis for any result with an equal or smaller value. Q-values are false discovery rate (FDR) adjusted p-values"
+    ), 
+    selectInput(
+      ns("padjustmethod"), 
+      label = "Select method", 
+      choices = c("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none "),
+      popup = "Correction methods used to control p-values and q-values"
+      ),
+   
     sliderInput(
       ns("mingssize"), 
-      label = "Select minimal size of genes for testing", 
+      label = "Select minimum size of each gene set", 
       min = 1, 
       max = 100, 
-      value = 10),
+      value = 10,
+      popup = "Minimum size of each gene set used for analyzing"),
     sliderInput(
       ns("maxgssize"),
-      label = "Select maximal size of genes for testing", 
+      label = "Select maximum size of each gene set", 
       min = 100, 
       max = 1000,
-      value = 500
+      value = 500,
+      popup = "Maximum size of each gene set used for analyzing"
       ), 
     prettySwitch(
       ns("readable"),
       label = "Readable",
       value = FALSE, 
-      status = "warning"
+      status = "warning",
+      popup = "whether mapping gene ID to gene Name"
       ), 
     prettySwitch(
       ns("pool"), 
       label = "Pool",
       value = FALSE, 
-      status = "warning"
+      status = "warning",
+      popup = "Need to be switch on if all subontologies are chosen"
       ),
     
-    actionButton(ns("load_input"), "Create enrichment analysis object")
+    tags$div( style = "text-align:center",
+              actionButton(ns("load_input"), label = "Enrich") 
+    )
   )
 }
 
