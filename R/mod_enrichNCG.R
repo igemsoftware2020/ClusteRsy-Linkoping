@@ -29,7 +29,7 @@ mod_enrichNCG_ui <- function(id){
     sliderInput(ns("mingssize"), label = "Minimum size of each gene set", min = 0, max = 100, value = 10, popup = "Minimum size of each gene set used for analyzing"),
     sliderInput(ns("maxgssize"), label = "Maximal size of each gene set", min = 0,  max = 5000, value = 500, popup = "Maximum size of each gene set used for analyzing"),
     tags$div( style = "text-align:center",
-              actionButton(ns("load_inputDO"), label = "Enrich") 
+              actionButton(ns("load_input"), label = "Enrich") 
     )
     
   )}
@@ -47,7 +47,7 @@ mod_enrichNCG_server <- function(input, output, session, con){
   
  
   
-  observeEvent(input$load_inputDO, {
+  observeEvent(input$load_input, {
     id <- showNotification("Identifying disease assosciation and creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     

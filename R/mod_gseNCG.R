@@ -35,7 +35,7 @@ mod_gseNCG_ui <- function(id){
                             "DOSE"),
                 popup = "Algorithm used for the gene set enrichment analysis"),
     tags$div( style = "text-align:center",
-              actionButton(ns("load_inputDO"), label = "Enrich") 
+              actionButton(ns("load_input"), label = "Enrich") 
     )
   )
 }

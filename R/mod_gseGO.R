@@ -85,7 +85,7 @@ mod_gseGO_ui <- function(id){
     ), 
     
     tags$div( style = "text-align:center",
-              actionButton(ns("load_inputDO"), label = "Enrich") 
+              actionButton(ns("load_input"), label = "Enrich") 
     )
   )
 }
