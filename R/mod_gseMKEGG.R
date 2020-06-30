@@ -16,11 +16,7 @@ mod_gseMKEGG_ui <- function(id){
                 choices = c("kegg",
                             "ncbi-proteinid",
                             "uniprot")),
-    sliderInput(ns("exponent"), label ="Weight of each step", min = 0.01, max = 2, value = 1),
-    sliderInput(ns("permutation"), label ="number of permutations", min = 1, max = 2000, value = 1000),
-    sliderInput(ns("mingssize"), label = "Minimal size of genes annotated", min = 1, max = 100, value = 10, popup = "Miniman size of genes annotated by Ontology term for testing"),
-    sliderInput(ns("maxgssize"), label = "Maximal size of genes annotated", min = 100, max = 1000, value = 500, popup = "Maximal size of genes annotated for testing"),
-    sliderInput(ns("deg_cutoff"), label = "P-value cutoff", min = 0, max = 1, value = 0.05, popup = "P-value cutoff for enrichment tests to report"),
+    sliderInput(ns("deg_cutoff"), label = "P-value cutoff", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value"),
     selectInput(ns("padj_method"), 
                 label = "Select Adjusted p-value method",
                 choices = c("hochberg",
@@ -29,9 +25,17 @@ mod_gseMKEGG_ui <- function(id){
                             "BH",
                             "BY",
                             "fdr",
-                            "none")),
-    prettySwitch(ns("include_seed"), label = "Include seed", value = FALSE, status = "warning"),
-    actionButton(ns("load_input"), label = "Create enrichment analysis object")
+                            "none"),popup = "Correction methods used to control p-values and q-values",
+                multiple = FALSE,
+                selectize = TRUE),
+    sliderInput(ns("exponent"), label ="Weight of each step", min = 0.01, max = 2, value = 1, popup = "Weight of each step"),
+    sliderInput(ns("mingssize"), label = "Minimal size of genes annotated", min = 1, max = 100, value = 10, popup = "Minimum size of each gene set used for analyzing"),
+    sliderInput(ns("maxgssize"), label = "Maximal size of genes annotated", min = 100, max = 1000, value = 500, popup = "Maximum size of each gene set used for analyzing"),
+    sliderInput(ns("permutation"), label ="number of permutations", min = 1, max = 2000, value = 1000, popup = "Number of permutations that should be performed"),
+    prettySwitch(ns("include_seed"), label = "Include seed", value = FALSE, status = "warning", popup = "Get reproducible results"),
+    tags$div( style = "text-align:center",
+              actionButton(ns("load_inputDO"), label = "Enrich") 
+    )
  
   )
 }
@@ -62,7 +66,7 @@ mod_gseMKEGG_server <- function(input, output, session, con){
                                                maxGSSize = input$maxgssize,
                                                pvalueCutoff = input$deg_cutoff,
                                                pAdjustMethod = input$padj_method,
-                                               verbose = TRUE,
+                                               verbose = FALSE,
                                                seed = input$include_seed
     )
     )

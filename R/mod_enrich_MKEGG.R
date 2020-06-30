@@ -33,8 +33,8 @@ mod_enrich_MKEGG_ui <- function(id){
                 selectize = TRUE
                 ),
     uiOutput(ns("background_genes")),
-    sliderInput(ns("mingssize"), label = "Minimal size of each gene set annotated", min = 1, max = 100, value = 10, popup = "Minimum size of each gene set used for analyzing"),
-    sliderInput(ns("maxgssize"), label = "Maximal size of each gene set annotated", min = 100, max = 1000, value = 500, popup = "Maximum size of each gene set used for analyzing"),
+    sliderInput(ns("mingssize"), label = "Minimum size of each gene set annotated", min = 1, max = 100, value = 10, popup = "Minimum size of each gene set used for analyzing"),
+    sliderInput(ns("maxgssize"), label = "Maximum size of each gene set annotated", min = 100, max = 1000, value = 500, popup = "Maximum size of each gene set used for analyzing"),
     tags$div( style = "text-align:center",
               actionButton(ns("load_inputDO"), label = "Enrich") 
     )
