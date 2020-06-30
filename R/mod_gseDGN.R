@@ -22,6 +22,8 @@ mod_gseDGN_ui <- function(id){
                             "BY",
                             "fdr",
                             "none"),
+                multiple = FALSE,
+                popup = "Correction methods used to control p-values"),
     numericInput(ns("exponent"), label = "Exponent", value = 5, max = 100, min = 0, popup = "Weight of each step"),
     numericInput(ns("mingssize"), label = "Minimum size of genes", value = 5, max = 100, min = 0, popup = "Minimum size of each gene set for analyzing"),
     numericInput(ns("maxgssize"), label = "Maximal size each geneSet", value = 500, max = 5000, min = 0, popup = "Maximum size of each gene set for analyzing"),
@@ -31,8 +33,7 @@ mod_gseDGN_ui <- function(id){
                             "DOSE"),
                 popup = "Algorithm used for the gene set enrichment analysis"),
     
-                multiple = FALSE,
-                popup = "Correction methods used to control p-values and q-values"),
+                
     tags$div( style = "text-align:center",
               actionButton(ns("load_inputDO"), label = "Enrich") 
     )
