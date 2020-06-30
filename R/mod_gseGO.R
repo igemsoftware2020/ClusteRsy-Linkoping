@@ -20,7 +20,7 @@ mod_gseGO_ui <- function(id){
     selectInput(
       ns("keyType"), 
       label = "Select keyType of gene", 
-      choices = c("ENTREZID")
+      choices = c(keytypes(org.Hs.eg.db::org.Hs.eg.db))
     ),
     sliderInput(
       ns("exponent"), 
@@ -80,9 +80,9 @@ mod_gseGO_ui <- function(id){
       choices = c("fgsea", "DOSE")
     ), 
     
-    tags$div(style = "text-align:center",
+    #tags$div(style = "text-align:center",
              actionButton(ns("load_input"), "Create gene set enrichment analysis object")
-    )
+    #)
   )
 }
 
@@ -101,16 +101,12 @@ mod_gseGO_server <- function(input, output, session, con){
   observeEvent(input$load_input, {
     id <- showNotification("Creating gene set enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
-    input_name <- as.character(MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$settings$MODifieR_input)
-    input_data <- MODifieRDB::MODifieR_input_from_db(input_name, con = con)$diff_genes
-    module_genes <- MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$module_genes
-    subset_genes <- input_data[(input_data$gene %in% module_genes), ]
-    genes <- subset_genes$pvalue
-    names(genes) <- subset_genes$gene
-    genes <- sort(genes, decreasing = T)
-    enrichment_object <- try(clusterProfiler::gseGO(geneList = genes,
+    
+    gene_list <- get_sorted_module_genes(input$module_object, con = con)
+    
+    gse_object <- try(clusterProfiler::gseGO(geneList = gene_list,
                                                     ont = input$ont, 
-                                                    OrgDb = org.Hs.eg.db,
+                                                    OrgDb = 'org.Hs.eg.db',
                                                     keyType = input$keyType, 
                                                     exponent = input$exponent, 
                                                     nPerm = input$nPerm, 
@@ -122,18 +118,18 @@ mod_gseGO_server <- function(input, output, session, con){
                                                     seed = input$seed, 
                                                     by = input$by
     ))
-    if (class(enrichment_object) == "try-error"){
+    if (class(gse_object) == "try-error"){
       output$error_p_value <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
+        tags$p(class = "text-danger", tags$b("Error:"), gse_object)
       })
     }
   })
 }
 
 ## To be copies in the UI 
-# mod_gseGO_ui(ns("gseGO_ui_1"))
+# mod_gseGO_ui("gseGO_ui_1")
 
 ## To be copied in the server
-# callModule(mod_gseGO_server, "gseGO_ui_1", con=con)
+# callModule(mod_gseGO_server, "gseGO_ui_1")
 
 
