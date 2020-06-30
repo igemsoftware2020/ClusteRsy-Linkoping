@@ -7088,8 +7088,29 @@ width: 40%;
 text-align: center;
   
 color: black;
+
+height: 15vh;
 }
 
-.center{
-  margin: 26px 0px 27.5px;
+/* Delete button */
+#main_page_v2_ui_1-input_overview_ui_1-delete{
+  background-color:#ff0000;
+  border-color:#ff0000
+}
+
+#main_page_v2_ui_1-input_overview_ui_1-delete:hover,
+#main_page_v2_ui_1-input_overview_ui_1-delete:focus{
+  background-color: #d20000;
+  border-color: #cd0000
+}
+
+#main_page_v2_ui_1-module_overview_ui_1-delete{
+  background-color:#ff0000;
+  border-color:#ff0000
+}
+
+#main_page_v2_ui_1-module_overview_ui_1-delete:hover,
+#main_page_v2_ui_1-module_overview_ui_1-delete:focus{
+  background-color: #d20000;
+  border-color: #cd0000
 }

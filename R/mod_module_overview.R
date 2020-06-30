@@ -17,8 +17,9 @@ mod_module_overview_ui <- function(id){
              uiOutput(ns("module_name_chooser"))),
              tags$br(),
              tags$div(`class`="col-sm-4", style = "text-align:right",
-                      actionButton(ns("refresh"), "Refresh database"),
-                      downloadButton(ns("download_module"), "Download")))
+                      actionButton(ns("refresh"), HTML("<i class='fa fa-refresh' aria-hidden='true'></i> Refresh")),
+                      downloadButton(ns("download_module"), "Download"),
+                      actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true"))))
   )
 }
 
@@ -28,6 +29,7 @@ mod_module_overview_ui <- function(id){
 mod_module_overview_server <- function(input, output, session, con){
   ns <- session$ns
   
+  #Reactive funciton for fileinput
   upload_module <- reactive({
     req(input$module_object)
     infile <- (input$module_object$datapath)
@@ -38,57 +40,70 @@ mod_module_overview_server <- function(input, output, session, con){
     
     read.table(file = infile, header = T)
   })
-  
+
   output$module_name_chooser <- renderUI({
-    module <- upload_module()
+    module <- upload_module() #reactive
     tagList( 
       textInput(ns("module_name"), "Module object name"),
       actionButton(ns("upload_module"), "Add module object to database")
     )
   })
   
+  # Upload module
   observeEvent(input$upload_module, {
     id <- showNotification("Saving module object to database", duration = NULL, closeButton = FALSE)
     module <- upload_module()
     module_name <- input$module_name
     on.exit(removeNotification(id), add = TRUE)
     
-    #MODifieRDB::ppi_network_to_db(ppi_network = ppi, ppi_name = ppi_name, con = con) 
     ## Need to implement in the package
-    
   })
   
   module_objects <- MODifieRDB::get_available_module_objects(con)
   
-  output$module_overview <- DT::renderDataTable(module_objects)
+  # Render DT
+  output$module_overview <- DT::renderDataTable(module_objects,
+                                                selection = list(selected = c(1)))
   
+  # Delete module object
+  observeEvent(input$delete, {
+    id <- showNotification("Deleting", duration = NULL, closeButton = FALSE)
+    on.exit(removeNotification(id), add = TRUE)
+    selected <- input$module_overview_rows_selected
+    MODifieRDB::delete_input_object(module_objects$module_name[selected] ,con = con)
+  })
+  
+  # Refresh DT
   observeEvent(input$refresh, {
     module_objects <- MODifieRDB::get_available_module_objects(con)
     
-    output$module_overview <- DT::renderDataTable(module_objects)
+    output$module_overview <- DT::renderDataTable(module_objects,
+                                                  selection = list(selected = c(1)))
   })
   
+  # Download function
   output$download_module <- downloadHandler(
     filename = function() {
-      paste0("module_set", Sys.Date(), ".rds", sep="")
+      paste0("module_set_", Sys.Date(), ".rds", sep="")
     },
     content = function(file) {
       saveRDS(retrieve_module(), file)
     }
   )
   
+  # Choose multiple options
   current_modules <- function() {
-    module_objects$module_name[input$module_overview_rows_selected]
+    selected <- input$module_overview_rows_selected
+    module_objects$module_name[selected]
   }
   
-  
   retrieve_module <- function(){
-    if (length(input$module_overview_rows_selected) > 1){
+    selected <- input$module_overview_rows_selected
+    if (length(selected) > 1){
       lapply(current_modules(), MODifieRDB::MODifieR_module_from_db, con = con)
     } else {
-      MODifieRDB::MODifieR_module_from_db(module_objects$module_name[input$module_overview_rows_selected], con = con)
+      MODifieRDB::MODifieR_module_from_db(module_objects$module_name[selected], con = con)
     }
-    
   }
 }
 

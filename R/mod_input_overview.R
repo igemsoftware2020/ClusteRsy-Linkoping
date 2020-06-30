@@ -17,7 +17,9 @@ mod_input_overview_ui <- function(id){
              uiOutput(ns("input_name_chooser"))),
              tags$br(),
              tags$div(`class`="col-sm-4", style = "text-align:right",
-                      actionButton(ns("refresh"), "Refresh database")))
+                      actionButton(ns("refresh"), HTML("<i class='fa fa-refresh' aria-hidden='true'></i> Refresh")),
+                      downloadButton(ns("download_input"), "Download"),
+                      actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true"))))
   )
 }
 
@@ -27,6 +29,7 @@ mod_input_overview_ui <- function(id){
 mod_input_overview_server <- function(input, output, session, con){
   ns <- session$ns
   
+  # Reactive function for fileinput
   upload_input <- reactive({
     req(input$input_object)
     infile <- (input$input_object$datapath)
@@ -38,14 +41,16 @@ mod_input_overview_server <- function(input, output, session, con){
     read.table(file = infile, header = T)
   })
   
+  # File input
   output$input_name_chooser <- renderUI({
-    input <- upload_input()
+    input <- upload_input() #reactive
     tagList( 
       textInput(ns("input_name"), "Input object name"),
       actionButton(ns("upload_input"), "Add input object to database")
     )
   })
   
+  # Upload input object
   observeEvent(input$upload_input, {
     id <- showNotification("Saving input object to database", duration = NULL, closeButton = FALSE)
     input <- upload_input()
@@ -55,18 +60,54 @@ mod_input_overview_server <- function(input, output, session, con){
     MODifieRDB::MODifieR_object_to_db(MODifieR_object = input,
                                       object_name = input_name,
                                       con = con)
-    ## Need to implement in the package
     
   })
   
   input_objects <- MODifieRDB::get_available_input_objects(con)
   
-  output$input_overview <- DT::renderDataTable(input_objects)
+  # Render DT
+  output$input_overview <- DT::renderDataTable(input_objects,
+                                               selection = list(selected = c(1)))
   
+  # Refresh DT
   observeEvent(input$refresh, {
     input_objects <- MODifieRDB::get_available_input_objects(con)
     
-    output$input_overview <- DT::renderDataTable(input_objects)
+    output$input_overview <- DT::renderDataTable(input_objects,
+                                                 selection = list(selected = c(1)))
+  })
+  
+  # Download function
+  output$download_input <- downloadHandler(
+    filename = function() {
+      paste0("input_set_", Sys.Date(), ".rds", sep="")
+    },
+    content = function(file) {
+      saveRDS(retrieve_input(), file)
+    }
+  )
+  
+  # Choose multiple options
+  current_modules <- function() {
+    selected <- input$input_overview_rows_selected
+    input_objects$input_name[selected]
+  }
+  
+  retrieve_input <- function(){
+    selected <- input$input_overview_rows_selected
+    if (length(selected) > 1){
+      lapply(current_modules(), MODifieRDB::MODifieR_input_from_db, con = con)
+    } else {
+      MODifieRDB::MODifieR_input_from_db(input_objects$input_name[selected], con = con)
+    }
+  }
+  
+  # Delete input object
+  observeEvent(input$delete, {
+    id <- showNotification("Deleting", duration = NULL, closeButton = FALSE)
+    on.exit(removeNotification(id), add = TRUE)
+    selected <- input$input_overview_rows_selected
+    MODifieRDB::delete_input_object(input_objects$input_name[selected] ,con = con)
   })
  
 }
