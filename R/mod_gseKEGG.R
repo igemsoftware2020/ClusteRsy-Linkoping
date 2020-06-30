@@ -11,7 +11,6 @@ mod_gseKEGG_ui <- function(id){
   ns <- NS(id)
   tagList(
           uiOutput(ns("module_input")),
-          actionButton(ns("load_input"), label = "Create enrichment analysis object"),
           selectInput(ns("keytype"), 
                       label = "Select key type",
                       choices = c("kegg",
@@ -31,7 +30,8 @@ mod_gseKEGG_ui <- function(id){
                                   "BY",
                                   "fdr",
                                   "none")),
-          prettySwitch(ns("include_seed"), label = "Include seed", value = FALSE, status = "warning")
+          prettySwitch(ns("include_seed"), label = "Include seed", value = FALSE, status = "warning"),
+          actionButton(ns("load_input"), label = "Create enrichment analysis object")
   )
 }
     
@@ -67,7 +67,7 @@ mod_gseKEGG_server <- function(input, output, session, con){
     )
     )
 
-    if (class(enrichment_object) == "try-error"){
+    if (class(gse_object) == "try-error"){
       output$error_p_value <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
       })
