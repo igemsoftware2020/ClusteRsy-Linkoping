@@ -26,8 +26,8 @@ mod_enrichDO_ui <- function(id){
                             "none"), popup = "Correction methods used to control p-values and q-values",
                 multiple = FALSE,
                 selectize = TRUE),
-    sliderInput(ns("mingssize"), label = "Minimum size of genes", min = 0, max = 100, value = 5, popup = "Minimum size of each gene set for analyzing"),
-    sliderInput(ns("maxgssize"), label = "Maximal size each gene set", min = 0,  max = 5000, value = 500, popup = "Maximum size of each gene set for analyzing"),
+    sliderInput(ns("mingssize"), label = "Minimum size of each gene set", min = 0, max = 100, value = 5, popup = "Minimum size of each gene set used for analyzing"),
+    sliderInput(ns("maxgssize"), label = "Maximum size of each gene set", min = 0,  max = 5000, value = 500, popup = "Maximum size of each gene set used for analyzing"),
     tags$div( style = "text-align:center",
               actionButton(ns("load_inputDO"), label = "Enrich") 
     )
