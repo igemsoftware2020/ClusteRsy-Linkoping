@@ -1,4 +1,4 @@
-#' enrich_MKEGG UI Function
+#' enrichMKEGG UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,7 +7,7 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
-mod_enrich_MKEGG_ui <- function(id){
+mod_enrichMKEGG_ui <- function(id){
   ns <- NS(id)
   tagList(
     uiOutput(ns("module_input")),
@@ -36,16 +36,16 @@ mod_enrich_MKEGG_ui <- function(id){
     sliderInput(ns("mingssize"), label = "Minimum size of each gene set annotated", min = 1, max = 100, value = 10, popup = "Minimum size of each gene set used for analyzing"),
     sliderInput(ns("maxgssize"), label = "Maximum size of each gene set annotated", min = 100, max = 1000, value = 500, popup = "Maximum size of each gene set used for analyzing"),
     tags$div( style = "text-align:center",
-              actionButton(ns("load_inputDO"), label = "Enrich") 
+              actionButton(ns("load_input"), label = "Enrich") 
     )
  
   )
 }
     
-#' enrich_MKEGG Server Function
+#' enrichMKEGG Server Function
 #'
 #' @noRd 
-mod_enrich_MKEGG_server <- function(input, output, session, con){
+mod_enrichMKEGG_server <- function(input, output, session, con){
   ns <- session$ns
   
   output$module_input <- renderUI({
@@ -83,8 +83,8 @@ mod_enrich_MKEGG_server <- function(input, output, session, con){
 }
     
 ## To be copied in the UI
-# mod_enrich_MKEGG_ui("enrich_MKEGG_ui_1")
+# mod_enrichMKEGG_ui("enrichMKEGG_ui_1")
     
 ## To be copied in the server
-# callModule(mod_enrich_MKEGG_server, "enrich_MKEGG_ui_1")
+# callModule(mod_enrichMKEGG_server, "enrichMKEGG_ui_1")
  
