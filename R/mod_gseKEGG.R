@@ -53,7 +53,7 @@ mod_gseKEGG_server <- function(input, output, session, con){
     
     gene_list <- get_sorted_module_genes(input$module_object, con = con)
     
-    enrichment_object <- try(clusterProfiler::gseKEGG(geneList = gene_list,
+    gse_object <- try(clusterProfiler::gseKEGG(geneList = gene_list,
                                                       organism = 'hsa',
                                                       keyType = input$keytype,
                                                       exponent = input$exponent,
