@@ -7,7 +7,7 @@
 #' @noRd
 #' 
 #' @importFrom shiny NS tagList
-mod_GO_ui <- function(id){
+mod_enrichGO_ui <- function(id){
   ns <- NS(id)
   tagList(
     uiOutput(
@@ -74,7 +74,7 @@ mod_GO_ui <- function(id){
 #' GO Server Function 
 #' 
 #' @noRd
-mod_GO_server <- function(input, output, session, con){
+mod_enrichGO_server <- function(input, output, session, con){
   ns <- session$ns
   
   output$module_input <- renderUI({
@@ -111,10 +111,10 @@ mod_GO_server <- function(input, output, session, con){
 }
 
 ## To be copies in the UI 
-# mod_GO_ui("GO_ui_1")
+# mod_enrichGO_ui("enrichGO_ui_1")
 
 ## To be copied in the server
-# callModule(mod_GO_server, "GO_ui_1")
+# callModule(mod_enrichGO_server, "enrichGO_ui_1")
 
 
     
