@@ -29,7 +29,7 @@ mod_enrichNCG_ui <- function(id){
     sliderInput(ns("maxgssize"), label = "Maximal size each gene set", min = 0,  max = 5000, value = 500, popup = "Maximal size of each geneSet for analyzing"),
     sliderInput(ns("qvalueCutoff"), label = "Q-value cut-off", min = 0, max = 1, value = 0.05, popup = "Q-value cutoff"),
     tags$div( style = "text-align:center",
-              actionButton(ns("load_inputDO"), label = "Use method") 
+              actionButton(ns("load_inputDO"), label = "Enrich") 
     )
     
   )}
@@ -50,9 +50,10 @@ mod_enrichNCG_server <- function(input, output, session, con){
   observeEvent(input$load_inputDO, {
     id <- showNotification("Identifying disease assosciation and creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
-    module_genes <- MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$module_genes
-    ppi_name <- as.character(MODifieRDB::MODifieR_module_from_db(input$module_object, con = con)$settings$ppi_network)
-    background_genes <- unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
+    
+    module_genes <- get_module_genes(input$module_object, con = con)
+    background_genes <- get_background_genes(input$module_object, con = con)
+    
     enrichment_objectONE <- try(DOSE::enrichNCG(gene = module_genes,
                                                pvalueCutoff = input$pvalueCutoff,
                                                pAdjustMethod = input$pAdjustMethod,
