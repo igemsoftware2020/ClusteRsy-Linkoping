@@ -12,14 +12,6 @@ mod_gseDGN_ui <- function(id){
   tagList(
     uiOutput(ns("module_input")),
     uiOutput(ns("error_p_value")),
-    numericInput(ns("exponent"), label = "Exponent", value = 5, max = 100, min = 0, popup = "Weight of each step"),
-    numericInput(ns("mingssize"), label = "Minimum size of genes", value = 5, max = 100, min = 0, popup = "Minimum size of each gene set for analyzing"),
-    numericInput(ns("maxgssize"), label = "Maximal size each geneSet", value = 500, max = 5000, min = 0, popup = "Maximum size of each gene set for analyzing"),
-    sliderInput(ns("nperm"), label = "Permutation number", min = 1, max = 1000, value = 500, popup = "Number of permutations that should be performed"),
-    selectInput(ns("by"), label = "Select algorithm",
-                choices = c("fgsea",
-                            "DOSE"),
-                popup = "Algorithm used for the gene set enrichment analysis"),
     sliderInput(ns("pvaluecutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value"),
     selectInput(ns("padjustmethod"), "Select an adjustment method",
                 choices = c("holm",
@@ -30,9 +22,20 @@ mod_gseDGN_ui <- function(id){
                             "BY",
                             "fdr",
                             "none"),
+    numericInput(ns("exponent"), label = "Exponent", value = 5, max = 100, min = 0, popup = "Weight of each step"),
+    numericInput(ns("mingssize"), label = "Minimum size of genes", value = 5, max = 100, min = 0, popup = "Minimum size of each gene set for analyzing"),
+    numericInput(ns("maxgssize"), label = "Maximal size each geneSet", value = 500, max = 5000, min = 0, popup = "Maximum size of each gene set for analyzing"),
+    sliderInput(ns("nperm"), label = "Permutation number", min = 1, max = 1000, value = 500, popup = "Number of permutations that should be performed"),
+    selectInput(ns("by"), label = "Select algorithm",
+                choices = c("fgsea",
+                            "DOSE"),
+                popup = "Algorithm used for the gene set enrichment analysis"),
+    
                 multiple = FALSE,
                 popup = "Correction methods used to control p-values and q-values"),
-    actionButton(ns("load_input"), label = "Enrich")
+    tags$div( style = "text-align:center",
+              actionButton(ns("load_inputDO"), label = "Enrich") 
+    )
   )
 }
     
