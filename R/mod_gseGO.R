@@ -15,12 +15,25 @@ mod_gseGO_ui <- function(id){
     selectInput(
       ns("ont"),
       label = "Select subontologies", 
-      choices= c("BP", "MF", "CC", "ALL")
+      choices= c("BP", "MF", "CC", "ALL"),
+      popup = "Either biological process (BP), cellular component (CC), molecular function (MF) or all."
     ),
     selectInput(
       ns("keyType"), 
       label = "Select keyType of gene", 
       choices = c(keytypes(org.Hs.eg.db::org.Hs.eg.db))
+    ),
+    sliderInput(
+      ns("pvalueCutoff"), 
+      label = "Pvalue cutoff", 
+      min = 0, 
+      max = 1, 
+      value = 0.05
+    ), 
+    selectInput(
+      ns("pAdjustMethod"), 
+      label = "Select adjustment method", 
+      choices = c ("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none ")
     ),
     sliderInput(
       ns("exponent"), 
@@ -29,13 +42,6 @@ mod_gseGO_ui <- function(id){
       max = 5, 
       value = 1
     ),
-    sliderInput(
-      ns("nPerm"), 
-      label = "Permutation numbers", 
-      min = 1, 
-      max = 5000, 
-      value = 1000
-    ), 
     sliderInput(
       ns("minGSSize"),
       label = "Select minimal size of each geneSet",
@@ -51,22 +57,11 @@ mod_gseGO_ui <- function(id){
       value = 500
     ), 
     sliderInput(
-      ns("pvalueCutoff"), 
-      label = "Pvalue cutoff", 
-      min = 0, 
-      max = 1, 
-      value = 0.05
-    ), 
-    selectInput(
-      ns("pAdjustMethod"), 
-      label = "Select adjustment method", 
-      choices = c ("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none ")
-    ),
-    prettySwitch(
-      ns("verbose"), 
-      label = "Print messege or not", 
-      value = FALSE, 
-      status = "warning"
+      ns("nPerm"), 
+      label = "Permutation numbers", 
+      min = 1, 
+      max = 5000, 
+      value = 1000
     ), 
     prettySwitch(
       ns("seed"), 
@@ -114,7 +109,7 @@ mod_gseGO_server <- function(input, output, session, con){
                                                     maxGSSize = input$maxGSSize, 
                                                     pvalueCutoff = input$pvalueCutoff, 
                                                     pAdjustMethod = input$pAdjustMethod, 
-                                                    verbose = input$verbose, 
+                                                    verbose = FALSE, 
                                                     seed = input$seed, 
                                                     by = input$by
     ))
