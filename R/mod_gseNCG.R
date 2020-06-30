@@ -28,6 +28,7 @@ mod_gseNCG_ui <- function(id){
     sliderInput(ns("mingssize"), label = "Minimum size of each gene set", value = 5, max = 100, min = 0, popup = "Minimum size of each gene set for analyzing"),
     sliderInput(ns("maxgssize"), label = "Maximum size each gene set", value = 500, max = 5000, min = 0, popup = "Maximum size of each gene set for analyzing"),
     sliderInput(ns("nperm"), label = "Permutation number", min = 1, max = 1000, value = 500, popup = "Number of permutations that should be performed"),
+    prettySwitch(ns("include_seed"), label = "Include seed", value = FALSE, status = "warning"),
     selectInput(ns("by"), label = "Select algorithm",
                 choices = c("fgsea",
                             "DOSE"),
