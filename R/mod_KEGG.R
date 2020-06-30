@@ -16,8 +16,10 @@ mod_KEGG_ui <- function(id){
                       label = "Select key type",
                       choices = c("kegg",
                                   "ncbi-proteinid",
-                                  "uniprot")),
-          sliderInput(ns("deg_cutoff"), label = "P-value cutoff", min = 0, max = 1, value = 0.05, popup = "P-value cutoff for enrichment tests to report"),
+                                  "uniprot"),
+                      popup = "The gene-id type of the input"),
+          sliderInput(ns("deg_cutoff"), label = "P-value cutoff", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value"),
+          sliderInput(ns("qvalue_cutoff"), label = "Q-value cutoff", min = 0, max = 1, value = 0.2, popup = "Rejecting the null hypothesis for any result with an equal or smaller value. Q-values are false discovery rate (FDR) adjusted p-values"),
           selectInput(ns("padj_method"), 
                       label = "Select Adjusted p-value method",
                       choices = c("hochberg",
@@ -26,12 +28,17 @@ mod_KEGG_ui <- function(id){
                                   "BH",
                                   "BY",
                                   "fdr",
-                                  "none")),
+                                  "none"),popup = "Correction methods used to control p-values and q-values",
+                      multiple = FALSE,
+                      selectize = TRUE
+                      ),
           uiOutput(ns("background_genes")),
-          sliderInput(ns("mingssize"), label = "Minimal size of genes annotated", min = 1, max = 100, value = 10, popup = "Miniman size of genes annotated by Ontology term for testing"),
-          sliderInput(ns("maxgssize"), label = "Maximal size of genes annotated", min = 100, max = 1000, value = 500, popup = "Maximal size of genes annotated for testing"),
-          sliderInput(ns("qvalue_cutoff"), label = "Q-value cutoff", min = 0, max = 1, value = 0.2, popup = "Q-value cutoff on enrichment tests to report as significant. Tests must pass I) P-value cutoff on unadjusted P-values, II) P-value cut off on unadjusted P-values and III) Q-value cut off on Q-values to be reported"),
-          actionButton(ns("load_input"), label = "Create enrichment analysis object")
+          sliderInput(ns("mingssize"), label = "Minimum size of each gene set annotated", min = 1, max = 100, value = 10, popup = "Minimum size of each gene set used for analyzing"),
+          sliderInput(ns("maxgssize"), label = "Maximum size of each gene set annotated", min = 100, max = 1000, value = 500, popup = "Maximum size of each gene set used for analyzing"),
+          
+          tags$div( style = "text-align:center",
+                    actionButton(ns("load_inputDO"), label = "Enrich") 
+          )
   )
 }
     
