@@ -10,7 +10,7 @@
 mod_upload_ui <- function(id){
   ns <- NS(id)
   tagList(
-    fileInput(ns("expression_matrix"), label = "Upload an expression matrix"),
+    fileInput(ns("expression_matrix"), label = "Upload an expression matrix", accept = c("text/csv", "text/plain", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".tsv")),
     uiOutput(ns("sample_chooser")),
     htmlOutput(ns("error_name_js"))
   )
@@ -31,15 +31,15 @@ mod_upload_server <- function(input, output, session, con){
       list(left=as.character(data$left), right=as.character(data$right))
   }, force = TRUE)
   
+  # File handler
   upload_expression <- reactive({
     req((input$expression_matrix))
     infile <- (input$expression_matrix$datapath)
     if (is.null(infile)){
-      
       return(NULL)
-    }
-    
-    read.table(file = infile, header = T)
+      } else {
+        read.table(file = infile, header = T)
+      }
   })
   
   output$sample_chooser <- renderUI({
