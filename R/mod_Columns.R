@@ -13,20 +13,20 @@ mod_Columns_ui <- function(id){
     # Number container
     tags$div(`class`="row",
              tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
-                      tags$form(class = "well",
+                      tags$form(class = "well", style = "background-color: inherit",
                                 tags$h2(class = "text-center",
                                         tags$span(
                                           class="label", "1",
                                           style = "border-radius: 100%;background-color:#ffbd40")))),
              tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
-                      tags$form(class = "well faded",
+                      tags$form(class = "well faded", style = "background-color: inherit",
                                 id = "num_contain_2",
                                 tags$h2(class = "text-center",
                                         tags$span(
                                           class="label", "2",
                                           style = "border-radius: 100%;background-color:#ffbd40")))),
              tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
-                      tags$form(class = "well faded",
+                      tags$form(class = "well faded", style = "background-color: inherit",
                                 id = "num_contain_3",
                                 tags$h2(class = "text-center",
                                         tags$span(
@@ -41,7 +41,6 @@ mod_Columns_ui <- function(id){
     tags$div(`class`="row",
              tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
                       tags$form(class = "well",
-                                `style`="background-color:#2c3e50;",
                                 uiOutput(ns("input_choice")),
                                 mod_upload_ui(ns("upload_ui_1"))
                                 ),
@@ -50,13 +49,13 @@ mod_Columns_ui <- function(id){
                        cursor: not-allowed;", id = "mod2",
                       tags$form(class = "well faded",
                                 id = "mod_contain_2",
-                                `style`="background-color:#2c3e50; pointer-events :none;",
+                                `style`="pointer-events :none;",
                                 mod_Description1_ui(ns("Description1_ui_1")))),
              tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;
                       cursor: not-allowed;", id = "mod3",
                       tags$form(class = "well faded",
                                 id = "mod_contain_3",
-                                `style`="background-color:#2c3e50; pointer-events :none;"))
+                                `style`="pointer-events :none;"))
              ),
     htmlOutput(ns("fadein"))
   )
@@ -105,41 +104,6 @@ mod_Columns_server <- function(input, output, session, con){
     upload_algorithm()
     tags$script(src = "www/fadein.js")
   })
-
-#   # Number containter 2
-#   output$column2_number <- renderUI({
-#     tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
-#              tags$form(class = "well",
-#                        tags$h2(class = "text-center",
-#                                tags$span(
-#                                  class="label", "2",
-#                                  style = "border-radius: 100%;background-color:#ffbd40"))))
-# })
-  
-#   # Module contatiner 2
-#   output$column2_module <- renderUI({
-#     tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
-#              tags$form(class = "well",
-#                        `style`="background-color:#2c3e50;",
-#                        mod_Description1_ui(ns("Description1_ui_1"))))
-# })
-  
-  # # Number container 3
-  # output$column3_number <- renderUI({
-  #   tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
-  #            tags$form(class = "well",
-  #                      tags$h2(class = "text-center",
-  #                              tags$span(
-  #                                class="label", "3",
-  #                                style = "border-radius: 100%;background-color:#ffbd40"))))
-  # })
-  
-  # # Moudle container 3
-  # output$column3_module <- renderUI({
-  #   tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
-  #            tags$form(class = "well",
-  #                      `style`="background-color:#2c3e50;"))
-  # })
   
   callModule(mod_Description1_server, "Description1_ui_1", con = con)
 } # Closes server function
