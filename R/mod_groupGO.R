@@ -15,7 +15,7 @@ mod_groupGO_ui <- function(id){
     selectInput(
       ns("keytype"), 
       label = "Select the type of gene input", 
-      choices = c(keytypes(org.Hs.eg.db::org.Hs.eg.db)),
+      choices = c(AnnotationDbi::keytypes(org.Hs.eg.db::org.Hs.eg.db)),
       popup = "Select the type of the input data"
     ),
     selectInput(

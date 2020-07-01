@@ -56,7 +56,8 @@ mod_Columns_ui <- function(id){
                       cursor: not-allowed;", id = "mod3",
                       tags$form(class = "well faded",
                                 id = "mod_contain_3",
-                                `style`="background-color:#2c3e50; pointer-events :none;"))
+                                `style`="background-color:#2c3e50; pointer-events :none;",
+                                mod_disease_analysis_ui(ns("disease_analysis_ui_1"))))
              ),
     htmlOutput(ns("fadein"))
   )
@@ -74,7 +75,7 @@ mod_Columns_server <- function(input, output, session, con){
     tagList(
     selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "Choose your input method"),
     tags$div(style = "text-align:center",
-             actionButton(ns("create_input"), "Create input object")),
+             actionButton(ns("select_input"), "Use this input object")),
     tags$br()
     )
   })
@@ -82,8 +83,8 @@ mod_Columns_server <- function(input, output, session, con){
   
   
   # Action button for creating input
-  observeEvent(input$create_input, {
-    upload_ui_1$input_object <- input$input_object
+  observeEvent(input$select_input, {
+    upload_ui_1$input_object <- MODifieRDB::MODifieR_input_from_db(input$input_object, con = con)
   })
   
   upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1", con = con)
@@ -93,54 +94,15 @@ mod_Columns_server <- function(input, output, session, con){
   }
   )
   
-  upload_algorithm <- reactive({
-    req(upload_ui_1$input_object) 
-    
-    if (is.null(upload_ui_1$input_object)){
-      return(NULL)
-    }
-  })
-  
   output$fadein <- renderUI({
-    upload_algorithm()
-    tags$script(src = "www/fadein.js")
+    req(upload_ui_1$input_object) 
+    tagList(
+      tags$head(tags$script(src = "www/fadein.js", type="text/javascript")),
+      tags$script("col2(); col3()")
+    )
   })
-
-#   # Number containter 2
-#   output$column2_number <- renderUI({
-#     tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
-#              tags$form(class = "well",
-#                        tags$h2(class = "text-center",
-#                                tags$span(
-#                                  class="label", "2",
-#                                  style = "border-radius: 100%;background-color:#ffbd40"))))
-# })
   
-#   # Module contatiner 2
-#   output$column2_module <- renderUI({
-#     tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
-#              tags$form(class = "well",
-#                        `style`="background-color:#2c3e50;",
-#                        mod_Description1_ui(ns("Description1_ui_1"))))
-# })
-  
-  # # Number container 3
-  # output$column3_number <- renderUI({
-  #   tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
-  #            tags$form(class = "well",
-  #                      tags$h2(class = "text-center",
-  #                              tags$span(
-  #                                class="label", "3",
-  #                                style = "border-radius: 100%;background-color:#ffbd40"))))
-  # })
-  
-  # # Moudle container 3
-  # output$column3_module <- renderUI({
-  #   tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
-  #            tags$form(class = "well",
-  #                      `style`="background-color:#2c3e50;"))
-  # })
-  
+  callModule(mod_disease_analysis_server, "disease_analysis_ui_1", con = con)
   callModule(mod_Description1_server, "Description1_ui_1", con = con)
 } # Closes server function
     
