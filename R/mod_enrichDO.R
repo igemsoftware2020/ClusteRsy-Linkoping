@@ -12,7 +12,6 @@ mod_enrichDO_ui <- function(id){
   tagList(
     #Description of the method "Finds disease assosciations and creates enrichment analysis objects"
     uiOutput(ns("module_input")),
-    uiOutput(ns("error_p_value")),
     sliderInput(ns("pvalueCutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value"),
     sliderInput(ns("qvalueCutoff"), label = "Q-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value. Q-values are false discovery rate (FDR) adjusted p-values"),
     selectInput(ns("pAdjustMethod"), "Select an adjustment method",
@@ -68,7 +67,7 @@ mod_enrichDO_server <- function(input, output, session, con){
     )
     )
     if (class(enrichment_objectONE) == "try-error"){
-      output$error_p_value <- renderUI({
+      output$error <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), enrichment_objectONE)
       })
     }})

@@ -73,8 +73,8 @@ mod_gseMKEGG_server <- function(input, output, session, con){
     )
     
     if (class(gse_object) == "try-error"){
-      output$error_p_value <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
+      output$error <- renderUI({
+        tags$p(class = "text-danger", tags$b("Error:"), gse_object)
       })
     }
   })

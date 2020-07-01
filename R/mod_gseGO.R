@@ -123,7 +123,7 @@ mod_gseGO_server <- function(input, output, session, con){
                                                     by = input$by
     ))
     if (class(gse_object) == "try-error"){
-      output$error_p_value <- renderUI({
+      output$error <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), gse_object)
       })
     }

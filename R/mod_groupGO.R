@@ -74,7 +74,7 @@ mod_groupGO_server <- function(input, output, session, con){
   ))
     
     if (class(group_object) == "try-error"){
-      output$error_p_value <- renderUI({
+      output$error <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), group_object)
       })
     }

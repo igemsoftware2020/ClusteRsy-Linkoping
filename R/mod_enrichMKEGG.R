@@ -11,7 +11,6 @@ mod_enrichMKEGG_ui <- function(id){
   ns <- NS(id)
   tagList(
     uiOutput(ns("module_input")),
-    uiOutput(ns("error_p_value")),
     selectInput(ns("keytype"), 
                 label = "Select key type",
                 choices = c("kegg",
@@ -74,7 +73,7 @@ mod_enrichMKEGG_server <- function(input, output, session, con){
     )
     )
     if (class(enrichment_object) == "try-error"){
-      output$error_p_value <- renderUI({
+      output$error <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
       })
     }
