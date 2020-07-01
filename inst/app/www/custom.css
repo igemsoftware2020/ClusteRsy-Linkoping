@@ -7114,3 +7114,15 @@ height: 15vh;
   background-color: #d20000;
   border-color: #cd0000
 }
+
+/* Remove padding */
+.container-fluid{
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Sticky nav */
+.navbar{
+  position: sticky;
+  top:0;
+}
