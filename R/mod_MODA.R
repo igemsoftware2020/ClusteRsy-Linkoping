@@ -48,7 +48,9 @@ mod_MODA_ui <- function(id){
 #' @noRd 
 mod_MODA_server <- function(input, output, session, con){
   ns <- session$ns
- 
+  
+  MODA_module <- reactiveValues()
+  
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation.")
@@ -89,8 +91,10 @@ mod_MODA_server <- function(input, output, session, con){
                                           conservedTheta = input$conservedTheta,
                                           module_name = input$module_name,
                                           con = con)
+    MODA_module$module_object <- module_object
     updateTextInput(session, "module_name", value = character(0))
   })
+  return(MODA_module)
 }
     
 ## To be copied in the UI

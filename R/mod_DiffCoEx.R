@@ -60,6 +60,8 @@ mod_DiffCoEx_ui <- function(id){
 #' @noRd 
 mod_DiffCoEx_server <- function(input, output, session, con){
   ns <- session$ns
+  
+  DiffCoEx_module <- reactiveValues()
  
   observeEvent(input$cuttree_method, {
     if (input$cuttree_method == "hybrid") {
@@ -120,10 +122,12 @@ mod_DiffCoEx_server <- function(input, output, session, con){
                                           beta = input$beta,
                                           module_name = input$module_name,
                                           con = con)
+    
+    DiffCoEx_module$module_object <- module_object
     updateTextInput(session, "module_name", value = character(0))
     
   })
-
+  return(DiffCoEx_module)
 }
     
 ## To be copied in the UI

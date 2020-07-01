@@ -33,6 +33,7 @@ mod_DIAMoND_ui <- function(id){
 mod_DIAMoND_server <- function(input, output, session, con){
   ns <- session$ns
   
+  DIAMoND_module <- reactiveValues()
   
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
@@ -87,11 +88,12 @@ mod_DIAMoND_server <- function(input, output, session, con){
                  style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
         })
     } else {
+      DIAMoND_module$module_object <- module_object
       updateTextInput(session, "module_name", value = character(0))
     }
     }
   )
-
+  return(DIAMoND_module)
 }
     
 ## To be copied in the UI

@@ -116,6 +116,8 @@ mod_WGCNA_ui <- function(id){
 mod_WGCNA_server <- function(input, output, session, con){
   ns <- session$ns
   
+  WGCNA_module <- reactiveValues()
+  
   # This function is used to make TOMType input valid
   decapitalize <- function(str){
     lo <- tolower(substring(str, 1, 1))
@@ -169,9 +171,10 @@ mod_WGCNA_server <- function(input, output, session, con){
                                           maxPOutliers = input$maxPOutliers, 
                                           module_name = input$module_name,
                                           con = con)
+    WGCNA_module$module_object <- module_object
     updateTextInput(session, "module_name", value = character(0))
   })
-  
+  return(WGCNA_module)
 }
     
 ## To be copied in the UI

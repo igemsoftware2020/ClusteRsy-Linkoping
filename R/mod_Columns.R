@@ -59,7 +59,8 @@ mod_Columns_ui <- function(id){
                                 `style`="background-color:#2c3e50; pointer-events :none;",
                                 mod_disease_analysis_ui(ns("disease_analysis_ui_1"))))
              ),
-    htmlOutput(ns("fadein"))
+    htmlOutput(ns("fadein")),
+    htmlOutput(ns("fadein1"))
   )
 }
     
@@ -81,16 +82,21 @@ mod_Columns_server <- function(input, output, session, con){
   })
   }
   
+  upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1", con = con)
+  Description1_ui_1 <- callModule(mod_Description1_server, "Description1_ui_1", con = con)
   
-  # Action button for creating input
+  # Action button to select input
   observeEvent(input$select_input, {
     upload_ui_1$input_object <- MODifieRDB::MODifieR_input_from_db(input$input_object, con = con)
   })
   
-  upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1", con = con)
-  
   observeEvent(upload_ui_1$input_object, {
     MODifieR_module <- upload_ui_1$input_object
+  }
+  )
+  
+  observeEvent(Description1_ui_1$module_object, {
+    Description1_module <- Description1_ui_1$module_object
   }
   )
   
@@ -98,12 +104,19 @@ mod_Columns_server <- function(input, output, session, con){
     req(upload_ui_1$input_object) 
     tagList(
       tags$head(tags$script(src = "www/fadein.js", type="text/javascript")),
-      tags$script("col2(); col3()")
+      tags$script("col2()")
     )
   })
   
+  output$fadein1 <- renderUI({
+    req(Description1_ui_1$module_object)
+    tagList(
+      tags$head(tags$script(src = "www/fadein.js", type="text/javascript")),
+      tags$script("col3()")
+    )
+  })
+
   callModule(mod_disease_analysis_server, "disease_analysis_ui_1", con = con)
-  callModule(mod_Description1_server, "Description1_ui_1", con = con)
 } # Closes server function
     
 ## To be copied in the UI

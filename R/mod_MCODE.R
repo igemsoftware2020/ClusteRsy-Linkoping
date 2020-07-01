@@ -101,6 +101,8 @@ mod_MCODE_ui <- function(id){
 #' @noRd 
 mod_MCODE_server <- function(input, output, session, con){
   ns <- session$ns
+  
+  MCODE_module <- reactiveValues()
  
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
@@ -159,11 +161,13 @@ mod_MCODE_server <- function(input, output, session, con){
                  style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
         })
     } else {
+      MCODE_module$module_object <- module_object
       updateTextInput(session, "module_name", value = character(0))
     }
     }
   )
-
+  
+  return(MCODE_module)
 }
     
 ## To be copied in the UI
