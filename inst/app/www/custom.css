@@ -7049,12 +7049,10 @@ border-radius:5px;
 
 /* Arrow */
 dash {
-   width: 30%;
+   width: 26vw;
    border: 1px solid #ffbd40;
-   border-radius: 10px;
-   line-height: 0.1em;
    display:block;
-   position: absolute;
+   position:relative;
 }    
 
 .no1 {

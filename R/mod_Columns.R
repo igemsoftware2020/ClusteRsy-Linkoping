@@ -11,7 +11,7 @@ mod_Columns_ui <- function(id){
   ns <- NS(id)
   tagList(
     # Number container
-    tags$div(`class`="row", style = "position: relative;",
+    tags$div(`class`="row",
              tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
                       tags$form(class = "well",
                                 tags$h2(class = "text-center",
@@ -32,9 +32,9 @@ mod_Columns_ui <- function(id){
                                         tags$span(
                                           class="label", "3",
                                           style = "border-radius: 100%;background-color:#ffbd40")))),
-             HTML("<dash id='arrow1' class='no1' style='left: 18.4%;top: 47.8%;'></dash><dash id='arrow2' class='no1' style='left: 51.9%;top: 47.8%;'></dash>"),
-             tags$i(class = "fa fa-chevron-right", style="position: absolute;left: 48%;top: 42.8%;"),
-             tags$i(class = "fa fa-chevron-right", style="position: absolute;left: 81.5%;top: 42.8%;")
+             HTML("<dash id='arrow1' class='no1' style='left: 20.6vw;top: 60px;'></dash><dash id='arrow2' class='no1' style='left: 55vw;top: 60px;'></dash>"),
+             tags$i(class = "fa fa-chevron-right", style="position: relative;left: 46.5vw;bottom: 76.01px;"),
+             tags$i(class = "fa fa-chevron-right", style="position: relative;left: 80vw;bottom: 74px;")
              ),
     
     # Module container         
