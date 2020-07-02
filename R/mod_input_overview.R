@@ -88,7 +88,7 @@ mod_input_overview_server <- function(input, output, session, con){
   )
   
   # Choose multiple options
-  current_modules <- function() {
+  current_inputs <- function() {
     selected <- input$input_overview_rows_selected
     input_objects$input_name[selected]
   }
@@ -111,9 +111,14 @@ mod_input_overview_server <- function(input, output, session, con){
     output$input_overview <- DT::renderDataTable(input_objects,
                                                  selection = list(selected = c(1)))
     
+    
     # Delete
-    selected <- input$input_overview_rows_selected
-    MODifieRDB::delete_input_object(input_objects$input_name[selected] ,con = con)
+    selected <- input$module_overview_rows_selected
+    if (length(selected) > 1){
+      lapply(current_modules(), MODifieRDB::delete_input_object, con = con)
+    } else {
+      MODifieRDB::delete_input_object(input_objects$input_name[selected] ,con = con)
+    }
     
     # Refresh
     input_objects <- MODifieRDB::get_available_input_objects(con)

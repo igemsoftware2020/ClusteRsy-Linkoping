@@ -86,10 +86,17 @@ mod_Modulediscoverer_server <- function(input, output, session, con){
                  )
     
     if (class(module_object) == "try-error"){
+      if (grepl("Name", module_object)) {
+        output$error_name_descrip <- renderUI({
+          tags$p(class = "text-danger", tags$b("Error:"), module_object,
+                 style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
+        })
+      } else {
         output$error_p_value <- renderUI({
           tags$p(class = "text-danger", tags$b("Error:"), module_object,
                  style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
         })
+      }
     } else {
       Modulediscoverer_module$module_object <- module_object
       updateTextInput(session, "module_name", value = character(0))

@@ -110,7 +110,7 @@ mod_DiffCoEx_server <- function(input, output, session, con){
   observeEvent(input$load_input, {
     id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
-    module_object <- MODifieRDB::diffcoex_db(input_name = input$input_object,
+    module_object <- try(MODifieRDB::diffcoex_db(input_name = input$input_object,
                                           cluster_method = input$cluster_method,
                                           cor_method = input$cor_method,
                                           cuttree_method = input$cuttree_method,
@@ -122,10 +122,16 @@ mod_DiffCoEx_server <- function(input, output, session, con){
                                           beta = input$beta,
                                           module_name = input$module_name,
                                           con = con)
-    
-    DiffCoEx_module$module_object <- module_object
-    updateTextInput(session, "module_name", value = character(0))
-    
+    )
+    if (class(module_object) == "try-error"){
+      output$error_name_descrip <- renderUI({
+        tags$p(class = "text-danger", tags$b("Error:"), module_object,
+               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
+      })
+    } else {
+      DiffCoEx_module$module_object <- module_object
+      updateTextInput(session, "module_name", value = character(0))
+    }
   })
   return(DiffCoEx_module)
 }
