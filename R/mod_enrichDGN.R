@@ -67,7 +67,7 @@ mod_enrichDGN_server <- function(input, output, session, con){
                                                 
     )
     )
-    if (class(enrichment_objectONE) == "try-error"){
+    if (class(enrichment_object) == "try-error"){
       output$error <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
       })
