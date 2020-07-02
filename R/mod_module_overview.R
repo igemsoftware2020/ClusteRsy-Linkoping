@@ -67,23 +67,6 @@ mod_module_overview_server <- function(input, output, session, con){
   output$module_overview <- DT::renderDataTable(module_objects,
                                                 selection = list(selected = c(1)))
   
-  # Delete module object
-  observeEvent(input$delete, {
-    id <- showNotification("Deleting", duration = NULL, closeButton = FALSE)
-    on.exit(removeNotification(id), add = TRUE)
-    # Required for selecting
-    module_objects <- MODifieRDB::get_available_module_objects(con)
-    output$module_overview <- DT::renderDataTable(module_objects,
-                                                  selection = list(selected = c(1)))
-    
-    selected <- input$module_overview_rows_selected
-    MODifieRDB::delete_module_object(module_objects$module_name[selected] ,con = con)
-    # Refresh
-    module_objects <- MODifieRDB::get_available_module_objects(con)
-    output$module_overview <- DT::renderDataTable(module_objects,
-                                                  selection = list(selected = c(1)))
-  })
-  
   # Refresh DT
   observeEvent(input$refresh, {
     module_objects <- MODifieRDB::get_available_module_objects(con)
@@ -91,16 +74,6 @@ mod_module_overview_server <- function(input, output, session, con){
     output$module_overview <- DT::renderDataTable(module_objects,
                                                   selection = list(selected = c(1)))
   })
-  
-  # Download function
-  output$download_module <- downloadHandler(
-    filename = function() {
-      paste0("module_set_", Sys.Date(), ".rds", sep="")
-    },
-    content = function(file) {
-      saveRDS(retrieve_module(), file)
-    }
-  )
   
   # Choose multiple options
   current_modules <- function() {
@@ -116,6 +89,41 @@ mod_module_overview_server <- function(input, output, session, con){
       MODifieRDB::MODifieR_module_from_db(module_objects$module_name[selected], con = con)
     }
   }
+  
+  # Download function
+  output$download_module <- downloadHandler(
+    filename = function() {
+      paste0("module_set_", Sys.Date(), ".rds", sep="")
+    },
+    content = function(file) {
+      saveRDS(retrieve_module(), file)
+    }
+  )
+  
+  # Delete module object
+  observeEvent(input$delete, {
+    id <- showNotification("Deleting", duration = NULL, closeButton = FALSE)
+    on.exit(removeNotification(id), add = TRUE)
+    # Required for selecting
+    module_objects <- MODifieRDB::get_available_module_objects(con)
+    output$module_overview <- DT::renderDataTable(module_objects,
+                                                  selection = list(selected = c(1)))
+    
+    # Delete
+    selected <- input$module_overview_rows_selected
+    if (length(selected) > 1){
+      lapply(current_modules(), MODifieRDB::delete_module_object, con = con)
+    } else {
+      MODifieRDB::delete_module_object(module_objects$module_name[selected] ,con = con)
+    }
+    
+    # Refresh
+    module_objects <- MODifieRDB::get_available_module_objects(con)
+    output$module_overview <- DT::renderDataTable(module_objects,
+                                                  selection = list(selected = c(1)))
+  })
+  
+  
 }
 
 ## To be copied in the UI
