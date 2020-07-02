@@ -32,11 +32,11 @@ mod_vis_enrichobj_server <- function(input, output, session, con){
   if (length(unlist((MODifieRDB::get_available_input_objects(con)$input_name)))==0){
      output$input_choice <- renderUI({
 
-       box <- tagList(tags$button(paste("No erichment object detected. Click me to learn more"),
-                                          class = "link",
-                                          type = "button",
-                                          `data-toggle` = "modal",
-                                          `data-target` = "#descrip"),
+        box <- tagList(tags$button(paste("No erichment object detected. Click me to learn more"),
+                                           class = "link",
+                                           type = "button",
+                                           `data-toggle` = "modal",
+                                           `data-target` = "#descrip"),
                               tags$div(`class` = "modal fade", `id` = "descrip", `role` = "dialog", `tabindex` = "-1", `aria-hidden` = "true", `style` = "display:none;",
                                        tags$div(`class` = "modal-dialog",
                                                 tags$div(`class` = "modal-content",
