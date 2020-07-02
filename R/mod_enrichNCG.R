@@ -54,7 +54,7 @@ mod_enrichNCG_server <- function(input, output, session, con){
     module_genes <- get_module_genes(input$module_object, con = con)
     background_genes <- get_background_genes(input$module_object, con = con)
     
-    enrichment_objectONE <- try(DOSE::enrichNCG(gene = module_genes,
+    enrichment_object <- try(DOSE::enrichNCG(gene = module_genes,
                                                pvalueCutoff = input$pvalueCutoff,
                                                pAdjustMethod = input$pAdjustMethod,
                                                universe = background_genes,
@@ -65,11 +65,17 @@ mod_enrichNCG_server <- function(input, output, session, con){
                                                
     )
     )
-    if (class(enrichment_objectONE) == "try-error"){
+    if (class(enrichment_object) == "try-error"){
       output$error_p_value <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), enrichment_objectONE)
+        tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
       })
-    }})
+    }
+    module_name <- input$module_object
+    MODifieRDB::enrichment_object_to_db(enrichment_object,
+                                        module_name = module_name, 
+                                        enrichment_method = "enrichNCG", 
+                                        con = con)
+    })
 }
 
 
