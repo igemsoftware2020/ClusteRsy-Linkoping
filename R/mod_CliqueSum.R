@@ -38,12 +38,9 @@ mod_CliqueSum_server <- function(input, output, session, con){
     )
   )
   
-  print(MODifieRDB::get_available_db_networks(con))
-  
   if (nrow(MODifieRDB::get_available_db_networks(con)) != 0 ) {
     output$parameters <- renderUI({
       UI
-
     })
   } else {
     

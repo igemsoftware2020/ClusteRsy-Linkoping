@@ -113,10 +113,11 @@ mod_input_overview_server <- function(input, output, session, con){
     
     
     # Delete
-    selected <- input$module_overview_rows_selected
+    selected <- input$input_overview_rows_selected
     if (length(selected) > 1){
       lapply(current_modules(), MODifieRDB::delete_input_object, con = con)
     } else {
+      print(input_objects$input_name[selected])
       MODifieRDB::delete_input_object(input_objects$input_name[selected] ,con = con)
     }
     
