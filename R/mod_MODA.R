@@ -48,7 +48,9 @@ mod_MODA_ui <- function(id){
 #' @noRd 
 mod_MODA_server <- function(input, output, session, con){
   ns <- session$ns
- 
+  
+  MODA_module <- reactiveValues()
+  
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation.")
@@ -82,15 +84,27 @@ mod_MODA_server <- function(input, output, session, con){
   observeEvent(input$load_input, {
     id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
-    module_object <- MODifieRDB::moda_db(input_name = input$input_object, 
+    module_object <- try(MODifieRDB::moda_db(input_name = input$input_object, 
                                           group_of_interest = as.numeric(input$group_of_interest),
                                           cutmethod = input$cutmethod,
                                           specificTheta = input$specificTheta,
                                           conservedTheta = input$conservedTheta,
                                           module_name = input$module_name,
                                           con = con)
-    updateTextInput(session, "module_name", value = character(0))
+    )
+    
+    if (class(module_object) == "try-error"){
+      output$error_name_descrip <- renderUI({
+        tags$p(class = "text-danger", tags$b("Error:"), module_object,
+               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
+      })
+    }
+    else {
+      MODA_module$module_object <- module_object
+      updateTextInput(session, "module_name", value = character(0))
+    }
   })
+  return(MODA_module)
 }
     
 ## To be copied in the UI

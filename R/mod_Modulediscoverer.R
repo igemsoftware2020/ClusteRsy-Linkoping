@@ -33,6 +33,9 @@ mod_Modulediscoverer_ui <- function(id){
 #' @noRd 
 mod_Modulediscoverer_server <- function(input, output, session, con){
   ns <- session$ns
+  
+  Modulediscoverer_module <- reactiveValues()
+  
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation")
@@ -68,8 +71,8 @@ mod_Modulediscoverer_server <- function(input, output, session, con){
   })
   
    observeEvent(input$load_input, {
-     id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
-     on.exit(removeNotification(id), add = TRUE)
+    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
+    on.exit(removeNotification(id), add = TRUE)
     output$error_p_value <- NULL # I CANNOT REMOVE THIS BUG, SO THIS IS A FEATURE NOW :)
     module_object <- try(MODifieRDB::modulediscoverer_db(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
@@ -83,16 +86,24 @@ mod_Modulediscoverer_server <- function(input, output, session, con){
                  )
     
     if (class(module_object) == "try-error"){
+      if (grepl("Name", module_object)) {
+        output$error_name_descrip <- renderUI({
+          tags$p(class = "text-danger", tags$b("Error:"), module_object,
+                 style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
+        })
+      } else {
         output$error_p_value <- renderUI({
           tags$p(class = "text-danger", tags$b("Error:"), module_object,
                  style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
         })
+      }
     } else {
+      Modulediscoverer_module$module_object <- module_object
       updateTextInput(session, "module_name", value = character(0))
     }
     }
   )
-
+  return(Modulediscoverer_module)
 }
     
 ## To be copied in the UI

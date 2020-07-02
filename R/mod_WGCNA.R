@@ -116,6 +116,8 @@ mod_WGCNA_ui <- function(id){
 mod_WGCNA_server <- function(input, output, session, con){
   ns <- session$ns
   
+  WGCNA_module <- reactiveValues()
+  
   # This function is used to make TOMType input valid
   decapitalize <- function(str){
     lo <- tolower(substring(str, 1, 1))
@@ -154,7 +156,7 @@ mod_WGCNA_server <- function(input, output, session, con){
   observeEvent(input$load_input, {
     id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
-    module_object <- MODifieRDB::wgcna_db(input_name = input$input_object, 
+    module_object <- try(MODifieRDB::wgcna_db(input_name = input$input_object, 
                                           group_of_interest = input$group_of_interest,
                                           minModuleSize = input$minModuleSize,
                                           deepSplit = input$deepSplit,
@@ -169,9 +171,18 @@ mod_WGCNA_server <- function(input, output, session, con){
                                           maxPOutliers = input$maxPOutliers, 
                                           module_name = input$module_name,
                                           con = con)
-    updateTextInput(session, "module_name", value = character(0))
+    )
+    if (class(module_object) == "try-error"){
+      output$error_name_descrip <- renderUI({
+        tags$p(class = "text-danger", tags$b("Error:"), module_object,
+               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
+      })
+    } else {
+      WGCNA_module$module_object <- module_object
+      updateTextInput(session, "module_name", value = character(0))
+    }
   })
-  
+  return(WGCNA_module)
 }
     
 ## To be copied in the UI

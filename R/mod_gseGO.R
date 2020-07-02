@@ -15,7 +15,7 @@ mod_gseGO_ui <- function(id){
     selectInput(
       ns("keytype"), 
       label = "Select the type of gene input", 
-      choices = c(keytypes(org.Hs.eg.db::org.Hs.eg.db)),
+      choices = c(AnnotationDbi::keytypes(org.Hs.eg.db::org.Hs.eg.db)),
       popup = "Select the type of the input data"
     ),
     selectInput(
@@ -96,6 +96,8 @@ mod_gseGO_ui <- function(id){
 mod_gseGO_server <- function(input, output, session, con){
   ns <- session$ns
   
+  gseGO_module <- reactiveValues()
+  
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, 
@@ -123,16 +125,19 @@ mod_gseGO_server <- function(input, output, session, con){
                                                     by = input$by
     ))
     if (class(gse_object) == "try-error"){
-      output$error_p_value <- renderUI({
+      output$error <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), gse_object)
       })
+    } else{
+      gseGO_module$enrich <- gse_object
+      module_name <- input$module_object
+      MODifieRDB::enrichment_object_to_db(gse_object,
+                                          module_name = module_name, 
+                                          enrichment_method = "gseGO", 
+                                          con = con)
     }
-    module_name <- input$module_object
-    MODifieRDB::enrichment_object_to_db(gse_object,
-                                        module_name = module_name, 
-                                        enrichment_method = "gseGO", 
-                                        con = con)
   })
+  return(gseGO_module)
 }
 
 ## To be copies in the UI 

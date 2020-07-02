@@ -12,10 +12,9 @@ mod_enrichDO_ui <- function(id){
   tagList(
     #Description of the method "Finds disease assosciations and creates enrichment analysis objects"
     uiOutput(ns("module_input")),
-    uiOutput(ns("error_p_value")),
-    sliderInput(ns("pvaluecutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value"),
-    sliderInput(ns("qvaluecutoff"), label = "Q-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value. Q-values are false discovery rate (FDR) adjusted p-values"),
-    selectInput(ns("padjustmethod"), "Select an adjustment method",
+    sliderInput(ns("pvalueCutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value"),
+    sliderInput(ns("qvalueCutoff"), label = "Q-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value. Q-values are false discovery rate (FDR) adjusted p-values"),
+    selectInput(ns("pAdjustMethod"), "Select an adjustment method",
                 choices = c("holm",
                             "hochberg",
                             "hommel",
@@ -41,6 +40,9 @@ mod_enrichDO_ui <- function(id){
 #' @noRd 
 mod_enrichDO_server <- function(input, output, session, con){
   ns <- session$ns
+  
+  enrichDO_module <- reactiveValues()
+  
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
@@ -71,13 +73,16 @@ mod_enrichDO_server <- function(input, output, session, con){
       output$error_p_value <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
       })
+    } else {
+      enrichDO_module$enrich <- enrichment_object  
+      module_name <- input$module_object
+      MODifieRDB::enrichment_object_to_db(enrichment_object,
+                                          module_name = module_name, 
+                                          enrichment_method = "enrichDO", 
+                                          con = con)
     }
-    module_name <- input$module_object
-    MODifieRDB::enrichment_object_to_db(enrichment_object,
-                                        module_name = module_name, 
-                                        enrichment_method = "enrichDO", 
-                                        con = con)
-    })
+  })
+  return(enrichDO_module)
 }
 
 

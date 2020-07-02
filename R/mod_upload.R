@@ -22,7 +22,7 @@ mod_upload_ui <- function(id){
 mod_upload_server <- function(input, output, session, con){
   ns <- session$ns
   
-  MODifieR_module <- reactiveValues()
+  upload_module <- reactiveValues()
   
   registerInputHandler("shinyjsexamples.chooser", function(data, ...) {
     if (is.null(data))
@@ -112,8 +112,6 @@ mod_upload_server <- function(input, output, session, con){
     use_adjusted <- input$adjusted_pvalue
     normalize_quantiles <- input$quantile_normalization
     
-    
-    
     output$error_empty_group <- NULL
     
     input_object <- try(MODifieR::create_input_rnaseq(count_matrix = count_matrix, 
@@ -130,23 +128,22 @@ mod_upload_server <- function(input, output, session, con){
           tags$p(class = "text-danger", tags$b("Error:"), input_object,
                  style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
         })
-    }
-    else{
-    input_name <- input$input_name
-    
-    MODifieRDB::MODifieR_object_to_db(MODifieR_object = input_object,
-                                      object_name = input_name,
-                                      con = con)
-    
-    
-    MODifieR_module$input_object <- input_object
+    } else {
+      updateTextInput(session, "input_name", value = character(0))
+      updateTextInput(session, "group1", value = character(0))
+      updateTextInput(session, "group2", value = character(0))
+      upload_module$input_object <- input_object
+      input_name <- input_name()
+      MODifieRDB::MODifieR_object_to_db(MODifieR_object = input_object,
+                                        object_name = input_name,
+                                        con = con)
     }
   })
   
   
   outputOptions(output, 'fileUploaded', suspendWhenHidden=FALSE)
   
-  return(MODifieR_module)
+  return(upload_module)
 }
 
 ## To be copied in the UI

@@ -12,7 +12,6 @@ mod_enrichNCG_ui <- function(id){
   tagList(
     #Description of the method "Enrichment analysis based on the Network of Cancer Genes database"
     uiOutput(ns("module_input")),
-    uiOutput(ns("error_p_value")),
     sliderInput(ns("pvalueCutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value"),
     sliderInput(ns("qvalueCutoff"), label = "Q-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value. Q-values are false discovery rate (FDR) adjusted p-values"),
     selectInput(ns("pAdjustMethod"), "Select an adjustment method",
@@ -40,12 +39,13 @@ mod_enrichNCG_ui <- function(id){
 # con should ne somewhere in the code?
 mod_enrichNCG_server <- function(input, output, session, con){
   ns <- session$ns
+  
+  enrichNCG_module <- reactiveValues()
+  
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
   })
-  
- 
   
   observeEvent(input$load_input, {
     id <- showNotification("Identifying disease assosciation and creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
@@ -69,13 +69,16 @@ mod_enrichNCG_server <- function(input, output, session, con){
       output$error_p_value <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
       })
+    } else {
+      enrichNCG_module$enrich <- enrichment_object
+      module_name <- input$module_object
+      MODifieRDB::enrichment_object_to_db(enrichment_object,
+                                          module_name = module_name, 
+                                          enrichment_method = "enrichNCG", 
+                                          con = con)
     }
-    module_name <- input$module_object
-    MODifieRDB::enrichment_object_to_db(enrichment_object,
-                                        module_name = module_name, 
-                                        enrichment_method = "enrichNCG", 
-                                        con = con)
-    })
+  })
+  return(enrichNCG_module)
 }
 
 

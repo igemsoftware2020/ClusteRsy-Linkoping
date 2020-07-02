@@ -11,7 +11,6 @@ mod_enrichKEGG_ui <- function(id){
   ns <- NS(id)
   tagList(
           uiOutput(ns("module_input")),
-          uiOutput(ns("error_p_value")),
           selectInput(ns("keytype"), 
                       label = "Select key type",
                       choices = c("kegg",
@@ -48,6 +47,8 @@ mod_enrichKEGG_ui <- function(id){
 mod_enrichKEGG_server <- function(input, output, session, con){
   ns <- session$ns
   
+  enrichKEGG_module <- reactiveValues()
+  
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
@@ -75,18 +76,19 @@ mod_enrichKEGG_server <- function(input, output, session, con){
                                                   )
     )
     if (class(enrichment_object) == "try-error"){
-      output$error_p_value <- renderUI({
+      output$error <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
       })
+    } else {
+      enrichKEGG_module$enrich <- enrichment_object  
+      module_name <- input$module_object
+      MODifieRDB::enrichment_object_to_db(enrichment_object,
+                                          module_name = module_name, 
+                                          enrichment_method = "enrichKEGG", 
+                                          con = con)
     }
-    module_name <- input$module_object
-    MODifieRDB::enrichment_object_to_db(enrichment_object,
-                                        module_name = module_name, 
-                                        enrichment_method = "enrichKEGG", 
-                                        con = con)
   })
-  
- 
+  return(enrichKEGG_module)
 }
     
 ## To be copied in the UI
