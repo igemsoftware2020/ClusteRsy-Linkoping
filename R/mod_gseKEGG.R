@@ -46,6 +46,8 @@ mod_gseKEGG_ui <- function(id){
 mod_gseKEGG_server <- function(input, output, session, con){
   ns <- session$ns
   
+  gseKEGG_module <- reactiveValues()
+  
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
@@ -68,23 +70,23 @@ mod_gseKEGG_server <- function(input, output, session, con){
                                                       pvalueCutoff = input$deg_cutoff,
                                                       pAdjustMethod = input$padj_method,
                                                       verbose = FALSE,
-                                                      seed = input$include_seed
-    )
-    )
+                                                      seed = input$include_seed)
+                      )
 
     if (class(gse_object) == "try-error"){
-      output$error_p_value <- renderUI({
+      output$error <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), gse_object)
       })
+    } else {
+      gseKEGG_module <- gse_object
+      module_name <- input$module_object
+      MODifieRDB::enrichment_object_to_db(gse_object,
+                                          module_name = module_name, 
+                                          enrichment_method = "gseKEGG", 
+                                          con = con)
     }
-    module_name <- input$module_object
-    MODifieRDB::enrichment_object_to_db(gse_object,
-                                        module_name = module_name, 
-                                        enrichment_method = "gseKEGG", 
-                                        con = con)
-  
   })
-  
+  return(gseKEGG_module)
 }
     
 ## To be copied in the UI

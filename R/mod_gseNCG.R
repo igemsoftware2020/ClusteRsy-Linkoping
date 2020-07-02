@@ -11,7 +11,6 @@ mod_gseNCG_ui <- function(id){
   ns <- NS(id)
   tagList(
     uiOutput(ns("module_input")),
-    uiOutput(ns("error_p_value")),
     sliderInput(ns("pvaluecutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value"),
     selectInput(ns("padjustmethod"), "Select an adjustment method",
                 choices = c("holm",
@@ -45,6 +44,9 @@ mod_gseNCG_ui <- function(id){
 #' @noRd 
 mod_gseNCG_server <- function(input, output, session, con){
   ns <- session$ns
+  
+  gseNCG_module <- reactiveValues()
+  
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
@@ -71,17 +73,19 @@ mod_gseNCG_server <- function(input, output, session, con){
     )
     )
     if (class(gse_object) == "try-error"){
-      output$error_p_value <- renderUI({
+      output$error <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), gse_object)
       })
+    } else {
+      gseNCG_module$enrich <- gse_object
+      module_name <- input$module_object
+      MODifieRDB::enrichment_object_to_db(enrichment_object,
+                                          module_name = module_name, 
+                                          enrichment_method = "gseNCG", 
+                                          con = con)
     }
   })
-  module_name <- input$module_object
-  MODifieRDB::enrichment_object_to_db(enrichment_object,
-                                      module_name = module_name, 
-                                      enrichment_method = "gseNCG", 
-                                      con = con)
-  
+  return(gseNCG_module)
 }
     
 ## To be copied in the UI

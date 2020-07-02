@@ -11,7 +11,12 @@ run_app <- function(
   with_golem_options(
     app = shinyApp(
       ui = app_ui, 
-      server = app_server
+      server = app_server,
+#      options = (list(
+#        host = "192.168.50.55",
+#        port = 1584
+#      )
+#      )
     ), 
     golem_opts = list(...)
   )

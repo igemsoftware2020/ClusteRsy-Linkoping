@@ -11,7 +11,6 @@ mod_gseDO_ui <- function(id){
   ns <- NS(id)
   tagList(
     uiOutput(ns("module_input")),
-    uiOutput(ns("error_p_value")),
     sliderInput(ns("pvaluecutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value"),
     selectInput(ns("padjustmethod"), "Select an adjustment method",
                 choices = c("holm",
@@ -45,7 +44,9 @@ mod_gseDO_ui <- function(id){
 #' @noRd 
 mod_gseDO_server <- function(input, output, session, con){
   ns <- session$ns
- 
+  
+  gseDO_module <- reactiveValues()
+  
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
@@ -67,22 +68,22 @@ mod_gseDO_server <- function(input, output, session, con){
                                 maxGSSize = input$maxgssize,
                                 by = input$by,
                                 seed = input$include_seed,
-                                verbose = FALSE  
-                
-  )
-  )
-  if (class(gse_object) == "try-error"){
-    output$error_p_value <- renderUI({
-      tags$p(class = "text-danger", tags$b("Error:"), gse_object)
-    })
-  }
+                                verbose = FALSE  )
+                    )
+    if (class(gse_object) == "try-error"){
+      output$error <- renderUI({
+        tags$p(class = "text-danger", tags$b("Error:"), gse_object)
+      })
+    } else {
+    gseDO_module$enrich <- gse_object
+    module_name <- input$module_object
+    MODifieRDB::enrichment_object_to_db(enrichment_object,
+                                        module_name = module_name, 
+                                        enrichment_method = "gseDO", 
+                                        con = con)
+    }
   })
-  module_name <- input$module_object
-  MODifieRDB::enrichment_object_to_db(enrichment_object,
-                                      module_name = module_name, 
-                                      enrichment_method = "gseDO", 
-                                      con = con)
-  
+  return(gseDO_module)
 }
 
     

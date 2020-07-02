@@ -37,6 +37,8 @@ mod_CClique_ui <- function(id){
 mod_CClique_server <- function(input, output, session, con){
   ns <- session$ns
  
+  CClique_module <- reactiveValues()
+  
    output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation")
@@ -91,15 +93,24 @@ mod_CClique_server <- function(input, output, session, con){
     
     
     if (class(module_object) == "try-error"){
-      output$error_p_value <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), module_object,
-               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
-      })
+      if (grepl("Name", module_object)) {
+        output$error_name_descrip <- renderUI({
+          tags$p(class = "text-danger", tags$b("Error:"), module_object,
+                 style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
+        })
+      } else {
+        output$error_p_value <- renderUI({
+          tags$p(class = "text-danger", tags$b("Error:"), module_object,
+                 style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
+        })
+      }
     } else {
+      CClique_module$module_object <- module_object
       updateTextInput(session, "module_name", value = character(0))
     }
     }
   )
+  return(CClique_module)
 }
     
 ## To be copied in the UI

@@ -20,7 +20,9 @@ mod_CliqueSum_ui <- function(id){
 #' @noRd 
 mod_CliqueSum_server <- function(input, output, session, con){
   ns <- session$ns
-
+  
+  CliqueSum_module <- reactiveValues()
+  
   UI <- tagList(
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
@@ -39,7 +41,6 @@ mod_CliqueSum_server <- function(input, output, session, con){
   if (nrow(MODifieRDB::get_available_db_networks(con)) != 0 ) {
     output$parameters <- renderUI({
       UI
-
     })
   } else {
     
@@ -60,7 +61,7 @@ mod_CliqueSum_server <- function(input, output, session, con){
       id <- showNotification("Creating clique database", duration = NULL, closeButton = FALSE, type = "warning")
       
       clique_db <- MODifieRDB::build_clique_db_db(ppi_name = input$ppi_object,
-                                                  db_folder =  "." , 
+                                                  db_folder =  "./.." , 
                                                   db_name = input$db_name,
                                                   con = con
       )
@@ -113,8 +114,8 @@ mod_CliqueSum_server <- function(input, output, session, con){
   
   observeEvent(input$load_input, {
     id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
-
-    module_object <- MODifieRDB::clique_sum_db(input_name = input$input_object,
+    on.exit(removeNotification(id), add = TRUE)
+    module_object <- try(MODifieRDB::clique_sum_db(input_name = input$input_object,
 
                                                ppi_name = input$ppi_object,
                                                n_iterations = input$n_iterations,
@@ -124,13 +125,19 @@ mod_CliqueSum_server <- function(input, output, session, con){
                                                n_cores = 1,
                                                module_name = input$module_name,
                                                con = con)
-    updateTextInput(session, "module_name", value = character(0))
-    on.exit(removeNotification(id), add = TRUE)
-    
-
+    )
+    if (class(module_object) == "try-error"){
+      output$error_name_descrip <- renderUI({
+        tags$p(class = "text-danger", tags$b("Error:"), module_object,
+               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
+      })
+    }
+    else {
+      CliqueSum_module$module_object <- module_object
+      updateTextInput(session, "module_name", value = character(0))
+    }
   })
-  
-  
+  return(CliqueSum_module)
 }
 
 ## To be copied in the UI
