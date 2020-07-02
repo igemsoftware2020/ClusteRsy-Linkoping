@@ -35,7 +35,7 @@ mod_gseMKEGG_ui <- function(id){
     sliderInput(ns("permutation"), label ="number of permutations", min = 1, max = 2000, value = 1000, popup = "Number of permutations that should be performed"),
     prettySwitch(ns("include_seed"), label = "Include seed", value = FALSE, status = "warning", popup = "Get reproducible results"),
     tags$div( style = "text-align:center",
-              actionButton(ns("load_inputDO"), label = "Enrich") 
+              actionButton(ns("load_input"), label = "Enrich") 
     )
  
   )
@@ -46,6 +46,9 @@ mod_gseMKEGG_ui <- function(id){
 #' @noRd 
 mod_gseMKEGG_server <- function(input, output, session, con){
   ns <- session$ns
+  
+  gseMKEGG_module <- reactiveValues()
+  
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
@@ -76,9 +79,16 @@ mod_gseMKEGG_server <- function(input, output, session, con){
       output$error <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), gse_object)
       })
+    } else {
+      gseMKEGG_module$enrich <- gse_object
+      module_name <- input$module_object
+      MODifieRDB::enrichment_object_to_db(gse_object,
+                                          module_name = module_name, 
+                                          enrichment_method = "gseMKEGG", 
+                                          con = con)
     }
   })
-  
+  return(gseMKEGG_module)
 }
     
 ## To be copied in the UI

@@ -44,6 +44,9 @@ mod_gseNCG_ui <- function(id){
 #' @noRd 
 mod_gseNCG_server <- function(input, output, session, con){
   ns <- session$ns
+  
+  gseNCG_module <- reactiveValues()
+  
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
@@ -73,10 +76,16 @@ mod_gseNCG_server <- function(input, output, session, con){
       output$error <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), gse_object)
       })
+    } else {
+      gseNCG_module$enrich <- gse_object
+      module_name <- input$module_object
+      MODifieRDB::enrichment_object_to_db(enrichment_object,
+                                          module_name = module_name, 
+                                          enrichment_method = "gseNCG", 
+                                          con = con)
     }
   })
-  
-  
+  return(gseNCG_module)
 }
     
 ## To be copied in the UI

@@ -52,6 +52,8 @@ mod_groupGO_ui <- function(id){
 mod_groupGO_server <- function(input, output, session, con){
   ns <- session$ns
   
+  groupGO_module <- reactiveValues()
+  
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, 
@@ -77,8 +79,16 @@ mod_groupGO_server <- function(input, output, session, con){
       output$error <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), group_object)
       })
+    } else {
+      groupGO_module$enrich <- group_object
+      module_name <- input$module_object
+      MODifieRDB::enrichment_object_to_db(group_object,
+                                          module_name = module_name, 
+                                          enrichment_method = "groupGO", 
+                                          con = con)
     }
   })
+  return(groupGO_module)
 }
 
 ## To be copies in the UI 

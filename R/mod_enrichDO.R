@@ -40,6 +40,9 @@ mod_enrichDO_ui <- function(id){
 #' @noRd 
 mod_enrichDO_server <- function(input, output, session, con){
   ns <- session$ns
+  
+  enrichDO_module <- reactiveValues()
+  
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
@@ -54,23 +57,32 @@ mod_enrichDO_server <- function(input, output, session, con){
     module_genes <- get_module_genes(input$module_object, con = con)
     background_genes <- get_background_genes(input$module_object, con = con)
     
-    enrichment_objectONE <- try(DOSE::enrichDO(gene = module_genes,
+    enrichment_object <- try(DOSE::enrichDO(gene = module_genes,
                                                ont = "DO",
-                                               pvalueCutoff = input$pvalueCutoff,
-                                               pAdjustMethod = input$pAdjustMethod,
+                                               pvalueCutoff = input$pvaluecutoff,
+                                               pAdjustMethod = input$padjustmethod,
                                                universe = background_genes,
                                                minGSSize = input$mingssize,
                                                maxGSSize = input$maxgssize,
-                                               qvalueCutoff = input$qvalueCutoff,
+                                               qvalueCutoff = input$qvaluecutoff,
                                                readable = FALSE
                                                
     )
     )
-    if (class(enrichment_objectONE) == "try-error"){
-      output$error <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), enrichment_objectONE)
+    if (class(enrichment_object) == "try-error"){
+      output$error_p_value <- renderUI({
+        tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
       })
-    }})
+    } else {
+      enrichDO_module$enrich <- enrichment_object  
+      module_name <- input$module_object
+      MODifieRDB::enrichment_object_to_db(enrichment_object,
+                                          module_name = module_name, 
+                                          enrichment_method = "enrichDO", 
+                                          con = con)
+    }
+  })
+  return(enrichDO_module)
 }
 
 

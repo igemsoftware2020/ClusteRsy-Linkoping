@@ -39,12 +39,13 @@ mod_enrichNCG_ui <- function(id){
 # con should ne somewhere in the code?
 mod_enrichNCG_server <- function(input, output, session, con){
   ns <- session$ns
+  
+  enrichNCG_module <- reactiveValues()
+  
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
   })
-  
- 
   
   observeEvent(input$load_input, {
     id <- showNotification("Identifying disease assosciation and creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
@@ -53,7 +54,7 @@ mod_enrichNCG_server <- function(input, output, session, con){
     module_genes <- get_module_genes(input$module_object, con = con)
     background_genes <- get_background_genes(input$module_object, con = con)
     
-    enrichment_objectONE <- try(DOSE::enrichNCG(gene = module_genes,
+    enrichment_object <- try(DOSE::enrichNCG(gene = module_genes,
                                                pvalueCutoff = input$pvalueCutoff,
                                                pAdjustMethod = input$pAdjustMethod,
                                                universe = background_genes,
@@ -64,11 +65,20 @@ mod_enrichNCG_server <- function(input, output, session, con){
                                                
     )
     )
-    if (class(enrichment_objectONE) == "try-error"){
-      output$error <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), enrichment_objectONE)
+    if (class(enrichment_object) == "try-error"){
+      output$error_p_value <- renderUI({
+        tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
       })
-    }})
+    } else {
+      enrichNCG_module$enrich <- enrichment_object
+      module_name <- input$module_object
+      MODifieRDB::enrichment_object_to_db(enrichment_object,
+                                          module_name = module_name, 
+                                          enrichment_method = "enrichNCG", 
+                                          con = con)
+    }
+  })
+  return(enrichNCG_module)
 }
 
 

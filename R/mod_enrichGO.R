@@ -89,6 +89,8 @@ mod_enrichGO_ui <- function(id){
 mod_enrichGO_server <- function(input, output, session, con){
   ns <- session$ns
   
+  enrichGO_module <- reactiveValues()
+  
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
@@ -118,8 +120,16 @@ mod_enrichGO_server <- function(input, output, session, con){
       output$error <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
       })
+    } else {
+      enrichGO_module$enrich <- enrichment_object
+      module_name <- input$module_object
+      MODifieRDB::enrichment_object_to_db(enrichment_object,
+                                          module_name = module_name, 
+                                          enrichment_method = "enrichGO", 
+                                          con = con)
     }
   })
+  return(enrichGO_module)
 }
 
 ## To be copies in the UI 
