@@ -56,7 +56,9 @@ mod_module_overview_server <- function(input, output, session, con){
     module_name <- input$module_name
     on.exit(removeNotification(id), add = TRUE)
     
-    ## Need to implement in the package
+    MODifieRDB::MODifieR_object_to_db(MODifieR_object = module,
+                                      object_name = module_name,
+                                      con = con)
   })
   
   module_objects <- MODifieRDB::get_available_module_objects(con)
@@ -69,8 +71,17 @@ mod_module_overview_server <- function(input, output, session, con){
   observeEvent(input$delete, {
     id <- showNotification("Deleting", duration = NULL, closeButton = FALSE)
     on.exit(removeNotification(id), add = TRUE)
+    # Required for selecting
+    module_objects <- MODifieRDB::get_available_module_objects(con)
+    output$module_overview <- DT::renderDataTable(module_objects,
+                                                  selection = list(selected = c(1)))
+    
     selected <- input$module_overview_rows_selected
-    MODifieRDB::delete_input_object(module_objects$module_name[selected] ,con = con)
+    MODifieRDB::delete_module_object(module_objects$module_name[selected] ,con = con)
+    # Refresh
+    module_objects <- MODifieRDB::get_available_module_objects(con)
+    output$module_overview <- DT::renderDataTable(module_objects,
+                                                  selection = list(selected = c(1)))
   })
   
   # Refresh DT

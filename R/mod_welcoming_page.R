@@ -10,7 +10,7 @@
 mod_welcoming_page_ui <- function(id){
   ns <- NS(id)
   tagList(
-    tags$div(style="height:100vh",
+    tags$div(style="height:100vh", class = "row",
               tags$div(style="border-style: dashed; color:black; background-image: url('www/headline_img.jpg'); background-size: contain;",
                        tags$div(class = "headline", style="border-style: dashed; margin-top: 1.2%;",
                          tags$p(class= "center", "Headline")
@@ -26,7 +26,7 @@ mod_welcoming_page_ui <- function(id){
               tags$div(style="border-style: dashed; color:black; height: 39vh",
                        tags$p(class= "center", style="text-align:center;", "Sub-headline"))),
     
-              tags$div(style="height:100vh; padding-top: 1%;",
+              tags$div(style="height:100vh; padding-top: 1%;", class = "row",
                       tags$div(style="border-style: dashed; color:black; height: 10vh;",
                                tags$p(class= "center", style="text-align:center;", "Benefist list")),
                       tags$br(),
@@ -39,7 +39,7 @@ mod_welcoming_page_ui <- function(id){
                       tags$div(style="border-style: dashed; color:black; height: 26vh",
                                tags$p(class= "center", style="text-align:center;", "Trust indicators"))),
     
-              tags$div(style="height:100vh; padding-top: 1%;",
+              tags$div(style="height:100vh; padding-top: 1%;", class = "row",
                       tags$div(style="text-align:center; color:black",
                                tags$span(`class`="col-sm-4", style="border-style: dashed; height:100vh",
                                         tags$p("Useful contetn")),

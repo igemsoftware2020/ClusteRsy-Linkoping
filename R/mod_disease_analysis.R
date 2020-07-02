@@ -25,6 +25,8 @@ mod_disease_analysis_ui <- function(id){
 mod_disease_analysis_server <- function(input, output, session, con){
   ns <- session$ns
   
+  disease_analysis_module <- reactiveValues()
+  
   observeEvent(input$analyse_method, {
     if (input$analyse_method == "Disease analysis"){
       output$enrich_type <- renderUI({
@@ -42,8 +44,11 @@ mod_disease_analysis_server <- function(input, output, session, con){
       observeEvent(c(input$enrich_type1, input$enrich_repo1), {
         if (input$enrich_type1 == "Over-representation test" & input$enrich_repo1 == "DGN" ){
           output$para <- renderUI({
-            mod_enrichDGN_ui(ns("enrichDGN_ui_1"))
-          })
+            mod_enrichDGN_ui(ns("enrichDGN_ui_1"))})
+            enrichDGN_ui_1 <- callModule(mod_enrichDGN_server, "enrichDGN_ui_1", con = con)
+            observeEvent(enrichDGN_ui_1$enrich, {
+              disease_analysis_module$enrich <- enrichDGN_ui_1$enrich 
+            })
         }
         if (input$enrich_type1 == "Over-representation test" & input$enrich_repo1 == "DO" ){
           output$para <- renderUI({
@@ -137,10 +142,9 @@ mod_disease_analysis_server <- function(input, output, session, con){
   }
   )
       
-  
+  return(disease_analysis_module)
   
   # Call module servers
-  callModule(mod_enrichDGN_server, "enrichDGN_ui_1", con = con)
   callModule(mod_enrichDO_server, "enrichDO_ui_1", con = con)
   callModule(mod_enrichGO_server, "enrichGO_ui_1", con = con)
   callModule(mod_enrichKEGG_server, "enrichKEGG_ui_1", con = con)

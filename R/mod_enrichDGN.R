@@ -40,6 +40,9 @@ mod_enrichDGN_ui <- function(id){
 # con should ne somewhere in the code?
 mod_enrichDGN_server <- function(input, output, session, con){
   ns <- session$ns
+  
+  enrichDGN_module <- reactiveValues()
+  
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
@@ -68,7 +71,11 @@ mod_enrichDGN_server <- function(input, output, session, con){
       output$error <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), enrichment_objectONE)
       })
-    }})
+    } else {
+      enrichDGN_module$enrich <- enrichment_objectONE
+    }
+    })
+  return(enrichDGN_module)
 }
 
 

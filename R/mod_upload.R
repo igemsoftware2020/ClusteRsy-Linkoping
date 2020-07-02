@@ -22,7 +22,7 @@ mod_upload_ui <- function(id){
 mod_upload_server <- function(input, output, session, con){
   ns <- session$ns
   
-  MODifieR_module <- reactiveValues()
+  upload_module <- reactiveValues()
   
   registerInputHandler("shinyjsexamples.chooser", function(data, ...) {
     if (is.null(data))
@@ -136,14 +136,14 @@ mod_upload_server <- function(input, output, session, con){
                                       con = con)
     
     
-    MODifieR_module$input_object <- input_object
+    upload_module$input_object <- input_object
     }
   })
   
   
   outputOptions(output, 'fileUploaded', suspendWhenHidden=FALSE)
   
-  return(MODifieR_module)
+  return(upload_module)
 }
 
 ## To be copied in the UI

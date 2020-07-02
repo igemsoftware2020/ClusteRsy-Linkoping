@@ -105,9 +105,19 @@ mod_input_overview_server <- function(input, output, session, con){
   # Delete input object
   observeEvent(input$delete, {
     id <- showNotification("Deleting", duration = NULL, closeButton = FALSE)
+    # Required for selecting
+    input_objects <- MODifieRDB::get_available_input_objects(con)
+    output$input_overview <- DT::renderDataTable(input_objects,
+                                                 selection = list(selected = c(1)))
+    
     on.exit(removeNotification(id), add = TRUE)
     selected <- input$input_overview_rows_selected
+    
     MODifieRDB::delete_input_object(input_objects$input_name[selected] ,con = con)
+    # Refresh
+    input_objects <- MODifieRDB::get_available_input_objects(con)
+    output$input_overview <- DT::renderDataTable(input_objects,
+                                                  selection = list(selected = c(1)))
   })
  
 }
