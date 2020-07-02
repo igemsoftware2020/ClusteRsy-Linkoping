@@ -13,9 +13,9 @@ mod_enrichDO_ui <- function(id){
     #Description of the method "Finds disease assosciations and creates enrichment analysis objects"
     uiOutput(ns("module_input")),
     uiOutput(ns("error_p_value")),
-    sliderInput(ns("pvalueCutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value"),
-    sliderInput(ns("qvalueCutoff"), label = "Q-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value. Q-values are false discovery rate (FDR) adjusted p-values"),
-    selectInput(ns("pAdjustMethod"), "Select an adjustment method",
+    sliderInput(ns("pvaluecutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value"),
+    sliderInput(ns("qvaluecutoff"), label = "Q-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value. Q-values are false discovery rate (FDR) adjusted p-values"),
+    selectInput(ns("padjustmethod"), "Select an adjustment method",
                 choices = c("holm",
                             "hochberg",
                             "hommel",
@@ -55,23 +55,29 @@ mod_enrichDO_server <- function(input, output, session, con){
     module_genes <- get_module_genes(input$module_object, con = con)
     background_genes <- get_background_genes(input$module_object, con = con)
     
-    enrichment_objectONE <- try(DOSE::enrichDO(gene = module_genes,
+    enrichment_object <- try(DOSE::enrichDO(gene = module_genes,
                                                ont = "DO",
-                                               pvalueCutoff = input$pvalueCutoff,
-                                               pAdjustMethod = input$pAdjustMethod,
+                                               pvalueCutoff = input$pvaluecutoff,
+                                               pAdjustMethod = input$padjustmethod,
                                                universe = background_genes,
                                                minGSSize = input$mingssize,
                                                maxGSSize = input$maxgssize,
-                                               qvalueCutoff = input$qvalueCutoff,
+                                               qvalueCutoff = input$qvaluecutoff,
                                                readable = FALSE
                                                
     )
     )
-    if (class(enrichment_objectONE) == "try-error"){
+    if (class(enrichment_object) == "try-error"){
       output$error_p_value <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), enrichment_objectONE)
+        tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
       })
-    }})
+    }
+    module_name <- input$module_object
+    MODifieRDB::enrichment_object_to_db(enrichment_object,
+                                        module_name = module_name, 
+                                        enrichment_method = "enrichDO", 
+                                        con = con)
+    })
 }
 
 

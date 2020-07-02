@@ -77,7 +77,11 @@ mod_gseDO_server <- function(input, output, session, con){
     })
   }
   })
-  
+  module_name <- input$module_object
+  MODifieRDB::enrichment_object_to_db(enrichment_object,
+                                      module_name = module_name, 
+                                      enrichment_method = "gseDO", 
+                                      con = con)
   
 }
 

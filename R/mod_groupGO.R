@@ -78,6 +78,11 @@ mod_groupGO_server <- function(input, output, session, con){
         tags$p(class = "text-danger", tags$b("Error:"), group_object)
       })
     }
+    module_name <- input$module_object
+    MODifieRDB::enrichment_object_to_db(group_object,
+                                        module_name = module_name, 
+                                        enrichment_method = "groupGO", 
+                                        con = con)
   })
 }
 
