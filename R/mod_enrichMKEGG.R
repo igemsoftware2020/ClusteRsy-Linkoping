@@ -78,7 +78,13 @@ mod_enrichMKEGG_server <- function(input, output, session, con){
         tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
       })
     }
+    module_name <- input$module_object
+    MODifieRDB::enrichment_object_to_db(enrichment_object,
+                                        module_name = module_name, 
+                                        enrichment_method = "enrichMKEGG", 
+                                        con = con)
   })
+  
   
 }
     
