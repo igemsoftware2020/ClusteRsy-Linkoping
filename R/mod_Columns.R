@@ -86,7 +86,7 @@ mod_Columns_server <- function(input, output, session, con){
   #   )
   # })
   # }
-  
+
   upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1", con = con)
   Description1_ui_1 <- callModule(mod_Description1_server, "Description1_ui_1", con = con)
   disease_analysis_ui_1 <- callModule(mod_disease_analysis_server, "disease_analysis_ui_1", con = con)
@@ -97,14 +97,14 @@ mod_Columns_server <- function(input, output, session, con){
   # })
   
   # Observe input objects
-  observeEvent(upload_ui_1$input_object, {
-    upload_module <- upload_ui_1$input_object
+  observeEvent(upload_ui_1$input_name, {
+    callModule(mod_Description1_server, "Description1_ui_1", con = con)
   }
   )
   
   # Observe module objects
-  observeEvent(Description1_ui_1$module_object, {
-    Description1_module <- Description1_ui_1$module_object
+  observeEvent(Description1_ui_1$module_name, {
+    callModule(mod_disease_analysis_server, "disease_analysis_ui_1", con = con)
   }
   )
   
@@ -114,14 +114,14 @@ mod_Columns_server <- function(input, output, session, con){
   })
   
   output$fadein <- renderUI({
-    req(upload_ui_1$input_object) 
+    req(upload_ui_1$input_name) 
     tagList(
       tags$script("col2();")
     )
   })
   
   output$fadein1 <- renderUI({
-    req(Description1_ui_1$module_object)
+    req(Description1_ui_1$module_name)
     tagList(
       tags$script("col3();")
     )

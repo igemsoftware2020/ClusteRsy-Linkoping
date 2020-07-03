@@ -146,8 +146,8 @@ mod_Description1_server <- function(input, output, session, con){
       output$method <- renderUI({mod_CliqueSum_ui(ns("CliqueSum_ui_1"))
       })
       CliqueSum_ui_1 <- callModule(mod_CliqueSum_server, "CliqueSum_ui_1", con = con)
-      observeEvent(CliqueSum_ui_1$module_object,{
-        Description1_module$module_object <- CliqueSum_ui_1$module_object
+      observeEvent(CliqueSum_ui_1$module_name,{
+        Description1_module$module_name <- CliqueSum_ui_1$module_name
       })
     }
     
@@ -155,8 +155,8 @@ mod_Description1_server <- function(input, output, session, con){
       output$method <- renderUI({mod_WGCNA_ui(ns("WGCNA_ui_1"))
       })
       WGCNA_ui_1 <- callModule(mod_WGCNA_server, "WGCNA_ui_1", con = con)
-      observeEvent(WGCNA_ui_1$module_object,{
-        Description1_module$module_object <- WGCNA_ui_1$module_object
+      observeEvent(WGCNA_ui_1$module_name,{
+        Description1_module$module_name <- WGCNA_ui_1$module_name
       })
     }
     
@@ -164,8 +164,8 @@ mod_Description1_server <- function(input, output, session, con){
       output$method <- renderUI({mod_DIAMoND_ui(ns("DIAMoND_ui_1"))
       })
       DIAMoND_ui_1 <- callModule(mod_DIAMoND_server, "DIAMoND_ui_1", con = con)
-      observeEvent(DIAMoND_ui_1$module_object,{
-        Description1_module$module_object <- DIAMoND_ui_1$module_object
+      observeEvent(DIAMoND_ui_1$module_name,{
+        Description1_module$module_name <- DIAMoND_ui_1$module_name
       })
     }
     
@@ -173,8 +173,8 @@ mod_Description1_server <- function(input, output, session, con){
       output$method <- renderUI({mod_DiffCoEx_ui(ns("DiffCoEx_ui_1"))
       })
       DiffCoEx_ui_1 <- callModule(mod_DiffCoEx_server, "DiffCoEx_ui_1", con = con)
-      observeEvent(DiffCoEx_ui_1$module_object,{
-        Description1_module$module_object <- DiffCoEx_ui_1$module_object
+      observeEvent(DiffCoEx_ui_1$module_name,{
+        Description1_module$module_name <- DiffCoEx_ui_1$module_name
       })
     }
     
@@ -182,8 +182,8 @@ mod_Description1_server <- function(input, output, session, con){
       output$method <- renderUI({mod_MCODE_ui(ns("MCODE_ui_1"))
       })
       MCODE_ui_1 <- callModule(mod_MCODE_server, "MCODE_ui_1", con = con)
-      observeEvent(MCODE_ui_1$module_object,{
-        Description1_module$module_object <- MCODE_ui_1$module_object
+      observeEvent(MCODE_ui_1$module_name,{
+        Description1_module$module_name <- MCODE_ui_1$module_name
       })
     }
     
@@ -191,8 +191,8 @@ mod_Description1_server <- function(input, output, session, con){
       output$method <- renderUI({mod_MODA_ui(ns("MODA_ui_1"))
       })
       MODA_ui_1 <-callModule(mod_MODA_server, "MODA_ui_1", con = con)
-      observeEvent(MODA_ui_1$module_object,{
-        Description1_module$module_object <- MODA_ui_1$module_object
+      observeEvent(MODA_ui_1$module_name,{
+        Description1_module$module_name <- MODA_ui_1$module_name
       })
     }
     
@@ -200,8 +200,8 @@ mod_Description1_server <- function(input, output, session, con){
       output$method <- renderUI({mod_Modulediscoverer_ui(ns("Modulediscoverer_ui_1"))
       })
       Modulediscoverer_ui_1 <- callModule(mod_Modulediscoverer_server, "Modulediscoverer_ui_1", con = con)
-      observeEvent(Modulediscoverer_ui_1$module_object,{
-        Description1_module$module_object <- Modulediscoverer_ui_1$module_object
+      observeEvent(Modulediscoverer_ui_1$module_name,{
+        Description1_module$module_name <- Modulediscoverer_ui_1$module_name
       })
     }
     
@@ -209,8 +209,8 @@ mod_Description1_server <- function(input, output, session, con){
       output$method <- renderUI({mod_CClique_ui(ns("CClique_ui_1"))
       })
       CClique_ui_1 <- callModule(mod_CClique_server, "CClique_ui_1", con = con)
-      observeEvent(CClique_ui_1$module_object,{
-        Description1_module$module_object <- CClique_ui_1$module_object
+      observeEvent(CClique_ui_1$module_name,{
+        Description1_module$module_name <- CClique_ui_1$module_name
       })
     }
   }

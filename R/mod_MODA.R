@@ -100,7 +100,7 @@ mod_MODA_server <- function(input, output, session, con){
       })
     }
     else {
-      MODA_module$module_object <- module_object
+      MODA_module$module_name <- module_name()
       updateTextInput(session, "module_name", value = character(0))
     }
   })

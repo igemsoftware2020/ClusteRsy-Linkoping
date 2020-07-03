@@ -133,7 +133,7 @@ mod_CliqueSum_server <- function(input, output, session, con){
       })
     }
     else {
-      CliqueSum_module$module_object <- module_object
+      CliqueSum_module$module_name <- module_name()
       updateTextInput(session, "module_name", value = character(0))
     }
   })

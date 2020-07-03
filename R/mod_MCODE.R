@@ -169,7 +169,7 @@ mod_MCODE_server <- function(input, output, session, con){
         })
       }
     } else {
-      MCODE_module$module_object <- module_object
+      MCODE_module$module_name <- module_name()
       updateTextInput(session, "module_name", value = character(0))
     }
     }
