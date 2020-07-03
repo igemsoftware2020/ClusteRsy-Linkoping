@@ -1,5 +1,5 @@
 chooserInput <- function(inputId, leftLabel, rightLabel, leftChoices, rightChoices,
-                         size = 5, multiple = FALSE) {
+                         size = 10, multiple = FALSE) {
   
   leftChoices <- lapply(leftChoices, tags$option)
   rightChoices <- lapply(rightChoices, tags$option)
@@ -16,19 +16,19 @@ chooserInput <- function(inputId, leftLabel, rightLabel, leftChoices, rightChoic
                  HTML(".chooser-container { display: inline-block; }")
       )
     )),
-    div(id=inputId, class="chooser",
-        div(class="chooser-container chooser-left-container",
+    div(id=inputId, class="chooser",  style="width:100%;",
+        div(class="chooser-container chooser-left-container", style="width:42%",
             tags$select(class="left", size=size, multiple=multiple, leftChoices,
-                        style = "color: black; width: 255px;background-color: #ecf0f1; border-radius: 8px;")
+                        style = "color: black; width: 100%;background-color: #ecf0f1; border-radius: 8px;")
         ),
-        div(class="chooser-container chooser-center-container", style = "position: relative; bottom: 5px; left: 1px;",
+        div(class="chooser-container chooser-center-container", style = "position: relative; bottom: 50px; width: 13%",
             icon("arrow-circle-o-right", "right-arrow fa-3x"),
             tags$br(),
             icon("arrow-circle-o-left", "left-arrow fa-3x")
         ),
-        div(class="chooser-container chooser-right-container",
+        div(class="chooser-container chooser-right-container", style="width:42%",
             tags$select(class="right", size=size, multiple=multiple, rightChoices,
-                        style = "color: black; width: 254px;background-color: #ecf0f1; border-radius: 8px;")
+                        style = "color: black; width: 100%;background-color: #ecf0f1; border-radius: 8px;")
         )
     )
   )

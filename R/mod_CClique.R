@@ -105,7 +105,7 @@ mod_CClique_server <- function(input, output, session, con){
         })
       }
     } else {
-      CClique_module$module_object <- module_object
+      CClique_module$module_name <- module_name()
       updateTextInput(session, "module_name", value = character(0))
     }
     }

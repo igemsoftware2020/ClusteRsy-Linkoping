@@ -129,7 +129,7 @@ mod_DiffCoEx_server <- function(input, output, session, con){
                style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
       })
     } else {
-      DiffCoEx_module$module_object <- module_object
+      DiffCoEx_module$module_name <- module_name()
       updateTextInput(session, "module_name", value = character(0))
     }
   })

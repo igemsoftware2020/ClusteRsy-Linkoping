@@ -98,7 +98,7 @@ mod_Modulediscoverer_server <- function(input, output, session, con){
         })
       }
     } else {
-      Modulediscoverer_module$module_object <- module_object
+      Modulediscoverer_module$module_name <- module_name()
       updateTextInput(session, "module_name", value = character(0))
     }
     }
