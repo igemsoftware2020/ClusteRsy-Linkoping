@@ -10,16 +10,8 @@
 mod_visual_ui <- function(id){
   ns <- NS(id)
   tagList(
-    tags$div(`class`="jumbotron",
-             tags$h1("Hello,world!",class="display-3"),
-             tags$hr(class="my-4"),
-             tags$p("I made it!"),
-             tags$b(),
-             tags$p(class="lead",
-                   tags$a("Learn more", class="btn btn-primary btn-lg", href="https://bootswatch.com/flatly/")
-                   )
-             )
-    )
+    mod_enrichment_results_ui(ns("enrichment_results_ui_1"))
+  )
 }
 
 
@@ -28,7 +20,8 @@ mod_visual_ui <- function(id){
 #' @noRd 
 mod_visual_server <- function(input, output, session, con){
   ns <- session$ns
-
+  callModule(mod_enrichment_results_server, "enrichment_results_ui_1", con = con)
+  
 }
 
 ## To be copied in the UI
