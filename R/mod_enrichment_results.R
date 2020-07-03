@@ -11,7 +11,7 @@ mod_enrichment_results_ui <- function(id){
   ns <- NS(id)
   tagList(
           DT::dataTableOutput(ns("enrichment_results")),
-          mod_enrichment_overview_ui(ns("enrichment_overview_ui_1"))
+         mod_enrichment_overview_ui(ns("enrichment_overview_ui_1"))
   )
 }
     
@@ -20,6 +20,7 @@ mod_enrichment_results_ui <- function(id){
 #' @noRd 
 mod_enrichment_results_server <- function(input, output, session, con){
   ns <- session$ns
+  
   
   enrichment_overview_ui_1 <- callModule(mod_enrichment_overview_server, "enrichment_overview_ui_1", con = con)
   observeEvent(enrichment_overview_ui_1$enrichment_object, {
