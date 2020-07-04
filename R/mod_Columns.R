@@ -10,7 +10,6 @@
 mod_Columns_ui <- function(id){
   ns <- NS(id)
   tagList(
-    tags$head(tags$script(src = "www/fadein.js", type="text/javascript")),
     # Number container
     tags$div(`class`="row",
              tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",

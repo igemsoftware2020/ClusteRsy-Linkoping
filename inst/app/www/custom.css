@@ -7119,6 +7119,52 @@ height: 15vh;
   padding-right: 0;
 }
 
+
+/* Loading Screen */
+
+/* ---- tsparticles container ---- */
+#tsparticles {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+#flag {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: auto;
+}
+
+canvas {
+  display: block;
+  vertical-align: bottom;
+}
+
+
+/* Loading modal */
+
+.bd-example-modal-lg .modal-dialog{
+    display: table;
+    position: relative;
+    margin: 0 auto;
+  }
+
+.modal-dialog{
+  width: 50px;
+  top: 45%;
+}
+  
+.loading-modal .modal-dialog .modal-content{
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+  
+
 /* Sticky nav 
 .navbar{
   position: sticky;

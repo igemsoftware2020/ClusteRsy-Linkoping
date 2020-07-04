@@ -16,7 +16,7 @@ app_ui <- function(request) {
       shinyWidgets::setBackgroundColor(color = "#ecf0f1"),
       
       # Loading screen
-      tags$div(id = "loading_screen",
+      tags$div(id = "loader-wrapper",
                mod_loading_screen_ui("loading_screen_ui_1")),
       
       # Main module
