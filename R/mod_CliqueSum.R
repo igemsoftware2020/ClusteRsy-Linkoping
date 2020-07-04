@@ -27,14 +27,15 @@ mod_CliqueSum_server <- function(input, output, session, con){
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
     tags$div(id = "error_name_CliqueSum_js",
-             textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods")),
+    textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
     sliderInput(ns("clique_significance"), label = "Clique significance", min = 0, max = 1, value = 0.05, popup ="P-value for cliques to be considered significant"),
     numericInput(ns("min_clique_size"), label = "Minimal clique size", value = 2, max = 50, min = 2, popup = "Minimal size of cliques"),
     numericInput(ns("n_iterations"), label = "Iterations", value = 500, max = 10000, min = 0, popup = "Number of iterations to be performed for the permutation based P-value"),
     tags$div(style = "text-align:center",
-             actionButton(ns("load_input"), label = "Infer Clique Sum module")
+    actionButton(ns("load_input"), label = "Infer Clique Sum module", onclick="loading_modal_open();"),
+    htmlOutput(ns("close_loading_modal")) # Close modal with JS
     )
   )
   
@@ -136,6 +137,9 @@ mod_CliqueSum_server <- function(input, output, session, con){
       CliqueSum_module$module_name <- module_name()
       updateTextInput(session, "module_name", value = character(0))
     }
+    output$close_loading_modal <- renderUI({
+      tags$script("loading_modal_close();")
+    })
   })
   return(CliqueSum_module)
 }

@@ -23,7 +23,8 @@ mod_Modulediscoverer_ui <- function(id){
     sliderInput(ns("clique_cutoff"), label = "P-value cutoff for significant cliques", min = 0, max = 1, value = 0.01, popup="Cutoff P-value for significant cliques"),
     numericInput(ns("n_cores"), label = "N cores", value = 4, max = 10, min = 1, popup = "Number of CPU cores used"),
     tags$div(style = "text-align:center",
-    actionButton(ns("load_input"), "Infer Module discoverer module")
+    actionButton(ns("load_input"), "Infer Module discoverer module", onclick="loading_modal_open();"),
+    htmlOutput(ns("close_loading_modal"))  # Close modal with JS
     )
   )
 }
@@ -71,7 +72,7 @@ mod_Modulediscoverer_server <- function(input, output, session, con){
   })
   
    observeEvent(input$load_input, {
-    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
+    id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     output$error_p_value <- NULL # I CANNOT REMOVE THIS BUG, SO THIS IS A FEATURE NOW :)
     module_object <- try(MODifieRDB::modulediscoverer_db(input_name = input$input_object, 
@@ -101,8 +102,10 @@ mod_Modulediscoverer_server <- function(input, output, session, con){
       Modulediscoverer_module$module_name <- module_name()
       updateTextInput(session, "module_name", value = character(0))
     }
-    }
-  )
+    output$close_loading_modal <- renderUI({
+      tags$script("loading_modal_close();")
+    })
+    })
   return(Modulediscoverer_module)
 }
     

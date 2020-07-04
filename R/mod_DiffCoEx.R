@@ -15,7 +15,7 @@ mod_DiffCoEx_ui <- function(id){
     textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
-    radioButtons(ns("clustermethod"), "Select a cluster method:", 
+    radioButtons(ns("cluster_method"), "Select a cluster method:", 
                  choices = c("ward",
                              "single",
                              "complete",
@@ -49,10 +49,10 @@ mod_DiffCoEx_ui <- function(id){
     sliderInput(ns("cut_height"), label = "Maximum joining heights", min = 0, max = 1, value = 0.1, popup = "Maximum height of joins in the dendrogram that will be considered"),
     sliderInput(ns("pval_cutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "P-value cutoff for significant co-expression modules"),
     tags$div(style = "text-align:center",
-    actionButton(ns("load_input"), "Infer DiffCoEx module")
+    actionButton(ns("load_input"), "Infer DiffCoEx module", onclick="loading_modal_open();"),
+    htmlOutput(ns("close_loading_modal"))  # Close modal with JS
     )
-    )
-
+  )
 }
     
 #' DiffCoEx Server Function
@@ -108,7 +108,7 @@ mod_DiffCoEx_server <- function(input, output, session, con){
    
    
   observeEvent(input$load_input, {
-    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
+    id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     module_object <- try(MODifieRDB::diffcoex_db(input_name = input$input_object,
                                           cluster_method = input$cluster_method,
@@ -132,6 +132,9 @@ mod_DiffCoEx_server <- function(input, output, session, con){
       DiffCoEx_module$module_name <- module_name()
       updateTextInput(session, "module_name", value = character(0))
     }
+    output$close_loading_modal <- renderUI({
+      tags$script("loading_modal_close();")
+    })
   })
   return(DiffCoEx_module)
 }

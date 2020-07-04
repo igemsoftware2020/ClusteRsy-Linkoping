@@ -37,7 +37,8 @@ mod_MODA_ui <- function(id){
     sliderInput(ns("conservedTheta"), label = "Select conserved theta", min = 0, max = 1, value = 0.5, popup = "The highest value assumed that can still be considered a condition conserved module."),
     
     tags$div(style = "text-align:center",
-    actionButton(ns("load_input"), "Infer MODA module")
+    actionButton(ns("load_input"), "Infer MODA module", onclick="loading_modal_open();"),
+    htmlOutput(ns("close_loading_modal"))  # Close modal with JS
     )
   )
   
@@ -82,7 +83,7 @@ mod_MODA_server <- function(input, output, session, con){
   
   
   observeEvent(input$load_input, {
-    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
+    id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     module_object <- try(MODifieRDB::moda_db(input_name = input$input_object, 
                                           group_of_interest = as.numeric(input$group_of_interest),
@@ -103,6 +104,9 @@ mod_MODA_server <- function(input, output, session, con){
       MODA_module$module_name <- module_name()
       updateTextInput(session, "module_name", value = character(0))
     }
+    output$close_loading_modal <- renderUI({
+      tags$script("loading_modal_close();")
+    })
   })
   return(MODA_module)
 }

@@ -15,6 +15,11 @@ app_ui <- function(request) {
       # Change background color
       shinyWidgets::setBackgroundColor(color = "#ecf0f1"),
       
+      # Loading modal
+      tags$div(id = "loading_modal", `class`="modal fade loading-modal", `data-backdrop`="static", `data-keyboard`="false", tabindex="-1",
+               tags$div(`class`="modal-dialog modal-sm",
+                        tags$div(`class`="modal-content",
+                                 tags$span(class="fa fa-spinner fa-spin fa-3x")))),
       # Loading screen
       tags$div(id = "loader-wrapper",
                mod_loading_screen_ui("loading_screen_ui_1")),
