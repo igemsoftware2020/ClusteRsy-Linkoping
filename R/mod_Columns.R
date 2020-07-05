@@ -23,21 +23,19 @@ mod_Columns_ui <- function(id){
                                 id = "num_contain_2",
                                 tags$h2(class = "text-center",
                                         tags$a(
-                                          id = "number2",
                                           href = "javascript:void(0)",
                                           onclick = "col2();",
                                           class="label", "2",
-                                          style = "border-radius: 100%;background-color:#ffbd40;pointer-events:none;")))),
+                                          style = "border-radius: 100%;background-color:#ffbd40;")))),
              tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
                       tags$form(class = "well faded", style = "background-color: inherit",
                                 id = "num_contain_3",
                                 tags$h2(class = "text-center",
                                         tags$a(
-                                          id = "number3",
                                           href = "javascript:void(0)",
                                           onclick = "col3();",
                                           class="label", "3",
-                                          style = "border-radius: 100%;background-color:#ffbd40;pointer-events:none;")))),
+                                          style = "border-radius: 100%;background-color:#ffbd40;")))),
              HTML("<dash id='arrow1' class='no1' style='left: 20.6vw;top: 60px;'></dash><dash id='arrow2' class='no1' style='left: 55vw;top: 60px;'></dash>"),
              tags$i(class = "fa fa-chevron-right", style="position: relative;left: 46.5vw;bottom: 76.01px;"),
              tags$i(class = "fa fa-chevron-right", style="position: relative;left: 80vw;bottom: 74px;")
@@ -81,19 +79,6 @@ mod_Columns_server <- function(input, output, session, con){
   upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1", con = con)
   Description1_ui_1 <- callModule(mod_Description1_server, "Description1_ui_1", con = con, upload_ui_1)
   disease_analysis_ui_1 <- callModule(mod_disease_analysis_server, "disease_analysis_ui_1", con = con, Description1_ui_1)
-  
-  observe({
-    if(length(unlist(MODifieRDB::get_available_input_objects(con)$input_name) != 0)){
-      output$enable_number_containers <- renderUI({
-        tags$script(HTML("document.getElementById('number2').style.pointerEvents = 'auto'"))
-      })
-    }
-    if(length(unlist(MODifieRDB::get_available_module_objects(con)$module_name) != 0)){
-      output$enable_number_containers <- renderUI({
-        tags$script(HTML("document.getElementById('number2').style.pointerEvents = 'auto'"))
-      })
-    }
-  })
   
   # Activate column 2 and 3
   output$fadein <- renderUI({
