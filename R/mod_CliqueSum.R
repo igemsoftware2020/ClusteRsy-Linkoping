@@ -78,6 +78,7 @@ mod_CliqueSum_server <- function(input, output, session, con, upload_ui_1){
     input$module_name
   })
   
+  # Check for module object names
   observe({
     if (any(MODifieRDB::get_available_module_objects(con)$module_name == module_name())){
       output$error_name_js <- renderUI({
