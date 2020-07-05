@@ -7150,9 +7150,11 @@ canvas {
     display: table;
     position: relative;
     margin: 0 auto;
+    width: 50px;
+    top: 45%;
   }
 
-.modal-dialog{
+#modal-dialog{
   width: 50px;
   top: 45%;
 }

@@ -17,7 +17,7 @@ app_ui <- function(request) {
       
       # Loading modal
       tags$div(id = "loading_modal", `class`="modal fade loading-modal", `data-backdrop`="static", `data-keyboard`="false", tabindex="-1",
-               tags$div(`class`="modal-dialog modal-sm",
+               tags$div(id="modal-dialog", `class`="modal-dialog modal-sm",
                         tags$div(`class`="modal-content",
                                  tags$span(class="fa fa-spinner fa-spin fa-3x"),
                                  tags$div(id="stopwatch", "00:00")))),
