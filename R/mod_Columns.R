@@ -87,25 +87,13 @@ mod_Columns_server <- function(input, output, session, con){
   # }
 
   upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1", con = con)
-  Description1_ui_1 <- callModule(mod_Description1_server, "Description1_ui_1", con = con)
-  disease_analysis_ui_1 <- callModule(mod_disease_analysis_server, "disease_analysis_ui_1", con = con)
+  Description1_ui_1 <- callModule(mod_Description1_server, "Description1_ui_1", con = con, upload_ui_1)
+  disease_analysis_ui_1 <- callModule(mod_disease_analysis_server, "disease_analysis_ui_1", con = con, Description1_ui_1)
   
   # # Action button to select input
   # observeEvent(input$select_input, {
   #   upload_ui_1$input_object <- MODifieRDB::MODifieR_input_from_db(input$input_object, con = con)
   # })
-  
-  # Observe input objects
-  observeEvent(upload_ui_1$input_name, {
-    callModule(mod_Description1_server, "Description1_ui_1", con = con)
-  }
-  )
-  
-  # Observe module objects
-  observeEvent(Description1_ui_1$module_name, {
-    callModule(mod_disease_analysis_server, "disease_analysis_ui_1", con = con)
-  }
-  )
   
   # Observe enrich objects
   observeEvent(disease_analysis_ui_1$enrich,{

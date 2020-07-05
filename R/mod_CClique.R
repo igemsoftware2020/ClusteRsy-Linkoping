@@ -26,7 +26,7 @@ mod_CClique_ui <- function(id){
     numericInput(ns("n_cores"), label = "Number of cores", value = 3, max = 50, min = 0, popup = "If one parallellizes iteratios how many cores will the process be run on"),
     prettySwitch(ns("multiple_cores"), label = "Parallellize iterations", value = TRUE, status = "warning", popup = "Should the process run parallel using multiple CPU cores?"),
     tags$div(style = "text-align:center",
-    actionButton(ns("load_input"), "Infer Correlation clique module", onclick="loading_modal_open();"),
+    actionButton(ns("load_input"), "Infer Correlation clique module", onclick="loading_modal_open(); stopWatch()"),
     htmlOutput(ns("close_loading_modal")) # Close modal with JS
     )
   )
@@ -35,15 +35,20 @@ mod_CClique_ui <- function(id){
 #' CClique Server Function
 #'
 #' @noRd 
-mod_CClique_server <- function(input, output, session, con){
+mod_CClique_server <- function(input, output, session, con, upload_ui_1){
   ns <- session$ns
  
   CClique_module <- reactiveValues()
   
-   output$input_choice <- renderUI({
+  output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation")
   })
+   
+  observeEvent(upload_ui_1$input_name, {
+     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
+     updateSelectInput(session, "input_object", choices = input_objects)
+   })
   
   output$ppi_choice <- renderUI({
     ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
@@ -110,7 +115,7 @@ mod_CClique_server <- function(input, output, session, con){
       updateTextInput(session, "module_name", value = character(0))
     }
     output$close_loading_modal <- renderUI({
-      tags$script("loading_modal_close();")
+      tags$script("loading_modal_close(); reset();")
     })
   })
   return(CClique_module)

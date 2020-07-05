@@ -23,7 +23,7 @@ mod_Modulediscoverer_ui <- function(id){
     sliderInput(ns("clique_cutoff"), label = "P-value cutoff for significant cliques", min = 0, max = 1, value = 0.01, popup="Cutoff P-value for significant cliques"),
     numericInput(ns("n_cores"), label = "N cores", value = 4, max = 10, min = 1, popup = "Number of CPU cores used"),
     tags$div(style = "text-align:center",
-    actionButton(ns("load_input"), "Infer Module discoverer module", onclick="loading_modal_open();"),
+    actionButton(ns("load_input"), "Infer Module discoverer module", onclick="loading_modal_open(); stopWatch()"),
     htmlOutput(ns("close_loading_modal"))  # Close modal with JS
     )
   )
@@ -32,7 +32,7 @@ mod_Modulediscoverer_ui <- function(id){
 #' Modulediscoverer Server Function
 #'
 #' @noRd 
-mod_Modulediscoverer_server <- function(input, output, session, con){
+mod_Modulediscoverer_server <- function(input, output, session, con, upload_ui_1){
   ns <- session$ns
   
   Modulediscoverer_module <- reactiveValues()
@@ -40,6 +40,11 @@ mod_Modulediscoverer_server <- function(input, output, session, con){
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation")
+  })
+  
+  observeEvent(upload_ui_1$input_name, {
+    input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
+    updateSelectInput(session, "input_object", choices = input_objects)
   })
   
   output$ppi_choice <- renderUI({
@@ -103,7 +108,7 @@ mod_Modulediscoverer_server <- function(input, output, session, con){
       updateTextInput(session, "module_name", value = character(0))
     }
     output$close_loading_modal <- renderUI({
-      tags$script("loading_modal_close();")
+      tags$script("loading_modal_close(); reset();")
     })
     })
   return(Modulediscoverer_module)
