@@ -178,10 +178,11 @@ mod_MCODE_server <- function(input, output, session, con, upload_ui_1){
       MCODE_module$module_name <- module_name()
       updateTextInput(session, "module_name", value = character(0))
     }
+    # Close loading modal
     output$close_loading_modal <- renderUI({
       tags$script("loading_modal_close(); reset();")
     })
-    })
+  })
   return(MCODE_module)
 }
     

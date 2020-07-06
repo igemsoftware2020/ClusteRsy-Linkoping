@@ -36,7 +36,8 @@ mod_gseDGN_ui <- function(id){
     
                 
     tags$div( style = "text-align:center",
-              actionButton(ns("load_input"), label = "Enrich") 
+              actionButton(ns("load_input"), label = "Enrich", onclick="loading_modal_open(); stopWatch();"),
+              htmlOutput(ns("close_loading_modal"))  # Close modal with JS
     )
   )
 }
@@ -91,6 +92,10 @@ mod_gseDGN_server <- function(input, output, session, con, Description1_ui_1){
                                           enrichment_method = "gseDGN", 
                                           con = con)
     }
+    # Close loading modal
+    output$close_loading_modal <- renderUI({
+      tags$script("loading_modal_close(); reset();")
+    })
   })
   return(gseDGN_module)
 }
