@@ -20,7 +20,13 @@ mod_vis_enrichobj_ui <- function(id){
                       ),
               ),
     htmlOutput(ns("fadein")),
-  )
+  
+    #htmlOutput() or uiOutput()
+    tags$head(tags$script(src = "www/alert.js", type="text/javascript")),
+    htmlOutput(ns("alert")),
+    
+    
+    )
 }
 
 #' create_input Server Function
@@ -31,7 +37,14 @@ mod_vis_enrichobj_server <- function(input, output, session, con){
   #get_available_input_objects(con)$input_name need to be changed to the enrichment object
   if (length(unlist((MODifieRDB::get_available_input_objects(con)$input_name)))==0){
      output$input_choice <- renderUI({
+       
+       
+       tags$script(
+         alert("No enrichment object has been detected! Please return to the Input tab")
+       )
 
+       
+       #Another solution
         box <- tagList(tags$button(paste("No erichment object detected. Click me to learn more"),
                                            class = "link",
                                            type = "button",
@@ -49,6 +62,7 @@ mod_vis_enrichobj_server <- function(input, output, session, con){
                                                                   tags$button("Close", class = "btn btn-default", `data-dismiss` = "modal"),
                                                                   tags$a("Input data tab (now google)", class= "btn btn-default", href="https://www.google.com/", style = "background-color: #2c3e50; border-color: #2c3e50"))))))
        return(box)
+       #End of another solution
      })
      }
   
@@ -69,7 +83,7 @@ mod_vis_enrichobj_server <- function(input, output, session, con){
 }
 
 ## To be copied in the UI
-# mod_vis_enrichobj_ui("create_input_ui_1")
+# mod_vis_enrichobj_ui("vis_enrichobj_ui_1")
 
 ## To be copied in the server
-# callModule(mod_vis_enrichobj_server, "create_input_ui_1")
+# callModule(mod_vis_enrichobj_server, "vis_enrichobj_ui_1")
