@@ -28,7 +28,8 @@ mod_enrichDO_ui <- function(id){
     sliderInput(ns("mingssize"), label = "Minimum size of each gene set", min = 0, max = 100, value = 5, popup = "Minimum size of each gene set used for analyzing"),
     sliderInput(ns("maxgssize"), label = "Maximum size of each gene set", min = 0,  max = 5000, value = 500, popup = "Maximum size of each gene set used for analyzing"),
     tags$div( style = "text-align:center",
-              actionButton(ns("load_input"), label = "Enrich") 
+              actionButton(ns("load_input"), label = "Enrich", onclick="loading_modal_open(); stopWatch();"),
+              htmlOutput(ns("close_loading_modal"))  # Close modal with JS 
     )
 
 
@@ -84,6 +85,10 @@ mod_enrichDO_server <- function(input, output, session, con, Description1_ui_1){
                                           enrichment_method = "enrichDO", 
                                           con = con)
     }
+    # Close loading modal
+    output$close_loading_modal <- renderUI({
+      tags$script("loading_modal_close(); reset();")
+    })
   })
   return(enrichDO_module)
 }
