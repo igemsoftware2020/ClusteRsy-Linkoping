@@ -23,7 +23,8 @@ mod_Modulediscoverer_ui <- function(id){
     sliderInput(ns("clique_cutoff"), label = "P-value cutoff for significant cliques", min = 0, max = 1, value = 0.01, popup="Cutoff P-value for significant cliques"),
     numericInput(ns("n_cores"), label = "N cores", value = 4, max = 10, min = 1, popup = "Number of CPU cores used"),
     tags$div(style = "text-align:center",
-    actionButton(ns("load_input"), "Infer Module discoverer module")
+    actionButton(ns("load_input"), "Infer Module discoverer module", onclick="loading_modal_open(); stopWatch()"),
+    htmlOutput(ns("close_loading_modal"))  # Close modal with JS
     )
   )
 }
@@ -31,11 +32,19 @@ mod_Modulediscoverer_ui <- function(id){
 #' Modulediscoverer Server Function
 #'
 #' @noRd 
-mod_Modulediscoverer_server <- function(input, output, session, con){
+mod_Modulediscoverer_server <- function(input, output, session, con, upload_ui_1){
   ns <- session$ns
+  
+  Modulediscoverer_module <- reactiveValues()
+  
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation")
+  })
+  
+  observeEvent(upload_ui_1$input_name, {
+    input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
+    updateSelectInput(session, "input_object", choices = input_objects)
   })
   
   output$ppi_choice <- renderUI({
@@ -68,8 +77,8 @@ mod_Modulediscoverer_server <- function(input, output, session, con){
   })
   
    observeEvent(input$load_input, {
-     id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
-     on.exit(removeNotification(id), add = TRUE)
+    id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
+    on.exit(removeNotification(id), add = TRUE)
     output$error_p_value <- NULL # I CANNOT REMOVE THIS BUG, SO THIS IS A FEATURE NOW :)
     module_object <- try(MODifieRDB::modulediscoverer_db(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
@@ -83,16 +92,26 @@ mod_Modulediscoverer_server <- function(input, output, session, con){
                  )
     
     if (class(module_object) == "try-error"){
+      if (grepl("Name", module_object)) {
+        output$error_name_descrip <- renderUI({
+          tags$p(class = "text-danger", tags$b("Error:"), module_object,
+                 style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
+        })
+      } else {
         output$error_p_value <- renderUI({
           tags$p(class = "text-danger", tags$b("Error:"), module_object,
                  style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
         })
+      }
     } else {
+      Modulediscoverer_module$module_name <- module_name()
       updateTextInput(session, "module_name", value = character(0))
     }
-    }
-  )
-
+    output$close_loading_modal <- renderUI({
+      tags$script("loading_modal_close(); reset();")
+    })
+    })
+  return(Modulediscoverer_module)
 }
     
 ## To be copied in the UI

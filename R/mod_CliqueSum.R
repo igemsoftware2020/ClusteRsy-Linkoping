@@ -18,28 +18,30 @@ mod_CliqueSum_ui <- function(id){
 #' CliqueSum Server Function
 #'
 #' @noRd 
-mod_CliqueSum_server <- function(input, output, session, con){
+mod_CliqueSum_server <- function(input, output, session, con, upload_ui_1){
   ns <- session$ns
-
+  
+  CliqueSum_module <- reactiveValues()
+  
   UI <- tagList(
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
     tags$div(id = "error_name_CliqueSum_js",
-             textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods")),
+    textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
     sliderInput(ns("clique_significance"), label = "Clique significance", min = 0, max = 1, value = 0.05, popup ="P-value for cliques to be considered significant"),
     numericInput(ns("min_clique_size"), label = "Minimal clique size", value = 2, max = 50, min = 2, popup = "Minimal size of cliques"),
     numericInput(ns("n_iterations"), label = "Iterations", value = 500, max = 10000, min = 0, popup = "Number of iterations to be performed for the permutation based P-value"),
     tags$div(style = "text-align:center",
-             actionButton(ns("load_input"), label = "Infer Clique Sum module")
+    actionButton(ns("load_input"), label = "Infer Clique Sum module", onclick="loading_modal_open(); stopWatch()"),
+    htmlOutput(ns("close_loading_modal")) # Close modal with JS
     )
   )
   
   if (nrow(MODifieRDB::get_available_db_networks(con)) != 0 ) {
     output$parameters <- renderUI({
       UI
-
     })
   } else {
     
@@ -60,7 +62,7 @@ mod_CliqueSum_server <- function(input, output, session, con){
       id <- showNotification("Creating clique database", duration = NULL, closeButton = FALSE, type = "warning")
       
       clique_db <- MODifieRDB::build_clique_db_db(ppi_name = input$ppi_object,
-                                                  db_folder =  "." , 
+                                                  db_folder =  "./.." , 
                                                   db_name = input$db_name,
                                                   con = con
       )
@@ -76,6 +78,7 @@ mod_CliqueSum_server <- function(input, output, session, con){
     input$module_name
   })
   
+  # Check for module object names
   observe({
     if (any(MODifieRDB::get_available_module_objects(con)$module_name == module_name())){
       output$error_name_js <- renderUI({
@@ -109,12 +112,16 @@ mod_CliqueSum_server <- function(input, output, session, con){
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation")
   })
-
+  
+  observeEvent(upload_ui_1$input_name, {
+    input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
+    updateSelectInput(session, "input_object", choices = input_objects)
+  })
   
   observeEvent(input$load_input, {
     id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
-
-    module_object <- MODifieRDB::clique_sum_db(input_name = input$input_object,
+    on.exit(removeNotification(id), add = TRUE)
+    module_object <- try(MODifieRDB::clique_sum_db(input_name = input$input_object,
 
                                                ppi_name = input$ppi_object,
                                                n_iterations = input$n_iterations,
@@ -124,13 +131,22 @@ mod_CliqueSum_server <- function(input, output, session, con){
                                                n_cores = 1,
                                                module_name = input$module_name,
                                                con = con)
-    updateTextInput(session, "module_name", value = character(0))
-    on.exit(removeNotification(id), add = TRUE)
-    
-
+    )
+    if (class(module_object) == "try-error"){
+      output$error_name_descrip <- renderUI({
+        tags$p(class = "text-danger", tags$b("Error:"), module_object,
+               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
+      })
+    }
+    else {
+      CliqueSum_module$module_name <- module_name()
+      updateTextInput(session, "module_name", value = character(0))
+    }
+    output$close_loading_modal <- renderUI({
+      tags$script("loading_modal_close(); reset();")
+    })
   })
-  
-  
+  return(CliqueSum_module)
 }
 
 ## To be copied in the UI

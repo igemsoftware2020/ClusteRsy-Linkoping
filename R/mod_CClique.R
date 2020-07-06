@@ -26,7 +26,8 @@ mod_CClique_ui <- function(id){
     numericInput(ns("n_cores"), label = "Number of cores", value = 3, max = 50, min = 0, popup = "If one parallellizes iteratios how many cores will the process be run on"),
     prettySwitch(ns("multiple_cores"), label = "Parallellize iterations", value = TRUE, status = "warning", popup = "Should the process run parallel using multiple CPU cores?"),
     tags$div(style = "text-align:center",
-    actionButton(ns("load_input"), "Infer Correlation clique module") 
+    actionButton(ns("load_input"), "Infer Correlation clique module", onclick="loading_modal_open(); stopWatch()"),
+    htmlOutput(ns("close_loading_modal")) # Close modal with JS
     )
   )
 }
@@ -34,13 +35,20 @@ mod_CClique_ui <- function(id){
 #' CClique Server Function
 #'
 #' @noRd 
-mod_CClique_server <- function(input, output, session, con){
+mod_CClique_server <- function(input, output, session, con, upload_ui_1){
   ns <- session$ns
  
-   output$input_choice <- renderUI({
+  CClique_module <- reactiveValues()
+  
+  output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation")
   })
+   
+  observeEvent(upload_ui_1$input_name, {
+     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
+     updateSelectInput(session, "input_object", choices = input_objects)
+   })
   
   output$ppi_choice <- renderUI({
     ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
@@ -72,7 +80,7 @@ mod_CClique_server <- function(input, output, session, con){
   })
   
   observeEvent(input$load_input, {
-    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
+    id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     output$error_p_value <- NULL # I CANNOT REMOVE THIS BUG, SO THIS IS A FEATURE NOW :)
     module_object <- try(MODifieRDB::correlation_clique_db(input_name = input$input_object, 
@@ -91,15 +99,26 @@ mod_CClique_server <- function(input, output, session, con){
     
     
     if (class(module_object) == "try-error"){
-      output$error_p_value <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), module_object,
-               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
-      })
+      if (grepl("Name", module_object)) {
+        output$error_name_descrip <- renderUI({
+          tags$p(class = "text-danger", tags$b("Error:"), module_object,
+                 style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
+        })
+      } else {
+        output$error_p_value <- renderUI({
+          tags$p(class = "text-danger", tags$b("Error:"), module_object,
+                 style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
+        })
+      }
     } else {
+      CClique_module$module_name <- module_name()
       updateTextInput(session, "module_name", value = character(0))
     }
-    }
-  )
+    output$close_loading_modal <- renderUI({
+      tags$script("loading_modal_close(); reset();")
+    })
+  })
+  return(CClique_module)
 }
     
 ## To be copied in the UI

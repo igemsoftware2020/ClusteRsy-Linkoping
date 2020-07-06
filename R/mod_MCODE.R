@@ -91,7 +91,8 @@ mod_MCODE_ui <- function(id){
       popup = "Include self-loops."
     ),
     tags$div(style = "text-align:center",
-    actionButton(ns("load_input"), "Infer MCODE module")
+    actionButton(ns("load_input"), "Infer MCODE module", onclick="loading_modal_open(); stopWatch();"),
+    htmlOutput(ns("close_loading_modal"))  # Close modal with JS
     )
   )
 }
@@ -99,12 +100,19 @@ mod_MCODE_ui <- function(id){
 #' MCODE Server Function
 #'
 #' @noRd 
-mod_MCODE_server <- function(input, output, session, con){
+mod_MCODE_server <- function(input, output, session, con, upload_ui_1){
   ns <- session$ns
- 
+  
+  MCODE_module <- reactiveValues()
+  
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     selectInput(ns("input_object"), label = "Input object", choices = input_objects,popup = "The input used for analyzation.")
+  })
+  
+  observeEvent(upload_ui_1$input_name, {
+    input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
+    updateSelectInput(session, "input_object", choices = input_objects)
   })
   
   output$ppi_choice <- renderUI({
@@ -138,9 +146,10 @@ mod_MCODE_server <- function(input, output, session, con){
             
   
   observeEvent(input$load_input, {
-    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
+    id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     output$error_p_value <- NULL 
+    output$error_name_descrip <- NULL
     module_object <- try(MODifieRDB::mcode_db(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
                                           hierarchy = as.numeric(input$hierarchy),
@@ -154,16 +163,27 @@ mod_MCODE_server <- function(input, output, session, con){
                                           con = con)
                          )
     if (class(module_object) == "try-error"){
+      if (grepl("Name", module_object)) {
+        output$error_name_descrip <- renderUI({
+          tags$p(class = "text-danger", tags$b("Error:"), module_object,
+                 style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
+        })
+      } else {
         output$error_p_value <- renderUI({
           tags$p(class = "text-danger", tags$b("Error:"), module_object,
                  style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
         })
+      }
     } else {
+      MCODE_module$module_name <- module_name()
       updateTextInput(session, "module_name", value = character(0))
     }
-    }
-  )
-
+    # Close loading modal
+    output$close_loading_modal <- renderUI({
+      tags$script("loading_modal_close(); reset();")
+    })
+  })
+  return(MCODE_module)
 }
     
 ## To be copied in the UI
