@@ -13,7 +13,7 @@ mod_input_overview_ui <- function(id){
     DT::dataTableOutput(ns("input_overview")),
     tags$div(`class`="row",
              tags$div(`class`="col-sm-8", style = "color:black",
-             fileInput(ns("input_object"), label = "Upload an input object"),
+             fileInput(ns("input_object"), label = "Upload an input object", accept = ".rds"),
              uiOutput(ns("input_name_chooser"))),
              tags$br(),
              tags$div(`class`="col-sm-4", style = "text-align:right",
@@ -37,25 +37,29 @@ mod_input_overview_server <- function(input, output, session, con){
       
       return(NULL)
     }
-    
-    read.table(file = infile, header = T)
+    readRDS(file = infile)
   })
   
   # File input
   output$input_name_chooser <- renderUI({
-    input <- upload_input() #reactive
+    input <- upload_input() #reactive pop up
     tagList( 
-      textInput(ns("input_name"), "Input object name"),
+      textInput(ns("input_name"), "Input object name", placeholder = "Input name"),
       actionButton(ns("upload_input"), "Add input object to database")
     )
   })
   
+  # Name reactive
+  input_name <- reactive({
+    input$input_name
+  })
+  
   # Upload input object
   observeEvent(input$upload_input, {
-    id <- showNotification("Saving input object to database", duration = NULL, closeButton = FALSE)
-    input <- upload_input()
-    input_name <- input$input_name
+    id <- showNotification("Saving input object to database", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
+    input <- upload_input()
+    input_name <- input_name()
     
     MODifieRDB::MODifieR_object_to_db(MODifieR_object = input,
                                       object_name = input_name,

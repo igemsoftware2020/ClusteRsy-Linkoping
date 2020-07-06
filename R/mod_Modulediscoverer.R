@@ -13,7 +13,7 @@ mod_Modulediscoverer_ui <- function(id){
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
     tags$div(id = "error_name_Modulediscoverer_js",
-    textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods")),
+    textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods", placeholder = "Module name")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
     sliderInput(ns("permutations"), label= "Permutations", min = 0, max = 10000, value = 5000, popup = "Number of permutations to perform to identify the community structure"),

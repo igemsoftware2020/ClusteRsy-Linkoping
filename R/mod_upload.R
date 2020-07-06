@@ -10,7 +10,7 @@
 mod_upload_ui <- function(id){
   ns <- NS(id)
   tagList(
-    fileInput(ns("expression_matrix"), label = "Upload an expression matrix", accept = c("text/csv", "text/plain", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".tsv")),
+    fileInput(ns("expression_matrix"), label = "Upload an expression matrix", accept = c("text/csv", "text/plain", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/tab-separated-values", ".rds")),
     uiOutput(ns("sample_chooser")),
     htmlOutput(ns("error_name_js"))
   )
@@ -37,19 +37,23 @@ mod_upload_server <- function(input, output, session, con){
     infile <- (input$expression_matrix$datapath)
     if (is.null(infile)){
       return(NULL)
-      } else {
-        read.table(file = infile, header = T)
-      }
+    }
+    if(input$expression_matrix$type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"){
+      readxl::read_excel(infile)
+    }
+    else {
+      read.table(file = infile, header = T) 
+    }
   })
   
   output$sample_chooser <- renderUI({
     expression_matrix <- upload_expression()
     tagList(
       tags$div(id = "error_name_js",
-      textInput(ns("input_name"), "Input object name")),
+      textInput(ns("input_name"), "Input object name", placeholder = "Input name")),
       htmlOutput(ns("error_name_descrip")),
-      textInput(ns("group1"), "Group 1 label"),
-      textInput(ns("group2"), "Group 2 label"),
+      textInput(ns("group1"), "Group 1 label", placeholder = "Group 1 label"),
+      textInput(ns("group2"), "Group 2 label", placeholder = "Group 2 label"),
       chooserInput(ns("sample_groups"), "Available frobs", "Selected frobs", 
                    colnames(expression_matrix), c(), multiple = TRUE),
       tags$br(),
@@ -136,13 +140,14 @@ mod_upload_server <- function(input, output, session, con){
       updateTextInput(session, "group2", value = character(0))
       input_name <- input_name()
       upload_module$input_name <- input_name
+      print(input_object)
       MODifieRDB::MODifieR_object_to_db(MODifieR_object = input_object,
                                         object_name = input_name,
                                         con = con)
     }
     output$close_loading_modal <- renderUI({
      tags$script("loading_modal_close(); reset();")
-      })
+    })
   })
   
   outputOptions(output, 'fileUploaded', suspendWhenHidden=FALSE)
