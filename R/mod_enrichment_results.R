@@ -33,14 +33,17 @@ mod_enrichment_results_server <- function(input, output, session, selected, con)
       DT::datatable(enrichment_results, 
                     filter = "top", 
                     class = styling,
+                    style = "default",
                     
                     extensions = 'Buttons',
                     
                     options = list(
                       paging = TRUE,
                       searching = TRUE,
-                      fixedColumns = TRUE,
-                      autoWidth = TRUE,
+                      scrollX = TRUE,
+                      scrollY = TRUE,
+                      #fixedColumns = FALSE,
+                      autoWidth = FALSE,
                       ordering = TRUE,
                       dom = 'Bfrtip',
                       buttons = c('copy', 'csv', 'excel')

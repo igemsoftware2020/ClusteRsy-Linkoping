@@ -48,19 +48,16 @@ mod_visual_server <- function(input, output, session, con){
     selected$selected_object <- input$enrichment_overview_rows_selected
     output$results_ui <- renderUI({
       tagList(
-        mod_enrichment_results_ui(ns("enrichment_results_ui_1")),
-        fluidPage(
-          tabsetPanel(type = "tab",
-               tabPanel("Dot plot"),
-               tabPanel("Bar plot"),
-               tabPanel("Enrichment map", mod_enrichment_map_ui(ns("enrichment_map_ui_1"))),
-               tabPanel("Gene-concep network"),
-               tabPanel("Heatmap")
-           )
-        )
+            tabsetPanel(type = "tab",
+                        tabPanel("Dot plot"),
+                        tabPanel("Bar plot"),
+                        tabPanel("Enrichment map", mod_enrichment_map_ui(ns("enrichment_map_ui_1"))),
+                        tabPanel("Gene-concep network"),
+                        tabPanel("Heatmap"),
+                        tabPanel("Results",  mod_enrichment_results_ui(ns("enrichment_results_ui_1")))
+            )
       )
     })
-    
   })
   
   callModule(mod_enrichment_results_server, "enrichment_results_ui_1", selected, con = con)
