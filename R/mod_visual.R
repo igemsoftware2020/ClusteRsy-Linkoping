@@ -49,7 +49,15 @@ mod_visual_server <- function(input, output, session, con){
     output$results_ui <- renderUI({
       tagList(
         mod_enrichment_results_ui(ns("enrichment_results_ui_1")),
-        mod_enrichment_map_ui(ns("enrichment_map_ui_1"))
+        fluidPage(
+          tabsetPanel(type = "tab",
+               tabPanel("Dot plot"),
+               tabPanel("Bar plot"),
+               tabPanel("Enrichment map", mod_enrichment_map_ui(ns("enrichment_map_ui_1"))),
+               tabPanel("Gene-concep network"),
+               tabPanel("Heatmap")
+           )
+        )
       )
     })
     
