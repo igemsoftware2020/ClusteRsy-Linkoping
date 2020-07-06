@@ -26,7 +26,6 @@ mod_Description1_server <- function(input, output, session, con, upload_ui_1){
   ns <- session$ns
   
   Description1_module <- reactiveValues()
-  description <- reactiveValues()
   
   # Call Module only once
   CliqueSum_ui_1 <- callModule(mod_CliqueSum_server, "CliqueSum_ui_1", con = con, upload_ui_1)
@@ -114,11 +113,6 @@ mod_Description1_server <- function(input, output, session, con, upload_ui_1){
       }
     }
     
-    
-    if (is.null(method)){
-      return(NULL)
-    }
-    
     #Popup Modal
     if (method %in% c("Clique Sum", "WGCNA", "DIAMoND", "DiffCoEx", "MCODE", "MODA", "Module Discoverer", "Correlation Clique")){
       description <- tagList(tags$button(paste("Click me to learn more about ", method),
@@ -126,9 +120,9 @@ mod_Description1_server <- function(input, output, session, con, upload_ui_1){
                                  class = "link",
                                  type = "button",
                                  `data-toggle` = "modal",
-                                 `data-target` = "#descrip"),
-                             tags$div(`class` = "modal fade", `id` = "descrip", `role` = "dialog", `tabindex` = "-1", `aria-hidden` = "true", `style` = "display:none;",
-                                      tags$div(`class` = "modal-dialog",
+                                 `data-target` = "#descrip_module"),
+                             tags$div(`class` = "modal fade", `id` = "descrip_module", `role` = "dialog", `tabindex` = "-1", `aria-hidden` = "true", `style` = "display:none;",
+                                      tags$div(`class` = "modal-dialog", style="top:35%",
                                                tags$div(`class` = "modal-content",
                                                         tags$div(`class` = "modal-header",
                                                                 tags$button("×", type = "button", class = "close", `data-dismiss` = "modal", `aria-hidden` = "true"),

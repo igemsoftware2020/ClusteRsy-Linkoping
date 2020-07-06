@@ -15,6 +15,8 @@ mod_disease_analysis_ui <- function(id){
     ),
     htmlOutput(ns("enrich_type")),
     htmlOutput(ns("enrich_repo")),
+    htmlOutput(ns("description")),
+    tags$br(),
     htmlOutput(ns("para"))
     )
 }
@@ -28,7 +30,7 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
   disease_analysis_module <- reactiveValues()
   
   # Call Module only once
-  enrichDGN_ui_1 <- callModule(mod_enrichDGN_server, "enrichDGN_ui_1", con = con, Description1_ui_1)
+  enrichDGN_ui_1 <- callModule(mod_enrichDGN_server, "enrichDGN_ui_1", con = con, Description1_ui_1) 
   enrichDO_ui_1 <- callModule(mod_enrichDO_server, "enrichDO_ui_1", con = con, Description1_ui_1)
   enrichNCG_ui_1 <- callModule(mod_enrichNCG_server, "enrichNCG_ui_1", con = con, Description1_ui_1)
   gseDGN_ui_1 <- callModule(mod_gseDGN_server, "gseDGN_ui_1", con = con, Description1_ui_1)
@@ -43,6 +45,83 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
   gseMKEGG_ui_1 <- callModule(mod_gseMKEGG_server, "gseMKEGG_ui_1", con = con, Description1_ui_1)
   
   observeEvent(input$analyse_method, {
+    
+    descrip <- function(method){
+      if (method == "DGN Enrichment Method"){
+        description = "DGN Enrichment Method"
+        return(description)
+      }
+      if (method == "DO Enrichment Method"){
+        description = "DO Enrichment Method"
+        return(description)
+      }
+      if (method == "NCG Enrichment Method"){
+        description = "NCG Enrichment Method"
+        return(description)
+      }
+      if (method == "DGN Gene Set Enrichment Method"){
+        description = "DGN Gene Set Enrichment Method"
+        return(description)
+      }
+      if (method == "DO Gene Set Enrichment Method"){
+        description = "DO Gene Set Enrichment Method"
+        return(description)
+      }
+      if (method == "NCG Gene Set Enrichment Method"){
+        description = "NCG Gene Set Enrichment Method"
+        return(description)
+      }
+      if (method == "GO Enrichment Method"){
+        description = "GO Enrichment Method"
+        return(description)
+      }
+      if (method == "GO Gene Set Enrichment Method"){
+        description = "GO Gene Set Enrichment Method"
+        return(description)
+      }
+      if (method == "GO Classification Method"){
+        description = "GO Classification Method"
+        return(description)
+      }
+      if (method == "KEGG Enrichment Method"){
+        description = "KEGG Enrichment Method"
+        return(description)
+      }
+      if (method == "KEGG Gense Set Enrichment Method"){
+        description = "KEGG Gense Set Enrichment Method"
+        return(description)
+      }
+      if (method == "MKEGG Enrichment Method"){
+        description = "MKEGG Enrichment Method"
+        return(description)
+      }
+      if (method == "MKEGG Gense Set Enrichment Method"){
+        description = "MKEGG Gense Set Enrichment Method"
+        return(description)
+      }
+    }
+    
+    description <- function(method, hyperlink){
+      tagList(tags$button(paste("Click me to learn more about ", method),
+                          id = "method",
+                          class = "link",
+                          type = "button",
+                          `data-toggle` = "modal",
+                          `data-target` = "#descrip_enrich"),
+              tags$div(`class` = "modal fade", `id` = "descrip_enrich", `role` = "dialog", `tabindex` = "-1", `aria-hidden` = "true", `style` = "display:none;",
+                       tags$div(`class` = "modal-dialog", style="top:35%",
+                                tags$div(`class` = "modal-content",
+                                         tags$div(`class` = "modal-header",
+                                                  tags$button("×", type = "button", class = "close", `data-dismiss` = "modal", `aria-hidden` = "true"),
+                                                  tags$h4(method ,class = "modal-title", style = "color: black")),
+                                         tags$div(`class` = "modal-body",
+                                                  tags$p(descrip(method = method), style = "color: black")),
+                                         tags$div(`class` = "modal-footer",
+                                                  tags$button("Close", class = "btn btn-default", `data-dismiss` = "modal"),
+                                                  tags$a("Learn more", class= "btn btn-default", href=hyperlink, style = "background-color: #2c3e50; border-color: #2c3e50"))))))
+    }
+    
+    
     if (input$analyse_method == "Disease analysis"){
       output$enrich_type <- renderUI({
         tags$div(selectInput(ns("enrich_type1"), label = "Type of enrichment",
@@ -63,6 +142,12 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
           observeEvent(enrichDGN_ui_1$enrich, {
             disease_analysis_module$enrich <- enrichDGN_ui_1$enrich 
             })
+          method <- "DGN Enrichment Method"
+          hyperlink <- "https://www.google.com/"
+          output$description <- renderUI({
+            tags$div(style = "text-align: center;",
+            description(method, hyperlink))
+          })
         }
         if (input$enrich_type1 == "Over-representation test" & input$enrich_repo1 == "DO" ){
           output$para <- renderUI({
@@ -70,6 +155,12 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
           observeEvent(enrichDO_ui_1$enrich, {
             disease_analysis_module$enrich <- enrichDO_ui_1$enrich
             })
+          method <- "DO Enrichment Method"
+          hyperlink <- "https://www.google.com/"
+          output$description <- renderUI({
+            tags$div(style = "text-align: center;",
+                     description(method, hyperlink))
+          })
         }
         if (input$enrich_type1 == "Over-representation test" & input$enrich_repo1 == "NCG" ){
           output$para <- renderUI({
@@ -77,6 +168,12 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
           observeEvent(enrichNCG_ui_1$enrich, {
             disease_analysis_module$enrich <- enrichNCG_ui_1$enrich 
            })
+          method <- "NCG Enrichment Method"
+          hyperlink <- "https://www.google.com/"
+          output$description <- renderUI({
+            tags$div(style = "text-align: center;",
+                     description(method, hyperlink))
+          })
         }
         if (input$enrich_type1 == "Gene Set Enrichment Analysis" & input$enrich_repo1 == "DGN" ){
           output$para <- renderUI({
@@ -84,6 +181,12 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
           observeEvent(gseDGN_ui_1$enrich, {
             disease_analysis_module$enrich <- gseDGN_ui_1$enrich
             })
+          method <- "DGN Gene Set Enrichment Method"
+          hyperlink <- "https://www.google.com/"
+          output$description <- renderUI({
+            tags$div(style = "text-align: center;",
+                     description(method, hyperlink))
+          })
         }
         if (input$enrich_type1 == "Gene Set Enrichment Analysis" & input$enrich_repo1 == "DO" ){
           output$para <- renderUI({
@@ -91,6 +194,12 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
           observeEvent(gseDO_ui_1$enrich, {
             disease_analysis_module$enrich <- gseDO_ui_1$enrich
             })
+          method <- "DO Gene Set Enrichment Method"
+          hyperlink <- "https://www.google.com/"
+          output$description <- renderUI({
+            tags$div(style = "text-align: center;",
+                     description(method, hyperlink))
+          })
         }
         if (input$enrich_type1 == "Gene Set Enrichment Analysis" & input$enrich_repo1 == "NCG" ){
           output$para <- renderUI({
@@ -98,6 +207,12 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
           observeEvent(gseNCG_ui_1$enrich, {
             disease_analysis_module$enrich <- gseNCG_ui_1$enrich
             })
+          method <- "NCG Gene Set Enrichment Method"
+          hyperlink <- "https://www.google.com/"
+          output$description <- renderUI({
+            tags$div(style = "text-align: center;",
+                     description(method, hyperlink))
+          })
         }
       })
     }
@@ -118,6 +233,12 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
           observeEvent(enrichGO_ui_1$enrich, {
             disease_analysis_module$enrich <- enrichGO_ui_1$enrich
             })
+          method <- "GO Enrichment Method"
+          hyperlink <- "https://www.google.com/"
+          output$description <- renderUI({
+            tags$div(style = "text-align: center;",
+                     description(method, hyperlink))
+          })
         }
         if (input$enrich_type1 == "GO Gene Set Enrichment Analysis"){
           output$para <- renderUI({
@@ -125,6 +246,12 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
           observeEvent(gseGO_ui_1$enrich, {
             disease_analysis_module$enrich <- gseGO_ui_1$enrich
             })
+          method <- "GO Gene Set Enrichment Method"
+          hyperlink <- "https://www.google.com/"
+          output$description <- renderUI({
+            tags$div(style = "text-align: center;",
+                     description(method, hyperlink))
+          })
         }
         if (input$enrich_type1 == "GO classification"){
           output$para <- renderUI({
@@ -132,6 +259,12 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
           observeEvent(groupGO_ui_1$enrich, {
             disease_analysis_module$enrich <- groupGO_ui_1$enrich
             })
+          method <- "GO Classification Method"
+          hyperlink <- "https://www.google.com/"
+          output$description <- renderUI({
+            tags$div(style = "text-align: center;",
+                     description(method, hyperlink))
+          })
         }
       })
     }
@@ -156,6 +289,12 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
           observeEvent(enrichKEGG_ui_1$enrich, {
             disease_analysis_module$enrich <- enrichKEGG_ui_1$enrich
           })
+          method <- "KEGG Enrichment Method"
+          hyperlink <- "https://www.google.com/"
+          output$description <- renderUI({
+            tags$div(style = "text-align: center;",
+                     description(method, hyperlink))
+          })
         }
         if (input$enrich_type1 == "Gene Set Enrichment Analysis" & input$enrich_repo1 == "KEGG"){
           output$para <- renderUI({
@@ -163,6 +302,12 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
           observeEvent(gseKEGG_ui_1$enrich, {
             disease_analysis_module$enrich <- gseKEGG_ui_1$enrich
             })
+          method <- "KEGG Gense Set Enrichment Method"
+          hyperlink <- "https://www.google.com/"
+          output$description <- renderUI({
+            tags$div(style = "text-align: center;",
+                     description(method, hyperlink))
+          })
         }
         if (input$enrich_type1 == "Over-representation test" & input$enrich_repo1 == "MKEGG"){
           output$para <- renderUI({
@@ -170,6 +315,12 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
           observeEvent(enrichMKEGG_ui_1$enrich, {
             disease_analysis_module$enrich <- enrichMKEGG_ui_1$enrich
             })
+          method <- "MKEGG Enrichment Method"
+          hyperlink <- "https://www.google.com/"
+          output$description <- renderUI({
+            tags$div(style = "text-align: center;",
+                     description(method, hyperlink))
+          })
         }
         if (input$enrich_type1 == "Gene Set Enrichment Analysis" & input$enrich_repo1 == "MKEGG"){
           output$para <- renderUI({
@@ -177,11 +328,16 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
           observeEvent(gseMKEGG_ui_1$enrich, {
             disease_analysis_module$enrich <- gseMKEGG_ui_1$enrich
             })
+          method <- "MKEGG Gense Set Enrichment Method"
+          hyperlink <- "https://www.google.com/"
+          output$description <- renderUI({
+            tags$div(style = "text-align: center;",
+                     description(method, hyperlink))
+          })
         }
       })
     }
-  }
-  )
+  })
   return(disease_analysis_module)
 }
     
