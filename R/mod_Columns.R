@@ -79,6 +79,11 @@ mod_Columns_server <- function(input, output, session, con){
   Description1_ui_1 <- callModule(mod_Description1_server, "Description1_ui_1", con = con, upload_ui_1)
   disease_analysis_ui_1 <- callModule(mod_disease_analysis_server, "disease_analysis_ui_1", con = con, Description1_ui_1)
   
+  
+  observeEvent(disease_analysis_ui_1$enrich,{
+    Columns_module$enrich <- disease_analysis_ui_1$enrich
+  })
+  
   # Activate column 2 and 3
   output$fadein <- renderUI({
     req(upload_ui_1$input_name) 
