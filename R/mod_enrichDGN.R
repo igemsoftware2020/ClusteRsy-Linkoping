@@ -28,7 +28,7 @@ mod_enrichDGN_ui <- function(id){
     sliderInput(ns("mingssize"), label = "Minimum size of each gene set", min = 0, max = 100, value = 10, popup = "Minimum size of each gene set used for analyzing"),
     sliderInput(ns("maxgssize"), label = "Maximal size of each gene set", min = 0,  max = 5000, value = 500, popup = "Maximum size of each gene set used for analyzing"),
     tags$div( style = "text-align:center",
-      actionButton(ns("load_input"), label = "Enrichment") 
+      actionButton(ns("load_input"), label = "Enrich") 
     )
     
     
@@ -38,7 +38,7 @@ mod_enrichDGN_ui <- function(id){
 #'
 #' @noRd 
 # con should ne somewhere in the code?
-mod_enrichDGN_server <- function(input, output, session, con){
+mod_enrichDGN_server <- function(input, output, session, con, Description1_ui_1){
   ns <- session$ns
   
   enrichDGN_module <- reactiveValues()
@@ -46,6 +46,11 @@ mod_enrichDGN_server <- function(input, output, session, con){
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
+  })
+  
+  observeEvent(Description1_ui_1$module_name, {
+    module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
+    updateSelectInput(session, "module_object", choices = module_objects)
   })
   
 

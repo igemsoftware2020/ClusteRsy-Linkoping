@@ -49,7 +49,7 @@ mod_groupGO_ui <- function(id){
 #' GO Server Function 
 #' 
 #' @noRd
-mod_groupGO_server <- function(input, output, session, con){
+mod_groupGO_server <- function(input, output, session, con, Description1_ui_1){
   ns <- session$ns
   
   groupGO_module <- reactiveValues()
@@ -58,6 +58,11 @@ mod_groupGO_server <- function(input, output, session, con){
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, 
                 popup = "The module used for gene set enrichment analysis.")
+  })
+  
+  observeEvent(Description1_ui_1$module_name, {
+    module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
+    updateSelectInput(session, "module_object", choices = module_objects)
   })
   
   observeEvent(input$load_input, {

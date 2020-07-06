@@ -57,7 +57,8 @@ mod_upload_server <- function(input, output, session, con){
       shinyWidgets::prettySwitch(ns("adjusted_pvalue"), label = "Pvalue", value = TRUE, status = "warning"),
       shinyWidgets::prettySwitch(ns("quantile_normalization"), label = "Quantile", value = FALSE, status = "warning"),
       tags$div(style = "text-align:center",
-      actionButton(ns("create_input"), "Create input object")
+      actionButton(ns("create_input"), "Create input object", onclick="loading_modal_open(); stopWatch();"),
+      htmlOutput(ns("close_loading_modal")) # Close modal with JS
       )
     )
   })
@@ -101,9 +102,10 @@ mod_upload_server <- function(input, output, session, con){
   
   
   observeEvent(input$create_input, {
+    
     id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
-    
+
     count_matrix <- as.matrix(upload_expression())
     group1_indici <- match(input$sample_groups[[1]], colnames(count_matrix))
     group2_indici <- match(input$sample_groups[[2]], colnames(count_matrix))
@@ -138,11 +140,12 @@ mod_upload_server <- function(input, output, session, con){
                                         object_name = input_name,
                                         con = con)
     }
+    output$close_loading_modal <- renderUI({
+     tags$script("loading_modal_close(); reset();")
+      })
   })
   
-  
   outputOptions(output, 'fileUploaded', suspendWhenHidden=FALSE)
-  
   return(upload_module)
 }
 

@@ -22,11 +22,20 @@ mod_Description1_ui <- function(id){
 #' Description Server Function
 #'
 #' @noRd 
-mod_Description1_server <- function(input, output, session, con){
+mod_Description1_server <- function(input, output, session, con, upload_ui_1){
   ns <- session$ns
   
   Description1_module <- reactiveValues()
-  description <- reactiveValues()
+  
+  # Call Module only once
+  CliqueSum_ui_1 <- callModule(mod_CliqueSum_server, "CliqueSum_ui_1", con = con, upload_ui_1)
+  WGCNA_ui_1 <- callModule(mod_WGCNA_server, "WGCNA_ui_1", con = con, upload_ui_1)
+  DIAMoND_ui_1 <- callModule(mod_DIAMoND_server, "DIAMoND_ui_1", con = con, upload_ui_1)
+  DiffCoEx_ui_1 <- callModule(mod_DiffCoEx_server, "DiffCoEx_ui_1", con = con, upload_ui_1)
+  MCODE_ui_1 <- callModule(mod_MCODE_server, "MCODE_ui_1", con = con, upload_ui_1)
+  MODA_ui_1 <-callModule(mod_MODA_server, "MODA_ui_1", con = con, upload_ui_1)
+  Modulediscoverer_ui_1 <- callModule(mod_Modulediscoverer_server, "Modulediscoverer_ui_1", con = con, upload_ui_1)
+  CClique_ui_1 <- callModule(mod_CClique_server, "CClique_ui_1", con = con, upload_ui_1)
   
   upload_description <- reactive({
     req((input$Inference_method))
@@ -104,11 +113,6 @@ mod_Description1_server <- function(input, output, session, con){
       }
     }
     
-    
-    if (is.null(method)){
-      return(NULL)
-    }
-    
     #Popup Modal
     if (method %in% c("Clique Sum", "WGCNA", "DIAMoND", "DiffCoEx", "MCODE", "MODA", "Module Discoverer", "Correlation Clique")){
       description <- tagList(tags$button(paste("Click me to learn more about ", method),
@@ -116,9 +120,9 @@ mod_Description1_server <- function(input, output, session, con){
                                  class = "link",
                                  type = "button",
                                  `data-toggle` = "modal",
-                                 `data-target` = "#descrip"),
-                             tags$div(`class` = "modal fade", `id` = "descrip", `role` = "dialog", `tabindex` = "-1", `aria-hidden` = "true", `style` = "display:none;",
-                                      tags$div(`class` = "modal-dialog",
+                                 `data-target` = "#descrip_module"),
+                             tags$div(`class` = "modal fade", `id` = "descrip_module", `role` = "dialog", `tabindex` = "-1", `aria-hidden` = "true", `style` = "display:none;",
+                                      tags$div(`class` = "modal-dialog", style="top:35%",
                                                tags$div(`class` = "modal-content",
                                                         tags$div(`class` = "modal-header",
                                                                 tags$button("×", type = "button", class = "close", `data-dismiss` = "modal", `aria-hidden` = "true"),
@@ -145,7 +149,6 @@ mod_Description1_server <- function(input, output, session, con){
     if(method == "Clique Sum"){
       output$method <- renderUI({mod_CliqueSum_ui(ns("CliqueSum_ui_1"))
       })
-      CliqueSum_ui_1 <- callModule(mod_CliqueSum_server, "CliqueSum_ui_1", con = con)
       observeEvent(CliqueSum_ui_1$module_name,{
         Description1_module$module_name <- CliqueSum_ui_1$module_name
       })
@@ -154,7 +157,6 @@ mod_Description1_server <- function(input, output, session, con){
     if(method == "WGCNA"){
       output$method <- renderUI({mod_WGCNA_ui(ns("WGCNA_ui_1"))
       })
-      WGCNA_ui_1 <- callModule(mod_WGCNA_server, "WGCNA_ui_1", con = con)
       observeEvent(WGCNA_ui_1$module_name,{
         Description1_module$module_name <- WGCNA_ui_1$module_name
       })
@@ -163,7 +165,6 @@ mod_Description1_server <- function(input, output, session, con){
     if(method == "DIAMoND"){
       output$method <- renderUI({mod_DIAMoND_ui(ns("DIAMoND_ui_1"))
       })
-      DIAMoND_ui_1 <- callModule(mod_DIAMoND_server, "DIAMoND_ui_1", con = con)
       observeEvent(DIAMoND_ui_1$module_name,{
         Description1_module$module_name <- DIAMoND_ui_1$module_name
       })
@@ -172,7 +173,6 @@ mod_Description1_server <- function(input, output, session, con){
     if(method == "DiffCoEx"){
       output$method <- renderUI({mod_DiffCoEx_ui(ns("DiffCoEx_ui_1"))
       })
-      DiffCoEx_ui_1 <- callModule(mod_DiffCoEx_server, "DiffCoEx_ui_1", con = con)
       observeEvent(DiffCoEx_ui_1$module_name,{
         Description1_module$module_name <- DiffCoEx_ui_1$module_name
       })
@@ -181,7 +181,6 @@ mod_Description1_server <- function(input, output, session, con){
     if(method == "MCODE"){
       output$method <- renderUI({mod_MCODE_ui(ns("MCODE_ui_1"))
       })
-      MCODE_ui_1 <- callModule(mod_MCODE_server, "MCODE_ui_1", con = con)
       observeEvent(MCODE_ui_1$module_name,{
         Description1_module$module_name <- MCODE_ui_1$module_name
       })
@@ -190,7 +189,6 @@ mod_Description1_server <- function(input, output, session, con){
     if(method == "MODA"){
       output$method <- renderUI({mod_MODA_ui(ns("MODA_ui_1"))
       })
-      MODA_ui_1 <-callModule(mod_MODA_server, "MODA_ui_1", con = con)
       observeEvent(MODA_ui_1$module_name,{
         Description1_module$module_name <- MODA_ui_1$module_name
       })
@@ -199,7 +197,6 @@ mod_Description1_server <- function(input, output, session, con){
     if(method == "Module Discoverer"){
       output$method <- renderUI({mod_Modulediscoverer_ui(ns("Modulediscoverer_ui_1"))
       })
-      Modulediscoverer_ui_1 <- callModule(mod_Modulediscoverer_server, "Modulediscoverer_ui_1", con = con)
       observeEvent(Modulediscoverer_ui_1$module_name,{
         Description1_module$module_name <- Modulediscoverer_ui_1$module_name
       })
@@ -208,14 +205,12 @@ mod_Description1_server <- function(input, output, session, con){
     if(method == "Correlation Clique"){
       output$method <- renderUI({mod_CClique_ui(ns("CClique_ui_1"))
       })
-      CClique_ui_1 <- callModule(mod_CClique_server, "CClique_ui_1", con = con)
       observeEvent(CClique_ui_1$module_name,{
         Description1_module$module_name <- CClique_ui_1$module_name
       })
     }
   }
   )
-  
   return(Description1_module)
   
 }

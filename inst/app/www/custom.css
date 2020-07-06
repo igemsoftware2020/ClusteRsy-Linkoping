@@ -7020,33 +7020,6 @@ option:checked {
   background: #c7c7c7 linear-gradient(0deg, #c7c7c7 0%, #c7c7c7 100%);
 }
 
-/* Animation */
-#animated_div {
-position: relative;
-height: 100px;
-width: 100px;
-animation-iteration-count: infinite;
-animation:animated_div 5s infinite;
--moz-animation:animated_div 5s infinite;
--webkit-animation:animated_div 5s infinite;
--o-animation:animated_div 5s infinite;
-border-radius:5px;
--webkit-border-radius:5px;
-}
-
-@keyframes animated_div
-{
-0% {transform: rotate(0deg);left:0px;}
-25% {transform: rotate(20deg);left:0px;}
-50% {transform: rotate(0deg);left:1000px;}
-55% {transform: rotate(0deg);left:1000px;}
-70% {transform: rotate(0deg);left:1000px;}
-100% {transform: rotate(-360deg);left:0px;}
-}
-
-/* Animation */
-
-
 /* Arrow */
 dash {
    width: 26vw;
@@ -7118,6 +7091,59 @@ height: 15vh;
   padding-left: 0;
   padding-right: 0;
 }
+
+
+/* Loading Screen */
+
+/* ---- tsparticles container ---- */
+#tsparticles {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+#flag {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: auto;
+}
+
+canvas {
+  display: block;
+  vertical-align: bottom;
+}
+
+
+/* Loading modal */
+
+.bd-example-modal-lg .modal-dialog{
+    display: table;
+    position: relative;
+    margin: 0 auto;
+    width: 50px;
+    top: 45%;
+  }
+
+#modal-dialog{
+  width: 50px;
+  top: 45%;
+}
+  
+.loading-modal .modal-dialog .modal-content{
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* Stopwatch */
+#stopwatch {
+  position: relative;
+  left: 4px;
+}
+  
 
 /* Sticky nav 
 .navbar{

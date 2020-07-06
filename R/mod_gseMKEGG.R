@@ -44,7 +44,7 @@ mod_gseMKEGG_ui <- function(id){
 #' gseMKEGG Server Function
 #'
 #' @noRd 
-mod_gseMKEGG_server <- function(input, output, session, con){
+mod_gseMKEGG_server <- function(input, output, session, con, Description1_ui_1){
   ns <- session$ns
   
   gseMKEGG_module <- reactiveValues()
@@ -52,6 +52,11 @@ mod_gseMKEGG_server <- function(input, output, session, con){
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
+  })
+  
+  observeEvent(Description1_ui_1$module_name, {
+    module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
+    updateSelectInput(session, "module_object", choices = module_objects)
   })
   
   observeEvent(input$load_input, {

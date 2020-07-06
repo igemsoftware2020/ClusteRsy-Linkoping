@@ -44,7 +44,7 @@ mod_enrichMKEGG_ui <- function(id){
 #' enrichMKEGG Server Function
 #'
 #' @noRd 
-mod_enrichMKEGG_server <- function(input, output, session, con){
+mod_enrichMKEGG_server <- function(input, output, session, con, Description1_ui_1){
   ns <- session$ns
   
   enrichMKEGG_module <- reactiveValues()
@@ -54,6 +54,10 @@ mod_enrichMKEGG_server <- function(input, output, session, con){
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
   })
   
+  observeEvent(Description1_ui_1$module_name, {
+    module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
+    updateSelectInput(session, "module_object", choices = module_objects)
+  })
   
   observeEvent(input$load_input, {
     id <- showNotification("Creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
