@@ -11,7 +11,7 @@ mod_welcoming_page_ui <- function(id){
   ns <- NS(id)
   tagList(
     tags$div(style="height:100vh", class = "row",
-              tags$div(style="border-style: dashed; color:black; background-image: url('www/headline_img.jpg'); background-size: contain;",
+              tags$div(style="border-style: dashed; color:black;",
                        tags$div(class = "headline", style="border-style: dashed; margin-top: 1.2%;",
                          tags$p(class= "center", "Headline")
                           ),

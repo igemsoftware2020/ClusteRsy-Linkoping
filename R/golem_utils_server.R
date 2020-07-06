@@ -68,6 +68,6 @@ rvtl <- shiny::reactiveValuesToList
 #' @noRd
 load_data <- function() {
   MODifieRDB::connect_to_db("./../testdb.db")
-  hide("loading_screen")
-  show("main_content")
+  shinyjs::hide("loader-wrapper")
+  shinyjs::show("main_content")
 }

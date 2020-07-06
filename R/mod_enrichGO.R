@@ -78,7 +78,8 @@ mod_enrichGO_ui <- function(id){
       ),
     
     tags$div( style = "text-align:center",
-              actionButton(ns("load_input"), label = "Enrich") 
+              actionButton(ns("load_input"), label = "Enrich", onclick="loading_modal_open(); stopWatch();"),
+              htmlOutput(ns("close_loading_modal"))  # Close modal with JS 
     )
   )
 }
@@ -86,7 +87,7 @@ mod_enrichGO_ui <- function(id){
 #' GO Server Function 
 #' 
 #' @noRd
-mod_enrichGO_server <- function(input, output, session, con){
+mod_enrichGO_server <- function(input, output, session, con, Description1_ui_1){
   ns <- session$ns
   
   enrichGO_module <- reactiveValues()
@@ -94,6 +95,11 @@ mod_enrichGO_server <- function(input, output, session, con){
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
+  })
+  
+  observeEvent(Description1_ui_1$module_name, {
+    module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
+    updateSelectInput(session, "module_object", choices = module_objects)
   })
   
   observeEvent(input$load_input, {
@@ -128,6 +134,10 @@ mod_enrichGO_server <- function(input, output, session, con){
                                           enrichment_method = "enrichGO", 
                                           con = con)
     }
+    # Close loading modal
+    output$close_loading_modal <- renderUI({
+      tags$script("loading_modal_close(); reset();")
+    })
   })
   return(enrichGO_module)
 }

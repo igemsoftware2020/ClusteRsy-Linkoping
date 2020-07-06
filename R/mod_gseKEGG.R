@@ -35,7 +35,8 @@ mod_gseKEGG_ui <- function(id){
           sliderInput(ns("permutation"), label ="number of permutations", min = 1, max = 2000, value = 1000, popup = "Number of permutations that should be performed"),
           prettySwitch(ns("include_seed"), label = "Include seed", value = FALSE, status = "warning", popup = "Get reproducible results"),
           tags$div( style = "text-align:center",
-                    actionButton(ns("load_input"), label = "Enrich") 
+                    actionButton(ns("load_input"), label = "Enrich", onclick="loading_modal_open(); stopWatch();"),
+                    htmlOutput(ns("close_loading_modal"))  # Close modal with JS
           )
   )
 }
@@ -43,7 +44,7 @@ mod_gseKEGG_ui <- function(id){
 #' gseKEGG Server Function
 #'
 #' @noRd 
-mod_gseKEGG_server <- function(input, output, session, con){
+mod_gseKEGG_server <- function(input, output, session, con, Description1_ui_1){
   ns <- session$ns
   
   gseKEGG_module <- reactiveValues()
@@ -51,6 +52,11 @@ mod_gseKEGG_server <- function(input, output, session, con){
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
+  })
+  
+  observeEvent(Description1_ui_1$module_name, {
+    module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
+    updateSelectInput(session, "module_object", choices = module_objects)
   })
   
   observeEvent(input$load_input, {
@@ -85,6 +91,10 @@ mod_gseKEGG_server <- function(input, output, session, con){
                                           enrichment_method = "gseKEGG", 
                                           con = con)
     }
+    # Close loading modal
+    output$close_loading_modal <- renderUI({
+      tags$script("loading_modal_close(); reset();")
+    })
   })
   return(gseKEGG_module)
 }

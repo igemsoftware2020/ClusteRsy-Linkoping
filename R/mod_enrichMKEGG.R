@@ -35,16 +35,16 @@ mod_enrichMKEGG_ui <- function(id){
     sliderInput(ns("mingssize"), label = "Minimum size of each gene set annotated", min = 1, max = 100, value = 10, popup = "Minimum size of each gene set used for analyzing"),
     sliderInput(ns("maxgssize"), label = "Maximum size of each gene set annotated", min = 100, max = 1000, value = 500, popup = "Maximum size of each gene set used for analyzing"),
     tags$div( style = "text-align:center",
-              actionButton(ns("load_input"), label = "Enrich") 
+              actionButton(ns("load_input"), label = "Enrich", onclick="loading_modal_open(); stopWatch();"),
+              htmlOutput(ns("close_loading_modal"))  # Close modal with JS 
     )
- 
   )
 }
     
 #' enrichMKEGG Server Function
 #'
 #' @noRd 
-mod_enrichMKEGG_server <- function(input, output, session, con){
+mod_enrichMKEGG_server <- function(input, output, session, con, Description1_ui_1){
   ns <- session$ns
   
   enrichMKEGG_module <- reactiveValues()
@@ -54,6 +54,10 @@ mod_enrichMKEGG_server <- function(input, output, session, con){
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
   })
   
+  observeEvent(Description1_ui_1$module_name, {
+    module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
+    updateSelectInput(session, "module_object", choices = module_objects)
+  })
   
   observeEvent(input$load_input, {
     id <- showNotification("Creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
@@ -86,6 +90,10 @@ mod_enrichMKEGG_server <- function(input, output, session, con){
                                           enrichment_method = "enrichMKEGG", 
                                           con = con)
     }
+    # Close loading modal
+    output$close_loading_modal <- renderUI({
+      tags$script("loading_modal_close(); reset();")
+    })
   })
   return(enrichMKEGG_module)
 }

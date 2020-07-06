@@ -37,7 +37,8 @@ mod_MODA_ui <- function(id){
     sliderInput(ns("conservedTheta"), label = "Select conserved theta", min = 0, max = 1, value = 0.5, popup = "The highest value assumed that can still be considered a condition conserved module."),
     
     tags$div(style = "text-align:center",
-    actionButton(ns("load_input"), "Infer MODA module")
+    actionButton(ns("load_input"), "Infer MODA module", onclick="loading_modal_open(); stopWatch()"),
+    htmlOutput(ns("close_loading_modal"))  # Close modal with JS
     )
   )
   
@@ -46,7 +47,7 @@ mod_MODA_ui <- function(id){
 #' MODA Server Function
 #'
 #' @noRd 
-mod_MODA_server <- function(input, output, session, con){
+mod_MODA_server <- function(input, output, session, con, upload_ui_1){
   ns <- session$ns
   
   MODA_module <- reactiveValues()
@@ -54,6 +55,11 @@ mod_MODA_server <- function(input, output, session, con){
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation.")
+  })
+  
+  observeEvent(upload_ui_1$input_name, {
+    input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
+    updateSelectInput(session, "input_object", choices = input_objects)
   })
   
   module_name <- reactive({
@@ -82,7 +88,7 @@ mod_MODA_server <- function(input, output, session, con){
   
   
   observeEvent(input$load_input, {
-    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
+    id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     module_object <- try(MODifieRDB::moda_db(input_name = input$input_object, 
                                           group_of_interest = as.numeric(input$group_of_interest),
@@ -100,9 +106,12 @@ mod_MODA_server <- function(input, output, session, con){
       })
     }
     else {
-      MODA_module$module_object <- module_object
+      MODA_module$module_name <- module_name()
       updateTextInput(session, "module_name", value = character(0))
     }
+    output$close_loading_modal <- renderUI({
+      tags$script("loading_modal_close(); reset();")
+    })
   })
   return(MODA_module)
 }

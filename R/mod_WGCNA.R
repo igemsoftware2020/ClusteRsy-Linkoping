@@ -105,7 +105,8 @@ mod_WGCNA_ui <- function(id){
       popup = "This is only used when the corType is Bicor. Specifies maximum percentile of the separate outliers data on either side of the median."),
     
     tags$div(style = "text-align:center",
-    actionButton(ns("load_input"), "Infer WGCNA trait-based module")
+    actionButton(ns("load_input"), "Infer WGCNA trait-based module", onclick="loading_modal_open(); stopWatch()"),
+    htmlOutput(ns("close_loading_modal"))  # Close modal with JS
     )
   )
 }
@@ -113,7 +114,7 @@ mod_WGCNA_ui <- function(id){
 #' WGCNA Server Function
 #'
 #' @noRd 
-mod_WGCNA_server <- function(input, output, session, con){
+mod_WGCNA_server <- function(input, output, session, con, upload_ui_1){
   ns <- session$ns
   
   WGCNA_module <- reactiveValues()
@@ -128,6 +129,12 @@ mod_WGCNA_server <- function(input, output, session, con){
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation")
   })
+  
+  observeEvent(upload_ui_1$input_name, {
+    input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
+    updateSelectInput(session, "input_object", choices = input_objects)
+  })
+  
   
   module_name <- reactive({
     input$module_name
@@ -154,7 +161,7 @@ mod_WGCNA_server <- function(input, output, session, con){
   }) 
   
   observeEvent(input$load_input, {
-    id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
+    id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     module_object <- try(MODifieRDB::wgcna_db(input_name = input$input_object, 
                                           group_of_interest = input$group_of_interest,
@@ -178,9 +185,12 @@ mod_WGCNA_server <- function(input, output, session, con){
                style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
       })
     } else {
-      WGCNA_module$module_object <- module_object
+      WGCNA_module$module_name <- module_name()
       updateTextInput(session, "module_name", value = character(0))
     }
+    output$close_loading_modal <- renderUI({
+      tags$script("loading_modal_close(); reset();")
+    })
   })
   return(WGCNA_module)
 }
