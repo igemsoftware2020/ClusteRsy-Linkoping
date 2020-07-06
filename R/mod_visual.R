@@ -32,7 +32,7 @@ mod_visual_server <- function(input, output, session, con){
       enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
       
       output$enrichment_overview <- DT::renderDataTable({
-        styling <- DT:::DT2BSClass(c('compact', 'cell-border', 'hover'))
+        styling <- DT:::DT2BSClass(c('compact', 'hover'))
         DT::datatable(enrichment_objects, 
                       class = styling,
                       selection = "single")
@@ -48,17 +48,15 @@ mod_visual_server <- function(input, output, session, con){
     selected$selected_object <- input$enrichment_overview_rows_selected
     output$results_ui <- renderUI({
       tagList(
-        mod_enrichment_results_ui(ns("enrichment_results_ui_1"))
+        mod_enrichment_results_ui(ns("enrichment_results_ui_1")),
+        mod_enrichment_map_ui(ns("enrichment_map_ui_1"))
       )
     })
     
   })
   
-  
-
-
-  
   callModule(mod_enrichment_results_server, "enrichment_results_ui_1", selected, con = con)
+  callModule(mod_enrichment_map_server, "enrichment_map_ui_1", selected, con = con)
 }
 
 ## To be copied in the UI
