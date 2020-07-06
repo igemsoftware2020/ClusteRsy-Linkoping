@@ -10,6 +10,7 @@
 mod_loading_screen_ui <- function(id){
   ns <- NS(id)
   tagList(
+    tags$h1("Loading...", style ="position:absolute;top:50%;left:50%;margin-top:-50px; margin-left:-50px; width:100px;height:100px;")
     )
 }
     
