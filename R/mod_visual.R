@@ -71,7 +71,8 @@ mod_visual_server <- function(input, output, session, con){
     output$results_ui <- renderUI({
       tagList(
         fluidPage(
-            tabsetPanel(type = "tab",
+          mainPanel( width = 12,
+            tabsetPanel(type = "tabs",
                         tabPanel("Dot plot", mod_dot_plot_ui(ns("dot_plot_ui_1"))),
                         tabPanel("Bar plot"),
                         tabPanel("Enrichment map", mod_enrichment_map_ui(ns("enrichment_map_ui_1"))),
@@ -80,6 +81,7 @@ mod_visual_server <- function(input, output, session, con){
                         tabPanel("Results",  mod_enrichment_results_ui(ns("enrichment_results_ui_1")))
             )
       )
+        )
       )
     })
   })
