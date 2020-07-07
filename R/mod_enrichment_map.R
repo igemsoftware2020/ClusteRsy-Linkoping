@@ -10,7 +10,7 @@
 mod_enrichment_map_ui <- function(id){
   ns <- NS(id)
   tagList(
- plotlyOutput(ns("enrichment_plot")),
+ plotOutput(ns("enrichment_plot")),
  # selectInput(ns("color"), 
  #             choices = c())
   )
@@ -24,12 +24,12 @@ mod_enrichment_map_server <- function(input, output, session, selected, con){
   
   
   
-  output$enrichment_plot <- renderPlotly({
+  output$enrichment_plot <- renderPlot({
     enrichment_object <- MODifieRDB::enrichment_object_from_db(con,
                                                                selected$selected_object
     )
     
-    ggplotly(enrichplot::emapplot(enrichment_object, showCategory = 30, color = "p.adjust",  layout = "kk"))
+    enrichplot::emapplot(enrichment_object, showCategory = 30, color = "pvalue",  layout = "kk")
   })
 }
     

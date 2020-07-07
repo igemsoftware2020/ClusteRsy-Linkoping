@@ -11,10 +11,27 @@ mod_visual_ui <- function(id){
   ns <- NS(id)
   tagList(
     uiOutput(ns("results_ui")),
-    DT::dataTableOutput(ns("enrichment_overview")),
+    absolutePanel(
+      bottom = 20, right = 20, width = "35%", height = "60%",
+      draggable = TRUE,
+      wellPanel(
+        HTML(markdownToHTML(fragment.only=TRUE, text=c(
+          "Please choose your enrichment analysis object for visualization.
+
+You can drag this panel around."
+
+
+        ))),
+        tags$form(`class` = "well", 
+                  style = "background-color:#FFFFFF;",
+    DT::dataTableOutput(ns("enrichment_overview"), width = "auto", height = "auto"),
+        ),
     actionButton(ns("refresh"), label = "Refresh"),
     actionButton(ns("analyze"), label = "Analyze")
-  )
+      ),
+    style = "opacity: 0.90"
+    ),
+    )
 }
 
 
@@ -35,7 +52,12 @@ mod_visual_server <- function(input, output, session, con){
         styling <- DT:::DT2BSClass(c('compact', 'hover'))
         DT::datatable(enrichment_objects, 
                       class = styling,
-                      selection = "single")
+                      selection = "single",
+                      options = list(
+                        scrollX = TRUE,
+                        scrollY = TRUE,
+                        dom = 't')
+        )
       })
       
     } else {
@@ -48,8 +70,9 @@ mod_visual_server <- function(input, output, session, con){
     selected$selected_object <- input$enrichment_overview_rows_selected
     output$results_ui <- renderUI({
       tagList(
+        fluidPage(
             tabsetPanel(type = "tab",
-                        tabPanel("Dot plot"),
+                        tabPanel("Dot plot", mod_dot_plot_ui(ns("dot_plot_ui_1"))),
                         tabPanel("Bar plot"),
                         tabPanel("Enrichment map", mod_enrichment_map_ui(ns("enrichment_map_ui_1"))),
                         tabPanel("Gene-concep network"),
@@ -57,11 +80,13 @@ mod_visual_server <- function(input, output, session, con){
                         tabPanel("Results",  mod_enrichment_results_ui(ns("enrichment_results_ui_1")))
             )
       )
+      )
     })
   })
   
   callModule(mod_enrichment_results_server, "enrichment_results_ui_1", selected, con = con)
   callModule(mod_enrichment_map_server, "enrichment_map_ui_1", selected, con = con)
+  callModule(mod_dot_plot_server, "dot_plot_ui_1", selected, con = con)
 }
 
 ## To be copied in the UI
