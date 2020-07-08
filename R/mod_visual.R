@@ -12,7 +12,11 @@ mod_visual_ui <- function(id){
   tagList(
     uiOutput(ns("results_ui")),
     absolutePanel(
-      bottom = 20, right = 20, width = "35%", height = "60%",
+      id = "controls",
+      bottom = 20, 
+      right = 20, 
+      width = "35%", 
+      height = "60%",
       draggable = TRUE,
       wellPanel(
         HTML(markdownToHTML(fragment.only=TRUE, text=c(
@@ -29,7 +33,6 @@ You can drag this panel around."
     actionButton(ns("refresh"), label = "Refresh"),
     actionButton(ns("analyze"), label = "Analyze")
       ),
-    style = "opacity: 0.90"
     ),
     )
 }

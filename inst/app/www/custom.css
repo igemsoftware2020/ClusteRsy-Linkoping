@@ -7143,6 +7143,22 @@ canvas {
   position: relative;
   left: 4px;
 }
+
+/* Hovering effect absolute panel */
+#controls {
+  /* Appearance */
+  cursor: move;
+  /* Fade out while not hovering */
+  opacity: 0.55;
+  zoom: 0.9;
+  transition: opacity 200ms 800ms;
+}
+
+#controls:hover {
+  /* Fade in while hovering */
+  opacity: 0.90;
+  transition-delay: 0;
+}
   
 
 /* Sticky nav 
