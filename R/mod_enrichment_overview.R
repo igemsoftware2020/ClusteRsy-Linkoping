@@ -10,10 +10,8 @@
 mod_enrichment_overview_ui <- function(id){
   ns <- NS(id)
   tagList(
-    uiOutput(ns("results_ui")),
     DT::dataTableOutput(ns("enrichment_overview")),
     actionButton(ns("refresh"), label = "Refresh"),
-    actionButton(ns("analyze"), label = "Analyze"),
     downloadButton(ns("download_enrichment"), label = "Download")
   )
 }
@@ -23,8 +21,6 @@ mod_enrichment_overview_ui <- function(id){
 #' @noRd 
 mod_enrichment_overview_server <- function(input, output, session, con){
   ns <- session$ns
-  
-   selected <- reactiveValues()
    
    observeEvent(input$refresh, {
      if(RSQLite::dbExistsTable(con, "enrichment_register")) {
@@ -35,24 +31,39 @@ mod_enrichment_overview_server <- function(input, output, session, con){
          styling <- DT:::DT2BSClass(c('compact', 'hover'))
          DT::datatable(enrichment_objects, 
                        class = styling,
-                       selection = "single")
+                       selection = "multiple")
        })
        
      } else {
        return(NULL)
      }
    })
+   
+   # Choose multiple options
+   current_enrichment_objects <- function() {
+     selected <- input$enrichment_overview_overview_rows_selected
+     MODifieRDB::enrichment_object_from_db(selected, con = con)
+   }
+   
+   retrieve_enrichment_object <- function(){
+     selected <- input$enrichment_overview_rows_selected
+     if (length(selected) > 1){
+       lapply(current_enrichment_objects(), MODifieRDB::enrichment_object_from_db(selected), con = con)
+     } else {
+       MODifieRDB::MODifieR_module_from_db(MODifieRDB::enrichment_object_from_db(selected), con = con)
+     }
+   }
 
+   # Download function
       output$download_enrichment <- downloadHandler(
         filename = function() {
           paste0("enrichment_set_", Sys.Date(), ".rds", sep="")
         },
         content = function(file) {
-          saveRDS(selected, file)
+          saveRDS(retrieve_enrichment_object, file)
         }
       )
 
-      callModule(mod_enrichment_results_server, "enrichment_results_ui_1", selected, con = con)
 }
 
     
