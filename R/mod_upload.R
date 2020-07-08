@@ -140,7 +140,6 @@ mod_upload_server <- function(input, output, session, con){
       updateTextInput(session, "group2", value = character(0))
       input_name <- input_name()
       upload_module$input_name <- input_name
-      print(input_object)
       MODifieRDB::MODifieR_object_to_db(MODifieR_object = input_object,
                                         object_name = input_name,
                                         con = con)
