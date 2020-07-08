@@ -14,7 +14,8 @@ Imports:
     glue,
     htmltools,
     MODifieR,
-    shinyWidgets
+    shinyWidgets,
+    pkgload
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
