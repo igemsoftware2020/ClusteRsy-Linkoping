@@ -10,9 +10,11 @@
 mod_enrichment_overview_ui <- function(id){
   ns <- NS(id)
   tagList(
+    uiOutput(ns("results_ui")),
     DT::dataTableOutput(ns("enrichment_overview")),
     actionButton(ns("refresh"), label = "Refresh"),
-    actionButton(ns("analyze"), label = "Analyze")
+    actionButton(ns("analyze"), label = "Analyze"),
+    downloadButton(ns("download_enrichment"), label = "Download")
   )
 }
     
@@ -22,32 +24,37 @@ mod_enrichment_overview_ui <- function(id){
 mod_enrichment_overview_server <- function(input, output, session, con){
   ns <- session$ns
   
-  enrichment_object <- reactiveValues()
-  
-  observeEvent(input$refresh, {
-    if(RSQLite::dbExistsTable(con, "enrichment_register")) {
-      #This should be the input from the DT that Lucas is building. Needs to be reactive as well.
-      enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
-      
-      output$enrichment_overview <- DT::renderDataTable({
-        DT::datatable(enrichment_objects)
-      })
+   selected <- reactiveValues()
+   
+   observeEvent(input$refresh, {
+     if(RSQLite::dbExistsTable(con, "enrichment_register")) {
+       
+       enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
+       
+       output$enrichment_overview <- DT::renderDataTable({
+         styling <- DT:::DT2BSClass(c('compact', 'hover'))
+         DT::datatable(enrichment_objects, 
+                       class = styling,
+                       selection = "single")
+       })
+       
+     } else {
+       return(NULL)
+     }
+   })
 
-      
-    } else {
-      
-      
-    }
-  })
-  
-  observeEvent(input$analyze, {
-    enrichment_object$enrichment_object <- MODifieRDB::enrichment_object_from_db(con,
-                                                                                   input$enrichment_overview_rows_selected
-                                                                                 )
-  })
-  
-  return(enrichment_object)
+      output$download_enrichment <- downloadHandler(
+        filename = function() {
+          paste0("enrichment_set_", Sys.Date(), ".rds", sep="")
+        },
+        content = function(file) {
+          saveRDS(selected, file)
+        }
+      )
+
+      callModule(mod_enrichment_results_server, "enrichment_results_ui_1", selected, con = con)
 }
+
     
 ## To be copied in the UI
 # mod_enrichment_overview_ui("enrichment_overview_ui_1")
