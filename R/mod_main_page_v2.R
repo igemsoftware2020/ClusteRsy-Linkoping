@@ -17,10 +17,11 @@ mod_main_page_v2_ui <- function(id){
                tabPanel("Visualization", mod_visual_ui(ns("visual_ui_1"))),
                tabPanel("Input objects", mod_input_overview_ui(ns("input_overview_ui_1"))),
                tabPanel("Module objects", mod_module_overview_ui(ns("module_overview_ui_1"))),
+               tabPanel("Enrichment objects", mod_enrichment_overview_ui(ns("enrichment_overview_ui_1"))),
                tabPanel("PPI networks", mod_ppi_networks_ui(ns("ppi_networks_ui_1"))),
                tabPanel(" ", mod_welcoming_page_ui(ns("welcoming_page_ui_1"))) #Hide this with Javascirpt
     ),
-    tags$script(HTML("element = document.getElementsByTagName('a')[6]; element.style.display = 'none'")) #Change the number according to the tabPanel order
+    tags$script(HTML("element = document.getElementsByTagName('a')[7]; element.style.display = 'none'")) #Change the number according to the tabPanel order
   )
 }
 
@@ -43,6 +44,7 @@ mod_main_page_v2_server <- function(input, output, session){
   callModule(mod_visual_server, "visual_ui_1", con = con)
   callModule(mod_input_overview_server, "input_overview_ui_1", con = con)
   callModule(mod_module_overview_server, "module_overview_ui_1", con = con)
+  callModule(mod_enrichment_overview_server, "enrichment_overview_ui_1", con = con)
   callModule(mod_ppi_networks_server, "ppi_networks_ui_1", con = con)
 }
 
