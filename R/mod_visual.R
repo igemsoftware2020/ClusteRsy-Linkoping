@@ -11,6 +11,7 @@ mod_visual_ui <- function(id){
   ns <- NS(id)
   tagList(
     uiOutput(ns("results_ui")),
+    # Floating panel with parameters. 
     absolutePanel(
       id = "controls",
       bottom = 20, 
@@ -18,7 +19,7 @@ mod_visual_ui <- function(id){
       width = "35%", 
       height = "60%",
       draggable = TRUE,
-      wellPanel(
+      wellPanel( #Text in the floating panel.
         tags$h3(class = "text-center",
           "Pick an enrichment object for visualization"
         ),
@@ -27,10 +28,14 @@ mod_visual_ui <- function(id){
         
         tags$form(`class` = "well", 
                   style = "background-color:#FFFFFF;",
-    DT::dataTableOutput(ns("enrichment_overview"), width = "auto", height = "auto"),
+    DT::dataTableOutput(ns("enrichment_overview"), width = "auto", height = "auto"), #Data table for plot output
         ),
+    
     actionButton(ns("refresh"), label = "Refresh"),
-    actionButton(ns("analyze"), label = "Analyze")
+    actionButton(ns("analyze"), label = "Analyze"),
+    
+    #Renders the parameters when analyzed is triggered.
+    uiOutput(ns("parameters"))  
       ),
     ),
     )
@@ -86,11 +91,45 @@ mod_visual_server <- function(input, output, session, con){
         )
       )
     })
+    output$parameters <- renderUI({
+      tagList(
+      #Parameters
+        tags$h3(class = "text-center",
+                "Select parameters"),
+      #Dot plot
+        selectInput(ns("xaxis"),
+                    label = "X-axis",
+                    choices = c("GeneRatio", "Count")),
+        selectInput(ns("color"),
+                    label = "Color",
+                    choices = c("pvalue", "p.adjust", "qvalue")),
+        sliderInput(ns("showcategory"), 
+                    label = "Number of enriched terms to display",
+                    min = 5,
+                    max = 50,
+                    value = 10),
+        textInput(ns("title"), 
+                  label = "Title")
+      )
+    })
   })
+  
   
   callModule(mod_enrichment_results_server, "enrichment_results_ui_1", selected, con = con)
   callModule(mod_enrichment_map_server, "enrichment_map_ui_1", selected, con = con)
-  callModule(mod_dot_plot_server, "dot_plot_ui_1", selected, con = con)
+  callModule(mod_dot_plot_server, "dot_plot_ui_1", parameters, selected, con = con)
+  
+  #Returning the parameter list to the dot_plot module. This needs to be here.
+  return(
+    parameters <- list(
+      xaxis = reactive({input$xaxis}),
+      color = reactive({input$color}),
+      showcategory = reactive({input$showcategory}),
+      plot_title = reactive({input$title})
+      
+    )
+  )
+  
 }
 
 ## To be copied in the UI
