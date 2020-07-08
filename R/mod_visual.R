@@ -19,13 +19,12 @@ mod_visual_ui <- function(id){
       height = "60%",
       draggable = TRUE,
       wellPanel(
-        HTML(markdownToHTML(fragment.only=TRUE, text=c(
-          "Please choose your enrichment analysis object for visualization.
-
-You can drag this panel around."
-
-
-        ))),
+        tags$h3(class = "text-center",
+          "Pick an enrichment object for visualization"
+        ),
+        tags$p(class = "text-right",
+               "You can drag this panel around."),
+        
         tags$form(`class` = "well", 
                   style = "background-color:#FFFFFF;",
     DT::dataTableOutput(ns("enrichment_overview"), width = "auto", height = "auto"),
