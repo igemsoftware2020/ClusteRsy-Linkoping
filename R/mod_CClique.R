@@ -13,7 +13,7 @@ mod_CClique_ui <- function(id){
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
     tags$div(id = "error_name_CClique_js",
-    textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods")),
+    textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods", placeholder = "Module name")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
     sliderInput(ns("frequency_cutoff"), label = "Select frequency cutoff", min = 0, max = 1, value = 0.5, popup = "Fraction of the number of times a gene should be present in the iterations"),

@@ -12,7 +12,7 @@ mod_DiffCoEx_ui <- function(id){
   tagList(
     uiOutput(ns("input_choice")),
     tags$div(id = "error_name_DiffCoEx_js",
-    textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods")),
+    textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods", placeholder = "Module name")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
     radioButtons(ns("cluster_method"), "Select a cluster method:", 

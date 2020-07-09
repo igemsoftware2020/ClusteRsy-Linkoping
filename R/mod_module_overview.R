@@ -13,7 +13,7 @@ mod_module_overview_ui <- function(id){
     DT::dataTableOutput(ns("module_overview")),
     tags$div(`class`="row",
              tags$div(`class`="col-sm-8", style = "color:black",
-             fileInput(ns("module_object"), label = "Upload a module object"),
+             fileInput(ns("module_object"), label = "Upload a module object", accept =  ".rds"),
              uiOutput(ns("module_name_chooser"))),
              tags$br(),
              tags$div(`class`="col-sm-4", style = "text-align:right",
@@ -38,23 +38,29 @@ mod_module_overview_server <- function(input, output, session, con){
       return(NULL)
     }
     
-    read.table(file = infile, header = T)
+    readRDS(file = infile)
   })
 
   output$module_name_chooser <- renderUI({
-    module <- upload_module() #reactive
+    module <- upload_module() #reactive pop up
     tagList( 
-      textInput(ns("module_name"), "Module object name"),
+      textInput(ns("module_name"), "Module object name", placeholder = "Module name"),
       actionButton(ns("upload_module"), "Add module object to database")
     )
   })
   
+  # Name reactive
+  module_name <- reactive({
+    input$module_name
+  })
+  
   # Upload module
   observeEvent(input$upload_module, {
-    id <- showNotification("Saving module object to database", duration = NULL, closeButton = FALSE)
-    module <- upload_module()
-    module_name <- input$module_name
+    id <- showNotification("Saving module object to database", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
+    module <- upload_module()
+    module_name <- module_name()
+    
     
     MODifieRDB::MODifieR_object_to_db(MODifieR_object = module,
                                       object_name = module_name,

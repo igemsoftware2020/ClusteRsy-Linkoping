@@ -13,7 +13,7 @@ mod_MCODE_ui <- function(id){
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
     tags$div(id = "error_name_MCODE_js",
-    textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods.")),
+    textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods.", placeholder = "Module name")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
     radioButtons(

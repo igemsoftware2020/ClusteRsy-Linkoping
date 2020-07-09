@@ -13,7 +13,7 @@ mod_DIAMoND_ui <- function(id){
     uiOutput(ns("input_choice")),
     uiOutput(ns("ppi_choice")),
     tags$div(id = "error_name_DIAMoND_js",
-    textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods.")),
+    textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods.", placeholder = "Module name")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
     sliderInput(ns("seed_weight"), label = "Select Seed Weight", min = 0, max = 50, value = 25, popup = "Additional numeric parameter to assign weight for the seed genes."),
