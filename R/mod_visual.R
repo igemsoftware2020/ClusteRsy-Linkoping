@@ -55,21 +55,15 @@ mod_visual_server <- function(input, output, session, con){
       
       enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
       
-      output$enrichment_overview <- DT::renderDataTable({
-        styling <- DT:::DT2BSClass(c('compact', 'hover'))
-        DT::datatable(enrichment_objects, 
-                      class = styling,
-                      selection = "single",
-                      options = list(
-                        scrollX = TRUE,
-                        scrollY = TRUE,
-                        dom = 't')
-        )
-      })
-      
-    } else {
-      return(NULL)
-    }
+      output$enrichment_overview <- DT::datatable(enrichment_objects, 
+                                                  class = 'compact hover',
+                                                  selection = "single",
+                                                  options = list(
+                                                    scrollX = TRUE,
+                                                    scrollY = TRUE,
+                                                    dom = 't')
+      )
+      }
   })
   
 
@@ -85,51 +79,17 @@ mod_visual_server <- function(input, output, session, con){
                         tabPanel("Enrichment map", mod_enrichment_map_ui(ns("enrichment_map_ui_1"))),
                         tabPanel("Gene-concep network"),
                         tabPanel("Heatmap"),
-                        tabPanel("Results",  mod_enrichment_results_ui(ns("enrichment_results_ui_1")))
-            )
-      )
-        )
-      )
-    })
+                        tabPanel("Results",  mod_enrichment_results_ui(ns("enrichment_results_ui_1")))))))
+      })
     output$parameters <- renderUI({
-      tagList(
-      #Parameters
-        tags$h3(class = "text-center",
-                "Select parameters"),
-      #Dot plot
-        selectInput(ns("xaxis"),
-                    label = "X-axis",
-                    choices = c("GeneRatio", "Count")),
-        selectInput(ns("color"),
-                    label = "Color",
-                    choices = c("pvalue", "p.adjust", "qvalue")),
-        sliderInput(ns("showcategory"), 
-                    label = "Number of enriched terms to display",
-                    min = 5,
-                    max = 50,
-                    value = 10),
-        textInput(ns("title"), 
-                  label = "Title")
-      )
+      mod_dot_plot_para_ui(ns("dot_plot_para_ui_1"))
+      })
     })
-  })
   
-  
+  dot_plot_para_ui_1 <- callModule(mod_dot_plot_para_server, "dot_plot_para_ui_1")
   callModule(mod_enrichment_results_server, "enrichment_results_ui_1", selected, con = con)
   callModule(mod_enrichment_map_server, "enrichment_map_ui_1", selected, con = con)
-  callModule(mod_dot_plot_server, "dot_plot_ui_1", parameters, selected, con = con)
-  
-  #Returning the parameter list to the dot_plot module. This needs to be here.
-  return(
-    parameters <- list(
-      xaxis = reactive({input$xaxis}),
-      color = reactive({input$color}),
-      showcategory = reactive({input$showcategory}),
-      plot_title = reactive({input$title})
-      
-    )
-  )
-  
+  callModule(mod_dot_plot_server, "dot_plot_ui_1", dot_plot_para_ui_1, selected, con = con)
 }
 
 ## To be copied in the UI

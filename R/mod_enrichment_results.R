@@ -24,8 +24,8 @@ mod_enrichment_results_server <- function(input, output, session, selected, con)
     output$enrichment_results <- DT::renderDataTable({
       
       
-      enrichment_object <- MODifieRDB::enrichment_object_from_db(con,
-                                                                 selected$selected_object
+      enrichment_object <- MODifieRDB::enrichment_object_from_db(selected$selected_object,
+                                                                 con
       )
       
       enrichment_results <- enrichment_object@result[c("Description", "GeneRatio", "BgRatio", "pvalue", "p.adjust", "qvalue", "Count")]

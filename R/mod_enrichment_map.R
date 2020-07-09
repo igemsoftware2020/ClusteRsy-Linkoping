@@ -25,8 +25,8 @@ mod_enrichment_map_server <- function(input, output, session, selected, con){
   
   
   output$enrichment_plot <- renderPlot({
-    enrichment_object <- MODifieRDB::enrichment_object_from_db(con,
-                                                               selected$selected_object
+    enrichment_object <- MODifieRDB::enrichment_object_from_db(selected$selected_object,
+                                                               con
     )
     
     enrichplot::emapplot(enrichment_object, showCategory = 30, color = "pvalue",  layout = "kk")
