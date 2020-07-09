@@ -63,12 +63,12 @@ mod_enrichDO_server <- function(input, output, session, con, Description1_ui_1){
     
     enrichment_object <- try(DOSE::enrichDO(gene = module_genes,
                                                ont = "DO",
-                                               pvalueCutoff = input$pvaluecutoff,
-                                               pAdjustMethod = input$padjustmethod,
+                                               pvalueCutoff = input$pvalueCutoff,
+                                               pAdjustMethod = input$pAdjustMethod,
                                                universe = background_genes,
                                                minGSSize = input$mingssize,
                                                maxGSSize = input$maxgssize,
-                                               qvalueCutoff = input$qvaluecutoff,
+                                               qvalueCutoff = input$qvalueCutoff,
                                                readable = FALSE
                                                
     )
@@ -78,7 +78,7 @@ mod_enrichDO_server <- function(input, output, session, con, Description1_ui_1){
         tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
       })
     } else {
-      enrichDO_module$enrich <- enrichment_object  
+      enrichDO_module$enrich <- input$load_input 
       module_name <- input$module_object
       MODifieRDB::enrichment_object_to_db(enrichment_object,
                                           module_name = module_name, 
