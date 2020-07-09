@@ -79,8 +79,15 @@ mod_Columns_server <- function(input, output, session, con){
   Description1_ui_1 <- callModule(mod_Description1_server, "Description1_ui_1", con = con, upload_ui_1)
   disease_analysis_ui_1 <- callModule(mod_disease_analysis_server, "disease_analysis_ui_1", con = con, Description1_ui_1)
   
+  observeEvent(upload_ui_1$input_name,{
+    Columns_module$input_name <- upload_ui_1$input_name
+  })
   
-  observeEvent(disease_analysis_ui_1$enrich,{
+  observeEvent(Description1_ui_1$module_name,{
+    Columns_module$module_name <- Description1_ui_1$module_name
+  })
+  
+  observeEvent(disease_analysis_ui_1$enrich, {
     Columns_module$enrich <- disease_analysis_ui_1$enrich
   })
   

@@ -64,6 +64,11 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1)
                                       object_name = input_name,
                                       con = con)
     
+    # Refresh
+    input_objects <- MODifieRDB::get_available_input_objects(con)
+    output$input_overview <- DT::renderDataTable(input_objects,
+                                                 selection = list(selected = c(1)))
+    
   })
   
   input_objects <- MODifieRDB::get_available_input_objects(con)
@@ -74,7 +79,6 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1)
   
   # Refresh DT
   observeEvent(Columns_ui_1$input_name, {
-    print("Hello")
     input_objects <- MODifieRDB::get_available_input_objects(con)
     
     output$input_overview <- DT::renderDataTable(input_objects,

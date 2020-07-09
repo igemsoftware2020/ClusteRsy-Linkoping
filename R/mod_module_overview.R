@@ -17,7 +17,6 @@ mod_module_overview_ui <- function(id){
              uiOutput(ns("module_name_chooser"))),
              tags$br(),
              tags$div(`class`="col-sm-4", style = "text-align:right",
-                      actionButton(ns("refresh"), HTML("<i class='fa fa-refresh' aria-hidden='true'></i> Refresh")),
                       downloadButton(ns("download_module"), "Download"),
                       actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true"))))
   )
@@ -26,7 +25,7 @@ mod_module_overview_ui <- function(id){
 #' module_overview Server Function
 #'
 #' @noRd 
-mod_module_overview_server <- function(input, output, session, con){
+mod_module_overview_server <- function(input, output, session, con, Columns_ui_1){
   ns <- session$ns
   
   #Reactive funciton for fileinput
@@ -65,6 +64,11 @@ mod_module_overview_server <- function(input, output, session, con){
     MODifieRDB::MODifieR_object_to_db(MODifieR_object = module,
                                       object_name = module_name,
                                       con = con)
+    
+    # Refresh
+    module_objects <- MODifieRDB::get_available_module_objects(con)
+    output$module_overview <- DT::renderDataTable(module_objects,
+                                                  selection = list(selected = c(1)))
   })
   
   module_objects <- MODifieRDB::get_available_module_objects(con)
@@ -74,7 +78,7 @@ mod_module_overview_server <- function(input, output, session, con){
                                                 selection = list(selected = c(1)))
   
   # Refresh DT
-  observeEvent(input$refresh, {
+  observeEvent(Columns_ui_1$module_name, {
     module_objects <- MODifieRDB::get_available_module_objects(con)
     
     output$module_overview <- DT::renderDataTable(module_objects,

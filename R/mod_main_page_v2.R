@@ -42,8 +42,8 @@ mod_main_page_v2_server <- function(input, output, session){
   
   callModule(mod_welcoming_page_server, "welcoming_page_ui_1")
   callModule(mod_visual_server, "visual_ui_1", con = con)
-  callModule(mod_input_overview_server, "input_overview_ui_1", con = con)
-  callModule(mod_module_overview_server, "module_overview_ui_1", con = con)
+  callModule(mod_input_overview_server, "input_overview_ui_1", con = con, Columns_ui_1)
+  callModule(mod_module_overview_server, "module_overview_ui_1", con = con, Columns_ui_1)
   callModule(mod_enrichment_overview_server, "enrichment_overview_ui_1", con = con)
   callModule(mod_ppi_networks_server, "ppi_networks_ui_1", con = con)
 }
