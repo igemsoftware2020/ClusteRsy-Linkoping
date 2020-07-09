@@ -91,6 +91,8 @@ mod_enrichGO_server <- function(input, output, session, con, Description1_ui_1){
   ns <- session$ns
   
   enrichGO_module <- reactiveValues()
+  x <- reactiveVal(1) # Reactive value to record if the input button is pressed
+  
   
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
@@ -127,7 +129,7 @@ mod_enrichGO_server <- function(input, output, session, con, Description1_ui_1){
         tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
       })
     } else {
-      enrichGO_module$enrich <- enrichment_object
+      enrichGO_module$enrich <- c(x(), "enrichGO")  # Reactive value to record if the input button is pressed 
       module_name <- input$module_object
       MODifieRDB::enrichment_object_to_db(enrichment_object,
                                           module_name = module_name, 

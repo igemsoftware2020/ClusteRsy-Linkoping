@@ -36,8 +36,101 @@ mod_main_page_v2_server <- function(input, output, session){
     updateNavbarPage(session, "navbar", " ")
   })
   
+  # Reactive values to record the buttons from all enrich methods
+  enrichDGN = reactiveVal("0")
+  enrichDO = reactiveVal("0")
+  enrichGO = reactiveVal("0")
+  enrichKEGG = reactiveVal("0")
+  enrichMKEGG = reactiveVal("0")
+  enrichNCG = reactiveVal("0")
+  groupGO = reactiveVal("0")
+  gseDGN = reactiveVal("0")
+  gseNCG = reactiveVal("0")
+  gseDO = reactiveVal("0")
+  gseGO = reactiveVal("0")
+  gseMKEGG = reactiveVal("0")
+  gseKEGG = reactiveVal("0")
+
   observeEvent(Columns_ui_1$enrich, {
-    updateNavbarPage(session, "navbar", "Visualization")
+    if (Columns_ui_1$enrich[2] == "enrichDGN"){
+      if (Columns_ui_1$enrich[1] != enrichDGN()){
+        enrichDGN(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "enrichDO"){
+      if (Columns_ui_1$enrich[1] != enrichDO()){
+        enrichDO(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "enrichGO"){
+      if (Columns_ui_1$enrich[1] != enrichGO()){
+        enrichGO(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "enrichKEGG"){
+      if (Columns_ui_1$enrich[1] != enrichKEGG()){
+        enrichKEGG(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "enrichMKEGG"){
+      if (Columns_ui_1$enrich[1] != enrichMKEGG()){
+        enrichMKEGG(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    
+    if (Columns_ui_1$enrich[2] == "enrichNCG"){
+      if (Columns_ui_1$enrich[1] != enrichNCG()){
+        enrichNCG(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "groupGO"){
+      if (Columns_ui_1$enrich[1] != groupGO()){
+        groupGO(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "gseDGN"){
+      if (Columns_ui_1$enrich[1] != gseDGN()){
+        gseDGN(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "gseNCG"){
+      if (Columns_ui_1$enrich[1] != gseNCG()){
+        gseNCG(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "gseDO"){
+      if (Columns_ui_1$enrich[1] != gseDO()){
+        gseDO(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "gseGO"){
+      if (Columns_ui_1$enrich[1] != gseGO()){
+        gseGO(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "gseMKEGG"){
+      if (Columns_ui_1$enrich[1] != gseMKEGG()){
+        gseMKEGG(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "gseKEGG"){
+      if (Columns_ui_1$enrich[1] != gseKEGG()){
+        gseKEGG(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
   })
   
   callModule(mod_welcoming_page_server, "welcoming_page_ui_1")
