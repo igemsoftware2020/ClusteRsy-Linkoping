@@ -27,16 +27,10 @@ mod_enrichment_overview_server <- function(input, output, session, con){
        
        enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
        
-       output$enrichment_overview <- DT::renderDataTable({
-         styling <- DT:::DT2BSClass(c('compact', 'hover'))
-         DT::datatable(enrichment_objects, 
-                       class = styling,
-                       selection = "multiple")
-       })
-       
-     } else {
-       return(NULL)
-     }
+       output$enrichment_overview <- DT::renderDataTable(enrichment_objects, 
+                                                         class = "compact, hover",
+                                                         selection = "multiple")
+       }
    })
    
    # Choose multiple options
@@ -48,9 +42,9 @@ mod_enrichment_overview_server <- function(input, output, session, con){
    retrieve_enrichment_object <- function(){
      selected <- input$enrichment_overview_rows_selected
      if (length(selected) > 1){
-       lapply(current_enrichment_objects(), MODifieRDB::enrichment_object_from_db(selected), con = con)
+       lapply(current_enrichment_objects(), MODifieRDB::enrichment_object_from_db, con = con)
      } else {
-       MODifieRDB::MODifieR_module_from_db(MODifieRDB::enrichment_object_from_db(selected), con = con)
+       MODifieRDB::MODifieR_module_from_db(MODifieRDB::get_available_enrichment_objects(selected ,con))
      }
    }
 

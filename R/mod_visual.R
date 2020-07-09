@@ -55,14 +55,12 @@ mod_visual_server <- function(input, output, session, con){
       
       enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
       
-      output$enrichment_overview <- DT::datatable(enrichment_objects, 
-                                                  class = 'compact hover',
-                                                  selection = "single",
-                                                  options = list(
-                                                    scrollX = TRUE,
-                                                    scrollY = TRUE,
-                                                    dom = 't')
-      )
+      output$enrichment_overview <- DT::renderDataTable(enrichment_objects, 
+                                                        class = 'compact hover',
+                                                        selection = "single",
+                                                        options =  list(scrollX = TRUE,
+                                                                        scrollY = TRUE,
+                                                                        dom = 't'))
       }
   })
   
