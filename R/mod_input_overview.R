@@ -17,7 +17,6 @@ mod_input_overview_ui <- function(id){
              uiOutput(ns("input_name_chooser"))),
              tags$br(),
              tags$div(`class`="col-sm-4", style = "text-align:right",
-                      actionButton(ns("refresh"), HTML("<i class='fa fa-refresh' aria-hidden='true'></i> Refresh")),
                       downloadButton(ns("download_input"), "Download"),
                       actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true"))))
   )
@@ -26,7 +25,7 @@ mod_input_overview_ui <- function(id){
 #' input_overview Server Function
 #'
 #' @noRd 
-mod_input_overview_server <- function(input, output, session, con){
+mod_input_overview_server <- function(input, output, session, con, Columns_ui_1){
   ns <- session$ns
   
   # Reactive function for fileinput
@@ -70,7 +69,8 @@ mod_input_overview_server <- function(input, output, session, con){
                                                selection = list(selected = c(1)))
   
   # Refresh DT
-  observeEvent(input$refresh, {
+  observeEvent(Columns_ui_1$input_name, {
+    print("Hello")
     input_objects <- MODifieRDB::get_available_input_objects(con)
     
     output$input_overview <- DT::renderDataTable(input_objects,
