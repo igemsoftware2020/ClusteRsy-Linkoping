@@ -30,6 +30,9 @@ mod_main_page_v2_ui <- function(id){
 #' @noRd 
 mod_main_page_v2_server <- function(input, output, session){
   ns <- session$ns
+  
+  main_page_v2_module <- reactiveValues()
+  
   con <- MODifieRDB::connect_to_db("./../testdb.db")
   Columns_ui_1 <- callModule(mod_Columns_server, "Columns_ui_1", con = con)
   observeEvent(input$title, {
@@ -52,6 +55,7 @@ mod_main_page_v2_server <- function(input, output, session){
   gseKEGG = reactiveVal("0")
 
   observeEvent(Columns_ui_1$enrich, {
+    main_page_v2_module$enrich <- Columns_ui_1$enrich 
     if (Columns_ui_1$enrich[2] == "enrichDGN"){
       if (Columns_ui_1$enrich[1] != enrichDGN()){
         enrichDGN(Columns_ui_1$enrich[1])
@@ -134,10 +138,10 @@ mod_main_page_v2_server <- function(input, output, session){
   })
   
   callModule(mod_welcoming_page_server, "welcoming_page_ui_1")
-  callModule(mod_visual_server, "visual_ui_1", con = con)
+  callModule(mod_visual_server, "visual_ui_1", con = con, main_page_v2_module)
   callModule(mod_input_overview_server, "input_overview_ui_1", con = con, Columns_ui_1)
   callModule(mod_module_overview_server, "module_overview_ui_1", con = con, Columns_ui_1)
-  callModule(mod_enrichment_overview_server, "enrichment_overview_ui_1", con = con)
+  callModule(mod_enrichment_overview_server, "enrichment_overview_ui_1", con = con, main_page_v2_module)
   callModule(mod_ppi_networks_server, "ppi_networks_ui_1", con = con)
 }
 

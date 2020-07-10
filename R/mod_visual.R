@@ -30,29 +30,33 @@ mod_visual_ui <- function(id){
                   style = "background-color:#FFFFFF;",
     DT::dataTableOutput(ns("enrichment_overview"), width = "auto", height = "auto"), #Data table for plot output
         ),
-    
-    actionButton(ns("refresh"), label = "Refresh"),
     actionButton(ns("analyze"), label = "Analyze"),
     
     #Renders the parameters when analyzed is triggered.
     uiOutput(ns("parameters"))  
       ),
     ),
-    )
+  )
 }
 
 
 #' create_input Server Function
 #'
 #' @noRd 
-mod_visual_server <- function(input, output, session, con){
+mod_visual_server <- function(input, output, session, con, main_page_v2_module){
   ns <- session$ns
   
   selected <- reactiveValues()
   
-  observeEvent(input$refresh, {
-    if(RSQLite::dbExistsTable(con, "enrichment_register")) {
-      
+  # Create an empty table
+  output$enrichment_overview <- DT::renderDataTable(data.frame(module_name = character(), enrichment_method= character()),
+                                                    class = 'compact hover',
+                                                    selection = "single",
+                                                    options =  list(scrollX = TRUE,
+                                                                    scrollY = TRUE,
+                                                                    dom = 't'))
+  
+  observeEvent(main_page_v2_module$enrich, {
       enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
       
       output$enrichment_overview <- DT::renderDataTable(enrichment_objects, 
@@ -61,7 +65,6 @@ mod_visual_server <- function(input, output, session, con){
                                                         options =  list(scrollX = TRUE,
                                                                         scrollY = TRUE,
                                                                         dom = 't'))
-      }
   })
   
 
