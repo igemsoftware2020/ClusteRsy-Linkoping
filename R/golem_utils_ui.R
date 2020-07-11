@@ -306,7 +306,7 @@ textInput <- function(inputId, label, value = "", width = NULL,
       if (tooltip){
         tags$span(
           tags$button(
-            style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; border:none",
+            style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative;",
             class = "badge badge-pill badge-warning",
             type = "button",
             `data-toggle` = "tooltip",
@@ -346,7 +346,7 @@ numericInput <- function(inputId, label, value, min = NA, max = NA, step = NA,
       if (tooltip){
         tags$span(
           tags$button(
-            style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; border:none",
+            style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative;",
             class = "badge badge-pill badge-warning",
             type = "button",
             `data-toggle` = "tooltip",
@@ -400,7 +400,7 @@ tooltip = T, title = "?", popup = "Help tips", pos = "right") {
       if (tooltip){
         tags$span(
           tags$button(
-            style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; border:none",
+            style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative;",
             class = "badge badge-pill badge-warning",
             type = "button",
             `data-toggle` = "tooltip",
@@ -461,7 +461,7 @@ radioButtons <- function(inputId, label, choices = NULL, selected = NULL,
            if (tooltip){
              tags$span(
                tags$button(
-                 style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; border:none",
+                 style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative;",
                  class = "badge badge-pill badge-warning",
                  type = "button",
                  `data-toggle` = "tooltip",
@@ -585,7 +585,7 @@ sliderInput <- function(inputId, label, min, max, value, step = NULL,
                    if (tooltip){
                      tags$span(
                        tags$button(
-                         style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; border:none",
+                         style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative;",
                          class = "badge badge-pill badge-warning",
                          type = "button",
                          `data-toggle` = "tooltip",
@@ -680,7 +680,7 @@ selectInput <- function(inputId, label, choices, selected = NULL,
     if (tooltip){
       tags$span(
         tags$button(
-          style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; border:none",
+          style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative;",
           class = "badge badge-pill badge-warning",
           type = "button",
           `data-toggle` = "tooltip",
@@ -768,7 +768,7 @@ prettySwitch <- function(inputId, label, value = FALSE, status = "default",
         if (tooltip){
           tags$span(
             tags$button(
-              style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; border:none",
+              style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative;",
               class = "badge badge-pill badge-warning",
               type = "button",
               `data-toggle` = "tooltip",
