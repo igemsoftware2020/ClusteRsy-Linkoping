@@ -12,13 +12,14 @@ mod_input_overview_ui <- function(id){
   tagList(
     DT::dataTableOutput(ns("input_overview")),
     tags$div(`class`="row",
-             tags$div(`class`="col-sm-8", style = "color:black",
+             tags$div(`class`="col-sm-10", style = "color:black",
              fileInput(ns("input_object"), label = "Upload an input object", accept = ".rds"),
              uiOutput(ns("input_name_chooser"))),
              tags$br(),
-             tags$div(`class`="col-sm-4", style = "text-align:right",
+             tags$div(`class`="col-sm-2", style = "text-align:right", id ="buttons_input_overview",
                       downloadButton(ns("download_input"), "Download"),
-                      actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true"))))
+                      actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true")))),
+    uiOutput(ns("disable"))
   )
 }
 
@@ -86,16 +87,6 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1)
                                                  selection = list(selected = c(1)))
   })
   
-  # Download function
-  output$download_input <- downloadHandler(
-    filename = function() {
-      paste0("input_set_", Sys.Date(), ".rds", sep="")
-    },
-    content = function(file) {
-      saveRDS(retrieve_input(), file)
-    }
-  )
-  
   # Choose multiple options
   current_inputs <- function() {
     selected <- input$input_overview_rows_selected
@@ -110,6 +101,32 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1)
       MODifieRDB::MODifieR_input_from_db(input_objects$input_name[selected], con = con)
     }
   }
+  
+  # Download function
+  output$download_input <- downloadHandler(
+    filename = function() {
+      paste0("input_set_", Sys.Date(), ".rds", sep="")
+    },
+    content = function(file) {
+      saveRDS(retrieve_input(), file)
+    }
+  )
+  
+  observe({
+    if(is.null(input$input_overview_rows_selected)) {
+      output$disable <- renderUI({
+        tags$script((HTML("document.getElementById('main_page_v2_ui_1-input_overview_ui_1-download_input').style.pointerEvents = 'none';
+                         document.getElementById('main_page_v2_ui_1-input_overview_ui_1-delete').style.pointerEvents = 'none';
+                         document.getElementById('buttons_input_overview').style.cursor = 'not-allowed';")))
+      }) 
+    } else {
+      output$disable <- renderUI({
+        tags$script((HTML("document.getElementById('main_page_v2_ui_1-input_overview_ui_1-download_input').style.pointerEvents = 'auto';
+                          document.getElementById('main_page_v2_ui_1-input_overview_ui_1-delete').style.pointerEvents = 'auto';
+                          document.getElementById('buttons_input_overview').style.cursor = 'default';")))
+      }) 
+    }
+  })
   
   # Delete input object
   observeEvent(input$delete, {

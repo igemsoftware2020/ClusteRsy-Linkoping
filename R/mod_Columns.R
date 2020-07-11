@@ -11,7 +11,7 @@ mod_Columns_ui <- function(id){
   ns <- NS(id)
   tagList(
     # Number container
-    tags$div(`class`="row",
+    tags$div(`class`="row", style = "margin-right:-15px; margin-left:-15px;",
              tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
                       tags$form(class = "well", style = "background-color: inherit",
                                 tags$h2(class = "text-center",
