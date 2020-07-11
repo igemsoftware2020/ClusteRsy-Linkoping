@@ -67,7 +67,7 @@ mod_gseNCG_server <- function(input, output, session, con, Description1_ui_1){
     gene_list <- get_sorted_module_genes(input$module_object, con = con)
    
     gse_object <- try(DOSE::gseNCG(
-                                  geneList = genes,
+                                  geneList = gene_list,
                                   exponent = input$exponent,
                                   nPerm = input$nperm,
                                   pvalueCutoff = input$pvaluecutoff,
