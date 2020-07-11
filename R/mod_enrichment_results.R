@@ -27,21 +27,20 @@ mod_enrichment_results_server <- function(input, output, session, selected, con)
     
     output$enrichment_results <- DT::renderDataTable({object()},
                                                      options = list(
-                                                     filter = "top", 
-                                                     class = 'compact cell-border hover',
-                                                     style = "default",
-                                                     extensions = 'Buttons',
-                                                     paging = TRUE,
-                                                     searching = TRUE,
-                                                     scrollX = TRUE,
-                                                     scrollY = TRUE,
-                                                     #fixedColumns = FALSE,
-                                                     autoWidth = FALSE,
-                                                     ordering = TRUE,
-                                                     dom = 'Bfrtip',
-                                                     buttons = c('copy', 'csv', 'excel')
-                                                     )
-                                                     )
+                                                       rownames = FALSE,
+                                                       filter = "top", 
+                                                       class = 'compact cell-border hover',
+                                                       style = "default",
+                                                       extensions = 'Buttons',
+                                                       paging = TRUE,
+                                                       searching = TRUE,
+                                                       scrollX = TRUE,
+                                                       scrollY = TRUE,
+                                                       #fixedColumns = FALSE,
+                                                       autoWidth = FALSE,
+                                                       ordering = TRUE,
+                                                       dom = 'Bfrtip',
+                                                       buttons = c('copy', 'csv', 'excel')))
 }
     
 ## To be copied in the UI

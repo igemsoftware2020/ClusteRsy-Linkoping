@@ -28,12 +28,11 @@ mod_main_page_v2_ui <- function(id){
 #' main_page_v2 Server Function
 #'
 #' @noRd 
-mod_main_page_v2_server <- function(input, output, session){
+mod_main_page_v2_server <- function(input, output, session, con){
   ns <- session$ns
   
   main_page_v2_module <- reactiveValues()
   
-  con <- MODifieRDB::connect_to_db("./../testdb.db")
   Columns_ui_1 <- callModule(mod_Columns_server, "Columns_ui_1", con = con)
   observeEvent(input$title, {
     updateNavbarPage(session, "navbar", " ")

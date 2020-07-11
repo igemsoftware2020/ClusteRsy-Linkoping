@@ -28,7 +28,10 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
   ns <- session$ns
   
   # Create an empty table
-  output$enrichment_overview <- DT::renderDataTable(data.frame(module_name = character(), enrichment_method= character()))
+  enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
+  
+  output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
+                                                    selection = list(selected = c(1)))
   
   #Reactive funciton for fileinput
   upload_enrichment <- reactive({

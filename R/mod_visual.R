@@ -49,7 +49,9 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
   selected <- reactiveValues()
   
   # Create an empty table
-  output$enrichment_overview <- DT::renderDataTable(data.frame(module_name = character(), enrichment_method= character()),
+  enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
+  
+  output$enrichment_overview <- DT::renderDataTable(enrichment_objects, 
                                                     class = 'compact hover',
                                                     selection = "single",
                                                     options =  list(scrollX = TRUE,
