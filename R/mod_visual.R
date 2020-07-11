@@ -50,11 +50,11 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
   
   # Create an empty table
   enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
-  
+  colnames(enrichment_objects) <- c("Module name", "Enrichment method")
   output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
                                                     rownames = FALSE,
                                                     class = 'compact hover',
-                                                    selection = "single",
+                                                    selection = list(selected = c(1), "single" ),
                                                     options =  list(scrollX = TRUE,
                                                                     scrollY = TRUE,
                                                                     dom = 't'))
@@ -65,7 +65,7 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
       output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
                                                         rownames = FALSE,
                                                         class = 'compact hover',
-                                                        selection = "single",
+                                                        selection = list(selected = c(1), "single" ),
                                                         options =  list(scrollX = TRUE,
                                                                         scrollY = TRUE,
                                                                         dom = 't'))
@@ -78,7 +78,7 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
     output$results_ui <- renderUI({
       tagList(
         fluidPage(
-          mainPanel( width = 12,
+          mainPanel( width = 12, style = "padding-left: 0px; padding-right: 0px;",
             tabsetPanel(type = "tabs",
                         tabPanel("Dot plot", mod_dot_plot_ui(ns("dot_plot_ui_1"))),
                         tabPanel("Bar plot"),

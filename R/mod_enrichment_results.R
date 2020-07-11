@@ -24,23 +24,23 @@ mod_enrichment_results_server <- function(input, output, session, selected, con)
   object <- reactive({
     MODifieRDB::enrichment_object_from_db(selected$selected_object,con)@result[c("Description", "GeneRatio", "BgRatio", "pvalue", "p.adjust", "qvalue", "Count")]
   })    
-    
-    output$enrichment_results <- DT::renderDataTable({object()},
-                                                     rownames = FALSE,
-                                                     filter = "top", 
-                                                     class = 'compact cell-border hover',
-                                                     style = "default",
-                                                     extensions = 'Buttons',
-                                                     options = list(
-                                                       paging = TRUE,
-                                                       searching = TRUE,
-                                                       scrollX = TRUE,
-                                                       scrollY = TRUE,
-                                                       #fixedColumns = FALSE,
-                                                       autoWidth = FALSE,
-                                                       ordering = TRUE,
-                                                       dom = 'Bfrtip',
-                                                       buttons = c('copy', 'csv', 'excel')))
+  
+  output$enrichment_results <- DT::renderDataTable({object()},
+                                                   rownames = FALSE,
+                                                   filter = "top", 
+                                                   class = 'compact cell-border hover',
+                                                   style = "default",
+                                                   extensions = 'Buttons',
+                                                   options = list(
+                                                     paging = TRUE,
+                                                     searching = TRUE,
+                                                     scrollX = TRUE,
+                                                     scrollY = TRUE,
+                                                     #fixedColumns = FALSE,
+                                                     autoWidth = FALSE,
+                                                     ordering = TRUE,
+                                                     dom = "lfrtipB",
+                                                     buttons = c('copy', 'csv', 'excel')))
 }
     
 ## To be copied in the UI
