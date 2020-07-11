@@ -87,9 +87,9 @@ mod_gseNCG_server <- function(input, output, session, con, Description1_ui_1){
     } else {
       gseNCG_module$enrich <- c(x(), "gseNCG")  # Reactive value to record if the input button is pressed
       module_name <- input$module_object
-      MODifieRDB::enrichment_object_to_db(enrichment_object,
+      MODifieRDB::enrichment_object_to_db(gse_object,
                                           module_name = module_name, 
-                                          enrichment_method = "gseNCG", 
+                                          enrichment_method = gse_object@setType, 
                                           con = con)
     }
     # Close loading modal

@@ -55,7 +55,7 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     input$module_name
   })
   
-  # Upload module
+  # Upload enrichment
   observeEvent(input$upload_enrichment, {
     id <- showNotification("Saving module object to database", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
@@ -73,7 +73,7 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
                                                   selection = list(selected = c(1)))
   })
   
-  # Redner DT
+  # Render DT
   observeEvent(main_page_v2_module$enrich, {
     enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
     
