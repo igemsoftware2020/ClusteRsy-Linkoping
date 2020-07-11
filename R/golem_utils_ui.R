@@ -787,6 +787,38 @@ prettySwitch <- function(inputId, label, value = FALSE, status = "default",
   shinyWidgets:::attachShinyWidgetsDep(switchTag, "pretty")
 }
 
+absolutePanel <- function(...,
+                          top = NULL, left = NULL, right = NULL, bottom = NULL,
+                          width = NULL, height = NULL,
+                          draggable = FALSE, fixed = FALSE,
+                          cursor = c('auto', 'move', 'default', 'inherit')) {
+  cssProps <- list(
+    top = top,
+    left = left,
+    right = right,
+    bottom = bottom,
+    width = width,
+    height = height
+  )
+  cssProps <- cssProps[!sapply(cssProps, is.null)]
+  cssProps <- sapply(cssProps, validateCssUnit)
+  cssProps[['position']] <- ifelse(fixed, 'fixed', 'absolute')
+  cssProps[['cursor']] <- match.arg(cursor)
+  if (identical(cssProps[['cursor']], 'auto'))
+    cssProps[['cursor']] <- ifelse(draggable, 'move', 'inherit')
+  
+  style <- paste(paste(names(cssProps), cssProps, sep = ':', collapse = ';'), ';', sep='')
+  divTag <- tags$div(style=style, ...)
+  if (isTRUE(draggable)) {
+    divTag <- tagAppendAttributes(divTag, class='draggable')
+    return(tagList(
+      divTag,
+      tags$script('$(".draggable").draggable();')
+    ))
+  } else {
+    return(divTag)
+  }
+}
 
 # UNCOMMENT AND USE 
 # 
