@@ -67,14 +67,12 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     
     # Refresh
     module_objects <- MODifieRDB::get_available_module_objects(con)
-    colnames(module_objects) <- c("Module name", "Input name", "Module Type", "PPI name")
     output$module_overview <- DT::renderDataTable(module_objects,
                                                   rownames = FALSE,
                                                   selection = list(selected = c(1)))
   })
   
   module_objects <- MODifieRDB::get_available_module_objects(con)
-  colnames(module_objects) <- c("Module name", "Input name", "Module Type", "PPI name")
   # Render DT
   output$module_overview <- DT::renderDataTable(module_objects,
                                                 rownames = FALSE,
@@ -83,7 +81,6 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   # Refresh DT
   observeEvent(Columns_ui_1$module_name, {
     module_objects <- MODifieRDB::get_available_module_objects(con)
-    colnames(module_objects) <- c("Module name", "Input name", "Module Type", "PPI name")
     output$module_overview <- DT::renderDataTable(module_objects,
                                                   rownames = FALSE,
                                                   selection = list(selected = c(1)))
@@ -114,13 +111,17 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     }
   )
   
+  # Observe if valid to download
+  observe({
+    print(input$module_overview_rows_selected)
+  })
+  
   # Delete module object
   observeEvent(input$delete, {
     id <- showNotification("Deleting", duration = NULL, closeButton = FALSE)
     on.exit(removeNotification(id), add = TRUE)
     # Required for selecting
     module_objects <- MODifieRDB::get_available_module_objects(con)
-    colnames(module_objects) <- c("Module name", "Input name", "Module Type", "PPI name")
     output$module_overview <- DT::renderDataTable(module_objects,
                                                   rownames = FALSE,
                                                   selection = list(selected = c(1)))
@@ -135,7 +136,6 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     
     # Refresh
     module_objects <- MODifieRDB::get_available_module_objects(con)
-    colnames(module_objects) <- c("Module name", "Input name", "Module Type", "PPI name")
     output$module_overview <- DT::renderDataTable(module_objects,
                                                   rownames = FALSE,
                                                   selection = list(selected = c(1)))

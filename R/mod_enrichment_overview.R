@@ -29,7 +29,6 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
   
   # Create a table
   enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
-  colnames(enrichment_objects) <- c("Module name", "Enrichment method")
   output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
                                                     rownames = FALSE,
                                                     selection = list(selected = c(1)))
@@ -66,7 +65,6 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     
     # Refresh
     enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
-    colnames(enrichment_objects) <- c("Module name", "Enrichment method")
     output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
                                                       rownames = FALSE,
                                                       selection = list(selected = c(1)))
@@ -75,7 +73,6 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
   # Render DT
   observeEvent(main_page_v2_module$enrich, {
     enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
-    colnames(enrichment_objects) <- c("Module name", "Enrichment method")
     output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
                                                       rownames = FALSE,
                                                       selection = list(selected = c(1)))
