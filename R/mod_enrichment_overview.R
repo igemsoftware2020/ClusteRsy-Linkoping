@@ -45,14 +45,8 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
   output$enrichment_name_chooser <- renderUI({
     module <- upload_enrichment() #reactive pop up
     tagList( 
-      textInput(ns("module_name"), "Module object name", placeholder = "Module name"),
       actionButton(ns("upload_enrichment"), "Add enrichment object to database")
     )
-  })
-  
-  # Name reactive
-  module_name <- reactive({
-    input$module_name
   })
   
   # Upload enrichment
@@ -60,7 +54,6 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     id <- showNotification("Saving module object to database", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     enrichment <- upload_enrichment()
-    module_name <- module_name()
     
     # MODifieRDB::enrichment_object_to_db(enrichment_object = enrichment,
     #                                     module_name = module_name, 
