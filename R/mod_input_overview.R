@@ -66,22 +66,26 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1)
     
     # Refresh
     input_objects <- MODifieRDB::get_available_input_objects(con)
+    colnames(input_objects) <- c("Input name", "Input Type")
     output$input_overview <- DT::renderDataTable(input_objects,
+                                                 rownames = FALSE,
                                                  selection = list(selected = c(1)))
     
   })
   
   input_objects <- MODifieRDB::get_available_input_objects(con)
-  
+  colnames(input_objects) <- c("Input name", "Input Type")
   # Render DT
   output$input_overview <- DT::renderDataTable(input_objects,
+                                               rownames = FALSE,
                                                selection = list(selected = c(1)))
   
   # Refresh DT
   observeEvent(Columns_ui_1$input_name, {
     input_objects <- MODifieRDB::get_available_input_objects(con)
-    
+    colnames(input_objects) <- c("Input name", "Input Type")
     output$input_overview <- DT::renderDataTable(input_objects,
+                                                 rownames = FALSE,
                                                  selection = list(selected = c(1)))
   })
   
@@ -116,7 +120,9 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1)
     on.exit(removeNotification(id), add = TRUE)
     # Required for selecting
     input_objects <- MODifieRDB::get_available_input_objects(con)
+    colnames(input_objects) <- c("Input name", "Input Type")
     output$input_overview <- DT::renderDataTable(input_objects,
+                                                 rownames = FALSE,
                                                  selection = list(selected = c(1)))
     
     
@@ -130,8 +136,10 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1)
     
     # Refresh
     input_objects <- MODifieRDB::get_available_input_objects(con)
+    colnames(input_objects) <- c("Input name", "Input Type")
     output$input_overview <- DT::renderDataTable(input_objects,
-                                                  selection = list(selected = c(1)))
+                                                 rownames = FALSE,
+                                                 selection = list(selected = c(1)))
   })
  
 }
