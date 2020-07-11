@@ -11,7 +11,9 @@ mod_enrichment_overview_ui <- function(id){
   ns <- NS(id)
   tagList(
     DT::dataTableOutput(ns("enrichment_overview")),
-    downloadButton(ns("download_enrichment"), label = "Download")
+    tags$div(style = "text-align:right",
+             tags$br(),
+             downloadButton(ns("download_enrichment"), label = "Download"))
   )
 }
     
@@ -25,13 +27,10 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
   output$enrichment_overview <- DT::renderDataTable(data.frame(module_name = character(), enrichment_method= character()))
   
   observeEvent(main_page_v2_module$enrich, {
-   if(RSQLite::dbExistsTable(con, "enrichment_register")) {
-     
      enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
      
      output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
                                                        selection = list(selected = c(1)))
-     }
  })
    
   # Choose multiple options
