@@ -22,22 +22,15 @@ mod_enrichment_map_para_ui <- function(id){
                 min = 5,
                 max = 50,
                 value = 10),
-    selectInput(ns("layout"), 
+    selectInput(ns("layout"),
+                label = "Layout",
                 choices = c("kk",
                             "nicely")),
-    sliderInput(ns("pie_scalue"), 
-                label = "Scale of pie plot", 
-                min = 0.1,
-                max = 5,
-                value = 1),
-    sliderInput(ns("line_scale"),
-                label = "Scale of line width",
-                min = 0.1,
-                max = 5,
-                value =1),
-    textInput(ns("title"), 
-              label = "Title")
+   textInput(ns("title"),
+             label = "Title")
+              
   )
+  
 }
     
 #' enrichment_map_para Server Function
@@ -47,12 +40,10 @@ mod_enrichment_map_para_server <- function(input, output, session){
   ns <- session$ns
   enrichment_map_para_module <- reactiveValues()
   observe({
-    enrichment_map_module$color <- input$color
-    enrichment_map_module$showcategory <- input$showcategory
-    enrichment_map_module$layout <- input$layout
-    enrichment_map_module$pie_scale <- input$pie_scale
-    enrichment_map_module$line_scale <- input$line_scale
-    enrichment_map_module$title <- input$title
+    enrichment_map_para_module$color <- input$color
+    enrichment_map_para_module$showcategory <- input$showcategory
+    enrichment_map_para_module$layout <- input$layout
+    enrichment_map_para_module$title <- input$title
   })
   
   return(enrichment_map_para_module)
