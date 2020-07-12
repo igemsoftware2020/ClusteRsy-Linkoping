@@ -74,7 +74,6 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
 
   observeEvent(input$analyze, {
     selected$selected_object <- input$enrichment_overview_rows_selected
-    if(RSQLite::dbExistsTable(con, "enrichment_register")) {
     output$results_ui <- renderUI({
       tagList(
         fluidPage(
@@ -90,11 +89,6 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
     output$parameters <- renderUI({
       mod_dot_plot_para_ui(ns("dot_plot_para_ui_1"))
       })
-    } else {
-      #This should be replaced with the same container type as the "click me to learn more" one. 
-      #There should be a link that sends the user back to the first page if they don't have any data.
-      showNotification("No data to visualize", duration = NULL, closeButton = TRUE, type = "warning")
-    }
     })
   
   dot_plot_para_ui_1 <- callModule(mod_dot_plot_para_server, "dot_plot_para_ui_1")
