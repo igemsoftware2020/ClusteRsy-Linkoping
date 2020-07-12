@@ -44,7 +44,6 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
   
   # Create a table
   enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
-  colnames(enrichment_objects) <- c("Module name", "Enrichment method")
   output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
                                                     rownames = FALSE,
                                                     class = 'compact hover',
@@ -55,7 +54,6 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
   # Updating the DT when a new enrichment object is created.
   observeEvent(main_page_v2_module$enrich, {
       enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
-      
       output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
                                                         rownames = FALSE,
                                                         class = 'compact hover',
