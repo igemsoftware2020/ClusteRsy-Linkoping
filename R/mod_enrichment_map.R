@@ -10,27 +10,34 @@
 mod_enrichment_map_ui <- function(id){
   ns <- NS(id)
   tagList(
- plotOutput(ns("enrichment_plot")),
- # selectInput(ns("color"), 
- #             choices = c())
+    plotOutput(ns("enrichment_map"))
   )
 }
     
 #' enrichment_map Server Function
 #'
 #' @noRd 
-mod_enrichment_map_server <- function(input, output, session, selected, con){
+mod_enrichment_map_server <- function(input, output, session, enrichment_map_para_ui_1, selected, con){
   ns <- session$ns
   
   
-  
-  output$enrichment_plot <- renderPlot({
-    enrichment_object <- MODifieRDB::enrichment_object_from_db(selected$selected_object,
-                                                               con
-    )
+  enrichment_map <- reactive({
     
-    enrichplot::emapplot(enrichment_object, showCategory = 30, color = "pvalue",  layout = "kk")
+    enrichment_object <- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
+    
+    p <- enrichplot::emapplot(x = enrichment_object,
+                              showCategory = enrichment_map_para_ui_1$showcategory,
+                              color = enrichment_map_para_ui_1$color,
+                              layout = enrichment_map_para_ui_1$layout
+                              ) + ggplot2::ggtitle(enrichment_map_para_ui_1$title)
+                              
+    return(p)
   })
+  
+  output$enrichment_map <- renderPlot({
+    enrichment_map() #calling the reactive plot
+  })
+  
 }
     
 ## To be copied in the UI

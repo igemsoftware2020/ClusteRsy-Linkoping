@@ -28,8 +28,8 @@ mod_visual_ui <- function(id){
     uiOutput(ns("disable")),
     #Renders the parameters when analyzed is triggered.
     uiOutput(ns("parameters"))  
-      ),
-    ),
+      )
+    )
   )
 }
 
@@ -52,14 +52,14 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
                                                     options =  list(scrollX = TRUE,
                                                                     scrollY = TRUE,
                                                                     dom = 't'))
-  # Update table
+  # Updating the DT when a new enrichment object is created.
   observeEvent(main_page_v2_module$enrich, {
       enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
       
       output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
                                                         rownames = FALSE,
                                                         class = 'compact hover',
-                                                        selection = list(selected = c(1), "single" ),
+                                                        selection = list(selected =c(1), "single"),
                                                         options =  list(scrollX = TRUE,
                                                                         scrollY = TRUE,
                                                                         dom = 't'))
@@ -81,33 +81,52 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
 
   observeEvent(input$analyze, {
     selected$selected_object <- input$enrichment_overview_rows_selected
-    if(RSQLite::dbExistsTable(con, "enrichment_register")) {
-    output$results_ui <- renderUI({
-      tagList(
-        fluidPage(
-          mainPanel( width = 12, style = "padding-left: 0px; padding-right: 0px;",
-            tabsetPanel(type = "tabs",
-                        tabPanel("Dot plot", mod_dot_plot_ui(ns("dot_plot_ui_1"))),
-                        tabPanel("Bar plot"),
-                        tabPanel("Enrichment map", mod_enrichment_map_ui(ns("enrichment_map_ui_1"))),
-                        tabPanel("Gene-concep network"),
-                        tabPanel("Heatmap"),
-                        tabPanel("Results",  mod_enrichment_results_ui(ns("enrichment_results_ui_1")))))))
-      })
-    output$parameters <- renderUI({
-      mod_dot_plot_para_ui(ns("dot_plot_para_ui_1"))
-      })
-    } else {
-      #This should be replaced with the same container type as the "click me to learn more" one. 
-      #There should be a link that sends the user back to the first page if they don't have any data.
-      showNotification("No data to visualize", duration = NULL, closeButton = TRUE, type = "warning")
-    }
+     output$results_ui <- renderUI({
+       tagList(
+         fluidPage(
+             tabsetPanel(id = ns("tabs"),
+                         type = "tabs",
+                         tabPanel(title = "Dot plot", mod_dot_plot_ui(ns("dot_plot_ui_1"))),
+                         tabPanel(title = "Bar plot"),
+                         tabPanel(title = "Enrichment map", mod_enrichment_map_ui(ns("enrichment_map_ui_1"))),
+                         tabPanel(title = "Gene-concept network"),
+                         tabPanel(title = "Heatmap"),
+                         tabPanel(title = "Results",  mod_enrichment_results_ui(ns("enrichment_results_ui_1"))))))
+    
+       })
     })
   
+  #Calling the parameters to the absolutePanel
+  observeEvent(input$tabs, {
+    output$parameters <- renderUI({
+      
+      if (input$tabs == "Dot plot") {
+        mod_dot_plot_para_ui(ns("dot_plot_para_ui_1"))
+      } else if (input$tabs == "Bar plot"){
+        
+      } else if (input$tabs == "Enrichment map") {
+        mod_enrichment_map_para_ui(ns("enrichment_map_para_ui_1"))
+      } else if (input$tabs == "Gene-concept network") {
+        
+      } else if (input$tabs == "Heatmap") {
+        
+      } else if (input$tabs == "Results") {
+        
+      }
+    }) 
+  })
+  
+ 
+  
+  #Parameter modules server call
   dot_plot_para_ui_1 <- callModule(mod_dot_plot_para_server, "dot_plot_para_ui_1")
-  callModule(mod_enrichment_results_server, "enrichment_results_ui_1", selected, con = con)
-  callModule(mod_enrichment_map_server, "enrichment_map_ui_1", selected, con = con)
+  enrichment_map_para_ui_1 <- callModule(mod_enrichment_map_para_server, "enrichment_map_para_ui_1")
+  
+  #Plot modules servercall
   callModule(mod_dot_plot_server, "dot_plot_ui_1", dot_plot_para_ui_1, selected, con = con)
+  callModule(mod_enrichment_map_server, "enrichment_map_ui_1",enrichment_map_para_ui_1, selected, con = con)
+  callModule(mod_enrichment_results_server, "enrichment_results_ui_1", selected, con = con)
+  
 }
 
 ## To be copied in the UI
