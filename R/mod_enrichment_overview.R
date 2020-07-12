@@ -27,8 +27,11 @@ mod_enrichment_overview_ui <- function(id){
 mod_enrichment_overview_server <- function(input, output, session, con, main_page_v2_module){
   ns <- session$ns
   
-  # Create an empty table
-  output$enrichment_overview <- DT::renderDataTable(data.frame(module_name = character(), enrichment_method= character()))
+  # Create a table
+  enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
+  output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
+                                                    rownames = FALSE,
+                                                    selection = list(selected = c(1)))
   
   #Reactive funciton for fileinput
   upload_enrichment <- reactive({
@@ -63,14 +66,15 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     # Refresh
     enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
     output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
-                                                  selection = list(selected = c(1)))
+                                                      rownames = FALSE,
+                                                      selection = list(selected = c(1)))
   })
   
   # Render DT
   observeEvent(main_page_v2_module$enrich, {
     enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
-    
     output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
+                                                      rownames = FALSE,
                                                       selection = list(selected = c(1)))
   })
   

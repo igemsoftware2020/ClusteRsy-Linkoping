@@ -56,6 +56,7 @@ mod_ppi_networks_server <- function(input, output, session, con){
     ppi_networks <- as.data.frame(MODifieRDB::get_available_networks(con)) 
     colnames(ppi_networks) <- "PPI networks"
     output$ppi_overview <- DT::renderDataTable(ppi_networks,
+                                               rownames = FALSE,
                                                selection = list(selected = c(1)))
     
   })
@@ -70,11 +71,13 @@ mod_ppi_networks_server <- function(input, output, session, con){
     ppi_networks <- as.data.frame(MODifieRDB::get_available_networks(con))
     colnames(ppi_networks) <- "PPI networks"
     output$ppi_overview <- DT::renderDataTable(ppi_networks,
+                                               rownames = FALSE,
                                                selection = list(selected = c(1)))
   } else if (any(ppi_networks == "Default")) {
     ppi_networks <- as.data.frame(MODifieRDB::get_available_networks(con))
     colnames(ppi_networks) <- "PPI networks"
     output$ppi_overview <- DT::renderDataTable(ppi_networks,
+                                               rownames = FALSE,
                                                selection = list(selected = c(1)))
   }
   
