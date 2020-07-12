@@ -25,13 +25,12 @@ mod_enrichment_map_server <- function(input, output, session, enrichment_map_par
     
     enrichment_object <- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
     
-    p <- enrichplot::emapplot(enrichment_object,
-                                  showCategory = enrichment_map_para_ui_1$showcategory,
-                                  color = enrichment_map_para_ui_1$color,
-                                  layout = enrichment_map_para_ui_1$layout,
-                                  pie_scale = enrichment_map_para_ui_1$pie_scale,
-                                  line_scale = enrichment_map_para_ui_1$line_scale,
-                                  title = enrichment_map_para_ui_1$plot_title)
+    p <- enrichplot::emapplot(x = enrichment_object,
+                              showCategory = enrichment_map_para_ui_1$showcategory,
+                              color = enrichment_map_para_ui_1$color,
+                              layout = enrichment_map_para_ui_1$layout
+                              ) + ggplot2::ggtitle(enrichment_map_para_ui_1$title)
+                              
     return(p)
   })
   
