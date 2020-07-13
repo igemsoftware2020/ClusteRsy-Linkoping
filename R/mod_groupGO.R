@@ -50,7 +50,7 @@ mod_groupGO_ui <- function(id){
 #' GO Server Function 
 #' 
 #' @noRd
-mod_groupGO_server <- function(input, output, session, con, Description1_ui_1){
+mod_groupGO_server <- function(input, output, session, con, Description1_ui_1, module_overview_ui_1){
   ns <- session$ns
   
   groupGO_module <- reactiveValues()
@@ -63,7 +63,7 @@ mod_groupGO_server <- function(input, output, session, con, Description1_ui_1){
                 popup = "The module used for gene set enrichment analysis.")
   })
   
-  observeEvent(Description1_ui_1$module_name, {
+  observeEvent(c(Description1_ui_1$module_name, module_overview_ui_1$delete$delete), {
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     updateSelectInput(session, "module_object", choices = module_objects)
   })
@@ -88,6 +88,7 @@ mod_groupGO_server <- function(input, output, session, con, Description1_ui_1){
         tags$p(class = "text-danger", tags$b("Error:"), group_object)
       })
     } else {
+      x(x() + 1)
       groupGO_module$enrich <- c(x(), "groupGO")  # Reactive value to record if the input button is pressed
       module_name <- input$module_object
       MODifieRDB::enrichment_object_to_db(group_object,

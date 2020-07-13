@@ -38,7 +38,7 @@ mod_enrichDGN_ui <- function(id){
 #'
 #' @noRd 
 # con should ne somewhere in the code?
-mod_enrichDGN_server <- function(input, output, session, con, Description1_ui_1){
+mod_enrichDGN_server <- function(input, output, session, con, Description1_ui_1, module_overview_ui_1){
   ns <- session$ns
   
   enrichDGN_module <- reactiveValues()
@@ -49,7 +49,7 @@ mod_enrichDGN_server <- function(input, output, session, con, Description1_ui_1)
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
   })
   
-  observeEvent(Description1_ui_1$module_name, {
+  observeEvent(c(Description1_ui_1$module_name, module_overview_ui_1$delete$delete), {
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     updateSelectInput(session, "module_object", choices = module_objects)
   })
@@ -59,8 +59,8 @@ mod_enrichDGN_server <- function(input, output, session, con, Description1_ui_1)
     id <- showNotification("Identifying disease assosciation and creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     
-    module_genes <- get_module_genes(input$module_object, con = con)
-    background_genes <- get_background_genes(input$module_object, con = con)
+    module_genes <- try(get_module_genes(input$module_object, con = con))
+    background_genes <- try(get_background_genes(input$module_object, con = con))
     
     enrichment_object <- try(DOSE::enrichDGN(gene = module_genes,
                                                 pvalueCutoff = input$pvalueCutoff,

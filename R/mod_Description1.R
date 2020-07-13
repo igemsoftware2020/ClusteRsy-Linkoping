@@ -22,20 +22,20 @@ mod_Description1_ui <- function(id){
 #' Description Server Function
 #'
 #' @noRd 
-mod_Description1_server <- function(input, output, session, con, upload_ui_1){
+mod_Description1_server <- function(input, output, session, con, upload_ui_1, input_overview_ui_1){
   ns <- session$ns
   
   Description1_module <- reactiveValues()
   
   # Call Module only once
-  CliqueSum_ui_1 <- callModule(mod_CliqueSum_server, "CliqueSum_ui_1", con = con, upload_ui_1)
-  WGCNA_ui_1 <- callModule(mod_WGCNA_server, "WGCNA_ui_1", con = con, upload_ui_1)
-  DIAMoND_ui_1 <- callModule(mod_DIAMoND_server, "DIAMoND_ui_1", con = con, upload_ui_1)
-  DiffCoEx_ui_1 <- callModule(mod_DiffCoEx_server, "DiffCoEx_ui_1", con = con, upload_ui_1)
-  MCODE_ui_1 <- callModule(mod_MCODE_server, "MCODE_ui_1", con = con, upload_ui_1)
-  MODA_ui_1 <-callModule(mod_MODA_server, "MODA_ui_1", con = con, upload_ui_1)
-  Modulediscoverer_ui_1 <- callModule(mod_Modulediscoverer_server, "Modulediscoverer_ui_1", con = con, upload_ui_1)
-  CClique_ui_1 <- callModule(mod_CClique_server, "CClique_ui_1", con = con, upload_ui_1)
+  CliqueSum_ui_1 <- callModule(mod_CliqueSum_server, "CliqueSum_ui_1", con = con, upload_ui_1, input_overview_ui_1)
+  WGCNA_ui_1 <- callModule(mod_WGCNA_server, "WGCNA_ui_1", con = con, upload_ui_1, input_overview_ui_1)
+  DIAMoND_ui_1 <- callModule(mod_DIAMoND_server, "DIAMoND_ui_1", con = con, upload_ui_1, input_overview_ui_1)
+  DiffCoEx_ui_1 <- callModule(mod_DiffCoEx_server, "DiffCoEx_ui_1", con = con, upload_ui_1, input_overview_ui_1)
+  MCODE_ui_1 <- callModule(mod_MCODE_server, "MCODE_ui_1", con = con, upload_ui_1, input_overview_ui_1)
+  MODA_ui_1 <-callModule(mod_MODA_server, "MODA_ui_1", con = con, upload_ui_1, input_overview_ui_1)
+  Modulediscoverer_ui_1 <- callModule(mod_Modulediscoverer_server, "Modulediscoverer_ui_1", con = con, upload_ui_1, input_overview_ui_1)
+  CClique_ui_1 <- callModule(mod_CClique_server, "CClique_ui_1", con = con, upload_ui_1, input_overview_ui_1)
   
   upload_description <- reactive({
     req((input$Inference_method))

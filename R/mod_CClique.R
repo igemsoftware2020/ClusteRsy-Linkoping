@@ -35,7 +35,7 @@ mod_CClique_ui <- function(id){
 #' CClique Server Function
 #'
 #' @noRd 
-mod_CClique_server <- function(input, output, session, con, upload_ui_1){
+mod_CClique_server <- function(input, output, session, con, upload_ui_1, input_overview_ui_1){
   ns <- session$ns
  
   CClique_module <- reactiveValues()
@@ -45,7 +45,7 @@ mod_CClique_server <- function(input, output, session, con, upload_ui_1){
     selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation")
   })
    
-  observeEvent(upload_ui_1$input_name, {
+  observeEvent(c(upload_ui_1$input_name, input_overview_ui_1$delete$delete), {
      input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
      updateSelectInput(session, "input_object", choices = input_objects)
    })

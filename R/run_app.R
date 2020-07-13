@@ -14,7 +14,8 @@ run_app <- function(
       server = app_server,
 #      options = (list(
 #        host = "192.168.50.55",
-#        port = 1584
+#        port = 1584,
+#        launch.browser  = F
 #      )
 #      )
     ), 

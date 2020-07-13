@@ -24,25 +24,25 @@ mod_disease_analysis_ui <- function(id){
 #' disease_analysis Server Function
 #'
 #' @noRd 
-mod_disease_analysis_server <- function(input, output, session, con, Description1_ui_1){
+mod_disease_analysis_server <- function(input, output, session, con, Description1_ui_1, module_overview_ui_1){
   ns <- session$ns
   
   disease_analysis_module <- reactiveValues()
   
   # Call Module only once
-  enrichDGN_ui_1 <- callModule(mod_enrichDGN_server, "enrichDGN_ui_1", con = con, Description1_ui_1) 
-  enrichDO_ui_1 <- callModule(mod_enrichDO_server, "enrichDO_ui_1", con = con, Description1_ui_1)
-  enrichNCG_ui_1 <- callModule(mod_enrichNCG_server, "enrichNCG_ui_1", con = con, Description1_ui_1)
-  gseDGN_ui_1 <- callModule(mod_gseDGN_server, "gseDGN_ui_1", con = con, Description1_ui_1)
-  gseDO_ui_1 <- callModule(mod_gseDO_server, "gseDO_ui_1", con = con, Description1_ui_1)
-  gseNCG_ui_1 <- callModule(mod_gseNCG_server, "gseNCG_ui_1", con = con, Description1_ui_1)
-  enrichGO_ui_1 <- callModule(mod_enrichGO_server, "enrichGO_ui_1", con = con, Description1_ui_1)
-  gseGO_ui_1 <- callModule(mod_gseGO_server, "gseGO_ui_1", con = con, Description1_ui_1)
-  groupGO_ui_1 <- callModule(mod_groupGO_server, "groupGO_ui_1", con = con, Description1_ui_1)
-  enrichKEGG_ui_1 <- callModule(mod_enrichKEGG_server, "enrichKEGG_ui_1", con = con, Description1_ui_1)
-  gseKEGG_ui_1 <- callModule(mod_gseKEGG_server, "gseKEGG_ui_1", con = con, Description1_ui_1)
-  enrichMKEGG_ui_1 <- callModule(mod_enrichMKEGG_server, "enrichMKEGG_ui_1", con = con, Description1_ui_1)
-  gseMKEGG_ui_1 <- callModule(mod_gseMKEGG_server, "gseMKEGG_ui_1", con = con, Description1_ui_1)
+  enrichDGN_ui_1 <- callModule(mod_enrichDGN_server, "enrichDGN_ui_1", con = con, Description1_ui_1, module_overview_ui_1) 
+  enrichDO_ui_1 <- callModule(mod_enrichDO_server, "enrichDO_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  enrichNCG_ui_1 <- callModule(mod_enrichNCG_server, "enrichNCG_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  gseDGN_ui_1 <- callModule(mod_gseDGN_server, "gseDGN_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  gseDO_ui_1 <- callModule(mod_gseDO_server, "gseDO_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  gseNCG_ui_1 <- callModule(mod_gseNCG_server, "gseNCG_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  enrichGO_ui_1 <- callModule(mod_enrichGO_server, "enrichGO_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  gseGO_ui_1 <- callModule(mod_gseGO_server, "gseGO_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  groupGO_ui_1 <- callModule(mod_groupGO_server, "groupGO_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  enrichKEGG_ui_1 <- callModule(mod_enrichKEGG_server, "enrichKEGG_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  gseKEGG_ui_1 <- callModule(mod_gseKEGG_server, "gseKEGG_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  enrichMKEGG_ui_1 <- callModule(mod_enrichMKEGG_server, "enrichMKEGG_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  gseMKEGG_ui_1 <- callModule(mod_gseMKEGG_server, "gseMKEGG_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
   
   observeEvent(input$analyse_method, {
     

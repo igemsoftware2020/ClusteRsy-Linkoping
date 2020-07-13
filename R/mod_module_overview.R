@@ -28,6 +28,7 @@ mod_module_overview_ui <- function(id){
 #' @noRd 
 mod_module_overview_server <- function(input, output, session, con, Columns_ui_1){
   ns <- session$ns
+  module_overview_module <- reactiveValues()
   
   #Reactive funciton for fileinput
   upload_module <- reactive({
@@ -152,9 +153,10 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     output$module_overview <- DT::renderDataTable(module_objects,
                                                   rownames = FALSE,
                                                   selection = list(selected = c(1)))
+    # Send refresh
+    module_overview_module$delete <- input$delete
   })
-  
-  
+  return(module_overview_module)
 }
 
 ## To be copied in the UI

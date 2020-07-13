@@ -87,7 +87,7 @@ mod_enrichGO_ui <- function(id){
 #' GO Server Function 
 #' 
 #' @noRd
-mod_enrichGO_server <- function(input, output, session, con, Description1_ui_1){
+mod_enrichGO_server <- function(input, output, session, con, Description1_ui_1, module_overview_ui_1){
   ns <- session$ns
   
   enrichGO_module <- reactiveValues()
@@ -99,7 +99,7 @@ mod_enrichGO_server <- function(input, output, session, con, Description1_ui_1){
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
   })
   
-  observeEvent(Description1_ui_1$module_name, {
+  observeEvent(c(Description1_ui_1$module_name, module_overview_ui_1$delete$delete), {
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     updateSelectInput(session, "module_object", choices = module_objects)
   })
@@ -129,6 +129,7 @@ mod_enrichGO_server <- function(input, output, session, con, Description1_ui_1){
         tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
       })
     } else {
+      x(x() + 1)
       enrichGO_module$enrich <- c(x(), "enrichGO")  # Reactive value to record if the input button is pressed 
       module_name <- input$module_object
       MODifieRDB::enrichment_object_to_db(enrichment_object,

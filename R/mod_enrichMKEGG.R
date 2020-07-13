@@ -44,7 +44,7 @@ mod_enrichMKEGG_ui <- function(id){
 #' enrichMKEGG Server Function
 #'
 #' @noRd 
-mod_enrichMKEGG_server <- function(input, output, session, con, Description1_ui_1){
+mod_enrichMKEGG_server <- function(input, output, session, con, Description1_ui_1, module_overview_ui_1){
   ns <- session$ns
   
   enrichMKEGG_module <- reactiveValues()
@@ -56,7 +56,7 @@ mod_enrichMKEGG_server <- function(input, output, session, con, Description1_ui_
     selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
   })
   
-  observeEvent(Description1_ui_1$module_name, {
+  observeEvent(c(Description1_ui_1$module_name, module_overview_ui_1$delete$delete), {
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     updateSelectInput(session, "module_object", choices = module_objects)
   })
@@ -85,6 +85,7 @@ mod_enrichMKEGG_server <- function(input, output, session, con, Description1_ui_
         tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
       })
     } else {
+      x(x() + 1)
       enrichMKEGG_module$enrich <- c(x(), "enrichMKEGG")  # Reactive value to record if the input button is pressed
       module_name <- input$module_object
       MODifieRDB::enrichment_object_to_db(enrichment_object,

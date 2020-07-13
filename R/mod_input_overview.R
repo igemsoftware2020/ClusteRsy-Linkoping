@@ -28,6 +28,7 @@ mod_input_overview_ui <- function(id){
 #' @noRd 
 mod_input_overview_server <- function(input, output, session, con, Columns_ui_1){
   ns <- session$ns
+  input_overview_module <- reactiveValues()
   
   # Reactive function for fileinput
   upload_input <- reactive({
@@ -152,8 +153,11 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1)
     output$input_overview <- DT::renderDataTable(input_objects,
                                                  rownames = FALSE,
                                                  selection = list(selected = c(1)))
+    
+    # Send refresh
+    input_overview_module$delete <- input$delete
   })
- 
+ return(input_overview_module)
 }
 
 ## To be copied in the UI
