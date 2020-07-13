@@ -10,7 +10,7 @@
 mod_enrichment_map_ui <- function(id){
   ns <- NS(id)
   tagList(
-    plotOutput(ns("enrichment_map")) %>% withSpinner(color= "#ffbd40", 
+    plotOutput(ns("enrichment_map")) %>% shinycssloaders::withSpinner(color= "#ffbd40", 
                                                      type = 4,
                                                      size = 0.8)
   )
@@ -27,11 +27,11 @@ mod_enrichment_map_server <- function(input, output, session, enrichment_map_par
     
     enrichment_object <- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
     
-    p <- enrichplot::emapplot(x = enrichment_object,
+    p <- try(enrichplot::emapplot(x = enrichment_object,
                               showCategory = enrichment_map_para_ui_1$showcategory,
                               color = enrichment_map_para_ui_1$color,
                               layout = enrichment_map_para_ui_1$layout
-                              ) + ggplot2::ggtitle(enrichment_map_para_ui_1$title)
+                              ) + ggplot2::ggtitle(enrichment_map_para_ui_1$title))
                               
     return(p)
   })
