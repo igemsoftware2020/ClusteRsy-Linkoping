@@ -87,7 +87,7 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
                          tabPanel(title = "Dot plot", mod_dot_plot_ui(ns("dot_plot_ui_1"))),
                          tabPanel(title = "Bar plot"),
                          tabPanel(title = "Enrichment map", mod_enrichment_map_ui(ns("enrichment_map_ui_1"))),
-                         tabPanel(title = "Gene-concept network"),
+                         tabPanel(title = "Gene-concept network", mod_cnet_plot_ui(ns("cnet_plot_ui_1"))),
                          tabPanel(title = "Heatmap"),
                          tabPanel(title = "Results",  mod_enrichment_results_ui(ns("enrichment_results_ui_1"))))))
     
@@ -105,7 +105,7 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
       } else if (input$tabs == "Enrichment map") {
         mod_enrichment_map_para_ui(ns("enrichment_map_para_ui_1"))
       } else if (input$tabs == "Gene-concept network") {
-        
+        mod_cnet_plot_para_ui(ns("cnet_plot_para_ui"))
       } else if (input$tabs == "Heatmap") {
         
       } else if (input$tabs == "Results") {
@@ -119,10 +119,12 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
   #Parameter modules server call
   dot_plot_para_ui_1 <- callModule(mod_dot_plot_para_server, "dot_plot_para_ui_1")
   enrichment_map_para_ui_1 <- callModule(mod_enrichment_map_para_server, "enrichment_map_para_ui_1")
+  cnet_plot_para_ui_1 <- callModule(mod_cnet_plot_para_server, "cnet_plot_para_ui_1")
   
   #Plot modules servercall
   callModule(mod_dot_plot_server, "dot_plot_ui_1", dot_plot_para_ui_1, selected, con = con)
   callModule(mod_enrichment_map_server, "enrichment_map_ui_1",enrichment_map_para_ui_1, selected, con = con)
+  callModule(mod_cnet_plot_server, "cnet_plot_ui_1", cnet_plot_para_ui_1, selected, con = con)
   callModule(mod_enrichment_results_server, "enrichment_results_ui_1", selected, con = con)
   
 }
