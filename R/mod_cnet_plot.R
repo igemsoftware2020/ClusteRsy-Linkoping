@@ -23,7 +23,7 @@ mod_cnet_plot_server <- function(input, output, session, cnet_plot_para_ui_1, se
   cnetplot <- reactive({
     
     enrichment_object <<- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
-    enrichment_object_readable <- DOSE::setReadable(enrichment_object, OrgDb = 'org.Hs.eg.db', keyType = "ENTREZID")
+    enrichment_object_readable <- DOSE::setReadable(enrichment_object, OrgDb = 'org.Hs.eg.db', keyType = "ENTREZID") #Not sure if KeyType should be selected from the enrichment object
     
     p <- enrichplot::cnetplot(x = enrichment_object_readable,
                               showCategory = 10,
