@@ -49,7 +49,7 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
   output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
                                                     rownames = FALSE,
                                                     class = 'compact hover',
-                                                    selection = list(selected = c(1), "single" ),
+                                                    selection = "single",
                                                     options =  list(scrollX = TRUE,
                                                                     scrollY = TRUE,
                                                                     dom = 't'))
@@ -59,7 +59,7 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
       output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
                                                         rownames = FALSE,
                                                         class = 'compact hover',
-                                                        selection = list(selected =c(1), "single"),
+                                                        selection = "single",
                                                         options =  list(scrollX = TRUE,
                                                                         scrollY = TRUE,
                                                                         dom = 't'))
