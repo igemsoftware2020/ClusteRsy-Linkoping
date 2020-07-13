@@ -10,7 +10,9 @@
 mod_dot_plot_ui <- function(id){
   ns <- NS(id)
   tagList(
-    plotOutput(ns("dot_plot"))
+    plotOutput(ns("dot_plot")) %>% withSpinner(color="#ffbd40", 
+                                               type = 4,
+                                               size = 0.8)
   )
 }
     

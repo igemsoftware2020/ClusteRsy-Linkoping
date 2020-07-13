@@ -10,7 +10,9 @@
 mod_enrichment_map_ui <- function(id){
   ns <- NS(id)
   tagList(
-    plotOutput(ns("enrichment_map"))
+    plotOutput(ns("enrichment_map")) %>% withSpinner(color= "#ffbd40", 
+                                                     type = 4,
+                                                     size = 0.8)
   )
 }
     

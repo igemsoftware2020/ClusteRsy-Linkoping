@@ -10,7 +10,9 @@
 mod_enrichment_results_ui <- function(id){
   ns <- NS(id)
   tagList(
-          DT::dataTableOutput(ns("enrichment_results")),
+          DT::dataTableOutput(ns("enrichment_results")) %>% withSpinner(color="#ffbd40", 
+                                                                        type = 4,
+                                                                        size = 0.8),
          
   )
 }
