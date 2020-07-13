@@ -11,7 +11,6 @@ mod_cnet_plot_ui <- function(id){
   ns <- NS(id)
   tagList(
           plotOutput(ns("cnet_plot")),
-          #mod_enrichment_overview_ui(ns("enrichment_overview_ui_1"))
   )
 }
     
@@ -24,14 +23,15 @@ mod_cnet_plot_server <- function(input, output, session, cnet_plot_para_ui_1, se
   cnetplot <- reactive({
     
     enrichment_object <<- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
-    enrichment_result <- enrichment_object@result
-    print(head(enrichment_result))
-   # enrichment_objectx <- DOSE::setReadable(enrichment_result, org.Hs.eg.db::org.Hs.eg.db, 'ENTREZID')
-    #print(head(enrichment_objectx))
-    p <- enrichplot::cnetplot.enrichResult(x=enrichment_result,
-                                  showCategory = cnet_plot_para_ui_1$showcategory,
-                                  layout = cnet_plot_para_ui_1$layout,
-                                  node_label = cnet_plot_para_ui_1$node_label)
+    enrichment_object_readable <- DOSE::setReadable(enrichment_object, OrgDb = 'org.Hs.eg.db', keyType = "ENTREZID")
+    
+    p <- enrichplot::cnetplot(x = enrichment_object_readable,
+                              showCategory = 10,
+                                  #showCategory = cnet_plot_para_ui_1$showcategory,
+                              
+                                  layout = "kk",
+                                  #node_label = cnet_plot_para_ui_1$node_label)
+    )
     return(p)
   })
   
