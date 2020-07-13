@@ -10,9 +10,9 @@
 mod_dot_plot_ui <- function(id){
   ns <- NS(id)
   tagList(
-    plotOutput(ns("dot_plot")) %>% shinycssloaders::withSpinner(color="#ffbd40", 
-                                               type = 4,
-                                               size = 0.8)
+    plotOutput(ns("dot_plot"), height = '100vh', width = '100%') %>% shinycssloaders::withSpinner(color="#ffbd40", 
+                                                                                                  type = 4,
+                                                                                                  size = 0.8)
   )
 }
     

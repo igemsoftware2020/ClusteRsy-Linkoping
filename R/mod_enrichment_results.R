@@ -34,6 +34,7 @@ mod_enrichment_results_server <- function(input, output, session, selected, con)
                                                    style = "default",
                                                    extensions = 'Buttons',
                                                    options = list(
+                                                     pageLength = 25,
                                                      paging = TRUE,
                                                      searching = TRUE,
                                                      scrollX = TRUE,

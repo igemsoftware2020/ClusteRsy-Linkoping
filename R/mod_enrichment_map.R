@@ -10,9 +10,9 @@
 mod_enrichment_map_ui <- function(id){
   ns <- NS(id)
   tagList(
-    plotOutput(ns("enrichment_map")) %>% shinycssloaders::withSpinner(color= "#ffbd40", 
-                                                     type = 4,
-                                                     size = 0.8)
+    plotOutput(ns("enrichment_map"), height = '100vh', width = '100%') %>% shinycssloaders::withSpinner(color= "#ffbd40", 
+                                                                                                                type = 4,
+                                                                                                                size = 0.8)
   )
 }
     
