@@ -81,7 +81,6 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
              tabsetPanel(id = ns("tabs"),
                          type = "tabs",
                          tabPanel(title = "Dot plot", mod_dot_plot_ui(ns("dot_plot_ui_1"))),
-                         tabPanel(title = "Bar plot"),
                          tabPanel(title = "Enrichment map", mod_enrichment_map_ui(ns("enrichment_map_ui_1"))),
                          tabPanel(title = "Gene-concept network"),
                          tabPanel(title = "Heatmap"),
@@ -96,8 +95,6 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
       
       if (input$tabs == "Dot plot") {
         mod_dot_plot_para_ui(ns("dot_plot_para_ui_1"))
-      } else if (input$tabs == "Bar plot"){
-        
       } else if (input$tabs == "Enrichment map") {
         mod_enrichment_map_para_ui(ns("enrichment_map_para_ui_1"))
       } else if (input$tabs == "Gene-concept network") {
