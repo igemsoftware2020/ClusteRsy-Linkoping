@@ -100,7 +100,7 @@ mod_MCODE_ui <- function(id){
 #' MCODE Server Function
 #'
 #' @noRd 
-mod_MCODE_server <- function(input, output, session, con, upload_ui_1, input_overview_ui_1){
+mod_MCODE_server <- function(input, output, session, con, upload_ui_1, input_overview_ui_1, ppi_networks_ui_1){
   ns <- session$ns
   
   MCODE_module <- reactiveValues()
@@ -118,6 +118,11 @@ mod_MCODE_server <- function(input, output, session, con, upload_ui_1, input_ove
   output$ppi_choice <- renderUI({
     ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
     selectInput(ns("ppi_object"), label = "PPI network", choices = ppi_networks, popup = "Protein-Protein interaction network to overlay the differentially expressed genes on.")
+  })
+  
+  observeEvent(ppi_networks_ui_1$upload_ppi$upload_ppi, {
+    ppi_networks <- unlist(MODifieRDB::get_available_networks(con))
+    updateSelectInput(session, "ppi_object", choices = ppi_networks)
   })
   
   module_name <- reactive({

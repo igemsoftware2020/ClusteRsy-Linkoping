@@ -7149,6 +7149,15 @@ tr {
   cursor: pointer !important;
 }
 
+#collasp {
+    color: orange;
+    font-size: 70px;
+    position: absolute;
+    top: -35px;
+    right: 16px;
+    cursor: pointer;
+}
+
 /* Sticky nav 
 .navbar{
   position: sticky;

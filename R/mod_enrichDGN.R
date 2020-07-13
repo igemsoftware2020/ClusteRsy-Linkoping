@@ -46,7 +46,10 @@ mod_enrichDGN_server <- function(input, output, session, con, Description1_ui_1,
   
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
-    selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
+    tagList(
+      selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis."),
+      uiOutput(ns("error"))
+    )
   })
   
   observeEvent(c(Description1_ui_1$module_name, module_overview_ui_1$delete$delete), {
@@ -58,6 +61,8 @@ mod_enrichDGN_server <- function(input, output, session, con, Description1_ui_1,
   observeEvent(input$load_input, {
     id <- showNotification("Identifying disease assosciation and creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
+    
+    output$error <- renderUI({})
     
     module_genes <- try(get_module_genes(input$module_object, con = con))
     background_genes <- try(get_background_genes(input$module_object, con = con))
@@ -73,9 +78,10 @@ mod_enrichDGN_server <- function(input, output, session, con, Description1_ui_1,
                                                 
     )
     )
-    if (class(enrichment_object) == "try-error"){
+    if (any(c(class(enrichment_object), class(background_genes), class(module_genes)) == "try-error")){
       output$error <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
+        tags$p(class = "text-danger", tags$b("Error:"), enrichment_object,
+               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
       })
     } else {
       x(x() + 1)

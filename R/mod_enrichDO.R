@@ -47,7 +47,10 @@ mod_enrichDO_server <- function(input, output, session, con, Description1_ui_1, 
   
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
-    selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
+    tagList(
+      selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis."),
+      uiOutput(ns("error"))
+    )
   })
   
   observeEvent(c(Description1_ui_1$module_name, module_overview_ui_1$delete$delete), {
@@ -59,8 +62,10 @@ mod_enrichDO_server <- function(input, output, session, con, Description1_ui_1, 
     id <- showNotification("Identifying disease assosciation and creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     
-    module_genes <- get_module_genes(input$module_object, con = con)
-    background_genes <- get_background_genes(input$module_object, con = con)
+    output$error <- renderUI({})
+    
+    module_genes <- try(et_module_genes(input$module_object, con = con))
+    background_genes <- try(get_background_genes(input$module_object, con = con))
     
     enrichment_object <- try(DOSE::enrichDO(gene = module_genes,
                                                ont = "DO",
@@ -74,9 +79,10 @@ mod_enrichDO_server <- function(input, output, session, con, Description1_ui_1, 
                                                
     )
     )
-    if (class(enrichment_object) == "try-error"){
+    if (any(c(class(enrichment_object), class(background_genes), class(module_genes)) == "try-error")){
       output$error_p_value <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
+        tags$p(class = "text-danger", tags$b("Error:"), enrichment_object,
+               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
       })
     } else {
       x(x() + 1)  # Reactive value to record if the input buttion is pressed

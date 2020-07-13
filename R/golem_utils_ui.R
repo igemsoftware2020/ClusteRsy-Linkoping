@@ -808,12 +808,15 @@ absolutePanel <- function(...,
     cssProps[['cursor']] <- ifelse(draggable, 'move', 'inherit')
   
   style <- paste(paste(names(cssProps), cssProps, sep = ':', collapse = ';'), ';', sep='')
-  divTag <- tags$div(style=style, ...)
+  divTag <- tags$div(style=style, tags$p(id="collasp", "-"), ...)
   if (isTRUE(draggable)) {
     divTag <- tagAppendAttributes(divTag, class='draggable')
     return(tagList(
       divTag,
-      tags$script('$(".draggable").draggable();')
+      tags$script('$(".draggable").draggable();'),
+      tags$script("$('#collasp').click(function(){
+        $('#collasp-panel').slideToggle();
+      });")
     ))
   } else {
     return(divTag)

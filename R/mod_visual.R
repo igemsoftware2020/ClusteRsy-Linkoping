@@ -22,14 +22,16 @@ mod_visual_ui <- function(id){
       height = "60%",
       draggable = TRUE,
       wellPanel( #Text in the floating panel.
-        tags$h3(class = "text-center", "Pick an enrichment object for visualization"),
-        tags$p(class = "text-right", "You can drag this panel around."),
-        tags$form(`class` = "well", style = "background-color:#FFFFFF;",
-                  DT::dataTableOutput(ns("enrichment_overview"), width = "auto", height = "auto")), #Data table for plot output
-    actionButton(ns("analyze"), label = "Analyze"),
-    uiOutput(ns("disable")),
-    #Renders the parameters when analyzed is triggered.
-    uiOutput(ns("parameters"))  
+        tags$div(id = "collasp-panel",
+          tags$h3(class = "text-center", "Pick an enrichment object for visualization"),
+          tags$p(class = "text-right", "You can drag this panel around."),
+          tags$form(`class` = "well", style = "background-color:#FFFFFF;",
+                    DT::dataTableOutput(ns("enrichment_overview"), width = "auto", height = "auto")), #Data table for plot output
+          actionButton(ns("analyze"), label = "Analyze"),
+          uiOutput(ns("disable")),
+          #Renders the parameters when analyzed is triggered.
+          uiOutput(ns("parameters")) 
+        )
       )
     )
   )

@@ -54,7 +54,10 @@ mod_gseDGN_server <- function(input, output, session, con, Description1_ui_1, mo
   
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
-    selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
+    tagList(
+      selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis."),
+      uiOutput(ns("error"))
+    )
   })  
   
   observeEvent(c(Description1_ui_1$module_name, module_overview_ui_1$delete$delete), {
@@ -66,7 +69,9 @@ mod_gseDGN_server <- function(input, output, session, con, Description1_ui_1, mo
     id <- showNotification("Creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     
-    gene_list <- get_sorted_module_genes(input$module_object, con = con)
+    output$error <- renderUI({})
+    
+    gene_list <- try(get_sorted_module_genes(input$module_object, con = con))
     
     gse_object <- try(DOSE::gseDGN(
                                   geneList = gene_list,
@@ -82,9 +87,10 @@ mod_gseDGN_server <- function(input, output, session, con, Description1_ui_1, mo
       
     )
     )
-    if (class(gse_object) == "try-error"){
+    if (any(c(class(gse_object), class(gene_list)) == "try-error")){
       output$error <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), gse_object)
+        tags$p(class = "text-danger", tags$b("Error:"), gse_object,
+               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
       })
     } else {
       x(x() + 1)

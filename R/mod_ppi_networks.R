@@ -23,6 +23,7 @@ mod_ppi_networks_ui <- function(id){
 #' @noRd 
 mod_ppi_networks_server <- function(input, output, session, con){
   ns <- session$ns
+  ppi_networks_module <- reactiveValues()
   
   # Reactive function for file input
   upload_ppi <- reactive({
@@ -58,7 +59,7 @@ mod_ppi_networks_server <- function(input, output, session, con){
     output$ppi_overview <- DT::renderDataTable(ppi_networks,
                                                rownames = FALSE,
                                                selection = list(selected = c(1)))
-    
+    ppi_networks_module$upload_ppi <- input$upload_ppi
   })
   
   ppi_networks <- as.data.frame(MODifieRDB::get_available_networks(con))
@@ -88,6 +89,7 @@ mod_ppi_networks_server <- function(input, output, session, con){
                                                 db_name = "Clique_db",
                                                 con = con)
   }
+  return(ppi_networks_module)
 }
 
 ## To be copied in the UI
