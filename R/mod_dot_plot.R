@@ -30,7 +30,7 @@ mod_dot_plot_server <- function(input, output, session, dot_plot_para_ui_1, sele
                                   x=dot_plot_para_ui_1$xaxis,
                                   showCategory = dot_plot_para_ui_1$showcategory,
                                   color = dot_plot_para_ui_1$color,
-                                  title = dot_plot_para_ui_1$plot_title))
+                                  title = dot_plot_para_ui_1$title))
      return(p)
     })
   
