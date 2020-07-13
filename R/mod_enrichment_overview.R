@@ -12,12 +12,13 @@ mod_enrichment_overview_ui <- function(id){
   tagList(
     DT::dataTableOutput(ns("enrichment_overview")),
     tags$div(`class`="row",
-             tags$div(`class`="col-sm-8", style = "color:black",
+             tags$div(`class`="col-sm-10", style = "color:black",
                       fileInput(ns("enrichment_object"), label = "Upload an enrichment object", accept =  ".rds"),
                       uiOutput(ns("enrichment_name_chooser"))),
              tags$br(),
-             tags$div(`class`="col-sm-4", style = "text-align:right",
-                      downloadButton(ns("download_enrichment"), "Download")))
+             tags$div(`class`="col-sm-2", style = "text-align:right", id ="buttons_enrichment_overview",
+                      downloadButton(ns("download_enrichment"), "Download"))),
+    uiOutput(ns("disable"))
   )
 }
 
@@ -102,6 +103,20 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     }
   )
   
+  # Observe if valid to download
+  observe({
+    if(is.null(input$enrichment_overview_rows_selected)) {
+      output$disable <- renderUI({
+        tags$script((HTML("document.getElementById('main_page_v2_ui_1-enrichment_overview_ui_1-download_enrichment').style.pointerEvents = 'none';
+                         document.getElementById('buttons_enrichment_overview').style.cursor = 'not-allowed';")))
+      }) 
+    } else {
+      output$disable <- renderUI({
+        tags$script((HTML("document.getElementById('main_page_v2_ui_1-enrichment_overview_ui_1-download_enrichment').style.pointerEvents = 'auto';
+                          document.getElementById('buttons_enrichment_overview').style.cursor = 'default';")))
+      }) 
+    }
+  })
 }
 
 

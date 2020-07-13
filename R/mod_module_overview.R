@@ -16,9 +16,10 @@ mod_module_overview_ui <- function(id){
              fileInput(ns("module_object"), label = "Upload a module object", accept =  ".rds"),
              uiOutput(ns("module_name_chooser"))),
              tags$br(),
-             tags$div(`class`="col-sm-4", style = "text-align:right",
+             tags$div(`class`="col-sm-4", style = "text-align:right", id ="buttons_module_overview",
                       downloadButton(ns("download_module"), "Download"),
-                      actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true"))))
+                      actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true")))),
+    uiOutput(ns("disable"))
   )
 }
 
@@ -113,7 +114,19 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   
   # Observe if valid to download
   observe({
-    print(input$module_overview_rows_selected)
+    if(is.null(input$module_overview_rows_selected)) {
+     output$disable <- renderUI({
+       tags$script((HTML("document.getElementById('main_page_v2_ui_1-module_overview_ui_1-download_module').style.pointerEvents = 'none';
+                         document.getElementById('main_page_v2_ui_1-module_overview_ui_1-delete').style.pointerEvents = 'none';
+                         document.getElementById('buttons_module_overview').style.cursor = 'not-allowed';")))
+     }) 
+    } else {
+      output$disable <- renderUI({
+        tags$script((HTML("document.getElementById('main_page_v2_ui_1-module_overview_ui_1-download_module').style.pointerEvents = 'auto';
+                          document.getElementById('main_page_v2_ui_1-module_overview_ui_1-delete').style.pointerEvents = 'auto';
+                          document.getElementById('buttons_module_overview').style.cursor = 'default';")))
+      }) 
+    }
   })
   
   # Delete module object

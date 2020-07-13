@@ -6,9 +6,8 @@
 #' @noRd
 app_server <- function( input, output, session) {
   # Loading screen
-  load_data()
+  con <- load_data()
   # Load example
-  con <- MODifieRDB::connect_to_db("./../testdb.db")
   enrichment_object <- readRDS("./data_example/breast_cancer_example.rds")
   MODifieRDB::enrichment_object_to_db(enrichment_object,
                                       module_name = "Breast cancer example", 

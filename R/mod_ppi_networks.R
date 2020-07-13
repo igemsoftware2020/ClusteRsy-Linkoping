@@ -39,7 +39,7 @@ mod_ppi_networks_server <- function(input, output, session, con){
   output$ppi_name_chooser <- renderUI({
     ppi <- upload_ppi() # reactive
     tagList( 
-      textInput(ns("ppi_name"), "PPI network name"),
+      textInput(ns("ppi_name"), "PPI network name", placeholder = "PPI name"),
       actionButton(ns("upload_ppi"), "Add PPI to database")
     )
   })

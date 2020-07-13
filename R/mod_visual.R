@@ -20,18 +20,12 @@ mod_visual_ui <- function(id){
       height = "60%",
       draggable = TRUE,
       wellPanel( #Text in the floating panel.
-        tags$h3(class = "text-center",
-          "Pick an enrichment object for visualization"
-        ),
-        tags$p(class = "text-right",
-               "You can drag this panel around."),
-        
-        tags$form(`class` = "well", 
-                  style = "background-color:#FFFFFF;",
-    DT::dataTableOutput(ns("enrichment_overview"), width = "auto", height = "auto"), #Data table for plot output
-        ),
+        tags$h3(class = "text-center", "Pick an enrichment object for visualization"),
+        tags$p(class = "text-right", "You can drag this panel around."),
+        tags$form(`class` = "well", style = "background-color:#FFFFFF;",
+                  DT::dataTableOutput(ns("enrichment_overview"), width = "auto", height = "auto")), #Data table for plot output
     actionButton(ns("analyze"), label = "Analyze"),
-    
+    uiOutput(ns("disable")),
     #Renders the parameters when analyzed is triggered.
     uiOutput(ns("parameters"))  
       )
@@ -48,9 +42,8 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
   
   selected <- reactiveValues()
   
-  # Create an empty table
+  # Create a table
   enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
-  colnames(enrichment_objects) <- c("Module name", "Enrichment method")
   output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
                                                     rownames = FALSE,
                                                     class = 'compact hover',
@@ -58,11 +51,9 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
                                                     options =  list(scrollX = TRUE,
                                                                     scrollY = TRUE,
                                                                     dom = 't'))
-  
   # Updating the DT when a new enrichment object is created.
   observeEvent(main_page_v2_module$enrich, {
       enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
-      
       output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
                                                         rownames = FALSE,
                                                         class = 'compact hover',
@@ -72,6 +63,19 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
                                                                         dom = 't'))
   })
   
+  
+  # Observe if valid to download
+  observe({
+    if(is.null(input$enrichment_overview_rows_selected)) {
+      output$disable <- renderUI({
+        tags$script((HTML("document.getElementById('main_page_v2_ui_1-visual_ui_1-analyze').disabled = true;")))
+      }) 
+    } else {
+      output$disable <- renderUI({
+        tags$script((HTML("document.getElementById('main_page_v2_ui_1-visual_ui_1-analyze').disabled = false;")))
+      }) 
+    }
+  })
 
   observeEvent(input$analyze, {
     selected$selected_object <- input$enrichment_overview_rows_selected
