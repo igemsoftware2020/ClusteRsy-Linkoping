@@ -34,7 +34,7 @@ mod_cnet_plot_server <- function(input, output, session, cnet_plot_para_ui_1, se
                               layout = cnet_plot_para_ui_1$layout,
                               circular = cnet_plot_para_ui_1$circular,
                               node_label = cnet_plot_para_ui_1$node_label,
-                              title = cnet_plot_para_ui_1$title))
+                              ) + ggplot2::ggtitle(label = cnet_plot_para_ui_1$title))
     
     return(p)
   })
