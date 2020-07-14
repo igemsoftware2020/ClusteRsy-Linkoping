@@ -106,7 +106,7 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
       } else if (input$tabs == "Enrichment map") {
         mod_enrichment_map_para_ui(ns("enrichment_map_para_ui_1"))
       } else if (input$tabs == "Gene-concept network") {
-        mod_cnet_plot_para_ui(ns("cnet_plot_para_ui"))
+        mod_cnet_plot_para_ui(ns("cnet_plot_para_ui_1"))
       } else if (input$tabs == "Heatmap") {
         
       } else if (input$tabs == "Results") {

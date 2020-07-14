@@ -14,10 +14,10 @@ mod_cnet_plot_para_ui <- function(id){
     tags$h3(class = "text-center",
             "Select parameters"),
     #Cnet plot
-    sliderInput(ns("showCategory"), 
+    sliderInput(ns("showcategory"), 
                 label = "Number of enriched terms to display",
                 min = 5,
-                max = 50,
+                max = 20,
                 value = 5),
     selectInput(ns("layout"),
                 label = "Layout",
@@ -36,7 +36,7 @@ mod_cnet_plot_para_server <- function(input, output, session){
   ns <- session$ns
   cnet_plot_para_module <- reactiveValues()
   observe({
-    cnet_plot_para_module$showCategory <- input$showCategory
+    cnet_plot_para_module$showcategory <- input$showcategory
     cnet_plot_para_module$layout <- input$layout
     cnet_plot_para_module$node_label <- input$node_label
   })

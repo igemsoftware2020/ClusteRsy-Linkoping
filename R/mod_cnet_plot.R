@@ -28,12 +28,10 @@ mod_cnet_plot_server <- function(input, output, session, cnet_plot_para_ui_1, se
     enrichment_object_readable <- DOSE::setReadable(enrichment_object, OrgDb = 'org.Hs.eg.db', keyType = "ENTREZID") #Not sure if KeyType should be selected from the enrichment object
     
     p <- enrichplot::cnetplot(x = enrichment_object_readable,
-                              showCategory = 10,
-                                  #showCategory = cnet_plot_para_ui_1$showcategory,
-                              
-                                  layout = "kk",
-                                  #node_label = cnet_plot_para_ui_1$node_label)
-    )
+                              showCategory = cnet_plot_para_ui_1$showcategory,
+                              layout = cnet_plot_para_ui_1$layout,
+                              node_label = cnet_plot_para_ui_1$node_label)
+    
     return(p)
   })
   
