@@ -22,6 +22,10 @@ mod_cnet_plot_para_ui <- function(id){
     selectInput(ns("layout"),
                 label = "Layout",
                 choices = c("kk", "nicely")),
+    prettySwitch(ns("circular"), 
+                 label = "Circular formation", 
+                 value = FALSE, 
+                 status = "warning"),
     selectInput(ns("node_label"),
                 label = "Node labels",
                 choices = c("all", "gene", "category", "none")),
@@ -40,6 +44,7 @@ mod_cnet_plot_para_server <- function(input, output, session){
   observe({
     cnet_plot_para_module$showcategory <- input$showcategory
     cnet_plot_para_module$layout <- input$layout
+    cnet_plot_para_module$circular <- input$circular
     cnet_plot_para_module$node_label <- input$node_label
     cnet_plot_para_module$title <- input$title
   })
