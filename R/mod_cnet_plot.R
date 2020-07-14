@@ -31,8 +31,10 @@ mod_cnet_plot_server <- function(input, output, session, cnet_plot_para_ui_1, se
     
     p <- try(enrichplot::cnetplot(x = enrichment_object_readable,
                               showCategory = cnet_plot_para_ui_1$showcategory,
+                              foldChange = enrichment_object,
                               layout = cnet_plot_para_ui_1$layout,
                               circular = cnet_plot_para_ui_1$circular,
+                              colorEdge = cnet_plot_para_ui_1$colorEdge,
                               node_label = cnet_plot_para_ui_1$node_label,
                               ) + ggplot2::ggtitle(label = cnet_plot_para_ui_1$title))
     
