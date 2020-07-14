@@ -26,7 +26,7 @@ mod_cnet_plot_para_ui <- function(id){
                  label = "Circular formation", 
                  value = FALSE, 
                  status = "warning"),
-    prettySwitch(ns("colorEdge"), 
+    prettySwitch(ns("coloredge"), 
                  label = "Add color", 
                  value = FALSE, 
                  status = "warning"),
@@ -44,12 +44,13 @@ mod_cnet_plot_para_ui <- function(id){
 #' @noRd 
 mod_cnet_plot_para_server <- function(input, output, session){
   ns <- session$ns
+  
   cnet_plot_para_module <- reactiveValues()
   observe({
     cnet_plot_para_module$showcategory <- input$showcategory
     cnet_plot_para_module$layout <- input$layout
     cnet_plot_para_module$circular <- input$circular
-    cnet_plot_para_module$colorEdge <- input$colorEdge
+    cnet_plot_para_module$colorEdge <- input$coloredge
     cnet_plot_para_module$node_label <- input$node_label
     cnet_plot_para_module$title <- input$title
   })
