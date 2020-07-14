@@ -16,8 +16,8 @@ mod_cnet_plot_para_ui <- function(id){
     #Cnet plot
     sliderInput(ns("showcategory"), 
                 label = "Number of enriched terms to display",
-                min = 5,
-                max = 20,
+                min = 3,
+                max = 15,
                 value = 5),
     selectInput(ns("layout"),
                 label = "Layout",
@@ -25,6 +25,8 @@ mod_cnet_plot_para_ui <- function(id){
     selectInput(ns("node_label"),
                 label = "Node labels",
                 choices = c("all", "gene", "category", "none")),
+    textInput(ns("title"), 
+              label = "Title")
     
   )
 }
@@ -39,6 +41,7 @@ mod_cnet_plot_para_server <- function(input, output, session){
     cnet_plot_para_module$showcategory <- input$showcategory
     cnet_plot_para_module$layout <- input$layout
     cnet_plot_para_module$node_label <- input$node_label
+    cnet_plot_para_module$title <- input$title
   })
   
   return(cnet_plot_para_module)

@@ -29,10 +29,11 @@ mod_cnet_plot_server <- function(input, output, session, cnet_plot_para_ui_1, se
     enrichment_object <<- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
     enrichment_object_readable <- DOSE::setReadable(enrichment_object, OrgDb = 'org.Hs.eg.db', keyType = "ENTREZID") #Not sure if KeyType should be selected from the enrichment object
     
-    p <- enrichplot::cnetplot(x = enrichment_object_readable,
+    p <- try(enrichplot::cnetplot(x = enrichment_object_readable,
                               showCategory = cnet_plot_para_ui_1$showcategory,
                               layout = cnet_plot_para_ui_1$layout,
-                              node_label = cnet_plot_para_ui_1$node_label)
+                              node_label = cnet_plot_para_ui_1$node_label,
+                              title = cnet_plot_para_ui_1$title))
     
     return(p)
   })
@@ -42,7 +43,7 @@ mod_cnet_plot_server <- function(input, output, session, cnet_plot_para_ui_1, se
   })
   
   output$download_plot <- downloadHandler(
-    filename = function() { paste("test", '.png', sep='') }, #The title here should be changed to the Cnet title
+    filename = function() { paste(cnet_plot_para_ui_1$title, '.png', sep='') }, 
     content = function(file) {
       ggplot2::ggsave(file, plot = cnetplot(), device = "png")
     }
