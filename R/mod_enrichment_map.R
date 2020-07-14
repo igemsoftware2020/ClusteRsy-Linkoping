@@ -12,7 +12,9 @@ mod_enrichment_map_ui <- function(id){
   tagList(
     plotOutput(ns("enrichment_map"), height = '100vh', width = '100%') %>% shinycssloaders::withSpinner(color= "#ffbd40", 
                                                                                                                 type = 4,
-                                                                                                                size = 0.8)
+                                                                                                                size = 0.8),
+    downloadButton(ns("download_plot"), 
+                   label = "Download Plot")
   )
 }
     
@@ -40,6 +42,12 @@ mod_enrichment_map_server <- function(input, output, session, enrichment_map_par
     enrichment_map() #calling the reactive plot
   })
   
+  output$download_plot <- downloadHandler(
+    filename = function() { paste(enrichment_map_para_ui_1$title, '.png', sep='') },
+    content = function(file) {
+      ggplot2::ggsave(file, plot = enrichment_map(), device = "png")
+    }
+  )
 }
     
 ## To be copied in the UI

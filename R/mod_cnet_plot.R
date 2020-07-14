@@ -12,7 +12,9 @@ mod_cnet_plot_ui <- function(id){
   tagList(
           plotOutput(ns("cnet_plot"), height = '100vh', width = '100%') %>% shinycssloaders::withSpinner(color="#ffbd40", 
                                                                                                          type = 4,
-                                                                                                         size = 0.8)
+                                                                                                         size = 0.8),
+          downloadButton(ns("download_plot"), 
+                         label = "Download Plot")
   )
 }
     
@@ -39,6 +41,12 @@ mod_cnet_plot_server <- function(input, output, session, cnet_plot_para_ui_1, se
     cnetplot() #calling the reactive plot
   })
   
+  output$download_plot <- downloadHandler(
+    filename = function() { paste("test", '.png', sep='') }, #The title here should be changed to the Cnet title
+    content = function(file) {
+      ggplot2::ggsave(file, plot = cnetplot(), device = "png")
+    }
+  )
   
   
   
