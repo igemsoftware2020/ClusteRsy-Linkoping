@@ -21,6 +21,7 @@ mod_visual_ui <- function(id){
       width = "25%", 
       height = "60%",
       draggable = TRUE,
+      style = "z-index: 25;",
       wellPanel( #Text in the floating panel.
         tags$div(id = "collasp-panel",
           tags$h3(class = "text-center", "Pick an enrichment object for visualization"),
