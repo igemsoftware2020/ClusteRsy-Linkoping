@@ -44,19 +44,7 @@ mod_welcoming_page_ui <- function(id){
                       ),
                       tags$div(
                         tags$image(src = "www/slick_item4.jpg")
-                      ))),
-    
-    
-#   tags$script(type="text/javascript", src="//code.jquery.com/jquery-1.11.0.min.js"),
-#   tags$script(type="text/javascript", src="//code.jquery.com/jquery-migrate-1.2.1.min.js"),
-#   tags$script(type="text/javascript", src="www/slick.min.js" )
-    # tags$script(type="text/javascript",
-    #             "$(document).ready(function(){
-    #                 $('.slick-js').slick({
-    #                   setting-name: setting-value
-    #               });
-    #              });"
-    #             )
+                      )))
   )
 }
     
