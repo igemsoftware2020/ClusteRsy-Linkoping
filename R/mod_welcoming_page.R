@@ -49,11 +49,19 @@ mod_welcoming_page_ui <- function(id){
                      tags$div(`class`="swiper-slide",
                               tags$div(`class`="row",
                                        tags$div(`class`="col-sm-4", style="height:100vh;padding:0;",
+<<<<<<< HEAD
                                                 tags$a(class="swiper-item", style="background-image:url('www/slick_item4.jpg');")),
                                        tags$div(`class`="col-sm-4", style="height:100vh;padding:0;",
                                                 tags$a(class="swiper-item", style="background-image:url('www/slick_item5.jpg');")),
                                        tags$div(`class`="col-sm-4", style="height:100vh;padding:0;",
                                                 tags$a(class="swiper-item", style="background-image:url('www/slick_item6.jpg');"))))),
+=======
+                                                tags$a(class="swiper-item", style="background-image:url('www/slick_item1.jpg');")),
+                                       tags$div(`class`="col-sm-4", style="height:100vh;padding:0;",
+                                                tags$a(class="swiper-item", style="background-image:url('www/slick_item2.jpg');")),
+                                       tags$div(`class`="col-sm-4", style="height:100vh;padding:0;",
+                                                tags$a(class="swiper-item", style="background-image:url('www/slick_item3.jpg');"))))),
+>>>>>>> dd9b7c672f48409db49cd09da8f0d388edbc1f53
              tags$div(`class`="swiper-button-prev"),
              tags$div(`class`="swiper-button-next"))
   )
