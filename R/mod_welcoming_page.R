@@ -13,7 +13,7 @@
 mod_welcoming_page_ui <- function(id){
   ns <- NS(id)
   tagList(
-    tags$div(style="height: 100vh; width: 100%; background-image: url('www/front_page.png');background-repeat:no-repeat;background-size:cover;; color:white", class= "row",
+    tags$div(style="height: 100vh; width: 100%; background-image: url('www/front_page1.png');background-repeat:no-repeat;background-size:cover;; color:white", class= "row",
              tags$div(`class`="container", style = "margin: 17vh 10vw; padding: 0;",
                       tags$h1("Lorem ipsum", style = "margin: 0"),
                       rep_br(2),
@@ -34,8 +34,9 @@ mod_welcoming_page_ui <- function(id){
                       tags$h3(style="color:#333c41;margin-top:15%", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. , rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae")),
              tags$div(`class`="col-sm-4", style= "top:10%;text-align:center;padding:0;padding-left:2%;padding-right:2%",
                       tags$h3(style="color:#333c41;margin-top:15%", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. , rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae"))),
-    tags$div(style="height: 85vh; width: 100%; margin-top:20%; margin-bottom:2%;",`class`="swiper-container",
-             tags$h3("Some cool panels"),
+    tags$div(`class`="text-center", style = "color:black; height:50vh",
+             tags$h3("Some cool panels", style = "position: relative;top: 45%; color: black;")),
+    tags$div(style="height: 85vh; width: 100%; margin-bottom:2%;",`class`="swiper-container",
              tags$div(`class`="swiper-wrapper",
                      tags$div(`class`="swiper-slide",
                               tags$a(class="swiper-item", style="background-image:url('www/slick_item1.jpg');"),
