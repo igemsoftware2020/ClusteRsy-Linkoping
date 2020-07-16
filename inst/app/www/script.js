@@ -15,4 +15,20 @@ $( document ).ready(function() {
       }
     }
   });
+  
+  // Loading modal
+  function loading_modal_open(){
+       $('#loading_modal').modal('show');
+  }
+  
+  function loading_modal_close(){
+         	$('#loading_modal').modal('hide');
+  }
+  
+  // Update welcom button
+  $('#blob_button').click(function(){
+        i++;
+        Shiny.setInputValue("blob_button", i);
+        console.log(i)
+    });
 });

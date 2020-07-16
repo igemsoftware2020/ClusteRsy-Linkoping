@@ -28,7 +28,7 @@ mod_main_page_v2_ui <- function(id){
 #' main_page_v2 Server Function
 #'
 #' @noRd 
-mod_main_page_v2_server <- function(input, output, session, con){
+mod_main_page_v2_server <- function(input, output, session, con, app_servr){
   ns <- session$ns
   
   main_page_v2_module <- reactiveValues()
@@ -44,6 +44,10 @@ mod_main_page_v2_server <- function(input, output, session, con){
   
   observeEvent(input$title, {
     updateNavbarPage(session, "navbar", " ")
+  })
+  
+  observeEvent(app_servr$blob_button, {
+    updateNavbarPage(session, "navbar", "Input data")
   })
   
   # Reactive values to record the buttons from all enrich methods

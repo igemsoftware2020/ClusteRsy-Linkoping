@@ -6,8 +6,10 @@ $( document ).ready(function() {
     grabCursor: true,
     observer: true,
     observeParents: true,
-    disableOnInteraction: false,
-    
+    slidesPerView: 4,
+    spaceBetween: 30,
+    slidesPerGroup: 2,
+    // loopFillGroupWithBlank: true, // Used for remained division between pics and pages
     // Navigation arrows
     navigation: {
       nextEl: '.swiper-button-next',
