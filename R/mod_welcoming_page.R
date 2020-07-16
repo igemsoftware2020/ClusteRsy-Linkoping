@@ -7,6 +7,9 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
+#' 
+
+
 mod_welcoming_page_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -31,20 +34,19 @@ mod_welcoming_page_ui <- function(id){
                       tags$h3(style="color:#333c41;margin-top:15%", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. , rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae")),
              tags$div(`class`="col-sm-4", style= "top:10%;text-align:center;padding:0;padding-left:2%;padding-right:2%",
                       tags$h3(style="color:#333c41;margin-top:15%", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. , rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae"))),
-    tags$div(style="height: 50vh; width: 100%;", `class`="row",
-             tags$div(`class`="slick-js",
-                      tags$div(
-                        tags$image(src = "www/slick_item1.jpg")
-                      ),
-                      tags$div(
-                        tags$image(src = "www/slick_item2.jpg")
-                      ),
-                      tags$div(
-                        tags$image(src = "www/slick_item3.jpg")
-                      ),
-                      tags$div(
-                        tags$image(src = "www/slick_item4.jpg")
-                      )))
+    tags$div(style="height: 85vh; width: 100%; margin-top:20%; margin-bottom:2%;",`class`="swiper-container",
+             tags$h3("Some cool panels"),
+             tags$div(`class`="swiper-wrapper",
+                     tags$div(`class`="swiper-slide",
+                              tags$a(class="swiper-item", style="background-image:url('www/slick_item1.jpg');"),
+                              tags$a(class="swiper-item", style="background-image:url('www/slick_item2.jpg');"),
+                              tags$a(class="swiper-item", style="background-image:url('www/slick_item3.jpg');")),
+                     tags$div(`class`="swiper-slide",
+                              tags$a(class="swiper-item", style="background-image:url('www/slick_item4.jpg');"),
+                              tags$a(class="swiper-item", style="background-image:url('www/slick_item5.jpg');"),
+                              tags$a(class="swiper-item", style="background-image:url('www/slick_item6.jpg');"))),
+             tags$div(`class`="swiper-button-prev"),
+             tags$div(`class`="swiper-button-next"))
   )
 }
     
@@ -53,7 +55,7 @@ mod_welcoming_page_ui <- function(id){
 #' @noRd 
 mod_welcoming_page_server <- function(input, output, session){
   ns <- session$ns
- 
+  
 }
     
 ## To be copied in the UI

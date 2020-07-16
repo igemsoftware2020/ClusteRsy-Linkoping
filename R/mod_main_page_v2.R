@@ -10,7 +10,7 @@
 mod_main_page_v2_ui <- function(id){
   ns <- NS(id)
   tagList(
-    navbarPage(id = ns("navbar"), title = actionLink(ns("title"), tags$i(class = "fa fa-home", `aria-hidden`="true"), type = "heading", style="left: 9px; position: relative;"),
+    navbarPage(id = ns("navbar"), title = actionLink(ns("title"), tags$i(class = "fa fa-home", `aria-hidden`="true"), type = "heading"),
                position = "fixed-top",
                collapsible = TRUE, selected = " ",
                tabPanel("Input data", mod_Columns_ui(ns("Columns_ui_1"))),
