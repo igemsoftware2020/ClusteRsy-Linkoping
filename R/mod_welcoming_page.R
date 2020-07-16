@@ -10,7 +10,7 @@
 #' 
 button <- '<div  class="buttons">
   <button id= "blob_button" class="blob-btn">
-    View app
+    VIEW APP
     <span class="blob-btn__inner">
       <span class="blob-btn__blobs">
         <span class="blob-btn__blob"></span>
@@ -21,6 +21,7 @@ button <- '<div  class="buttons">
     </span>
   </button>
   <br/>
+  </div>
 
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
   <defs>
