@@ -7164,7 +7164,6 @@ nav{
   margin: 20px;
   background-size: auto 120%;
   cursor: pointer;
-  border-radius: 5%;
 }
 
 .grid-item:hover {
@@ -7181,7 +7180,6 @@ a > p {
   color: #e6e6e6;
   background-color: #2f5c945c;
   height: 100%;
-  border-radius: 5%;
   padding-top: 53%;
 }
 
@@ -7190,7 +7188,6 @@ a > p:hover {
   color: #e6e6e6;
   background-color: #2c3e50b8;
   height: 100%;
-  border-radius: 5%;
   padding-top: 53%;
 }
 
@@ -7198,16 +7195,14 @@ a > p:hover {
 .swiper-item {
   display: inline-flex;
   height: 100%;
-  width: 30%;
+  width: 100%;
   -webkit-transition: all .5s;
   -moz-transition: all .5s;
   -o-transition: all .5s;
   transition: all 0.5s;
   background-size: auto 150%;
   cursor: pointer;
-  border-radius: 5%;
-  margin-left: 47px;
-  opacity: 0.8;
+  opacity: 0.7;
 }
 
 .swiper-item:hover {
