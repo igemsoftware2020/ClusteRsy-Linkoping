@@ -12,9 +12,7 @@ mod_dot_plot_ui <- function(id){
   tagList(
     plotOutput(ns("dot_plot"), height = '100vh', width = '100%') %>% shinycssloaders::withSpinner(color="#ffbd40", 
                                                                                                   type = 4,
-                                                                                                  size = 0.8),
-    downloadButton(ns("download_plot"), 
-                   label = "Download Plot")
+                                                                                                  size = 0.8)
   )
 }
     
@@ -39,13 +37,6 @@ mod_dot_plot_server <- function(input, output, session, dot_plot_para_ui_1, sele
     output$dot_plot <- renderPlot({
       dotplot() #calling the reactive plot
     })
-    
-    output$download_plot <- downloadHandler(
-      filename = function() { paste(dot_plot_para_ui_1$title, '.png', sep='') },
-      content = function(file) {
-        ggplot2::ggsave(file, plot = dotplot(), device = "png")
-      }
-    )
 }
     
 ## To be copied in the UI
