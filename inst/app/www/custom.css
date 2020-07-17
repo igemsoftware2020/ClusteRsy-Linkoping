@@ -3075,6 +3075,7 @@ fieldset[disabled] a.btn {
   color: #fff9f9;
   background-color: #687b7c;
   border-color: #566566;
+  outline: none;
 }
 .btn-default.disabled:hover,
 .btn-default[disabled]:hover,
@@ -6981,6 +6982,10 @@ a.list-group-item-danger.active:focus {
 button.link {
   background: none;
   border: none;
+}
+
+button.link:focus {
+  outline:none;
 }
 
 /* Pretty switch*/

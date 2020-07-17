@@ -1,3 +1,12 @@
+// Loading modal
+function loading_modal_open(){
+     $('#loading_modal').modal('show');
+}
+
+function loading_modal_close(){
+       	$('#loading_modal').modal('hide');
+}
+
 $( document ).ready(function() {
   // Change position of tabs
   var i;
@@ -15,15 +24,6 @@ $( document ).ready(function() {
       }
     }
   });
-  
-  // Loading modal
-  function loading_modal_open(){
-       $('#loading_modal').modal('show');
-  }
-  
-  function loading_modal_close(){
-         	$('#loading_modal').modal('hide');
-  }
   
   // Update welcom button
   $('#blob_button').click(function(){
