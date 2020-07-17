@@ -12,10 +12,7 @@ mod_heat_plot_ui <- function(id){
   tagList(
     plotOutput(ns("heat_plot"), height = '100vh', width = '100%') %>% shinycssloaders::withSpinner(color="#ffbd40", 
                                                                 type = 4,
-                                                                size = 0.8),
-    downloadButton(ns("download_plot"), 
-                   label = "Download Plot")
- 
+                                                                size = 0.8)
   )
 }
     
@@ -40,14 +37,6 @@ mod_heat_plot_server <- function(input, output, session, heat_plot_para_ui_1, se
   output$heat_plot <- renderPlot({
     heatplot() 
   })
-  
-  output$download_plot <- downloadHandler(
-    filename = function() { paste(heat_plot_para_ui_1$title, '.png', sep='') }, 
-    content = function(file) {
-      ggplot2::ggsave(file, plot = heatplot(), device = "png")
-    }
-  )
- 
 }
     
 ## To be copied in the UI

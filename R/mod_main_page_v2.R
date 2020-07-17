@@ -21,7 +21,8 @@ mod_main_page_v2_ui <- function(id){
                tabPanel("PPI networks", mod_ppi_networks_ui(ns("ppi_networks_ui_1"))),
                tabPanel(" ", mod_welcoming_page_ui(ns("welcoming_page_ui_1"))) #Hide this with Javascirpt
     ),
-    tags$script(HTML("element = document.getElementsByTagName('a')[7]; element.style.display = 'none'")) #Change the number according to the tabPanel order
+    tags$script(HTML("element = document.getElementsByTagName('a')[7]; element.style.display = 'none'")), #Change the number according to the tabPanel order
+    htmlOutput(ns("loaded"))
   )
 }
 
@@ -48,6 +49,12 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
   
   observeEvent(app_servr$blob_button, {
     updateNavbarPage(session, "navbar", "Input data")
+  })
+  
+  observeEvent(app_servr$loaded, {
+    output$loaded <- renderUI({
+      tags$script("$('body').toggleClass('loaded');")
+    })
   })
   
   # Reactive values to record the buttons from all enrich methods
