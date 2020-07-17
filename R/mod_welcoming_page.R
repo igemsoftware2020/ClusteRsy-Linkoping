@@ -30,13 +30,13 @@ button <- '<div  class="buttons">
     </filter>
   </defs>
 </svg>
-</div>' 
+</div>' # !!NOTE: The button only works on browser
 
 mod_welcoming_page_ui <- function(id){
   ns <- NS(id)
   tagList(
     # section 1
-    tags$div(style="height: 100vh; width: 100%; background-image: url('www/front_page1.png');background-repeat:no-repeat;background-size:cover; color:#fff9f9", class= "row",
+    tags$div(style="height: 100vh; width: 100%; background-image: url('www/front_page1.gif');background-repeat:no-repeat;background-size:cover; color:#fff9f9", class= "row",
              tags$div(`class`="container", style = "margin: 17vh 10vw; padding: 0;",
                       tags$h1("Lorem ipsum", style = "margin: 0"),
                       rep_br(2),
