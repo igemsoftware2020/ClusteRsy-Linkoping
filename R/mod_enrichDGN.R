@@ -64,6 +64,7 @@ mod_enrichDGN_server <- function(input, output, session, con, Description1_ui_1,
     
     output$error <- renderUI({})
     
+    
     module_genes <- try(get_module_genes(input$module_object, con = con))
     background_genes <- try(get_background_genes(input$module_object, con = con))
     
