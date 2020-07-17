@@ -7040,11 +7040,12 @@ dash {
 
 /* tag <a> */
 a[type="heading"]{
-  color: #ffbd40;
+  color: #fec961;
 }
 
 a[type="heading"]:hover, a[type="heading"]:focus{
-  text-decoration:none
+  text-decoration:none;
+  outline: none;
 }
 
 /* Delete button */
@@ -7134,7 +7135,7 @@ tr {
 
 /* Collapse panel */
 #collasp {
-    color: orange;
+    color: #ffbd40;
     font-size: 70px;
     position: absolute;
     top: -35px;

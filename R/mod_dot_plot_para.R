@@ -12,7 +12,7 @@ mod_dot_plot_para_ui <- function(id){
   tagList(
       #Parameters
       tags$h3(class = "text-center",
-              "Select parameters"),
+              "Parameters"),
       #Dot plot
       selectInput(ns("xaxis"),
                   label = "X-axis",

@@ -24,8 +24,7 @@ mod_visual_ui <- function(id){
       style = "z-index: 25;",
       wellPanel( #Text in the floating panel.
         tags$div(id = "collasp-panel",
-          tags$h3(class = "text-center", "Pick an enrichment object for visualization"),
-          tags$p(class = "text-right", "You can drag this panel around."),
+          tags$h3(class = "text-center", "Visualization"),
           tags$form(`class` = "well", style = "background-color:#FFFFFF;",
                     DT::dataTableOutput(ns("enrichment_overview"), width = "auto", height = "auto")), #Data table for plot output
           actionButton(ns("analyze"), label = "Analyze"),

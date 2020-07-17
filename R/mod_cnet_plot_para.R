@@ -12,7 +12,7 @@ mod_cnet_plot_para_ui <- function(id){
   tagList(
     #Parameters
     tags$h3(class = "text-center",
-            "Select parameters"),
+            "Parameters"),
     #Cnet plot
     sliderInput(ns("showcategory"), 
                 label = "Number of enriched terms to display",

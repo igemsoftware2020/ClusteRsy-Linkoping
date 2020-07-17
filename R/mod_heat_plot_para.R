@@ -11,7 +11,7 @@ mod_heat_plot_para_ui <- function(id){
   ns <- NS(id)
   tagList(
     tags$h3(class = "text-center",
-            "Select parameters"),
+            "Parameters"),
     sliderInput(ns("showcategory"), 
                 label = "Number of enriched terms to display",
                 min = 5,

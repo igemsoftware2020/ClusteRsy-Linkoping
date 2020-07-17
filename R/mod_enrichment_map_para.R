@@ -12,7 +12,7 @@ mod_enrichment_map_para_ui <- function(id){
   tagList(
     #Parameters
     tags$h3(class = "text-center",
-            "Select parameters"),
+            "Parameters"),
    #Enrichment_map 
     selectInput(ns("color"),
                 label = "Color",
