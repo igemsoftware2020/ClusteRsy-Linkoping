@@ -24,92 +24,86 @@ mod_disease_analysis_ui <- function(id){
 #' disease_analysis Server Function
 #'
 #' @noRd 
-mod_disease_analysis_server <- function(input, output, session, con, Description1_ui_1){
+mod_disease_analysis_server <- function(input, output, session, con, Description1_ui_1, module_overview_ui_1){
   ns <- session$ns
   
   disease_analysis_module <- reactiveValues()
   
   # Call Module only once
-  enrichDGN_ui_1 <- callModule(mod_enrichDGN_server, "enrichDGN_ui_1", con = con, Description1_ui_1) 
-  enrichDO_ui_1 <- callModule(mod_enrichDO_server, "enrichDO_ui_1", con = con, Description1_ui_1)
-  enrichNCG_ui_1 <- callModule(mod_enrichNCG_server, "enrichNCG_ui_1", con = con, Description1_ui_1)
-  gseDGN_ui_1 <- callModule(mod_gseDGN_server, "gseDGN_ui_1", con = con, Description1_ui_1)
-  gseDO_ui_1 <- callModule(mod_gseDO_server, "gseDO_ui_1", con = con, Description1_ui_1)
-  gseNCG_ui_1 <- callModule(mod_gseNCG_server, "gseNCG_ui_1", con = con, Description1_ui_1)
-  enrichGO_ui_1 <- callModule(mod_enrichGO_server, "enrichGO_ui_1", con = con, Description1_ui_1)
-  gseGO_ui_1 <- callModule(mod_gseGO_server, "gseGO_ui_1", con = con, Description1_ui_1)
-  groupGO_ui_1 <- callModule(mod_groupGO_server, "groupGO_ui_1", con = con, Description1_ui_1)
-  enrichKEGG_ui_1 <- callModule(mod_enrichKEGG_server, "enrichKEGG_ui_1", con = con, Description1_ui_1)
-  gseKEGG_ui_1 <- callModule(mod_gseKEGG_server, "gseKEGG_ui_1", con = con, Description1_ui_1)
-  enrichMKEGG_ui_1 <- callModule(mod_enrichMKEGG_server, "enrichMKEGG_ui_1", con = con, Description1_ui_1)
-  gseMKEGG_ui_1 <- callModule(mod_gseMKEGG_server, "gseMKEGG_ui_1", con = con, Description1_ui_1)
+  enrichDGN_ui_1 <- callModule(mod_enrichDGN_server, "enrichDGN_ui_1", con = con, Description1_ui_1, module_overview_ui_1) 
+  enrichDO_ui_1 <- callModule(mod_enrichDO_server, "enrichDO_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  enrichNCG_ui_1 <- callModule(mod_enrichNCG_server, "enrichNCG_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  gseDGN_ui_1 <- callModule(mod_gseDGN_server, "gseDGN_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  gseDO_ui_1 <- callModule(mod_gseDO_server, "gseDO_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  gseNCG_ui_1 <- callModule(mod_gseNCG_server, "gseNCG_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  enrichGO_ui_1 <- callModule(mod_enrichGO_server, "enrichGO_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  gseGO_ui_1 <- callModule(mod_gseGO_server, "gseGO_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  groupGO_ui_1 <- callModule(mod_groupGO_server, "groupGO_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  enrichKEGG_ui_1 <- callModule(mod_enrichKEGG_server, "enrichKEGG_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  gseKEGG_ui_1 <- callModule(mod_gseKEGG_server, "gseKEGG_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  enrichMKEGG_ui_1 <- callModule(mod_enrichMKEGG_server, "enrichMKEGG_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
+  gseMKEGG_ui_1 <- callModule(mod_gseMKEGG_server, "gseMKEGG_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
   
   observeEvent(input$analyse_method, {
     
     descrip <- function(method){
-      if (method == "DGN Enrichment Method"){
-        description = "DGN Enrichment Method"
+      if (input$analyse_method == "Disease analysis"){
+        description = tags$div(style = "color: #3f3f40", class = "text-left", 
+                        tags$p(tags$b("Over-representation:"), "Method for identifying association of interesting genes."),
+                        tags$p(tags$b("Gene set enrichment analysis:"),"Method for identifying association of a set of interesting genes"),
+
+                        tags$p(tags$a("DO:", style = "color: #fec961", href = "https://academic.oup.com/bioinformatics/article/31/4/608/2748221"),
+                               "(Disease Ontology) Method for identifying disease association of interesting genes."), 
+                        
+
+                        tags$p(tags$a("NCG:", style = "color: #fec961", href = "https://academic.oup.com/nar/article/44/D1/D992/2502624"),
+                               "Network of Cancer Gene (NCG), a  manually curated repository containing 1571 cancer genes which has been derived from 175 published studies."),
+                        tags$p("The method is used for analyzing gene lists and determining whether they are enriched in genes known to be mutated in a given cancer type. "),
+                        
+                      
+                        tags$p(tags$a("DGN:", style ="color: #fec961", href = "https://academic.oup.com/database/article/doi/10.1093/database/bav028/2433160"),
+                               "DisGeNET is a discovery comprehensive platform for dynamical exploration of human disease and their genes. The platform contains over 380 000 associations between >16 000 genes and 13 000 diseases. The enrichment analysis of disease-gene associations is supported by over-representation test and gene set enrichment analysis."),
+                        
+        
+        )
         return(description)
       }
-      if (method == "DO Enrichment Method"){
-        description = "DO Enrichment Method"
+      if (input$analyse_method == "Gene Ontology analysis"){
+        description = tags$div(style = "color: #3f3f40", class = "text-left",
+                        tags$p(tags$b("Over-representation:"), "Method for identifying association of interesting genes."),
+                        tags$p(tags$b("Gene set enrichment analysis:"),"Method for identifying association of a set of interesting genes"),
+                        tags$p(tags$b("Classification:"), "A method designed for a gene classification based on GO distribution at a specific level"),
+                        
+                        tags$p(
+                          tags$a(tags$b("GO termfinder"),style ="color: #fec961", href ="https://academic.oup.com/bioinformatics/article/20/18/3710/202612"),
+                               "This package uses methods for accessing Gene Ontology information and finding significantly enriched Gene Ontology terms associated with a list of genes."),
+                        
+                        tags$p("The organism data is collected from",tags$a("Bioconductor OrgDb",style ="color: #fec961", href ="http://bioconductor.org/packages/release/BiocViews.html#___OrgDb")),
+                        )
         return(description)
       }
-      if (method == "NCG Enrichment Method"){
-        description = "NCG Enrichment Method"
-        return(description)
-      }
-      if (method == "DGN Gene Set Enrichment Method"){
-        description = "DGN Gene Set Enrichment Method"
-        return(description)
-      }
-      if (method == "DO Gene Set Enrichment Method"){
-        description = "DO Gene Set Enrichment Method"
-        return(description)
-      }
-      if (method == "NCG Gene Set Enrichment Method"){
-        description = "NCG Gene Set Enrichment Method"
-        return(description)
-      }
-      if (method == "GO Enrichment Method"){
-        description = "GO Enrichment Method"
-        return(description)
-      }
-      if (method == "GO Gene Set Enrichment Method"){
-        description = "GO Gene Set Enrichment Method"
-        return(description)
-      }
-      if (method == "GO Classification Method"){
-        description = "GO Classification Method"
-        return(description)
-      }
-      if (method == "KEGG Enrichment Method"){
-        description = "KEGG Enrichment Method"
-        return(description)
-      }
-      if (method == "KEGG Gense Set Enrichment Method"){
-        description = "KEGG Gense Set Enrichment Method"
-        return(description)
-      }
-      if (method == "MKEGG Enrichment Method"){
-        description = "MKEGG Enrichment Method"
-        return(description)
-      }
-      if (method == "MKEGG Gense Set Enrichment Method"){
-        description = "MKEGG Gense Set Enrichment Method"
+      if (input$analyse_method == "KEGG analysis"){
+        description = tags$div(style = "color: #3f3f40", class = "text-left",
+                               tags$p(tags$b("Over-representation:"), "Method for identifying association of interesting genes."),
+                               tags$p(tags$b("Gene set enrichment analysis:"),"Method for identifying association of a set of interesting genes"),
+                               tags$p(
+                                 tags$a(tags$b("KEGG:"), style ="color: #fec961", href = "https://www.genome.jp/kegg/"),
+                                 "Kyoto Encyclopedia of Genes and Genomes (KEGG), is a database resource for understanding high-level functions and utilities of the biological system."),
+                               tags$p("The organism is set to hsa (H. sapiens) by default and is collected from",
+                                      tags$a("KEGGdb", style ="color: #fec961", href ="https://www.genome.jp/kegg/catalog/org_list.html"))
+        )
         return(description)
       }
     }
     
     description <- function(method, hyperlink){
-      tagList(tags$button(paste("Click me to learn more about ", method),
-                          id = "method",
+      tagList(tags$button(paste("Click me to learn more about ", input$analyse_method),
                           class = "link",
                           type = "button",
                           `data-toggle` = "modal",
                           `data-target` = "#descrip_enrich"),
               tags$div(`class` = "modal fade", `id` = "descrip_enrich", `role` = "dialog", `tabindex` = "-1", `aria-hidden` = "true", `style` = "display:none;",
-                       tags$div(`class` = "modal-dialog", style="top:35%",
+                       tags$div(`class` = "modal-dialog", style="top:25%",
                                 tags$div(`class` = "modal-content",
                                          tags$div(`class` = "modal-header",
                                                   tags$button("×", type = "button", class = "close", `data-dismiss` = "modal", `aria-hidden` = "true"),
@@ -143,7 +137,7 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
             disease_analysis_module$enrich <- enrichDGN_ui_1$enrich 
             })
           method <- "DGN Enrichment Method"
-          hyperlink <- "https://www.google.com/"
+          hyperlink <- "https://yulab-smu.github.io/clusterProfiler-book/chapter4.html#enrichdgn-and-enrichdgnv-functions"
           output$description <- renderUI({
             tags$div(style = "text-align: center;",
             description(method, hyperlink))
@@ -156,7 +150,7 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
             disease_analysis_module$enrich <- enrichDO_ui_1$enrich
             })
           method <- "DO Enrichment Method"
-          hyperlink <- "https://www.google.com/"
+          hyperlink <- "https://yulab-smu.github.io/clusterProfiler-book/chapter4.html#enrichdo-function"
           output$description <- renderUI({
             tags$div(style = "text-align: center;",
                      description(method, hyperlink))
@@ -169,7 +163,7 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
             disease_analysis_module$enrich <- enrichNCG_ui_1$enrich 
            })
           method <- "NCG Enrichment Method"
-          hyperlink <- "https://www.google.com/"
+          hyperlink <- "https://yulab-smu.github.io/clusterProfiler-book/chapter4.html#enrichncg-function"
           output$description <- renderUI({
             tags$div(style = "text-align: center;",
                      description(method, hyperlink))
@@ -182,7 +176,7 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
             disease_analysis_module$enrich <- gseDGN_ui_1$enrich
             })
           method <- "DGN Gene Set Enrichment Method"
-          hyperlink <- "https://www.google.com/"
+          hyperlink <- "https://yulab-smu.github.io/clusterProfiler-book/chapter4.html#gsedgn-fuction"
           output$description <- renderUI({
             tags$div(style = "text-align: center;",
                      description(method, hyperlink))
@@ -195,7 +189,7 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
             disease_analysis_module$enrich <- gseDO_ui_1$enrich
             })
           method <- "DO Gene Set Enrichment Method"
-          hyperlink <- "https://www.google.com/"
+          hyperlink <- "https://yulab-smu.github.io/clusterProfiler-book/chapter4.html#gsedo-fuction"
           output$description <- renderUI({
             tags$div(style = "text-align: center;",
                      description(method, hyperlink))
@@ -208,7 +202,7 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
             disease_analysis_module$enrich <- gseNCG_ui_1$enrich
             })
           method <- "NCG Gene Set Enrichment Method"
-          hyperlink <- "https://www.google.com/"
+          hyperlink <- "https://yulab-smu.github.io/clusterProfiler-book/chapter4.html#gsencg-fuction"
           output$description <- renderUI({
             tags$div(style = "text-align: center;",
                      description(method, hyperlink))
@@ -234,7 +228,7 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
             disease_analysis_module$enrich <- enrichGO_ui_1$enrich
             })
           method <- "GO Enrichment Method"
-          hyperlink <- "https://www.google.com/"
+          hyperlink <- "https://yulab-smu.github.io/clusterProfiler-book/chapter5.html#go-over-representation-test"
           output$description <- renderUI({
             tags$div(style = "text-align: center;",
                      description(method, hyperlink))
@@ -247,7 +241,7 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
             disease_analysis_module$enrich <- gseGO_ui_1$enrich
             })
           method <- "GO Gene Set Enrichment Method"
-          hyperlink <- "https://www.google.com/"
+          hyperlink <- "https://yulab-smu.github.io/clusterProfiler-book/chapter5.html#go-gene-set-enrichment-analysis"
           output$description <- renderUI({
             tags$div(style = "text-align: center;",
                      description(method, hyperlink))
@@ -260,7 +254,7 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
             disease_analysis_module$enrich <- groupGO_ui_1$enrich
             })
           method <- "GO Classification Method"
-          hyperlink <- "https://www.google.com/"
+          hyperlink <- "https://yulab-smu.github.io/clusterProfiler-book/chapter5.html#go-classification"
           output$description <- renderUI({
             tags$div(style = "text-align: center;",
                      description(method, hyperlink))
@@ -290,7 +284,7 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
             disease_analysis_module$enrich <- enrichKEGG_ui_1$enrich
           })
           method <- "KEGG Enrichment Method"
-          hyperlink <- "https://www.google.com/"
+          hyperlink <- "https://yulab-smu.github.io/clusterProfiler-book/chapter6.html#kegg-over-representation-test"
           output$description <- renderUI({
             tags$div(style = "text-align: center;",
                      description(method, hyperlink))
@@ -303,7 +297,7 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
             disease_analysis_module$enrich <- gseKEGG_ui_1$enrich
             })
           method <- "KEGG Gense Set Enrichment Method"
-          hyperlink <- "https://www.google.com/"
+          hyperlink <- "https://yulab-smu.github.io/clusterProfiler-book/chapter6.html#kegg-gene-set-enrichment-analysis"
           output$description <- renderUI({
             tags$div(style = "text-align: center;",
                      description(method, hyperlink))
@@ -316,7 +310,7 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
             disease_analysis_module$enrich <- enrichMKEGG_ui_1$enrich
             })
           method <- "MKEGG Enrichment Method"
-          hyperlink <- "https://www.google.com/"
+          hyperlink <- "https://yulab-smu.github.io/clusterProfiler-book/chapter6.html#kegg-module-over-representation-test"
           output$description <- renderUI({
             tags$div(style = "text-align: center;",
                      description(method, hyperlink))
@@ -329,7 +323,7 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
             disease_analysis_module$enrich <- gseMKEGG_ui_1$enrich
             })
           method <- "MKEGG Gense Set Enrichment Method"
-          hyperlink <- "https://www.google.com/"
+          hyperlink <- "https://yulab-smu.github.io/clusterProfiler-book/chapter6.html#kegg-module-gene-set-enrichment-analysis"
           output$description <- renderUI({
             tags$div(style = "text-align: center;",
                      description(method, hyperlink))

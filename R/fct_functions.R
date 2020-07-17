@@ -45,9 +45,9 @@ set_background_genes.module_discoverer <- function(module, con) {
   unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
 }
 
-set_background_genes.clique_sum <- function(module, con) {
-  ppi_name <- as.character(module$settings$ppi_network)
-  unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
+#Clique_Sum gets it's ppi from the Clique DB (default PPI)
+set_background_genes.Clique_Sum_permutation <- function(module, con) {
+  unique(unlist(MODifieRDB::ppi_network_from_db("Default", con = con)[,1:2]))
 }
 
 #Inference methods not using ppi-network.  

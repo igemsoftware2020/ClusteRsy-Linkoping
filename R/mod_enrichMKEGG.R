@@ -44,17 +44,22 @@ mod_enrichMKEGG_ui <- function(id){
 #' enrichMKEGG Server Function
 #'
 #' @noRd 
-mod_enrichMKEGG_server <- function(input, output, session, con, Description1_ui_1){
+mod_enrichMKEGG_server <- function(input, output, session, con, Description1_ui_1, module_overview_ui_1){
   ns <- session$ns
   
   enrichMKEGG_module <- reactiveValues()
+  x <- reactiveVal(1) # Reactive value to record if the input button is pressed
+  
   
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
-    selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
+    tagList(
+      selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis."),
+      uiOutput(ns("error"))
+    )
   })
   
-  observeEvent(Description1_ui_1$module_name, {
+  observeEvent(c(Description1_ui_1$module_name, module_overview_ui_1$delete$delete), {
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     updateSelectInput(session, "module_object", choices = module_objects)
   })
@@ -63,8 +68,10 @@ mod_enrichMKEGG_server <- function(input, output, session, con, Description1_ui_
     id <- showNotification("Creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     
-    module_genes <- get_module_genes(input$module_object, con = con)
-    background_genes <- get_background_genes(input$module_object, con = con)
+    output$error <- renderUI({})
+    
+    module_genes <- try(get_module_genes(input$module_object, con = con))
+    background_genes <- try(get_background_genes(input$module_object, con = con))
     
     enrichment_object <- try(clusterProfiler::enrichMKEGG(gene = module_genes,
                                                          organism = 'hsa', #Homo sapiens set as default.
@@ -78,12 +85,14 @@ mod_enrichMKEGG_server <- function(input, output, session, con, Description1_ui_
                                                          
     )
     )
-    if (class(enrichment_object) == "try-error"){
+    if (any(c(class(enrichment_object), class(background_genes), class(module_genes)) == "try-error")){
       output$error <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
+        tags$p(class = "text-danger", tags$b("Error:"), enrichment_object,
+               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
       })
     } else {
-      enrichMKEGG_module$enrich <- enrichment_object
+      x(x() + 1)
+      enrichMKEGG_module$enrich <- c(x(), "enrichMKEGG")  # Reactive value to record if the input button is pressed
       module_name <- input$module_object
       MODifieRDB::enrichment_object_to_db(enrichment_object,
                                           module_name = module_name, 

@@ -61,13 +61,3 @@ drop_nulls <- function(x){
 #' @noRd
 rv <- shiny::reactiveValues
 rvtl <- shiny::reactiveValuesToList
-
-
-#' Loading screen
-#' 
-#' @noRd
-load_data <- function() {
-  MODifieRDB::connect_to_db("./../testdb.db")
-  shinyjs::hide("loader-wrapper")
-  shinyjs::show("main_content")
-}

@@ -10,39 +10,154 @@
 mod_main_page_v2_ui <- function(id){
   ns <- NS(id)
   tagList(
-    navbarPage(id = ns("navbar"), title = actionLink(ns("title"), tags$i(class = "fa fa-home", `aria-hidden`="true"), 
-                                                     type = "heading", style="left: 9px; position: relative;"), 
+    navbarPage(id = ns("navbar"), title = actionLink(ns("title"), tags$i(class = "fa fa-home", `aria-hidden`="true"), type = "heading"),
+               position = "fixed-top",
                collapsible = TRUE, selected = " ",
                tabPanel("Input data", mod_Columns_ui(ns("Columns_ui_1"))),
                tabPanel("Visualization", mod_visual_ui(ns("visual_ui_1"))),
                tabPanel("Input objects", mod_input_overview_ui(ns("input_overview_ui_1"))),
                tabPanel("Module objects", mod_module_overview_ui(ns("module_overview_ui_1"))),
+               tabPanel("Enrichment objects", mod_enrichment_overview_ui(ns("enrichment_overview_ui_1"))),
                tabPanel("PPI networks", mod_ppi_networks_ui(ns("ppi_networks_ui_1"))),
                tabPanel(" ", mod_welcoming_page_ui(ns("welcoming_page_ui_1"))) #Hide this with Javascirpt
     ),
-    tags$script(HTML("element = document.getElementsByTagName('a')[6]; element.style.display = 'none'")) #Change the number according to the tabPanel order
+    tags$script(HTML("element = document.getElementsByTagName('a')[7]; element.style.display = 'none'")), #Change the number according to the tabPanel order
+    htmlOutput(ns("loaded"))
   )
 }
 
 #' main_page_v2 Server Function
 #'
 #' @noRd 
-mod_main_page_v2_server <- function(input, output, session){
+mod_main_page_v2_server <- function(input, output, session, con, app_servr){
   ns <- session$ns
-  con <- MODifieRDB::connect_to_db("./../testdb.db")
-  Columns_ui_1 <- callModule(mod_Columns_server, "Columns_ui_1", con = con)
+  
+  main_page_v2_module <- reactiveValues()
+  module_overview_ui_1 <- reactiveValues()
+  input_overview_ui_1 <- reactiveValues()
+  ppi_networks_ui_1 <- reactiveValues()
+  
+  Columns_ui_1 <- callModule(mod_Columns_server, "Columns_ui_1", con = con, module_overview_ui_1, input_overview_ui_1, ppi_networks_ui_1)
+  module_overview_ui_1$delete <- callModule(mod_module_overview_server, "module_overview_ui_1", con = con, Columns_ui_1)
+  input_overview_ui_1$delete <- callModule(mod_input_overview_server, "input_overview_ui_1", con = con, Columns_ui_1)
+  ppi_networks_ui_1$upload_ppi <- callModule(mod_ppi_networks_server, "ppi_networks_ui_1", con = con)
+  
+  
   observeEvent(input$title, {
     updateNavbarPage(session, "navbar", " ")
   })
   
+  observeEvent(app_servr$blob_button, {
+    updateNavbarPage(session, "navbar", "Input data")
+  })
+  
+  observeEvent(app_servr$loaded, {
+    output$loaded <- renderUI({
+      tags$script("$('body').toggleClass('loaded');")
+    })
+  })
+  
+  # Reactive values to record the buttons from all enrich methods
+  enrichDGN = reactiveVal("0")
+  enrichDO = reactiveVal("0")
+  enrichGO = reactiveVal("0")
+  enrichKEGG = reactiveVal("0")
+  enrichMKEGG = reactiveVal("0")
+  enrichNCG = reactiveVal("0")
+  groupGO = reactiveVal("0")
+  gseDGN = reactiveVal("0")
+  gseNCG = reactiveVal("0")
+  gseDO = reactiveVal("0")
+  gseGO = reactiveVal("0")
+  gseMKEGG = reactiveVal("0")
+  gseKEGG = reactiveVal("0")
+
   observeEvent(Columns_ui_1$enrich, {
-    updateNavbarPage(session, "navbar", "Visualization")
+    main_page_v2_module$enrich <- Columns_ui_1$enrich 
+    if (Columns_ui_1$enrich[2] == "enrichDGN"){
+      if (Columns_ui_1$enrich[1] != enrichDGN()){
+        enrichDGN(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "enrichDO"){
+      if (Columns_ui_1$enrich[1] != enrichDO()){
+        enrichDO(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "enrichGO"){
+      if (Columns_ui_1$enrich[1] != enrichGO()){
+        enrichGO(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "enrichKEGG"){
+      if (Columns_ui_1$enrich[1] != enrichKEGG()){
+        enrichKEGG(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "enrichMKEGG"){
+      if (Columns_ui_1$enrich[1] != enrichMKEGG()){
+        enrichMKEGG(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    
+    if (Columns_ui_1$enrich[2] == "enrichNCG"){
+      if (Columns_ui_1$enrich[1] != enrichNCG()){
+        enrichNCG(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "groupGO"){
+      if (Columns_ui_1$enrich[1] != groupGO()){
+        groupGO(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "gseDGN"){
+      if (Columns_ui_1$enrich[1] != gseDGN()){
+        gseDGN(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "gseNCG"){
+      if (Columns_ui_1$enrich[1] != gseNCG()){
+        gseNCG(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "gseDO"){
+      if (Columns_ui_1$enrich[1] != gseDO()){
+        gseDO(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "gseGO"){
+      if (Columns_ui_1$enrich[1] != gseGO()){
+        gseGO(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "gseMKEGG"){
+      if (Columns_ui_1$enrich[1] != gseMKEGG()){
+        gseMKEGG(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
+    if (Columns_ui_1$enrich[2] == "gseKEGG"){
+      if (Columns_ui_1$enrich[1] != gseKEGG()){
+        gseKEGG(Columns_ui_1$enrich[1])
+        updateNavbarPage(session, "navbar", "Visualization")
+      }
+    }
   })
   
   callModule(mod_welcoming_page_server, "welcoming_page_ui_1")
-  callModule(mod_visual_server, "visual_ui_1", con = con)
-  callModule(mod_input_overview_server, "input_overview_ui_1", con = con)
-  callModule(mod_module_overview_server, "module_overview_ui_1", con = con)
+  callModule(mod_visual_server, "visual_ui_1", con = con, main_page_v2_module)
+  callModule(mod_enrichment_overview_server, "enrichment_overview_ui_1", con = con, main_page_v2_module)
   callModule(mod_ppi_networks_server, "ppi_networks_ui_1", con = con)
 }
 

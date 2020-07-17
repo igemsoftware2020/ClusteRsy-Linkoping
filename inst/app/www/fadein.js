@@ -13,7 +13,6 @@ function unfade(element) {
 
 /* Column 2 */
 function col2() {
-    console.log("Hello World");
     unfade(document.getElementById('num_contain_2'))
     unfade(document.getElementById('mod_contain_2'))
     document.getElementById('mod_contain_2').style.pointerEvents = "auto";

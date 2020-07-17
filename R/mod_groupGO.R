@@ -50,18 +50,23 @@ mod_groupGO_ui <- function(id){
 #' GO Server Function 
 #' 
 #' @noRd
-mod_groupGO_server <- function(input, output, session, con, Description1_ui_1){
+mod_groupGO_server <- function(input, output, session, con, Description1_ui_1, module_overview_ui_1){
   ns <- session$ns
   
   groupGO_module <- reactiveValues()
+  x <- reactiveVal(1) # Reactive value to record if the input button is pressed
+  
   
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
-    selectInput(ns("module_object"), label = "Module object", choices = module_objects, 
-                popup = "The module used for gene set enrichment analysis.")
+    tagList(
+      selectInput(ns("module_object"), label = "Module object", choices = module_objects, 
+                  popup = "The module used for gene set enrichment analysis."),
+      uiOutput(ns("error"))
+    )
   })
   
-  observeEvent(Description1_ui_1$module_name, {
+  observeEvent(c(Description1_ui_1$module_name, module_overview_ui_1$delete$delete), {
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     updateSelectInput(session, "module_object", choices = module_objects)
   })
@@ -70,8 +75,9 @@ mod_groupGO_server <- function(input, output, session, con, Description1_ui_1){
     id <- showNotification("Creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     
-    module_genes <- get_module_genes(input$module_object, con = con)
-    background_genes <- get_background_genes(input$module_object, con = con)
+    output$error <- renderUI({})
+    
+    module_genes <- try(get_module_genes(input$module_object, con = con))
     
     group_object <- try(clusterProfiler::groupGO(gene = module_genes,
                                                  OrgDb = 'org.Hs.eg.db',
@@ -81,12 +87,14 @@ mod_groupGO_server <- function(input, output, session, con, Description1_ui_1){
                                                  readable = input$readable
   ))
     
-    if (class(group_object) == "try-error"){
+    if (any(c(class(group_object), class(module_genes)) == "try-error")){
       output$error <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), group_object)
+        tags$p(class = "text-danger", tags$b("Error:"), group_object,
+               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
       })
     } else {
-      groupGO_module$enrich <- group_object
+      x(x() + 1)
+      groupGO_module$enrich <- c(x(), "groupGO")  # Reactive value to record if the input button is pressed
       module_name <- input$module_object
       MODifieRDB::enrichment_object_to_db(group_object,
                                           module_name = module_name, 

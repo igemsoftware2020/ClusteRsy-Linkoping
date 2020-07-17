@@ -16,18 +16,19 @@ mod_module_overview_ui <- function(id){
              fileInput(ns("module_object"), label = "Upload a module object", accept =  ".rds"),
              uiOutput(ns("module_name_chooser"))),
              tags$br(),
-             tags$div(`class`="col-sm-4", style = "text-align:right",
-                      actionButton(ns("refresh"), HTML("<i class='fa fa-refresh' aria-hidden='true'></i> Refresh")),
+             tags$div(`class`="col-sm-4", style = "text-align:right", id ="buttons_module_overview",
                       downloadButton(ns("download_module"), "Download"),
-                      actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true"))))
+                      actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true")))),
+    uiOutput(ns("disable"))
   )
 }
 
 #' module_overview Server Function
 #'
 #' @noRd 
-mod_module_overview_server <- function(input, output, session, con){
+mod_module_overview_server <- function(input, output, session, con, Columns_ui_1){
   ns <- session$ns
+  module_overview_module <- reactiveValues()
   
   #Reactive funciton for fileinput
   upload_module <- reactive({
@@ -65,19 +66,25 @@ mod_module_overview_server <- function(input, output, session, con){
     MODifieRDB::MODifieR_object_to_db(MODifieR_object = module,
                                       object_name = module_name,
                                       con = con)
+    
+    # Refresh
+    module_objects <- MODifieRDB::get_available_module_objects(con)
+    output$module_overview <- DT::renderDataTable(module_objects,
+                                                  rownames = FALSE,
+                                                  selection = list(selected = c(1)))
   })
   
   module_objects <- MODifieRDB::get_available_module_objects(con)
-  
   # Render DT
   output$module_overview <- DT::renderDataTable(module_objects,
+                                                rownames = FALSE,
                                                 selection = list(selected = c(1)))
   
   # Refresh DT
-  observeEvent(input$refresh, {
+  observeEvent(Columns_ui_1$module_name, {
     module_objects <- MODifieRDB::get_available_module_objects(con)
-    
     output$module_overview <- DT::renderDataTable(module_objects,
+                                                  rownames = FALSE,
                                                   selection = list(selected = c(1)))
   })
   
@@ -106,6 +113,23 @@ mod_module_overview_server <- function(input, output, session, con){
     }
   )
   
+  # Observe if valid to download
+  observe({
+    if(is.null(input$module_overview_rows_selected)) {
+     output$disable <- renderUI({
+       tags$script((HTML("document.getElementById('main_page_v2_ui_1-module_overview_ui_1-download_module').style.pointerEvents = 'none';
+                         document.getElementById('main_page_v2_ui_1-module_overview_ui_1-delete').style.pointerEvents = 'none';
+                         document.getElementById('buttons_module_overview').style.cursor = 'not-allowed';")))
+     }) 
+    } else {
+      output$disable <- renderUI({
+        tags$script((HTML("document.getElementById('main_page_v2_ui_1-module_overview_ui_1-download_module').style.pointerEvents = 'auto';
+                          document.getElementById('main_page_v2_ui_1-module_overview_ui_1-delete').style.pointerEvents = 'auto';
+                          document.getElementById('buttons_module_overview').style.cursor = 'default';")))
+      }) 
+    }
+  })
+  
   # Delete module object
   observeEvent(input$delete, {
     id <- showNotification("Deleting", duration = NULL, closeButton = FALSE)
@@ -113,6 +137,7 @@ mod_module_overview_server <- function(input, output, session, con){
     # Required for selecting
     module_objects <- MODifieRDB::get_available_module_objects(con)
     output$module_overview <- DT::renderDataTable(module_objects,
+                                                  rownames = FALSE,
                                                   selection = list(selected = c(1)))
     
     # Delete
@@ -126,10 +151,12 @@ mod_module_overview_server <- function(input, output, session, con){
     # Refresh
     module_objects <- MODifieRDB::get_available_module_objects(con)
     output$module_overview <- DT::renderDataTable(module_objects,
+                                                  rownames = FALSE,
                                                   selection = list(selected = c(1)))
+    # Send refresh
+    module_overview_module$delete <- input$delete
   })
-  
-  
+  return(module_overview_module)
 }
 
 ## To be copied in the UI

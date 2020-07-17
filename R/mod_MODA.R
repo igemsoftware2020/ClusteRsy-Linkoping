@@ -47,7 +47,7 @@ mod_MODA_ui <- function(id){
 #' MODA Server Function
 #'
 #' @noRd 
-mod_MODA_server <- function(input, output, session, con, upload_ui_1){
+mod_MODA_server <- function(input, output, session, con, upload_ui_1, input_overview_ui_1){
   ns <- session$ns
   
   MODA_module <- reactiveValues()
@@ -57,7 +57,7 @@ mod_MODA_server <- function(input, output, session, con, upload_ui_1){
     selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation.")
   })
   
-  observeEvent(upload_ui_1$input_name, {
+  observeEvent(c(upload_ui_1$input_name, input_overview_ui_1$delete$delete), {
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     updateSelectInput(session, "input_object", choices = input_objects)
   })
@@ -87,7 +87,7 @@ mod_MODA_server <- function(input, output, session, con, upload_ui_1){
   }) 
   
   
-  observeEvent(input$load_input, {
+  observeEvent(input$load_input,  {
     id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     module_object <- try(MODifieRDB::moda_db(input_name = input$input_object, 

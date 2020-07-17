@@ -39,17 +39,21 @@ mod_enrichDO_ui <- function(id){
 #' enrichDO Server Function
 #'
 #' @noRd 
-mod_enrichDO_server <- function(input, output, session, con, Description1_ui_1){
+mod_enrichDO_server <- function(input, output, session, con, Description1_ui_1, module_overview_ui_1){
   ns <- session$ns
   
   enrichDO_module <- reactiveValues()
+  x <- reactiveVal(1) # Reactive value to record if the input button is pressed
   
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
-    selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
+    tagList(
+      selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis."),
+      uiOutput(ns("error"))
+    )
   })
   
-  observeEvent(Description1_ui_1$module_name, {
+  observeEvent(c(Description1_ui_1$module_name, module_overview_ui_1$delete$delete), {
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     updateSelectInput(session, "module_object", choices = module_objects)
   })
@@ -58,27 +62,31 @@ mod_enrichDO_server <- function(input, output, session, con, Description1_ui_1){
     id <- showNotification("Identifying disease assosciation and creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     
-    module_genes <- get_module_genes(input$module_object, con = con)
-    background_genes <- get_background_genes(input$module_object, con = con)
+    output$error <- renderUI({})
+    
+    module_genes <- try(et_module_genes(input$module_object, con = con))
+    background_genes <- try(get_background_genes(input$module_object, con = con))
     
     enrichment_object <- try(DOSE::enrichDO(gene = module_genes,
                                                ont = "DO",
-                                               pvalueCutoff = input$pvaluecutoff,
-                                               pAdjustMethod = input$padjustmethod,
+                                               pvalueCutoff = input$pvalueCutoff,
+                                               pAdjustMethod = input$pAdjustMethod,
                                                universe = background_genes,
                                                minGSSize = input$mingssize,
                                                maxGSSize = input$maxgssize,
-                                               qvalueCutoff = input$qvaluecutoff,
+                                               qvalueCutoff = input$qvalueCutoff,
                                                readable = FALSE
                                                
     )
     )
-    if (class(enrichment_object) == "try-error"){
+    if (any(c(class(enrichment_object), class(background_genes), class(module_genes)) == "try-error")){
       output$error_p_value <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), enrichment_object)
+        tags$p(class = "text-danger", tags$b("Error:"), enrichment_object,
+               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
       })
     } else {
-      enrichDO_module$enrich <- enrichment_object  
+      x(x() + 1)  # Reactive value to record if the input buttion is pressed
+      enrichDO_module$enrich <- c(x(), "enrichDO") 
       module_name <- input$module_object
       MODifieRDB::enrichment_object_to_db(enrichment_object,
                                           module_name = module_name, 

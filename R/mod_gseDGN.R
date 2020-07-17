@@ -45,17 +45,22 @@ mod_gseDGN_ui <- function(id){
 #' gseDGN Server Function
 #'
 #' @noRd 
-mod_gseDGN_server <- function(input, output, session, con, Description1_ui_1){
+mod_gseDGN_server <- function(input, output, session, con, Description1_ui_1, module_overview_ui_1){
   ns <- session$ns
   
   gseDGN_module <- reactiveValues()
+  x <- reactiveVal(1) # Reactive value to record if the input button is pressed
+  
   
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
-    selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis.")
+    tagList(
+      selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis."),
+      uiOutput(ns("error"))
+    )
   })  
   
-  observeEvent(Description1_ui_1$module_name, {
+  observeEvent(c(Description1_ui_1$module_name, module_overview_ui_1$delete$delete), {
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     updateSelectInput(session, "module_object", choices = module_objects)
   })
@@ -64,10 +69,12 @@ mod_gseDGN_server <- function(input, output, session, con, Description1_ui_1){
     id <- showNotification("Creating enrichment analysis object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     
-    gene_list <- get_sorted_module_genes(input$module_object, con = con)
+    output$error <- renderUI({})
+    
+    gene_list <- try(get_sorted_module_genes(input$module_object, con = con))
     
     gse_object <- try(DOSE::gseDGN(
-                                  geneList = genes,
+                                  geneList = gene_list,
                                   exponent = input$exponent,
                                   nPerm = input$nperm,
                                   pvalueCutoff = input$pvaluecutoff,
@@ -80,16 +87,18 @@ mod_gseDGN_server <- function(input, output, session, con, Description1_ui_1){
       
     )
     )
-    if (class(gse_object) == "try-error"){
+    if (any(c(class(gse_object), class(gene_list)) == "try-error")){
       output$error <- renderUI({
-        tags$p(class = "text-danger", tags$b("Error:"), gse_object)
+        tags$p(class = "text-danger", tags$b("Error:"), gse_object,
+               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
       })
     } else {
-      gseDGN_module$enrich <- gse_object
+      x(x() + 1)
+      gseDGN_module$enrich <- c(x(), "gseDGN")  # Reactive value to record if the input button is pressed
       module_name <- input$module_object
-      MODifieRDB::enrichment_object_to_db(enrichment_object,
+      MODifieRDB::enrichment_object_to_db(gse_object,
                                           module_name = module_name, 
-                                          enrichment_method = "gseDGN", 
+                                          enrichment_method = gse_object@setType, 
                                           con = con)
     }
     # Close loading modal

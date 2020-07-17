@@ -12,22 +12,23 @@ mod_input_overview_ui <- function(id){
   tagList(
     DT::dataTableOutput(ns("input_overview")),
     tags$div(`class`="row",
-             tags$div(`class`="col-sm-8", style = "color:black",
+             tags$div(`class`="col-sm-10", style = "color:black",
              fileInput(ns("input_object"), label = "Upload an input object", accept = ".rds"),
              uiOutput(ns("input_name_chooser"))),
              tags$br(),
-             tags$div(`class`="col-sm-4", style = "text-align:right",
-                      actionButton(ns("refresh"), HTML("<i class='fa fa-refresh' aria-hidden='true'></i> Refresh")),
+             tags$div(`class`="col-sm-2", style = "text-align:right", id ="buttons_input_overview",
                       downloadButton(ns("download_input"), "Download"),
-                      actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true"))))
+                      actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true")))),
+    uiOutput(ns("disable"))
   )
 }
 
 #' input_overview Server Function
 #'
 #' @noRd 
-mod_input_overview_server <- function(input, output, session, con){
+mod_input_overview_server <- function(input, output, session, con, Columns_ui_1){
   ns <- session$ns
+  input_overview_module <- reactiveValues()
   
   # Reactive function for fileinput
   upload_input <- reactive({
@@ -65,31 +66,27 @@ mod_input_overview_server <- function(input, output, session, con){
                                       object_name = input_name,
                                       con = con)
     
+    # Refresh
+    input_objects <- MODifieRDB::get_available_input_objects(con)
+    output$input_overview <- DT::renderDataTable(input_objects,
+                                                 rownames = FALSE,
+                                                 selection = list(selected = c(1)))
+    
   })
   
   input_objects <- MODifieRDB::get_available_input_objects(con)
-  
   # Render DT
   output$input_overview <- DT::renderDataTable(input_objects,
+                                               rownames = FALSE,
                                                selection = list(selected = c(1)))
   
   # Refresh DT
-  observeEvent(input$refresh, {
+  observeEvent(Columns_ui_1$input_name, {
     input_objects <- MODifieRDB::get_available_input_objects(con)
-    
     output$input_overview <- DT::renderDataTable(input_objects,
+                                                 rownames = FALSE,
                                                  selection = list(selected = c(1)))
   })
-  
-  # Download function
-  output$download_input <- downloadHandler(
-    filename = function() {
-      paste0("input_set_", Sys.Date(), ".rds", sep="")
-    },
-    content = function(file) {
-      saveRDS(retrieve_input(), file)
-    }
-  )
   
   # Choose multiple options
   current_inputs <- function() {
@@ -106,6 +103,32 @@ mod_input_overview_server <- function(input, output, session, con){
     }
   }
   
+  # Download function
+  output$download_input <- downloadHandler(
+    filename = function() {
+      paste0("input_set_", Sys.Date(), ".rds", sep="")
+    },
+    content = function(file) {
+      saveRDS(retrieve_input(), file)
+    }
+  )
+  
+  observe({
+    if(is.null(input$input_overview_rows_selected)) {
+      output$disable <- renderUI({
+        tags$script((HTML("document.getElementById('main_page_v2_ui_1-input_overview_ui_1-download_input').style.pointerEvents = 'none';
+                         document.getElementById('main_page_v2_ui_1-input_overview_ui_1-delete').style.pointerEvents = 'none';
+                         document.getElementById('buttons_input_overview').style.cursor = 'not-allowed';")))
+      }) 
+    } else {
+      output$disable <- renderUI({
+        tags$script((HTML("document.getElementById('main_page_v2_ui_1-input_overview_ui_1-download_input').style.pointerEvents = 'auto';
+                          document.getElementById('main_page_v2_ui_1-input_overview_ui_1-delete').style.pointerEvents = 'auto';
+                          document.getElementById('buttons_input_overview').style.cursor = 'default';")))
+      }) 
+    }
+  })
+  
   # Delete input object
   observeEvent(input$delete, {
     id <- showNotification("Deleting", duration = NULL, closeButton = FALSE)
@@ -113,6 +136,7 @@ mod_input_overview_server <- function(input, output, session, con){
     # Required for selecting
     input_objects <- MODifieRDB::get_available_input_objects(con)
     output$input_overview <- DT::renderDataTable(input_objects,
+                                                 rownames = FALSE,
                                                  selection = list(selected = c(1)))
     
     
@@ -127,9 +151,13 @@ mod_input_overview_server <- function(input, output, session, con){
     # Refresh
     input_objects <- MODifieRDB::get_available_input_objects(con)
     output$input_overview <- DT::renderDataTable(input_objects,
-                                                  selection = list(selected = c(1)))
+                                                 rownames = FALSE,
+                                                 selection = list(selected = c(1)))
+    
+    # Send refresh
+    input_overview_module$delete <- input$delete
   })
- 
+ return(input_overview_module)
 }
 
 ## To be copied in the UI

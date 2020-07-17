@@ -11,7 +11,7 @@ mod_Columns_ui <- function(id){
   ns <- NS(id)
   tagList(
     # Number container
-    tags$div(`class`="row",
+    tags$div(`class`="row", style = "margin-right:-15px; margin-left:-15px;",
              tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
                       tags$form(class = "well", style = "background-color: inherit",
                                 tags$h2(class = "text-center",
@@ -70,17 +70,24 @@ mod_Columns_ui <- function(id){
 #' Columns Server Function
 #'
 #' @noRd 
-mod_Columns_server <- function(input, output, session, con){
+mod_Columns_server <- function(input, output, session, con, module_overview_ui_1, input_overview_ui_1, ppi_networks_ui_1){
   ns <- session$ns
   
   Columns_module <- reactiveValues()
 
   upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1", con = con)
-  Description1_ui_1 <- callModule(mod_Description1_server, "Description1_ui_1", con = con, upload_ui_1)
-  disease_analysis_ui_1 <- callModule(mod_disease_analysis_server, "disease_analysis_ui_1", con = con, Description1_ui_1)
+  Description1_ui_1 <- callModule(mod_Description1_server, "Description1_ui_1", con = con, upload_ui_1, input_overview_ui_1, ppi_networks_ui_1)
+  disease_analysis_ui_1 <- callModule(mod_disease_analysis_server, "disease_analysis_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
   
+  observeEvent(upload_ui_1$input_name,{
+    Columns_module$input_name <- upload_ui_1$input_name
+  })
   
-  observeEvent(disease_analysis_ui_1$enrich,{
+  observeEvent(Description1_ui_1$module_name,{
+    Columns_module$module_name <- Description1_ui_1$module_name
+  })
+  
+  observeEvent(disease_analysis_ui_1$enrich, {
     Columns_module$enrich <- disease_analysis_ui_1$enrich
   })
   
