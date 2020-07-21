@@ -36,7 +36,12 @@ mod_welcoming_page_ui <- function(id){
                       tags$h3("Innovative", style="font-family:Quicksand")
                       ),
              HTML(button, user_guide_button),
-             HTML('<a class="button learn" href="#section2">&#8595;</a>')),
+             HTML('<a class="button learn" href="#section2">&#8595;</a>'),
+             tags$a(icon("github-square", "fa-3x", lib = "font-awesome"), 
+                    href = "https://github.com/iGEM-linkoping",
+                    style = "position: absolute;
+                             bottom: 5vh;
+                             left: 5vh;")),
     ## section 2
     tags$div(id="section2", style="height: 100vh; width: 100%;text-align:center;", class= "row",
              tags$div(`class`="col-sm-4", style="height: 100%;text-align: center;padding-left: 3%;",
