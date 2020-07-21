@@ -29,11 +29,11 @@ mod_welcoming_page_ui <- function(id){
              tags$div(`class`="container", style = "margin: 17vh 10vw; padding: 0",
                       tags$h1("MODifieRWeb", style = "margin: 0; font-family:Quicksand"),
                       rep_br(2),
-                      tags$h2("Our belief is that MODifierWeb will help to streamline transcriptomics data processing and thus make science and bioinformatics in more approachable for every professional enthusiast.", style="font-family:Quicksand"),
-                      tags$h2("As a team of young researchers we aspire to make this tool:", style="font-family:Quicksand"),
-                      tags$h2("Simple", style="font-family:Quicksand"),
-                      tags$h2("Enlightening", style="font-family:Quicksand"), 
-                      tags$h2("Innovative", style="font-family:Quicksand")
+                      tags$h3("Our belief is that MODifierWeb will help to streamline transcriptomics data processing and thus make science and bioinformatics in more approachable for every professional enthusiast.", style="font-family:Quicksand"),
+                      tags$h3("As a team of young researchers we aspire to make this tool:", style="font-family:Quicksand"),
+                      tags$h3("Simple", style="font-family:Quicksand"),
+                      tags$h3("Enlightening", style="font-family:Quicksand"), 
+                      tags$h3("Innovative", style="font-family:Quicksand")
                       ),
              HTML(button, user_guide_button),
              HTML('<a class="button learn" href="#section2">&#8595;</a>'),
