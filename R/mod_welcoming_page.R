@@ -11,10 +11,10 @@
 #' @importFrom shiny NS tagList 
 #' 
 
-#Need to add new buttons to JS in the folder for them to work.
 button <- '<button id = "blob_button" class ="front_button">
 View app
 </button>'
+#This button doesn't work properly. Needs fix before beta goes live or remove it.
 user_guide_button <- '<button id = "user_guide_btn" class = "front_button" style = "position:absolute; top:80%">
   User guide
 </button>'
@@ -36,28 +36,18 @@ mod_welcoming_page_ui <- function(id){
                       tags$h3("Innovative", style="font-family:Quicksand")
                       ),
              HTML(button, user_guide_button),
-             HTML('<a class="button learn" href="#section2">&#8595;</a>'),
-             tags$a(icon("github-square", "fa-3x", lib = "font-awesome"), 
-                    href = "https://github.com/iGEM-linkoping",
-                    style = "position: absolute;
-                             bottom: 5vh;
-                             left: 5vh;"),
-             ),
-             #actionLink(ns("test"), label = "", icon = icon("github-square", lib = "font-awesome"))),
-               
+             HTML('<a class="button learn" href="#section2">&#8595;</a>')),
     ## section 2
     tags$div(id="section2", style="height: 100vh; width: 100%;text-align:center;", class= "row",
              tags$div(`class`="col-sm-4", style="height: 100%;text-align: center;padding-left: 3%;",
                       tags$h3(style ="color:#615a5a;margin: 0;position: absolute; top: 50%;-ms-transform: translateY(-50%);transform: translateY(-50%);", "MODifieRWeb is a tool that analyses and elucidates the predominant disease genes in any given transcriptomics data. By the creation of disease modules the interplay and significance of genes are illuminated and the disease is identified.", style="font-family:Quicksand")),
-             tags$div(`class`="col-sm-8", style = "height:200%",
+             tags$div(`class`="col-sm-8", style = "height:100%",
                       tags$a(class="grid-item", style="background-image:url('www/grid_item1.jpg');",
                              tags$p("MODifieR", style="font-family:Quicksand")),
                       tags$a(class="grid-item", style="background-image:url('www/grid_item2.jpg');",
                              tags$p("ClusterProfiler", style="font-family:Quicksand")),
                       tags$a(class="grid-item", style="background-image:url('www/grid_item3.jpg');",
-                             tags$p("GWAS", style="font-family:Quicksand")),
-                      tags$a(class="grid-item", style="background-image:url('www/grid_item4.jpg');",
-                             tags$p("Comhub", style="font-family:Quicksand"))
+                             tags$p("GWAS", style="font-family:Quicksand"))
                       )),
     ## section 3
     tags$div(style="height: 50vh; width: 100%; background-color:#fec961;",`class`="row",
