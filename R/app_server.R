@@ -7,7 +7,7 @@
 app_server <- function( input, output, session) {
   app_servr <- reactiveValues()
   # Loading screen
-  con <- MODifieRDB::connect_to_db("./../testdb.db")
+  con <- MODifieRDB::connect_to_db("./data_example/testdb.db")
   app_servr$loaded <- con
   # Load example
   enrichment_object <- readRDS("./data_example/breast_cancer_example.rds")
