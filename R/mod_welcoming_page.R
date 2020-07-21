@@ -11,10 +11,10 @@
 #' @importFrom shiny NS tagList 
 #' 
 
+#Need to add new buttons to JS in the folder for them to work.
 button <- '<button id = "blob_button" class ="front_button">
 View app
 </button>'
-#This button doesn't work properly. Needs fix before beta goes live or remove it.
 user_guide_button <- '<button id = "user_guide_btn" class = "front_button" style = "position:absolute; top:80%">
   User guide
 </button>'
@@ -36,7 +36,15 @@ mod_welcoming_page_ui <- function(id){
                       tags$h2("Innovative", style="font-family:Quicksand")
                       ),
              HTML(button, user_guide_button),
-             HTML('<a class="button learn" href="#section2">&#8595;</a>')),
+             HTML('<a class="button learn" href="#section2">&#8595;</a>'),
+             tags$a(icon("github-square", "fa-3x", lib = "font-awesome"), 
+                    href = "https://github.com/iGEM-linkoping",
+                    style = "position: absolute;
+                             bottom: 5vh;
+                             left: 5vh;"),
+             ),
+             #actionLink(ns("test"), label = "", icon = icon("github-square", lib = "font-awesome"))),
+               
     ## section 2
     tags$div(id="section2", style="height: 100vh; width: 100%;text-align:center;", class= "row",
              tags$div(`class`="col-sm-4", style="height: 100%;text-align: center;padding-left: 3%;",
