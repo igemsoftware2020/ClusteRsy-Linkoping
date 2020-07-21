@@ -1,4 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Lato:400,700,400italic&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap%27");
+@import url("https://fonts.googleapis.com/css?family=Sofia");
 /*!
  * bootswatch v3.4.1
  * Homepage: http://bootswatch.com
@@ -7334,3 +7336,8 @@ a.button.learn:hover:after, a.button.learn:hover:before{
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
 }
+
+
+
+
+

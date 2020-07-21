@@ -4,6 +4,8 @@
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
+#'@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap%27);
+#'
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
@@ -24,34 +26,43 @@ mod_welcoming_page_ui <- function(id){
   tagList(
     # section 1
     tags$div(style="height: 100vh; width: 100%; background-image: url('www/front_page2.gif');background-repeat:no-repeat;background-size:cover; color:#fff9f9", class= "row",
-             tags$div(`class`="container", style = "margin: 17vh 10vw; padding: 0;",
-                      tags$h1("Lorem ipsum", style = "margin: 0"),
+             tags$div(`class`="container", style = "margin: 17vh 10vw; padding: 0",
+                      tags$h1("MODifieRWeb", style = "margin: 0; font-family:Quicksand"),
                       rep_br(2),
-                      tags$h2("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo "),
-                      tags$h2("Lorem ipsum dolor sit amet, consectetuer")),
+                      tags$h2("Our belief is that MODifierWeb will help to streamline transcriptomics data processing and thus make science and bioinformatics in more approachable for every professional enthusiast.", style="font-family:Quicksand"),
+                      tags$h2("As a team of young researchers we aspire to make this tool:", style="font-family:Quicksand"),
+                      tags$h2("Simple", style="font-family:Quicksand"),
+                      tags$h2("Enlightening", style="font-family:Quicksand"), 
+                      tags$h2("Innovative", style="font-family:Quicksand")
+                      ),
              HTML(button, user_guide_button),
              HTML('<a class="button learn" href="#section2">&#8595;</a>')),
     ## section 2
     tags$div(id="section2", style="height: 100vh; width: 100%;text-align:center;", class= "row",
              tags$div(`class`="col-sm-4", style="height: 100%;text-align: center;padding-left: 3%;",
-                      tags$h3(style ="color:#615a5a;margin: 0;position: absolute; top: 50%;-ms-transform: translateY(-50%);transform: translateY(-50%);", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. justo, fringilla vel, aliquet nec, vulputate ")),
-             tags$div(`class`="col-sm-8", style = "height:100%",
+                      tags$h3(style ="color:#615a5a;margin: 0;position: absolute; top: 50%;-ms-transform: translateY(-50%);transform: translateY(-50%);", "MODifieRWeb is a tool that analyses and elucidates the predominant disease genes in any given transcriptomics data. By the creation of disease modules the interplay and significance of genes are illuminated and the disease is identified.", style="font-family:Quicksand")),
+             tags$div(`class`="col-sm-8", style = "height:200%",
                       tags$a(class="grid-item", style="background-image:url('www/grid_item1.jpg');",
-                             tags$p("Lorem ipsum dolor sit amet")),
+                             tags$p("MODifieR", style="font-family:Quicksand")),
                       tags$a(class="grid-item", style="background-image:url('www/grid_item2.jpg');",
-                             tags$p("Lorem ipsum dolor sit amet")))),
+                             tags$p("ClusterProfiler", style="font-family:Quicksand")),
+                      tags$a(class="grid-item", style="background-image:url('www/grid_item3.jpg');",
+                             tags$p("GWAS", style="font-family:Quicksand")),
+                      tags$a(class="grid-item", style="background-image:url('www/grid_item4.jpg');",
+                             tags$p("Comhub", style="font-family:Quicksand"))
+                      )),
     ## section 3
     tags$div(style="height: 50vh; width: 100%; background-color:#fec961;",`class`="row",
              tags$div(`class`="col-sm-4 welcom-col",
                       tags$div(`class`="container con1",
-                               tags$h4(`class`="conh3", "Hello World!"))),
+                               tags$h4(`class`="conh3", "Hello World!", style="font-family:Quicksand"))),
              tags$div(`class`="col-sm-4 welcom-col",
                       tags$div(`class`="brline"),
                       tags$div(`class`="container con1",
-                               tags$h4(`class`="conh3", "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary"))),
+                               tags$h4(`class`="conh3", "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary", style="font-family:Quicksand"))),
              tags$div(`class`="col-sm-4 welcom-col",
                       tags$div(`class`="container con1",
-                               tags$h4(`class`="conh3", "Hello World!")))),
+                               tags$h4(`class`="conh3", "Hello World!", style="font-family:Quicksand")))),
     ## section 4
     tags$div(`class`="row", style="height:110vh;width:100%;padding-top: 35vh;",
               tags$div(style="height: 57vh; width: 100%; margin-bottom:5%;",`class`="swiper-container",
