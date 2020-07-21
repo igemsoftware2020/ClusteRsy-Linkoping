@@ -59,7 +59,7 @@ mod_user_guide_server <- function(input, output, session){
             tags$p("When choosing parameters for the inference method there are tips beside the parameters."),
             tags$br(), 
 
-            tags$p("For this beta-testing you should only choose MCODE or DIAMoND when trying the inference methods, since the rest will take too long. To try the rest of the inference methods, upload the datasets provided by us.
+            tags$p("For this beta-testing you should only choose MCODE when trying the inference methods, since the rest of the methods will take too long and are too heavy for the server. You can choose from already existing data that has been collected with the different MODifieR methods or try to upload a data set with the instructions mentioned above.
                    ")
    ),
    

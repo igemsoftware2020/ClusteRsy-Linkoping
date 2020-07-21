@@ -10,8 +10,14 @@
 #' 
 
 button <- '<button id = "blob_button" class ="front_button">
-View app </button>
-'
+View app
+</button>'
+#This button doesn't work properly. Needs fix before beta goes live or remove it.
+user_guide_button <- '<button id = "user_guide_btn" class = "front_button" style = "position:absolute; top:80%">
+  User guide
+</button>'
+
+
 
 mod_welcoming_page_ui <- function(id){
   ns <- NS(id)
@@ -23,7 +29,7 @@ mod_welcoming_page_ui <- function(id){
                       rep_br(2),
                       tags$h2("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo "),
                       tags$h2("Lorem ipsum dolor sit amet, consectetuer")),
-             HTML(button),
+             HTML(button, user_guide_button),
              HTML('<a class="button learn" href="#section2">&#8595;</a>')),
     ## section 2
     tags$div(id="section2", style="height: 100vh; width: 100%;text-align:center;", class= "row",
@@ -76,7 +82,7 @@ mod_welcoming_page_ui <- function(id){
 #' @noRd 
 mod_welcoming_page_server <- function(input, output, session){
   ns <- session$ns
-  
+
 }
     
 ## To be copied in the UI

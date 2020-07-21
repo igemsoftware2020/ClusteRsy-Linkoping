@@ -37,7 +37,6 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
   module_overview_ui_1 <- reactiveValues()
   input_overview_ui_1 <- reactiveValues()
   ppi_networks_ui_1 <- reactiveValues()
- 
   
   Columns_ui_1 <- callModule(mod_Columns_server, "Columns_ui_1", con = con, module_overview_ui_1, input_overview_ui_1, ppi_networks_ui_1)
   module_overview_ui_1$delete <- callModule(mod_module_overview_server, "module_overview_ui_1", con = con, Columns_ui_1)
@@ -49,9 +48,16 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
     updateNavbarPage(session, "navbar", " ")
   })
   
+  #Front page button calls
+  observeEvent(app_servr$user_guide_btn, {
+    updateNavbarPage(session, "navbar", "User guide")
+  })
+  
   observeEvent(app_servr$blob_button, {
     updateNavbarPage(session, "navbar", "Input data")
   })
+  
+ 
   
   observeEvent(app_servr$loaded, {
     output$loaded <- renderUI({
