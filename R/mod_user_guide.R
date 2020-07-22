@@ -21,35 +21,50 @@ mod_user_guide_server <- function(input, output, session){
   ns <- session$ns
  output$user_guide <- renderUI({
    tagList(
-
    tags$div(`class`="sidenav", style = "margin: 7vh 0vw;", 
             tags$a("1.Input Data", href="#top"),
             tags$a("1.1 Upload", href="#section2", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
             tags$a("1.2 Inference Method", href="#section3", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
             tags$a("1.3 Enrishment Method", href="#section4", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
             tags$a("2. Visualization", href="#section5"),
-            tags$a("2.1 Enrichment Method for Visualization", href="#section4", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
-            tags$a("2.2 Vizualisation Chart", href="#section6", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
-            tags$a("2.3 Results", href="#section7", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
-            tags$a("3. Input Objects", href="#section8"),
-            tags$a("3.1 Constructing an Input Object", href="#section9", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
-            tags$a("3.2 Potential Errors", href="#section10", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
-            tags$a("4. Module Objects", href="#section11"),
-            tags$a("5. Enrichment Objects", href="#section12"),
-            tags$a("6. PPI networks", href="#section13"),
+            tags$a("2.1 Enrichment Method for Visualization", href="#section6", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
+            tags$a("2.2 Vizualisation Chart", href="#section7", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
+            tags$a("2.3 Results", href="#section8", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
+            tags$a("3. Database", href="#section9"),
+            tags$a("3.1 Input objects database", href="#section10", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
+            tags$a("3.2 Module Objects database", href="#section11", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
+            tags$a("3.3 Enrichment Objects", href="#section12", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
+            tags$a("3.4. PPI networks", href="#section13", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
+            tags$a("4. Input data processing examples", href ="#section14"),
+            tags$a("4.1 Proccesing example", href ="#section15",style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
+            tags$a("4.2 Processing of data using supplementary files", href ="#section16", style= "font-size: 20px; padding: 6px 8px 1px 35px;")
              ),
    
 
 
    tags$div(id="section1", `class`="main", style= "padding-top: 30px; padding-bottom: 10px",
             tags$h1("1. Input Data"),
-            tags$p("The input of the web tool is a count matrix. The count matrix that we utilize is slightly different, but it is not a hassle to convert your old ones to ones functional for our tool! It should be noted that XXXTOOOLNAMEXXX is not a preprocessing tool, but an analytical tool, and thus your raw data needs to be refined elsewhere."),
+            tags$p("The input of the web tool is a count matrix. The count matrix that we utilize is slightly different and require slight modification, but it is not a hassle to convert your old matrixes to ones functional for our tool! It should be noted that MODifieRWeb is not a preprocessing tool, but an analytical tool, and thus your raw data needs to be refined elsewhere."),
+            
+            tags$p(style = "color: #f39c12;",
+                   "Pro tip: If you have previously saved input data, module objects or just want to change something in your enrichment, the different stages in the Input data tab can be navigated by clicking the numbers on top of the respective stages."),
    ),
    
    tags$div(id="section", `class`="main", style= "padding-top: 5px;",
-     tags$h2("1.1 Upload"),
-     tags$p("Select a file with a given count matrix. The file formats supported are csv, tsv and txt. See the section on input object for further information regarding the count matrix. Once the upload is completed a set of choices will be needed for further analysis. First, set a preferred name for your input object. Second, label your test group and your control group and split the data according to test and reference groups. The header from your input object will help you see which is  which. The left box should correspond to group 1 and the right box should correspond to group 2. Either P-value, Quantile or both can be chosen to be calculated. "),
-           ),
+     tags$h3("1.1 Upload"),
+     tags$p("For the tools to work successfully, the input data needs to be in a specific format. This format is that of a count matrix. A count matrix features named columns, each column representing one of the respective samples in your study. The rows are filled with genes/genomic loci values. These values represent the summarized read counts per genomic region (e.g. gene, transcript) after normalization. The supported file formats are csv, tsv and txt"),
+     tags$p("Most online tools, such as usegalaxy.org, will make the pre-processing steps very easy (see our example for a quick guidance). So what is it that you need to do?"),
+     tags$h3("1.1.1 Constructing an input object"),
+     tags$p("The easiest way to construct your input object is simply to merge the different tables, one for each sample, that is generated by your pre-processing. This can easily be achieved in a program such as excel. Make sure to remove the column with gene names. What you should be left with is columns only consisting of sample name as the header, and counts for the respective sample in the following rows below. You then change the file format to csv, tsv, or txt before uploading the input object, which can be achieved with the ‘Save as’ function. Make sure that the input object does not contain any leftover data from the pre-processing!"),
+     tags$h3("1.1.2 Potential errors"),
+     tags$p("For the count matrix to be able to function, there can not be any text present in it more than the sample/patient names. In other words, the gene names that usually occupy the first column can be entirely removed. Deletion of entire columns is easily done in excel. Also, make sure that there is no text present in the bottom of the document as this sometimes occur after pre-processing."),
+     tags$p("Make sure before you convert your input object that you only have commas if decimals are present. Excel features a ‘Search and replace’ function which can come in handy. "),
+     tags$p("Once the count matrix has been modified as mentioned above it can be uploaded. Once the upload is complete a set of choices will be needed for further analysis. First, set a preferred name for your input object. Second, label your test group and your control group and split the data according to test and reference groups. The header from your input object will help you see which is  which. The left box should correspond to group 1 and the right box should correspond to group 2. Either P-value, Quantile or both can be chosen to be calculated. Once the data has been uploaded to the database you can find it in the “input objects” tab."),
+     tags$p(style = "color: #fc4444",
+            "Note: The input data that has been uploaded and saved to the database is found in the “input objects” tab, there you can upload and download input data that you generated through MODifieRWeb and this data can only be uploaded to the “input objects” tab. If you want to upload raw data i.e a new count matrix, follow the steps mentioned above."),
+     tags$p(style = "color: #f39c12",
+            "Pro tip: In the processing", tags$a("example section", href="#section14"), "you will find an example on how to process a count matrix to work with MODifieRWeb."),
+          ),
    
    tags$div(id="section3", `class`="main",
             tags$h2("1.2 Inferance Method"),
@@ -59,7 +74,8 @@ mod_user_guide_server <- function(input, output, session){
             tags$p("When choosing parameters for the inference method there are tips beside the parameters."),
             tags$br(), 
 
-            tags$p("For this beta-testing you should only choose MCODE when trying the inference methods, since the rest of the methods will take too long and are too heavy for the server. You can choose from already existing data that has been collected with the different MODifieR methods or try to upload a data set with the instructions mentioned above.
+            tags$p(style = "color: #fc4444",
+                   "Note: For this beta-testing you should only choose MCODE when trying the inference methods, since the rest of the methods will take too long and are too heavy for the server. You can choose from already existing data that has been collected with the different MODifieR methods or try to upload a data set with the instructions mentioned above.
                    ")
    ),
    
@@ -81,8 +97,11 @@ mod_user_guide_server <- function(input, output, session){
    ),
    
    tags$div(id="section5", `class`="main",
-            tags$h1("2. Welcome to the user guide!"),
-            tags$p("Visualize the enrichment objects via the following graphs.")
+            tags$h1("2. Visualization"),
+            tags$p("Visualize the enrichment objects via the following graphs."),
+            tags$p("To download the plots you simply right click on the plot and select save image."),
+            tags$p(style = "color: #f39c12",
+                   "Pro tip: The box in the visualization tab is floating, you can drag it around and minimize it using the - button.")
    ),
    
    tags$div(id="section6", `class`="main",
@@ -92,17 +111,14 @@ mod_user_guide_server <- function(input, output, session){
    
    tags$div(id="section7", `class`="main",
             tags$h2("2.2 Visualization Charts"),
-            tags$p("2.2.1. Dot plot
-Dot plot is used to visualize enriched genes. The vertical axis shows the name of a certain disease. The horizontal shows the gene ratio to each result which also corresponds to the count. The adjusted p-values show the significance of each result. 
-2.2.2. Enrichment map
-The enrichment map organizes the enriched terms into a network consisting of overlapping gene sets. Therefore overlapping gene sets tend to cluster together and make it easier to identify similarities and functions. 
-
-2.2.3. Gene-concept network
-In the gene-concept network the user can see which genes are associated with the significant terms received in the two prior plots. 
-
-2.2.4. Heatmap
-The heatmap allows the user to see which genes are associated with the significant terms. The results are the same as in the gene-concept network. 
-")
+            tags$p("2.2.1. Dot plot"),
+            tags$p("Dot plot is used to visualize enriched genes. The vertical axis shows the name of a certain disease. The horizontal shows the gene ratio to each result which also corresponds to the count. The adjusted p-values show the significance of each result."),
+            tags$p("2.2.2. Enrichment map"),
+            tags$p("The enrichment map organizes the enriched terms into a network consisting of overlapping gene sets. Therefore overlapping gene sets tend to cluster together and make it easier to identify similarities and functions."),
+            tags$p("2.2.3. Gene-concept network"),
+            tags$p("In the gene-concept network the user can see which genes are associated with the significant terms received in the two prior plots."),
+            tags$p("2.2.4. Heatmap"),
+            tags$p("The heatmap allows the user to see which genes are associated with the significant terms. The results are the same as in the gene-concept network.")
    ),
    
    tags$div(id="section8", `class`="main",
@@ -111,35 +127,31 @@ The heatmap allows the user to see which genes are associated with the significa
    ),
    
    tags$div(id="section9", `class`="main",
-            tags$h1("3. Input Object"),
-            tags$p("For the tools to work successfully, the input data needs to be in a specific format. This format is that of a count matrix. A count matrix features named columns, each column representing one of the respective samples in your study. The rows however are filled with genes/genomic loci values. These values represent the summarized read counts per genomic region (e.g. gene, transcript) after normalization. Most online tools, such as usegalaxy.org, will make the pre-processing steps very easy (see our example for a quick guidance). So what is it that you need to do?")
+            tags$h1("3. Database"),
+            tags$p("We provide a database in this web tool for easy access to previously uploaded and modified data. In the tabs input objects, module objects and enrichment objects you can find your stored data."),
+            tags$p(style = "color: #fc4444",
+                   "Note: The enrichment objects are only stored temporarily, that means that they only exist during the current session. If you want to reuse your enrichment analysis results you will have to download them within the Enrichment objects tab. When you revisit the tool you can upload these .Rds files to the same tab. "),
+            tags$p(style = "color: #f39c12",
+                   "Pro tip: If you have used our tool before and have stored .Rds files from the database you can always go into the database tabs and upload your .Rds files to the right tab. This will save you the trouble of having to redo your MODifieR objects."),
+),
+tags$div(id ="section10", class="main",
+            tags$h2("3.1 Input objects database"),
+            tags$p("In the tab Input objects the previously made input objects are saved and stored. You can always download the objects to your local machine and then upload them to the web tool at any given time or use them within R locally."),
+            tags$p(style = "color: #fc4444",
+                   "Note: These files are .Rds format and can therefore NOT be uploaded to the input data tab."),
    ),
-   
-   tags$div(id="section10", `class`="main",
-            tags$h2("3.1 Construction an Input Objects"),
-            tags$p("The easiest way to construct your input object is simply to merge the different tables, one for each sample, that is generated by your pre-processing. This can easily be achieved in a program such as excel. You then change the file format to csv, tsv, or txt before uploading it. Make sure that the input object does not contain any leftover data from the pre-processing!")
-   ),
-   
-   tags$div(id="section11", `class`="main",
-            tags$h2("3.2 Potential Errors"),
-            tags$p("For the count matrix to be able to function, there can not be any text present in it more than the sample/patient names. In other words, the gene names that usually occupy the first column can be entirely removed. Deletion of entire columns is easily done in excel. Also, make sure that there is no text present in the bottom of the document as this sometimes happens as well.
-
-Make sure before you convert your input object that you only have commas if decimals are present. Excel features a “Search and replace” function which can come in handy. 
-")
-   ),
-   
-   tags$div(id="section12", `class`="main",
-            tags$h1("4. Module Objects"),
-            tags$p("In the tab Module Objects the previously made inference methods are saved. From there, they can be downloaded, deleted or brought back to further analysis.
+    tags$div(id="section11", `class`="main",
+            tags$h2("3.2 Module Objects database"),
+            tags$p("In the tab Module Objects the previously made inference methods are saved and stored. From there, they can be downloaded, deleted or brought back to further analysis.
 
 If a big number of inference methods are saved the user can decide to view more than 10 entries in the top left corner, or search among the inference methods in the top right corner. One can also sort the inference methods on module name, input name, module type or the ppi name. 
 
 Lastly, the user can choose to upload an inference method that has previously been downloaded to the computer. This is done in the bottom left corner.
-")
+"),
    ),
-   
-   tags$div(id="section13", `class`="main",
-            tags$h1("5. Enrichment Objects"),
+
+   tags$div(id="section12", `class`="main",
+            tags$h2("3.3 Enrichment Objects database"),
             tags$p("In the tab enrichment objects the previously made enrichments are saved. From there, they can be downloaded or brought back to further analysis.
 
 However, it is important to remember that all the enrichments will disappear if the programme is turned off. The user will need to save all necessary enrichments. 
@@ -147,14 +159,39 @@ However, it is important to remember that all the enrichments will disappear if 
 If a big number of enrichments are saved the user can decide to view more than 10 entries in the top left corner, or search among the enrichments in the top right corner. One can also sort the enrichments on module name or the enrichment method.
 
 Lastly, the user can choose to upload an enrichment that has previously been downloaded to the computer. This is done in the bottom left corner.
-")
+"),
    ),
-   
    tags$div(id="section13", `class`="main",
-            tags$h1("6. PPI networks"),
-            tags$p("Under the PPI-networks tab the available PPI-networks can be viewed and new ones can be uploaded. If no additional PPI-networks have been uploaded there will only be one option called “Default”. Some of the inference methods have PPI-networks as a parameter and the available PPI-networks are the options the user can choose from. ")
+            tags$h2("3.4 PPI networks database"),
+            tags$p("In the tab PPI-networks the available PPI-networks can be viewed and new ones can be uploaded. If no additional PPI-networks have been uploaded there will only be one option called “Default”. Some of the inference methods have PPI-networks as a parameter and the available PPI-networks are the options the user can choose from. "),
    ),
    
+   tags$div(id="section14", `class`="main"),
+   tags$div(id="section15", class = "main",
+            tags$h1("4.1 Input data processing example"),
+            tags$h3("4.1.1 Download and conversion to FASTQ-format"),
+            tags$p("Bioproject ID number is used to access the corresponding page in the Short Read Archive database. Under Project Data, the different SRA experiments are found. This is done in GEO Accession Viewer. Each of these SRA experiments has a unique code, starting with SRR. Using Galaxy's tool Download and Extract Reads in FASTA/Q (format from NCBI SRA) the files can be downloaded to the cloud as uncompressed fastq files."),
+            tags$h3("4.1.2 FastQC"),
+            tags$p("Another tool in Galaxy, FastQC (Quality Control), can be used to assess the quality of the FastQ files using the default setting. This generates both raw data and a web page for each FastQ file, enabling good visualization."),
+            tags$h3("4.1.3 Trimming the FastQC-files"),
+            tags$p("Trimmomatic is another Galaxy tool which can be utilized to trim the FastQ-files. The full trimming steps of Trimmomatic can be found on their website. The next generation sequence read processing tool was designed in order to make a more efficient and flexible preprocessing tool."),
+            tags$p("In short, it cleans up the data based on a threshold quality score. Using the default setting with the addition of Leading, Trailing, Crop and Minlen, the Trimmomatic tool creates new fastq-dump files. This rid the files from all the deviant data that could be seen in the quality control such as duplications and adapter sequencers. Leading and trailing removes bases that are off towards the end and in the beginning, whilst crop cuts the read at a specific length. Finally, Minlen deals with overrepresentation by removing short reads."),
+            tags$h3("4.1.4 Mapping"),
+            tags$p("Using the newly generated RNA-Seq fastq files as an input in the tool RNA STAR (Gapped-read mapper for RNA-seq data) which is also available on the Galaxy site, three new outputs for each file are created. STAR stands for Spliced Transcripts Alignment to a Reference, and the tool essentially has two purposes. The main one is to tackle the problem of transcriptome variation; Reads that contain insertions, deletions and general mismatches must be properly aligned. The second purpose touches upon the splicing problem, that is the mRNA variation as a consequence of different selection of exons. STAR utilizes the reference genome H19 amongst others to complete its task. 
+A log, splice junctions and bam file should be created from each trimmed fastq file."),
+            tags$h3("4.1.5 Bam, featureCounts and gene expression data"),
+            tags$p("BAM stands for binary alignment map, and is a file format for compressed alignment sequences. When the different BAM files have been created, the next tool in the Galaxy arsenal is recruited. FeatureCounts can be used to measure gene expression, input being the BAM file. Changing the Gene annotation file to featureCounts built-in, and selecting built-in genome as H19 are the only two modifications for the settings. The output format is tabula, and when all tabulas have been generated they can be merged in a program such as excel simply by copy pasting the data. The end product is an excel document containing all the different genes on the rows, at their respective count for each experiment in the columns. Make sure to remove the gene name column and scan the bottom and top of the document for any nonessential text. The file format can ultimately be converted to txt or another appropriate format, in order to analyze it further using the web tool."),
+   ),
+   tags$div(id ="section16", class = "main",
+            tags$h1("4.2 Processing of data using supplementary files"),
+            tags$h3("4.2.1 Download"),
+            tags$p("In GEO Accession viewer, the supplementary files can be downloaded at the very bottom. It comes in the form of a Zip file."),
+            tags$h3("4.2.2 Modifications needed"),
+            tags$p("Open the txt file in Excel with the ‘Open with’ option that appears when right clicking the file. Remove the left-most column containing all the gene names. If there are any decimals, make sure to have commas and not dots representing them. This can be changed using Excel's “Search and replace” function. Check the bottom of the document for any additional text."),
+            tags$h3("4.2.3 Saving"),
+            tags$p("Save the file in any of the formats supported. Txt is however recommended!")
+   
+   ),
    
    )
 
