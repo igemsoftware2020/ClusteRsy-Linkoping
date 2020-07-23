@@ -34,7 +34,7 @@ mod_user_guide_server <- function(input, output, session){
             tags$a("3.1 Input objects database", href="#section10", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
             tags$a("3.2 Module Objects database", href="#section11", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
             tags$a("3.3 Enrichment Objects", href="#section12", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
-            tags$a("3.4. PPI networks", href="#section13", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
+            tags$a("3.4 PPI networks", href="#section13", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
             tags$a("4. Input data processing examples", href ="#section14"),
             tags$a("4.1 Proccesing example", href ="#section15",style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
             tags$a("4.2 Processing of data using supplementary files", href ="#section16", style= "font-size: 20px; padding: 6px 8px 1px 35px;")
@@ -44,7 +44,7 @@ mod_user_guide_server <- function(input, output, session){
 
    tags$div(id="section1", `class`="main", style= "padding-top: 30px; padding-bottom: 10px",
             tags$h1("1. Input Data"),
-            tags$p("The input of the web tool is a count matrix. The count matrix that we utilize is slightly different and require slight modification, but it is not a hassle to convert your old matrixes to ones functional for our tool! It should be noted that MODifieRWeb is not a preprocessing tool, but an analytical tool, and thus your raw data needs to be refined elsewhere."),
+            tags$p("The input of the web tool is a count matrix. The count matrix that we utilize is slightly different and require slight modification, but it is not a hassle to convert your old matrices to ones functional for our tool! It should be noted that MODifieRWeb is not a preprocessing tool, but an analytical tool, and thus your raw data needs to be refined elsewhere."),
             
             tags$p(style = "color: #f39c12;",
                    "Pro tip: If you have previously saved input data, module objects or just want to change something in your enrichment, the different stages in the Input data tab can be navigated by clicking the numbers on top of the respective stages."),
