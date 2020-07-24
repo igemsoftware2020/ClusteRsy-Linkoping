@@ -29,6 +29,9 @@ $( document ).ready(function() {
   $('#blob_button').click(function(){
         i++;
         Shiny.setInputValue("blob_button", i);
-        console.log(i)
+    });
+  $('#user_guide_btn').click(function(){
+        i++;
+        Shiny.setInputValue("user_guide_btn", i);
     });
 });

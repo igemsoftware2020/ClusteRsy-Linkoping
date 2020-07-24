@@ -21,7 +21,7 @@ mod_upload_ui <- function(id){
 #' @noRd 
 mod_upload_server <- function(input, output, session, con){
   ns <- session$ns
-  
+  options(shiny.maxRequestSize = 50*1024^2)
   upload_module <- reactiveValues()
   
   registerInputHandler("shinyjsexamples.chooser", function(data, ...) {

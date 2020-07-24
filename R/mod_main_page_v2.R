@@ -19,9 +19,10 @@ mod_main_page_v2_ui <- function(id){
                tabPanel("Module objects", mod_module_overview_ui(ns("module_overview_ui_1"))),
                tabPanel("Enrichment objects", mod_enrichment_overview_ui(ns("enrichment_overview_ui_1"))),
                tabPanel("PPI networks", mod_ppi_networks_ui(ns("ppi_networks_ui_1"))),
+               tabPanel("User guide", mod_user_guide_ui(ns("user_guide_ui_1"))),
                tabPanel(" ", mod_welcoming_page_ui(ns("welcoming_page_ui_1"))) #Hide this with Javascirpt
     ),
-    tags$script(HTML("element = document.getElementsByTagName('a')[7]; element.style.display = 'none'")), #Change the number according to the tabPanel order
+    tags$script(HTML("element = document.getElementsByTagName('a')[8]; element.style.display = 'none'")), #Change the number according to the tabPanel order
     htmlOutput(ns("loaded"))
   )
 }
@@ -41,15 +42,22 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
   module_overview_ui_1$delete <- callModule(mod_module_overview_server, "module_overview_ui_1", con = con, Columns_ui_1)
   input_overview_ui_1$delete <- callModule(mod_input_overview_server, "input_overview_ui_1", con = con, Columns_ui_1)
   ppi_networks_ui_1$upload_ppi <- callModule(mod_ppi_networks_server, "ppi_networks_ui_1", con = con)
-  
+  callModule(mod_user_guide_server, "user_guide_ui_1")
   
   observeEvent(input$title, {
     updateNavbarPage(session, "navbar", " ")
   })
   
+  #Front page button calls
+  observeEvent(app_servr$user_guide_btn, {
+    updateNavbarPage(session, "navbar", "User guide")
+  })
+  
   observeEvent(app_servr$blob_button, {
     updateNavbarPage(session, "navbar", "Input data")
   })
+  
+ 
   
   observeEvent(app_servr$loaded, {
     output$loaded <- renderUI({

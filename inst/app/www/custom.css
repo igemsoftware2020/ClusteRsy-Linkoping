@@ -1,4 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Lato:400,700,400italic&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap%27");
+@import url("https://fonts.googleapis.com/css?family=Sofia");
 /*!
  * bootswatch v3.4.1
  * Homepage: http://bootswatch.com
@@ -7291,4 +7293,51 @@ a.button.learn:hover:after, a.button.learn:hover:before{
 	width: 40%;
 	transition: width .2s ease;
 }
+
+
+/* The sidebar menu */
+.sidenav {
+  height: 100%; /* Full-height: remove this if you want "auto" height */
+  width: 300px; /* Set the width of the sidebar */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: #445363; 
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+/* The navigation menu links */
+.sidenav a {
+  padding: 15px 8px 1px 16px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #ecf0f1;
+  display: block;
+}
+
+.sidenav a:hover {
+  color: #ffbe40;
+}
+
+
+/* Style page content */
+.main {
+  margin-left: 320px;
+  margin-top: 30px;
+  padding: 3px;
+  color: #2d3e50;
+}
+
+
+/* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+
+
+
+
 
