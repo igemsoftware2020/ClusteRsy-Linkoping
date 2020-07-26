@@ -13,16 +13,20 @@ mod_main_page_v2_ui <- function(id){
     navbarPage(id = ns("navbar"), title = actionLink(ns("title"), tags$i(class = "fa fa-home", `aria-hidden`="true"), type = "heading"),
                position = "fixed-top",
                collapsible = TRUE, selected = " ",
-               tabPanel("Input data", mod_Columns_ui(ns("Columns_ui_1"))),
+               tabPanel("Tools", mod_Columns_ui(ns("Columns_ui_1"))),
                tabPanel("Visualization", mod_visual_ui(ns("visual_ui_1"))),
-               tabPanel("Input objects", mod_input_overview_ui(ns("input_overview_ui_1"))),
-               tabPanel("Module objects", mod_module_overview_ui(ns("module_overview_ui_1"))),
-               tabPanel("Enrichment objects", mod_enrichment_overview_ui(ns("enrichment_overview_ui_1"))),
-               tabPanel("PPI networks", mod_ppi_networks_ui(ns("ppi_networks_ui_1"))),
+                 tabPanel("Database",
+                            tabsetPanel(
+                            tabPanel("Input objects", mod_input_overview_ui(ns("input_overview_ui_1"))),
+                            tabPanel("Module objects", mod_module_overview_ui(ns("module_overview_ui_1"))),
+                            tabPanel("Enrichment objects", mod_enrichment_overview_ui(ns("enrichment_overview_ui_1"))),
+                            tabPanel("PPI networks", mod_ppi_networks_ui(ns("ppi_networks_ui_1")))
+                 )),
                tabPanel("User guide", mod_user_guide_ui(ns("user_guide_ui_1"))),
-               tabPanel(" ", mod_welcoming_page_ui(ns("welcoming_page_ui_1"))) #Hide this with Javascirpt
+               tabPanel(" ", mod_welcoming_page_ui(ns("welcoming_page_ui_1")))
+                #Hide this with Javascirpt
     ),
-    tags$script(HTML("element = document.getElementsByTagName('a')[8]; element.style.display = 'none'")), #Change the number according to the tabPanel order
+    tags$script(HTML("element = document.getElementsByTagName('a')[5]; element.style.display = 'none'")), #Change the number according to the tabPanel order
     htmlOutput(ns("loaded"))
   )
 }
@@ -54,7 +58,7 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
   })
   
   observeEvent(app_servr$blob_button, {
-    updateNavbarPage(session, "navbar", "Input data")
+    updateNavbarPage(session, "navbar", "Tools")
   })
   
  
