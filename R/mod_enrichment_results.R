@@ -43,7 +43,8 @@ mod_enrichment_results_server <- function(input, output, session, selected, con)
                                                      autoWidth = FALSE,
                                                      ordering = TRUE,
                                                      dom = "lfrtipB",
-                                                     buttons = c('copy', 'csv', 'excel'))))
+                                                     buttons = c('copy', 'csv', 'excel'),
+                                                     lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")) )))
 }
     
 ## To be copied in the UI
