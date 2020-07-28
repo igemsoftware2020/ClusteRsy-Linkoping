@@ -66,5 +66,51 @@ set_background_genes.MODA <- function(module, con) {
   rownames(MODifieRDB::MODifieR_input_from_db(input_name, con = con)$annotated_exprs_matrix)
 }
 
+#Heatmap function.
 
+# CPobj = clusterprofiler enrich object
+# NP = number of top pathways
+# NG = number of top genes 
+gene_heatmap <- function(CPobj, NP, NG, plot_title, pval_color) {
+  res_test <- CPobj@result[1:NP,]
+  gene_names <- unique(unlist(strsplit(res_test$geneID ,split = "/")))
+  test_matrix <-as.data.frame(matrix(data = 0 , ncol = length(res_test$Description) , nrow= length(gene_names)))
+  colnames(test_matrix) <- res_test$Description
+  rownames(test_matrix) <- gene_names
+
+  if (pval_color == TRUE) {
+  for (i in 1:ncol(test_matrix)) {
+    test_matrix[,i][rownames(test_matrix) %in% unlist(strsplit(res_test$geneID[i] , split = "/"))] <- -log10(res_test$p.adjust[i])
+  }
+    test_matrix$rowsums <- rowSums(test_matrix)
+    test_matrix <- test_matrix[order(test_matrix$rowsums , decreasing = T) , ]
+    test_matrix <- test_matrix[,-(NP+1)]
+    test_df <<-  as.data.frame(as.table(as.matrix(test_matrix[1:NG,1:NP])))
+    colnames(test_df) <- c("Genes" , "Pathways" , "P.val")
+    
+    p <- ggplot(test_df, aes(Genes,Pathways)) + 
+      geom_tile(aes(fill = P.val), colour = "white") + 
+      scale_fill_gradient(low = "white", high = "steelblue", name = "-log10(P-val)") +
+      theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) +
+      ggtitle(plot_title)
+  
+   } else if (pval_color == FALSE) {
+    for (i in 1:ncol(test_matrix)) {
+      test_matrix[,i][rownames(test_matrix) %in% unlist(strsplit(res_test$geneID[i] , split = "/"))] <- 1
+    }
+    test_matrix$rowsums <- rowSums(test_matrix)
+    test_matrix <- test_matrix[order(test_matrix$rowsums , decreasing = T) , ]
+    test_matrix <- test_matrix[,-(NP+1)]
+    test_df <<-  as.data.frame(as.table(as.matrix(test_matrix[1:NG,1:NP])))
+    colnames(test_df) <- c("Genes" , "Pathways" , "P.val")
+    
+    p <- ggplot(test_df, aes(Genes,Pathways)) + 
+      geom_tile(aes(fill = P.val), colour = "white") + 
+      scale_fill_gradient(low = "white", high = "steelblue") +
+      theme(legend.position="none") +
+      theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) +
+      ggtitle(plot_title)
+  }
+  
+}
   
