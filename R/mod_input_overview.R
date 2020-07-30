@@ -88,6 +88,14 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1)
                                                  selection = list(selected = c(1)))
   })
   
+  # Refresh DT
+  observeEvent(Columns_ui_1$upload_input_rds, {
+    input_objects <- MODifieRDB::get_available_input_objects(con)
+    output$input_overview <- DT::renderDataTable(input_objects,
+                                                 rownames = FALSE,
+                                                 selection = list(selected = c(1)))
+  })
+  
   # Choose multiple options
   current_inputs <- function() {
     selected <- input$input_overview_rows_selected
