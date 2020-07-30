@@ -10,13 +10,17 @@
 mod_upload_ui <- function(id){
     ns <- NS(id)
     tagList(
-      fileInput(ns("expression_matrix"), label = "Upload an expression matrix", accept = c("text/csv", "text/plain", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/tab-separated-values", ".rds")),
+      tags$div(id = "hide_matrix",
+      fileInput(ns("expression_matrix"), label = "Upload an expression matrix", accept = c("text/csv", "text/plain", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/tab-separated-values", ".rds"))),
       uiOutput(ns("sample_chooser")),
-      fileInput(ns("input_object_rds"), label = "Upload an input object", accept = ".rds"),
+      tags$div(id = "hide_rds",
+      fileInput(ns("input_object_rds"), label = "Upload an input object", accept = ".rds")),
       uiOutput(ns("input_name_chooser")),
-      htmlOutput(ns("error_name_js"))
+      htmlOutput(ns("error_name_js")),
+
     )
   }
+
 
 #' upload Server Function
 #'
@@ -47,10 +51,13 @@ mod_upload_server <- function(input, output, session, con){
       read.table(file = infile, header = T) 
     }
   })
-
+  
+  
+  
   output$sample_chooser <- renderUI({
     expression_matrix <- upload_expression()
-    tagList(
+    tagList( 
+      #tags$script(HTML("document.getElementById('hide_rds').style.display = 'none';")),
       tags$div(id = "error_name_js",
       textInput(ns("input_name"), "Input object name", placeholder = "Input name")),
       htmlOutput(ns("error_name_descrip")),
@@ -165,6 +172,7 @@ mod_upload_server <- function(input, output, session, con){
   output$input_name_chooser <- renderUI({
     input <- upload_input_reactive() #reactive pop up
     tagList( 
+      tags$script(HTML("document.getElementById('hide_matrix').style.display = 'none';")),
       textInput(ns("input_name_rds"), "Input object name", placeholder = "Input name"),
       actionButton(ns("upload_input_rds"), "Add input object to database"),
     )
