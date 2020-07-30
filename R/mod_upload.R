@@ -8,13 +8,15 @@
 #'
 #' @importFrom shiny NS tagList 
 mod_upload_ui <- function(id){
-  ns <- NS(id)
-  tagList(
-    fileInput(ns("expression_matrix"), label = "Upload an expression matrix", accept = c("text/csv", "text/plain", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/tab-separated-values", ".rds")),
-    uiOutput(ns("sample_chooser")),
-    htmlOutput(ns("error_name_js"))
-  )
-}
+    ns <- NS(id)
+    tagList(
+      fileInput(ns("expression_matrix"), label = "Upload an expression matrix", accept = c("text/csv", "text/plain", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/tab-separated-values", ".rds")),
+      uiOutput(ns("sample_chooser")),
+      fileInput(ns("input_object_rds"), label = "Upload an input object", accept = ".rds"),
+      uiOutput(ns("input_name_chooser")),
+      htmlOutput(ns("error_name_js"))
+    )
+  }
 
 #' upload Server Function
 #'
@@ -23,7 +25,7 @@ mod_upload_server <- function(input, output, session, con){
   ns <- session$ns
   options(shiny.maxRequestSize = 50*1024^2)
   upload_module <- reactiveValues()
-  
+
   registerInputHandler("shinyjsexamples.chooser", function(data, ...) {
     if (is.null(data))
       NULL
@@ -45,7 +47,7 @@ mod_upload_server <- function(input, output, session, con){
       read.table(file = infile, header = T) 
     }
   })
-  
+
   output$sample_chooser <- renderUI({
     expression_matrix <- upload_expression()
     tagList(
@@ -54,8 +56,8 @@ mod_upload_server <- function(input, output, session, con){
       htmlOutput(ns("error_name_descrip")),
       textInput(ns("group1"), "Group 1 label", placeholder = "Group 1 label"),
       textInput(ns("group2"), "Group 2 label", placeholder = "Group 2 label"),
-      chooserInput(ns("sample_groups"), "Available frobs", "Selected frobs", 
-                   colnames(expression_matrix), c(), multiple = TRUE),
+      chooserInput(ns("sample_groups"), "Available frobs", "Selected frobs",
+      colnames(expression_matrix), c(), multiple = TRUE),
       tags$br(),
       uiOutput(ns("error_empty_group")),
       shinyWidgets::prettySwitch(ns("adjusted_pvalue"), label = "Pvalue", value = TRUE, status = "warning"),
@@ -103,8 +105,6 @@ mod_upload_server <- function(input, output, session, con){
     return(!is.null(upload_expression()))
   })
   
-  
-  
   observeEvent(input$create_input, {
     
     id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
@@ -139,7 +139,7 @@ mod_upload_server <- function(input, output, session, con){
       updateTextInput(session, "group1", value = character(0))
       updateTextInput(session, "group2", value = character(0))
       input_name <- input_name()
-      upload_module$input_name <- input_name
+      upload_module$input_name <- input_name #This creates reactive value and is sent to the Columns module
       MODifieRDB::MODifieR_object_to_db(MODifieR_object = input_object,
                                         object_name = input_name,
                                         con = con)
@@ -149,8 +149,58 @@ mod_upload_server <- function(input, output, session, con){
     })
   })
   
+  # File input for .rds files 
+  # Reactive function for fileinput
+  upload_input_reactive <- reactive({
+    req(input$input_object_rds)
+    infile <- (input$input_object_rds$datapath)
+    if (is.null(infile)){
+      
+      return(NULL)
+    }
+    readRDS(file = infile)
+  })
+  
+  # File input
+  output$input_name_chooser <- renderUI({
+    input <- upload_input_reactive() #reactive pop up
+    tagList( 
+      textInput(ns("input_name_rds"), "Input object name", placeholder = "Input name"),
+      actionButton(ns("upload_input_rds"), "Add input object to database"),
+    )
+  })
+  
+  input_name_rds <- reactive({
+    input$input_name_rds
+  })
+  
+  upload_input_rds <- reactive({
+    input$upload_input_rds
+  }
+  )
+  
+  observeEvent(input$upload_input_rds, {
+    upload_input_rds <- upload_input_rds()
+    upload_module$upload_input_rds <- upload_input_rds #This creates reactive value and is sent to the Columns module
+  })
+  
+  # Upload input object
+  observeEvent(input$upload_input_rds, {
+    id <- showNotification("Saving input object to database", duration = NULL, closeButton = FALSE, type = "warning")
+    on.exit(removeNotification(id), add = TRUE)
+    input <- upload_input_reactive()
+    input_name_rds <- input_name_rds()
+    
+    MODifieRDB::MODifieR_object_to_db(MODifieR_object = input,
+                                      object_name = input_name_rds,
+                                      con = con)
+  })
+  
+  #---
+  
   outputOptions(output, 'fileUploaded', suspendWhenHidden=FALSE)
   return(upload_module)
+
 }
 
 ## To be copied in the UI
