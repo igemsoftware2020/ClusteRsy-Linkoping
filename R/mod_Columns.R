@@ -82,6 +82,10 @@ mod_Columns_server <- function(input, output, session, con, module_overview_ui_1
   observeEvent(upload_ui_1$input_name,{
     Columns_module$input_name <- upload_ui_1$input_name
   })
+
+  observeEvent(upload_ui_1$upload_input_rds,{
+    Columns_module$upload_input_rds <- upload_ui_1$upload_input_rds
+  }) #Is sent to input_overview for refreshing DT
   
   observeEvent(Description1_ui_1$module_name,{
     Columns_module$module_name <- Description1_ui_1$module_name
@@ -92,13 +96,20 @@ mod_Columns_server <- function(input, output, session, con, module_overview_ui_1
   })
   
   # Activate column 2 and 3
-  output$fadein <- renderUI({
-    req(upload_ui_1$input_name) 
+    output$fadein <- renderUI({
+      req(upload_ui_1$input_name)
+      tagList(
+        tags$script("col2();")
+      )
+    })
+  
+  output$fadein <- renderUI ({
+    req(upload_ui_1$upload_input_rds)
     tagList(
       tags$script("col2();")
     )
   })
-  
+
   output$fadein1 <- renderUI({
     req(Description1_ui_1$module_name)
     tagList(
