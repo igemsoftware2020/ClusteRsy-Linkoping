@@ -13,16 +13,16 @@ mod_main_page_v2_ui <- function(id){
     navbarPage(id = ns("navbar"), title = actionLink(ns("title"), tags$i(class = "fa fa-home", `aria-hidden`="true"), type = "heading"),
                position = "fixed-top",
                collapsible = TRUE, selected = " ",
-               tabPanel("Tools", mod_Columns_ui(ns("Columns_ui_1"))),
+               tabPanel("Tools", value = "tools", mod_Columns_ui(ns("Columns_ui_1"))),
                tabPanel("Visualization", mod_visual_ui(ns("visual_ui_1"))),
                  tabPanel("Database",
                             tabsetPanel(
-                            tabPanel("Input objects", mod_input_overview_ui(ns("input_overview_ui_1"))),
-                            tabPanel("Module objects", mod_module_overview_ui(ns("module_overview_ui_1"))),
-                            tabPanel("Enrichment objects", mod_enrichment_overview_ui(ns("enrichment_overview_ui_1"))),
-                            tabPanel("PPI networks", mod_ppi_networks_ui(ns("ppi_networks_ui_1")))
+                            tabPanel("Input objects", value = "input_objects", mod_input_overview_ui(ns("input_overview_ui_1"))),
+                            tabPanel("Module objects", value = "module_objects", mod_module_overview_ui(ns("module_overview_ui_1"))),
+                            tabPanel("Enrichment objects", value = "enrichment_objects", mod_enrichment_overview_ui(ns("enrichment_overview_ui_1"))),
+                            tabPanel("PPI networks", value = "ppi_networks", mod_ppi_networks_ui(ns("ppi_networks_ui_1")))
                  )),
-               tabPanel("User guide", mod_user_guide_ui(ns("user_guide_ui_1"))),
+               tabPanel("User guide", value = "user_guide", mod_user_guide_ui(ns("user_guide_ui_1"))),
                tabPanel(" ", mod_welcoming_page_ui(ns("welcoming_page_ui_1")))
                 #Hide this with Javascirpt
     ),

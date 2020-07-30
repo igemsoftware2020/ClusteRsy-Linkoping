@@ -11,13 +11,26 @@ mod_upload_ui <- function(id){
     ns <- NS(id)
     tagList(
       tags$div(id = "hide_matrix",
-      fileInput(ns("expression_matrix"), label = "Upload an expression matrix", accept = c("text/csv", "text/plain", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/tab-separated-values", ".rds"))),
+      fileInput(ns("expression_matrix"), 
+                label = "Upload an expression matrix",
+                accept = c("text/csv", 
+                           "text/plain", 
+                           "application/vnd.ms-excel", 
+                           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", 
+                           "text/tab-separated-values", ".rds"),
+                popup = tags$p("Read more about how to upload your data in our",
+                                tags$a("user guide.", onclick = "customHref('user_guide')"), #This onclick doesn't take javascript as input when in a tooltip. Not sure how to solve this. It works when not in tooltip. 
+                               "Or you can read more online on",
+                               tags$a("google", href = "https://www.google.com/"))
+                )
+      ),
       uiOutput(ns("sample_chooser")),
       tags$div(id = "hide_rds",
-      fileInput(ns("input_object_rds"), label = "Upload an input object", accept = ".rds")),
+      fileInput(ns("input_object_rds"), label = "Upload an input object", accept = ".rds")
+      ),
       uiOutput(ns("input_name_chooser")),
       htmlOutput(ns("error_name_js")),
-
+      uiOutput(ns("test"))
     )
   }
 
@@ -29,6 +42,7 @@ mod_upload_server <- function(input, output, session, con){
   ns <- session$ns
   options(shiny.maxRequestSize = 50*1024^2)
   upload_module <- reactiveValues()
+
 
   registerInputHandler("shinyjsexamples.chooser", function(data, ...) {
     if (is.null(data))
