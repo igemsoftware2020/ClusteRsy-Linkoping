@@ -57,7 +57,7 @@ mod_upload_server <- function(input, output, session, con){
   output$sample_chooser <- renderUI({
     expression_matrix <- upload_expression()
     tagList( 
-      #tags$script(HTML("document.getElementById('hide_rds').style.display = 'none';")),
+      tags$script(HTML("document.getElementById('hide_rds').style.display = 'none';")),
       tags$div(id = "error_name_js",
       textInput(ns("input_name"), "Input object name", placeholder = "Input name")),
       htmlOutput(ns("error_name_descrip")),
@@ -114,6 +114,9 @@ mod_upload_server <- function(input, output, session, con){
   
   observeEvent(input$create_input, {
     
+    input_name <- input_name()
+    upload_module$input_name <- input_name #This creates reactive value and is sent to the Columns module
+    
     id <- showNotification("Creating input object", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
 
@@ -145,8 +148,6 @@ mod_upload_server <- function(input, output, session, con){
       updateTextInput(session, "input_name", value = character(0))
       updateTextInput(session, "group1", value = character(0))
       updateTextInput(session, "group2", value = character(0))
-      input_name <- input_name()
-      upload_module$input_name <- input_name #This creates reactive value and is sent to the Columns module
       MODifieRDB::MODifieR_object_to_db(MODifieR_object = input_object,
                                         object_name = input_name,
                                         con = con)
