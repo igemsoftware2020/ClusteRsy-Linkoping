@@ -113,4 +113,13 @@ gene_heatmap <- function(CPobj, NP, NG, plot_title, pval_color) {
   }
   
 }
+
+shinyLink <- function(to, label) {
+  tags$a(
+    class = "shiny__link",
+    href = to,
+    label
+  )
+}
+  
   

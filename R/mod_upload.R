@@ -19,9 +19,7 @@ mod_upload_ui <- function(id){
                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", 
                            "text/tab-separated-values", ".rds"),
                 popup = tags$p("Read more about how to upload your data in our",
-                                tags$a("user guide.", onclick = "customHref('user_guide')"), #This onclick doesn't take javascript as input when in a tooltip. Not sure how to solve this. It works when not in tooltip. 
-                               "Or you can read more online on",
-                               tags$a("google", href = "https://www.google.com/"))
+                                shinyLink(to = "user_guide", label = "User Guide")) #This doesn't work when in the tooltip, need to figure out why.. 
                 )
       ),
       uiOutput(ns("sample_chooser")),
@@ -30,7 +28,6 @@ mod_upload_ui <- function(id){
       ),
       uiOutput(ns("input_name_chooser")),
       htmlOutput(ns("error_name_js")),
-      uiOutput(ns("test"))
     )
   }
 
