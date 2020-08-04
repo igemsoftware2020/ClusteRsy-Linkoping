@@ -25,29 +25,30 @@ set_background_genes <- function(module, con) {
 }
 
 #Inference method use ppi-network.
-set_background_genes.Mcode <- function(module, con) {
+set_background_genes.MCODE <- function(module, con) {
   ppi_name <- as.character(module$settings$ppi_network)
   unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
 }
 
-set_background_genes.correlation_clique <- function(module, con) {
+set_background_genes.Correlation_Clique <- function(module, con) {
   ppi_name <- as.character(module$settings$ppi_network)
   unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
 }
 
-set_background_genes.diamond <- function(module, con) {
+set_background_genes.DIAMoND <- function(module, con) {
   ppi_name <- as.character(module$settings$ppi_network)
   unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
 }
 
-set_background_genes.module_discoverer <- function(module, con) {
+set_background_genes.Module_Discoverer <- function(module, con) {
   ppi_name <- as.character(module$settings$ppi_network)
   unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
 }
 
 #Clique_Sum gets it's ppi from the Clique DB (default PPI)
 set_background_genes.Clique_Sum_permutation <- function(module, con) {
-  unique(unlist(MODifieRDB::ppi_network_from_db("Default", con = con)[,1:2]))
+  ppi_name <- MODifieRDB::match_db_loc_to_ppi(module$settings$db, con = con)
+  unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
 }
 
 #Inference methods not using ppi-network.  
