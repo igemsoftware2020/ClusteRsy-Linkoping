@@ -54,11 +54,11 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
   
   #Front page button calls
   observeEvent(app_servr$user_guide_btn, {
-    updateNavbarPage(session, "navbar", "User guide")
+    updateNavbarPage(session, "navbar", "user_guide")
   })
   
   observeEvent(app_servr$blob_button, {
-    updateNavbarPage(session, "navbar", "Tools")
+    updateNavbarPage(session, "navbar", "tools")
   })
   
  
