@@ -25,22 +25,22 @@ set_background_genes <- function(module, con) {
 }
 
 #Inference method use ppi-network.
-set_background_genes.MCODE <- function(module, con) {
+set_background_genes.Mcode <- function(module, con) {
   ppi_name <- as.character(module$settings$ppi_network)
   unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
 }
 
-set_background_genes.Correlation_Clique <- function(module, con) {
+set_background_genes.Correlation_clique <- function(module, con) {
   ppi_name <- as.character(module$settings$ppi_network)
   unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
 }
 
-set_background_genes.DIAMoND <- function(module, con) {
+set_background_genes.DIAMOnD <- function(module, con) {
   ppi_name <- as.character(module$settings$ppi_network)
   unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
 }
 
-set_background_genes.Module_Discoverer <- function(module, con) {
+set_background_genes.module_discoverer <- function(module, con) {
   ppi_name <- as.character(module$settings$ppi_network)
   unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
 }
@@ -53,17 +53,17 @@ set_background_genes.Clique_Sum_permutation <- function(module, con) {
 
 #Inference methods not using ppi-network.  
 set_background_genes.DiffCoEx <- function(module, con) {
-  input_name <- as.character(module$settings$input_name)
+  input_name <- as.character(module$settings$MODifieR_input)
   rownames(MODifieRDB::MODifieR_input_from_db(input_name, con = con)$annotated_exprs_matrix)
 }
 
 set_background_genes.WGCNA <- function(module, con) {
-  input_name <- as.character(module$settings$input_name)
+  input_name <- as.character(module$settings$MODifieR_input)
   rownames(MODifieRDB::MODifieR_input_from_db(input_name, con = con)$annotated_exprs_matrix)
 }
 
 set_background_genes.MODA <- function(module, con) {
-  input_name <- as.character(module$settings$input_name)
+  input_name <- as.character(module$settings$MODifieR_input)
   rownames(MODifieRDB::MODifieR_input_from_db(input_name, con = con)$annotated_exprs_matrix)
 }
 
@@ -115,6 +115,7 @@ gene_heatmap <- function(CPobj, NP, NG, plot_title, pval_color) {
   
 }
 
+#This function is being used together with shinyLink.js in the inst folder.
 shinyLink <- function(to, label) {
   tags$a(
     class = "shiny__link",
@@ -122,5 +123,7 @@ shinyLink <- function(to, label) {
     label
   )
 }
+
+
   
   
