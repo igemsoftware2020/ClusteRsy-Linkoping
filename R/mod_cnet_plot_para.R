@@ -30,6 +30,10 @@ mod_cnet_plot_para_ui <- function(id){
                  label = "Add color", 
                  value = FALSE, 
                  status = "warning"),
+    prettySwitch(ns("foldchange"), 
+                 label = "Include foldChange?", 
+                 value = TRUE, 
+                 status = "warning"),
     selectInput(ns("node_label"),
                 label = "Node labels",
                 choices = c("all", "gene", "category", "none")),
@@ -52,6 +56,7 @@ mod_cnet_plot_para_server <- function(input, output, session){
     cnet_plot_para_module$circular <- input$circular
     cnet_plot_para_module$colorEdge <- input$coloredge
     cnet_plot_para_module$node_label <- input$node_label
+    cnet_plot_para_module$foldchange <- input$foldchange
     cnet_plot_para_module$title <- input$title
   })
   
