@@ -24,12 +24,20 @@ mod_cnet_plot_server <- function(input, output, session, cnet_plot_para_ui_1, se
   
   cnetplot <- reactive({
     
-    enrichment_object <<- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
+    enrichment_object <- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
+    
     enrichment_object_readable <- DOSE::setReadable(enrichment_object, OrgDb = 'org.Hs.eg.db', keyType = "ENTREZID") #Not sure if KeyType should be selected from the enrichment object
     
+    input_data_name <- MODifieRDB::get_input_name_by_enrichment_row(selected$selected_object, con)
+    input_data <<- MODifieRDB::MODifieR_input_from_db(input_data_name, con)
+    
+    foldchange <- input_data$edgeR_deg_table$logFC
+    names(foldchange) <- row.names(input_data$edgeR_deg_table) 
+    
+    if (cnet_plot_para_ui_1$foldchange == TRUE) {
     p <- try(enrichplot::cnetplot(x = enrichment_object_readable,
                               showCategory = cnet_plot_para_ui_1$showcategory,
-                              foldChange = enrichment_object,
+                              foldChange = foldchange,
                               layout = cnet_plot_para_ui_1$layout,
                               circular = cnet_plot_para_ui_1$circular,
                               colorEdge = cnet_plot_para_ui_1$colorEdge,
@@ -37,20 +45,23 @@ mod_cnet_plot_server <- function(input, output, session, cnet_plot_para_ui_1, se
                               ) + ggplot2::ggtitle(label = cnet_plot_para_ui_1$title))
     
     return(p)
+    } else {
+      p <- try(enrichplot::cnetplot(x = enrichment_object_readable,
+                                    showCategory = cnet_plot_para_ui_1$showcategory,
+                                    layout = cnet_plot_para_ui_1$layout,
+                                    circular = cnet_plot_para_ui_1$circular,
+                                    colorEdge = cnet_plot_para_ui_1$colorEdge,
+                                    node_label = cnet_plot_para_ui_1$node_label,
+      ) + ggplot2::ggtitle(label = cnet_plot_para_ui_1$title))
+      return(p)
+    }
+    
   })
   
   output$cnet_plot <- renderPlot({
     cnetplot() #calling the reactive plot
   })
   
-#   enrichment_overview_ui_1 <- callModule(mod_enrichment_overview_server, "enrichment_overview_ui_1", con = con)
-#   observeEvent(enrichment_overview_ui_1$enrichment_object, {
-#     
-#     enrichment_results <- enrichment_overview_ui_1$enrichment_object@result
-#     output$testplot <- renderPlot({
-#     plot(enrichment_result$pvalue)
-#     })
-# })
 }
     
 ## To be copied in the UI
