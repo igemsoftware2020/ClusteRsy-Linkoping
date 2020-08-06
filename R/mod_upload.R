@@ -11,6 +11,8 @@ mod_upload_ui <- function(id){
     ns <- NS(id)
     tagList(
       tags$div(id = "hide_matrix",
+               `data-intro`="Begin by uploadnig an expression matrix with your data.",
+               `data-step`=1,
       fileInput(ns("expression_matrix"), 
                 label = "Upload an expression matrix",
                 accept = c("text/csv", 
@@ -24,7 +26,7 @@ mod_upload_ui <- function(id){
       ),
       uiOutput(ns("sample_chooser")),
       tags$div(id = "hide_rds",
-      fileInput(ns("input_object_rds"), label = "Upload an input object", accept = ".rds")
+      tags$div(fileInput(ns("input_object_rds"), label = "Upload an input object", accept = ".rds"), `data-hint`="Here you can upload an alreday formated input object! You can find these under the database tab.", `data-hintPosition`="top-right")
       ),
       uiOutput(ns("input_name_chooser")),
       htmlOutput(ns("error_name_js")),

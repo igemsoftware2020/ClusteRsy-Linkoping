@@ -61,6 +61,10 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
     updateNavbarPage(session, "navbar", "tools")
   })
   
+  observeEvent(app_servr$tutorial_btn, {
+    updateNavbarPage(session, "navbar", "tools")
+  })
+  
  
   
   observeEvent(app_servr$loaded, {

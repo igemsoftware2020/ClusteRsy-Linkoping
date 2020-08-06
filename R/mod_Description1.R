@@ -10,7 +10,7 @@
 mod_Description1_ui <- function(id){
   ns <- NS(id)
   tagList(
-    tags$div(selectInput(ns("Inference_method"), label = "Inference method", popup = "Network-based approaches to create disease modules",
+    tags$div(`data-intro`= "After formating you input data you can select an inference method here!", `data-step`=2, selectInput(ns("Inference_method"), label = "Inference method", popup = "Network-based approaches to create disease modules",
                          choices = c("Clique Sum", "Correlation Clique", "DIAMoND", "DiffCoEx", "MCODE", "MODA", "Module Discoverer", "WGCNA"))
     ),
     htmlOutput(ns("description")),

@@ -24,6 +24,11 @@ app_server <- function( input, output, session) {
     app_servr$user_guide_btn <- input$user_guide_btn
   })
   
+  observeEvent(input$tutorial_btn, {
+    app_servr$tutorial_btn <- input$tutorial_btn
+  })
+  
+  
   
   
   # List the first level call Modules here

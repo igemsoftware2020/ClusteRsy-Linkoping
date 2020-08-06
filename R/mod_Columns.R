@@ -10,6 +10,7 @@
 mod_Columns_ui <- function(id){
   ns <- NS(id)
   tagList(
+    uiOutput(ns("hints")),
     # Number container
     tags$div(`class`="row", style = "margin-right:-15px; margin-left:-15px;",
              tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
@@ -26,6 +27,8 @@ mod_Columns_ui <- function(id){
                                           href = "javascript:void(0)",
                                           onclick = "col2();",
                                           class="label", "2",
+                                          `data-hint`="If you click here you can skip directly to this column!",
+                                          `data-hintPosition`="top-right",
                                           style = "border-radius: 100%;background-color:#ffbd40;")))),
              tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
                       tags$form(class = "well faded", style = "background-color: inherit",
@@ -65,6 +68,7 @@ mod_Columns_ui <- function(id){
     htmlOutput(ns("fadein")),
     htmlOutput(ns("fadein1"))
   )
+  
 }
     
 #' Columns Server Function
@@ -75,6 +79,10 @@ mod_Columns_server <- function(input, output, session, con, module_overview_ui_1
   
   Columns_module <- reactiveValues()
 
+  output$hints <- renderUI({
+    tags$script( onload="introJs().addHints();")
+  })
+  
   upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1", con = con)
   Description1_ui_1 <- callModule(mod_Description1_server, "Description1_ui_1", con = con, upload_ui_1, input_overview_ui_1, ppi_networks_ui_1)
   disease_analysis_ui_1 <- callModule(mod_disease_analysis_server, "disease_analysis_ui_1", con = con, Description1_ui_1, module_overview_ui_1)

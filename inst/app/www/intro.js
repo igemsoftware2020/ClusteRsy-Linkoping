@@ -2531,6 +2531,3 @@
 });
 
 
- var delay = 3000;
-
- setTimeout( introJs.start, delay )

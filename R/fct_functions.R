@@ -124,6 +124,8 @@ shinyLink <- function(to, label) {
   )
 }
 
+tutorialLink <- function(to, label)
+
 
   
   

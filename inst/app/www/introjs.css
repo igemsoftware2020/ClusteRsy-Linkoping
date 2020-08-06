@@ -369,7 +369,7 @@ tr.introjs-showElement > th {
 }
 
 .introjs-hint {
-  box-sizing: content-box;
+  box-sizing: content-box; 
   position: absolute;
   background: transparent;
   width: 20px;
@@ -389,18 +389,18 @@ tr.introjs-showElement > th {
 }
 
 .introjs-hint:hover > .introjs-hint-pulse {
-  border: 5px solid rgba(60, 60, 60, 0.57);
+  border: 5px solid rgba(255, 128, 0, 0.57);
 }
 
 .introjs-hint-pulse {
   box-sizing: content-box;
   width: 10px;
   height: 10px;
-  border: 5px solid rgba(60, 60, 60, 0.27);
+  border: 5px solid rgba(255, 128, 0, 0.27);
   -webkit-border-radius: 30px;
   -moz-border-radius: 30px;
   border-radius: 30px;
-  background-color: rgba(136, 136, 136, 0.24);
+  background-color: rgba(255, 128, 0, 0.24);
   z-index: 10;
   position: absolute;
   -webkit-transition: all 0.2s ease-out;
@@ -417,7 +417,7 @@ tr.introjs-showElement > th {
 .introjs-hint-dot {
   box-sizing: content-box;
   border: 10px solid rgba(146, 146, 146, 0.36);
-  background: transparent;
+  background: #fee573; /*Colour of the puls*/
   -webkit-border-radius: 60px;
   -moz-border-radius: 60px;
   border-radius: 60px;
