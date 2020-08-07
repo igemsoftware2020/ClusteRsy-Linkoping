@@ -11,6 +11,10 @@ mod_gseMKEGG_ui <- function(id){
   ns <- NS(id)
   tagList(
     uiOutput(ns("module_input")),
+    
+    tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_enrich', "href"='#advanced_enrich',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+    tags$div(id = "advanced_enrich", class = "collapse",
+             tags$div(
     selectInput(ns("keytype"), 
                 label = "Select key type",
                 choices = c("kegg",
@@ -34,6 +38,8 @@ mod_gseMKEGG_ui <- function(id){
     sliderInput(ns("maxgssize"), label = "Maximum size of each gene set annotated", min = 100, max = 1000, value = 500, popup = "Maximum size of each gene set used for analyzing"),
     sliderInput(ns("permutation"), label ="number of permutations", min = 1, max = 2000, value = 1000, popup = "Number of permutations that should be performed"),
     prettySwitch(ns("include_seed"), label = "Include seed", value = FALSE, status = "warning", popup = "Get reproducible results"),
+             )),
+    
     tags$div( style = "text-align:center",
               actionButton(ns("load_input"), label = "Enrich", onclick="loading_modal_open(); stopWatch();"),
               htmlOutput(ns("close_loading_modal"))  # Close modal with JS

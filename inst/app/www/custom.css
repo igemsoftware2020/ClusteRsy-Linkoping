@@ -6850,8 +6850,8 @@ input:focus {
 .pager a,
 .pager a:hover {
   color: #fff;
-}
-.pager .disabled > a,
+}.pager .disabled > a,
+
 .pager .disabled > a:hover,
 .pager .disabled > a:focus,
 .pager .disabled > span {

@@ -16,12 +16,18 @@ mod_Modulediscoverer_ui <- function(id){
     textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods", placeholder = "Module name")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
+    
+    tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_mod', "href"='#advanced_mod',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+    tags$div(id = "advanced_mod", class = "collapse",
+             tags$div(
     sliderInput(ns("permutations"), label= "Permutations", min = 0, max = 10000, value = 5000, popup = "Number of permutations to perform to identify the community structure"),
     sliderInput(ns("deg_cutoff"), label = "P-value cutoff for differentialy expressed genes", min = 0, max = 1, value = 0.05, popup = "P-value cutoff for differentially expressed genes"),
     uiOutput(ns("error_p_value")),
     sliderInput(ns("repeats"), label = "Repeats", min = 0, max = 30, value = 15, popup = "Number of times the algorithm is repeated"),
     sliderInput(ns("clique_cutoff"), label = "P-value cutoff for significant cliques", min = 0, max = 1, value = 0.01, popup="Cutoff P-value for significant cliques"),
     numericInput(ns("n_cores"), label = "N cores", value = 4, max = 10, min = 1, popup = "Number of CPU cores used"),
+             )),
+    
     tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer Module discoverer module", onclick="loading_modal_open(); stopWatch()"),
     htmlOutput(ns("close_loading_modal"))  # Close modal with JS

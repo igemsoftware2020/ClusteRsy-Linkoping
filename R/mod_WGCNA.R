@@ -16,6 +16,9 @@ mod_WGCNA_ui <- function(id){
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
     
+    tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_mod', "href"='#advanced_mod',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+    tags$div(id = "advanced_mod", class = "collapse",
+             tags$div(
     radioButtons(
       ns("group_of_interest"), 
       label= "Select group of interest", 
@@ -103,6 +106,7 @@ mod_WGCNA_ui <- function(id){
       max=1, 
       value = 0.1, 
       popup = "This is only used when the corType is Bicor. Specifies maximum percentile of the separate outliers data on either side of the median."),
+             )),
     
     tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer WGCNA trait-based module", onclick="loading_modal_open(); stopWatch()"),

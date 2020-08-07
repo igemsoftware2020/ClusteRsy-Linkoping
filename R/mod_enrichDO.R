@@ -12,6 +12,10 @@ mod_enrichDO_ui <- function(id){
   tagList(
     #Description of the method "Finds disease assosciations and creates enrichment analysis objects"
     uiOutput(ns("module_input")),
+    
+    tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_enrich', "href"='#advanced_enrich',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+    tags$div(id = "advanced_enrich", class = "collapse",
+             tags$div(
     sliderInput(ns("pvalueCutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value"),
     sliderInput(ns("qvalueCutoff"), label = "Q-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value. Q-values are false discovery rate (FDR) adjusted p-values"),
     selectInput(ns("pAdjustMethod"), "Select an adjustment method",
@@ -27,6 +31,8 @@ mod_enrichDO_ui <- function(id){
                 selectize = TRUE),
     sliderInput(ns("mingssize"), label = "Minimum size of each gene set", min = 0, max = 100, value = 5, popup = "Minimum size of each gene set used for analyzing"),
     sliderInput(ns("maxgssize"), label = "Maximum size of each gene set", min = 0,  max = 5000, value = 500, popup = "Maximum size of each gene set used for analyzing"),
+             )),
+    
     tags$div( style = "text-align:center",
               actionButton(ns("load_input"), label = "Enrich", onclick="loading_modal_open(); stopWatch();"),
               htmlOutput(ns("close_loading_modal"))  # Close modal with JS 

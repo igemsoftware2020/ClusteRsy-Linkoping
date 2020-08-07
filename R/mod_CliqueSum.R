@@ -10,8 +10,11 @@
 #' 
 mod_CliqueSum_ui <- function(id){
   ns <- NS(id)
-  tagList(uiOutput(ns("input_choice")),
-          uiOutput(ns("ppi_choice")),
+  tagList(
+    tags$div(`data-intro`="Here you can choose from all your formated input data. You can see what data you have avaliable under the database tab.", `data-step`=3,
+             uiOutput(ns("input_choice"))),
+          tags$div(`data-intro`= "Then you can choose the different parameters for your data!", `data-step`=4,
+            uiOutput(ns("ppi_choice")),
           tags$div(id = "error_name_CliqueSum_js",
           textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods", placeholder = "Module name")),
           uiOutput(ns("error_name_descrip")),
@@ -22,9 +25,13 @@ mod_CliqueSum_ui <- function(id){
                    tags$div(
           sliderInput(ns("clique_significance"), label = "Clique significance", min = 0, max = 1, value = 0.05, popup ="P-value for cliques to be considered significant"),
           numericInput(ns("min_clique_size"), label = "Minimal clique size", value = 2, max = 50, min = 2, popup = "Minimal size of cliques"),
+<<<<<<< HEAD
           numericInput(ns("n_iterations"), label = "Iterations", value = 500, max = 10000, min = 0, popup = "Number of iterations to be performed for the permutation based P-value")
                    )),
 
+=======
+          numericInput(ns("n_iterations"), label = "Iterations", value = 500, max = 10000, min = 0, popup = "Number of iterations to be performed for the permutation based P-value")),
+>>>>>>> 36f97bc9ef0c09ed427bbaa94d4a5963e5e59b2c
           tags$div(style = "text-align:center",
                   actionButton(ns("load_input"), label = "Infer Clique Sum module", onclick="loading_modal_open(); stopWatch()"),
                   htmlOutput(ns("close_loading_modal")) # Close modal with JS

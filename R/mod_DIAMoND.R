@@ -16,11 +16,17 @@ mod_DIAMoND_ui <- function(id){
     textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods.", placeholder = "Module name")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
+    
+    tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_mod', "href"='#advanced_mod',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+    tags$div(id = "advanced_mod", class = "collapse",
+             tags$div(
     sliderInput(ns("seed_weight"), label = "Select Seed Weight", min = 0, max = 50, value = 25, popup = "Additional numeric parameter to assign weight for the seed genes."),
     sliderInput(ns("deg_cutoff"), label = "P-value cutoff", min = 0, max = 1, value = 0.05, popup = "P-value cutoff for differentially expressed genes."),
     uiOutput(ns("error_p_value")),
     prettySwitch(ns("include_seed"), label = "Include seed", value = FALSE, status = "warning", popup = "Include seed genes in the output model."),
     sliderInput(ns("output_genes"), label= "Select maximum number of genes to be included", min = 0, max = 500, value = 250, popup =  "Maximum number of genes to be included in the final module."),
+             )),
+    
     tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer DIAMoND module", onclick="loading_modal_open(); stopWatch();"),
     htmlOutput(ns("close_loading_modal")) # Close modal with JS

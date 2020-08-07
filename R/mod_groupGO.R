@@ -12,6 +12,10 @@ mod_groupGO_ui <- function(id){
   tagList(
     uiOutput(
       ns("module_input")),
+    
+    tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_enrich', "href"='#advanced_enrich',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+    tags$div(id = "advanced_enrich", class = "collapse",
+             tags$div(
     selectInput(
       ns("keytype"), 
       label = "Select the type of gene input", 
@@ -39,6 +43,7 @@ mod_groupGO_ui <- function(id){
       status = "warning",
       popup = "Whether the gene IDs will mapping to gene symbols"
     ),
+             )),
     
     tags$div( style = "text-align:center",
               actionButton(ns("load_input"), label = "Group", onclick="loading_modal_open(); stopWatch();"),

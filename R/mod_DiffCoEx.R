@@ -15,6 +15,10 @@ mod_DiffCoEx_ui <- function(id){
     textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods", placeholder = "Module name")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
+    
+    tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_mod', "href"='#advanced_mod',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+    tags$div(id = "advanced_mod", class = "collapse",
+             tags$div(
     radioButtons(ns("cluster_method"), "Select a cluster method:", 
                  choices = c("ward",
                              "single",
@@ -48,6 +52,8 @@ mod_DiffCoEx_ui <- function(id){
     sliderInput(ns("minClusterSize"), label = "Minimum cluster size", min = 0, max = 100, value = 5, popup = "Minimum cluster size"),
     sliderInput(ns("cut_height"), label = "Maximum joining heights", min = 0, max = 1, value = 0.1, popup = "Maximum height of joins in the dendrogram that will be considered"),
     sliderInput(ns("pval_cutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "P-value cutoff for significant co-expression modules"),
+             )),
+    
     tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer DiffCoEx module", onclick="loading_modal_open(); stopWatch()"),
     htmlOutput(ns("close_loading_modal"))  # Close modal with JS

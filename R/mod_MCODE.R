@@ -16,6 +16,10 @@ mod_MCODE_ui <- function(id){
     textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods.", placeholder = "Module name")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
+    
+    tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_mod', "href"='#advanced_mod',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+    tags$div(id = "advanced_mod", class = "collapse",
+             tags$div(
     radioButtons(
         ns("hierarchy"),
         label = "Hierarchy",
@@ -90,6 +94,8 @@ mod_MCODE_ui <- function(id){
       status = "warning",
       popup = "Include self-loops."
     ),
+             )),
+    
     tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer MCODE module", onclick="loading_modal_open(); stopWatch();"),
     htmlOutput(ns("close_loading_modal"))  # Close modal with JS

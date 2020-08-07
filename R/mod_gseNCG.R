@@ -11,6 +11,10 @@ mod_gseNCG_ui <- function(id){
   ns <- NS(id)
   tagList(
     uiOutput(ns("module_input")),
+    
+    tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_enrich', "href"='#advanced_enrich',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+    tags$div(id = "advanced_enrich", class = "collapse",
+             tags$div(
     sliderInput(ns("pvaluecutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value"),
     selectInput(ns("padjustmethod"), "Select an adjustment method",
                 choices = c("holm",
@@ -33,6 +37,8 @@ mod_gseNCG_ui <- function(id){
                 choices = c("fgsea",
                             "DOSE"),
                 popup = "Algorithm used for the gene set enrichment analysis"),
+             )),
+    
     tags$div( style = "text-align:center",
               actionButton(ns("load_input"), label = "Enrich", onclick="loading_modal_open(); stopWatch();"),
               htmlOutput(ns("close_loading_modal"))  # Close modal with JS 
