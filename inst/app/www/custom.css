@@ -7337,7 +7337,14 @@ a.button.learn:hover:after, a.button.learn:hover:before{
   .sidenav a {font-size: 18px;}
 }
 
-
-
+/* PURE css solution for rotating carets based on expanded section */
+.expand_caret {
+    transform: scale(1.6);
+    margin-left: 8px;
+    margin-top: -4px;
+}
+a[aria-expanded='false'] > .expand_caret {
+    transform: scale(1.6) rotate(-90deg);
+}
 
 

@@ -7,23 +7,32 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
+#' 
 mod_CliqueSum_ui <- function(id){
   ns <- NS(id)
   tagList(uiOutput(ns("input_choice")),
           uiOutput(ns("ppi_choice")),
           tags$div(id = "error_name_CliqueSum_js",
-                  textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods", placeholder = "Module name")),
+          textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods", placeholder = "Module name")),
           uiOutput(ns("error_name_descrip")),
           uiOutput(ns("error_name_js")),
+          
+          tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_mod', "href"='#advanced_mod',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+          tags$div(id = "advanced_mod", class = "collapse",
+                   tags$div(
           sliderInput(ns("clique_significance"), label = "Clique significance", min = 0, max = 1, value = 0.05, popup ="P-value for cliques to be considered significant"),
           numericInput(ns("min_clique_size"), label = "Minimal clique size", value = 2, max = 50, min = 2, popup = "Minimal size of cliques"),
-          numericInput(ns("n_iterations"), label = "Iterations", value = 500, max = 10000, min = 0, popup = "Number of iterations to be performed for the permutation based P-value"),
+          numericInput(ns("n_iterations"), label = "Iterations", value = 500, max = 10000, min = 0, popup = "Number of iterations to be performed for the permutation based P-value")
+                   )),
+
           tags$div(style = "text-align:center",
                   actionButton(ns("load_input"), label = "Infer Clique Sum module", onclick="loading_modal_open(); stopWatch()"),
                   htmlOutput(ns("close_loading_modal")) # Close modal with JS
            )
   )
 }
+
+#“default”, “primary”, “success”, “info”, “warning”, “danger” btn-block
 
 #' CliqueSum Server Function
 #'
@@ -36,6 +45,11 @@ mod_CliqueSum_server <- function(input, output, session, con, upload_ui_1, input
   module_name <- reactive({
     input$module_name
   })
+  
+  # observeEvent(input$advanced, {
+  #   advanced <-  tags$button(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced',  tags$div(class= "glyphicon glyphicon-menu-down"))
+  # })
+  
   
   # Check for module object names
   observe({
@@ -85,7 +99,6 @@ mod_CliqueSum_server <- function(input, output, session, con, upload_ui_1, input
     id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     module_object <- try(MODifieRDB::clique_sum_db(input_name = input$input_object,
-
                                                ppi_name = input$ppi_object,
                                                n_iterations = input$n_iterations,
                                                clique_significance = input$clique_significance,
@@ -109,6 +122,8 @@ mod_CliqueSum_server <- function(input, output, session, con, upload_ui_1, input
       tags$script("loading_modal_close(); reset();")
     })
   })
+  
+  
   return(CliqueSum_module)
 }
 
