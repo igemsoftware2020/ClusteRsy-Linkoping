@@ -113,4 +113,118 @@ gene_heatmap <- function(CPobj, NP, NG, plot_title, pval_color) {
   }
   
 }
+
+#Inspected module object function.
+
+inspect_module <- function(inspected_module, ns, con) {
+  UseMethod("inspect_module", inspected_module)
+}
+
+
+inspect_module.Mcode <- function(inspected_module, ns, con) {
+  
+  ui_ouput <- renderUI({
+    mod_Mcode_post_processing_ui(ns("Mcode_post_processing_ui_1"))
+  })
+  
+  server_output <- callModule(mod_Mcode_post_processing_server, "Mcode_post_processing_ui_1", inspected_module, con = con)
+  
+  return(ui_ouput)
+  return(server_output)
+  
+}
+
+inspect_module.Correlation_clique <- function(inspected_module, ns, con) {
+  
+  ui_output <- renderUI({
+    mod_Correlation_clique_post_processing_ui(ns("Correlation_clique_post_processing_ui_1"))
+  })
+  
+  server_output <- callModule(mod_Correlation_clique_post_processing_server, "Correlation_clique_post_processing_ui_1", inspected_module, con = con)
+  
+  return(ui_output)
+  return(server_output)
+  
+}
+
+inspect_module.DIAMOnD <- function(inspected_module, ns, con) {
+  
+  ui_output <- renderUI({
+    mod_DIAMoND_post_processing_ui(ns("DIAMoND_post_processing_ui_1"))
+  })
+  
+  server_output <- callModule(mod_DIAMoND_post_processing_server, "DIAMoND_post_processing_ui_1", inspected_module, con = con)
+  
+  return(ui_output)
+  return(server_output)
+  
+}
+
+inspect_module.module_discoverer <- function(inspected_module, ns, con) {
+  
+  ui_output <- renderUI({
+    mod_module_discoverer_post_processing_ui(ns("module_discoverer_post_processing_ui_1"))
+  })
+  
+  server_output <- callModule(mod_module_discoverer_post_processing_server, "module_discoverer_post_processing_ui_1", inspected_module, con = con)
+  
+  return(ui_output)
+  return(server_output)
+  
+}
+
+inspect_module.Clique_Sum_permutation <- function(inspected_module, ns, con) {
+  
+  ui_output <- renderUI({                       
+    mod_CliqueSum_post_processing_ui(ns("CliqueSum_post_processing_ui_1"))
+  })
+  
+  server_output <- callModule(mod_CliqueSum_post_processing_server, "CliqueSum_post_processing_ui_1", inspected_module, con = con)
+  
+  return(ui_output)
+  return(server_output)
+  
+}
+
+inspect_module.DiffCoEx <- function(inspected_module, ns, con) {
+  
+  ui_output <- renderUI({
+    mod_DiffCoEx_post_processing_ui(ns("DiffCoEx_post_processing_ui_1"))
+  })
+  
+  server_output <- callModule(mod_DiffCoEx_post_processing_server, "DiffCoEx_post_processing_ui_1", inspected_module, con = con)
+  
+  return(ui_output)
+  return(server_output)
+  
+}
+
+inspect_module.WGCNA <- function(inspected_module, ns, con) {
+  
+  ui_output <- renderUI({
+    mod_WGCNA_post_processing_ui(ns("WGCNA_post_processing_ui_1"))
+  })
+  
+  server_output <- callModule(mod_WGCNA_post_processing_server, "WGCNA_post_processing_ui_1", inspected_module, con = con)
+  
+  return(ui_output)
+  return(server_output)
+  
+}
+
+inspect_module.MODA <- function(inspected_module, ns, con) {
+  
+  ui_output <- renderUI({
+    mod_MODA_post_processing_ui(ns("MODA_post_processing_ui_1"))
+  })
+  
+  server_output <- callModule(mod_MODA_post_processing_server, "MODA_post_processing_ui_1", inspected_module, con = con)
+  
+  return(ui_output)
+  return(server_output)
+  
+  
+  
+}
+
   

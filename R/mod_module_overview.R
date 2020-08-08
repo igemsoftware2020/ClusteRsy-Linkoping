@@ -14,11 +14,13 @@ mod_module_overview_ui <- function(id){
     tags$div(`class`="row",
              tags$div(`class`="col-sm-8", style = "color:black",
              fileInput(ns("module_object"), label = "Upload a module object", accept =  ".rds"),
+             actionButton(ns("inspect"), label = "Inspect the module object"),
              uiOutput(ns("module_name_chooser"))),
              tags$br(),
              tags$div(`class`="col-sm-4", style = "text-align:right", id ="buttons_module_overview",
                       downloadButton(ns("download_module"), "Download"),
                       actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true")))),
+    uiOutput(ns("inspected_results")),
     uiOutput(ns("disable"))
   )
 }
@@ -155,6 +157,23 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
                                                   selection = list(selected = c(1)))
     # Send refresh
     module_overview_module$delete <- input$delete
+  })
+  
+  # Inspect current module
+  observeEvent(input$inspect, {
+    
+    selected <- input$module_overview_rows_selected
+    
+    
+    if (length(selected) > 1) {
+      showNotification("Sorry, you can only inspect one object at a time", duration = NULL, closeButton = TRUE, type = "warning")
+    } else {
+      inspected_module <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[selected], con = con)
+      
+      #Function, in the fct_functions.R, to call the different module objects tables.
+      output$inspected_results <- inspect_module(inspected_module, ns, con) 
+      
+    }
   })
   return(module_overview_module)
 }
