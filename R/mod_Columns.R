@@ -66,7 +66,8 @@ mod_Columns_ui <- function(id){
                                 mod_disease_analysis_ui(ns("disease_analysis_ui_1"))))
              ),
     htmlOutput(ns("fadein")),
-    htmlOutput(ns("fadein1"))
+    htmlOutput(ns("fadein1")),
+    introjsUI()
   )
   
 }

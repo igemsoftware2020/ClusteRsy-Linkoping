@@ -10,7 +10,7 @@
 mod_upload_ui <- function(id){
     ns <- NS(id)
     tagList(
-      tags$div(id = "hide_matrix",
+      tags$div(`data-intro`="Begin by uploading an expression matrix here! Then you can create an input object further down.", `data-step`=1, id = "hide_matrix",
       fileInput(ns("expression_matrix"), label = "Upload an expression matrix", accept = c("text/csv", "text/plain", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/tab-separated-values", ".rds"))),
       uiOutput(ns("sample_chooser")),
       tags$div(id = "hide_rds",

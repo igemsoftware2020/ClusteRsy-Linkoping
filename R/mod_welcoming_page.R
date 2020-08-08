@@ -18,6 +18,9 @@ View app
 user_guide_button <- '<button id = "user_guide_btn" class = "front_button" style = "position:absolute; top:80%">
   User guide
 </button>'
+tutorial_button <- '<button id = "tutorial_btn" class = "front_button" style = "position:absolute; top:90%">
+  Tutorial
+</button>'
 
 
 
@@ -35,7 +38,7 @@ mod_welcoming_page_ui <- function(id){
                       tags$h3("Enlightening", style="font-family:Quicksand"), 
                       tags$h3("Innovative", style="font-family:Quicksand")
                       ),
-             HTML(button, user_guide_button),
+             HTML(button, user_guide_button, tutorial_button),
              HTML('<a class="button learn" href="#section2">&#8595;</a>'),
              tags$a(icon("github-square", "fa-3x", lib = "font-awesome"), 
                     href = "https://github.com/iGEM-linkoping",

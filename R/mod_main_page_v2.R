@@ -61,6 +61,28 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
     updateNavbarPage(session, "navbar", "Tools")
   })
   
+  observeEvent(app_servr$tutorial_btn, {
+    updateNavbarPage(session, "navbar", "Tools")
+    showModal(modalDialog(
+      easyClose = TRUE,
+      title = "Welcome to MODifieRWeb!",
+      "This tutorial will show you how to use this webtool. You can find and manage the obects you create when using the tool under the Database tab and if you need more help you can find more detailed instructions in the User guide.",
+      style = "color:black; text-align:center;",
+      footer=tagList(
+        tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
+        tutorial_start_button <- actionButton(inputId = "tutorial_start_btn", label = "Start the tutorial!", style = "background-color: #2c3e50;border-color:#2c3e50;")
+      )
+    ))
+  })
+  
+  
+  observeEvent(app_servr$tutorial_start_btn, {
+    removeModal()
+  })
+  observeEvent(app_servr$tutorial_start_btn, {
+    introjs(session)
+  })
+  
  
   
   observeEvent(app_servr$loaded, {

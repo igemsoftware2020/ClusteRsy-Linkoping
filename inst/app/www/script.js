@@ -34,4 +34,12 @@ $( document ).ready(function() {
         i++;
         Shiny.setInputValue("user_guide_btn", i);
     });
+  $('#tutorial_btn').click(function(){
+        i++;
+        Shiny.setInputValue("tutorial_btn", i);
+    });
+  $('#tutorial_start_btn').click(function(){
+        i++;
+        Shiny.setInputValue("tutorial_start_btn", i);
+    });
 });

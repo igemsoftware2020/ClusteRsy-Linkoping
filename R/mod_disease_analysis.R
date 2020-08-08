@@ -10,15 +10,18 @@
 mod_disease_analysis_ui <- function(id){
   ns <- NS(id)
   tagList(
-    tags$div(selectInput(ns("analyse_method"), label = "Type of analysis",
+    tags$div(`data-intro`="In this column you start by deciding what type of analysis you want.", `data-step`=5,
+      selectInput(ns("analyse_method"), label = "Type of analysis",
                          choices = c("Disease analysis", "Gene Ontology analysis", "KEGG analysis"))
     ),
+    tags$div(`data-intro`="Then you choose enrichment and repository type.", `data-step`=6,
     htmlOutput(ns("enrich_type")),
-    htmlOutput(ns("enrich_repo")),
+    htmlOutput(ns("enrich_repo"))),
     htmlOutput(ns("description")),
     tags$br(),
+    tags$div(`data-intro`="And lastly you choose the parameters for the analysis and run the enrichment!", `data-step`=7,
     htmlOutput(ns("para"))
-    )
+    ))
 }
     
 #' disease_analysis Server Function
