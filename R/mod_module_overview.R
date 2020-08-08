@@ -117,7 +117,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   
   # Observe if valid to download
   observe({
-    if(is.null(input$module_overview_rows_selected)) {
+    if(is.null(input$module_overview_rows_selected)) { 
      output$disable <- renderUI({
        tags$script((HTML("document.getElementById('main_page_v2_ui_1-module_overview_ui_1-download_module').style.pointerEvents = 'none';
                          document.getElementById('main_page_v2_ui_1-module_overview_ui_1-delete').style.pointerEvents = 'none';
@@ -164,16 +164,20 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     
     selected <- input$module_overview_rows_selected
     
-    
     if (length(selected) > 1) {
       showNotification("Sorry, you can only inspect one object at a time", duration = NULL, closeButton = TRUE, type = "warning")
-    } else {
+    } else if (length(selected) == 1 ) {
       inspected_module <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[selected], con = con)
       
-      #Function, in the fct_functions.R, to call the different module objects tables.
-      output$inspected_results <- inspect_module(inspected_module, ns, con) 
+      if (is.null(inspected_module)) { # Selected is not NULL here, not sure why. 
+        showNotification("No module object selected", duration = 10, closeButton = TRUE, type = "warning") 
+      } else {
+        #Function, in the fct_functions.R, to call the different module objects tables.
+        output$inspected_results <- inspect_module(inspected_module, ns, con) 
+      }
       
     }
+    
   })
   return(module_overview_module)
 }
