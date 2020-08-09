@@ -134,13 +134,13 @@ inspect_module.Mcode <- function(inspected_module, ns, con) {
   
 }
 
-inspect_module.Correlation_clique <- function(inspected_module, ns, con) {
+inspect_module.Correlation_clique <- function(inspected_module, selected_module_name, ns, con) {
   
   ui_output <- renderUI({
     mod_Correlation_clique_post_processing_ui(ns("Correlation_clique_post_processing_ui_1"))
   })
   
-  server_output <- callModule(mod_Correlation_clique_post_processing_server, "Correlation_clique_post_processing_ui_1", inspected_module, con = con)
+  server_output <- callModule(mod_Correlation_clique_post_processing_server, "Correlation_clique_post_processing_ui_1", inspected_module, selected_module_name, con = con)
   
   return(ui_output)
   return(server_output)

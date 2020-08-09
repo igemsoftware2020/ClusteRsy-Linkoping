@@ -10,29 +10,8 @@
 mod_MODA_post_processing_ui <- function(id){
   ns <- NS(id)
   tagList(
-    showModal(modalDialog(
-      title = selected_module_name,
-      easyClose = TRUE,
-      size = "l",
-    fluidPage(
-      tabsetPanel(id = ns("tabs"),
-                  type = "tabs",
-                     tabPanel(title = "Module genes", 
-                              DT::dataTableOutput(ns("module_genes_table"))),
-                      tabPanel(title = "Group 1 module genes", 
-                               DT::dataTableOutput(ns("group1_modules_table"))),
-                     tabPanel(title = "Group 2 module genes",
-                              DT::dataTableOutput(ns("group2_modules_table"))),
-                      tabPanel(title = "Jaccard table", 
-                               DT::dataTableOutput(ns("jaccard_table_table"))),
-                      tabPanel(title = "Settings table",
-                               DT::dataTableOutput(ns("settings_table"))))),
-    footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
-                      ),
-
-    
+  uiOutput(ns("tables"))
   )
-    ))
 }
     
 #' MODA_post_processing Server Function
@@ -40,6 +19,32 @@ mod_MODA_post_processing_ui <- function(id){
 #' @noRd 
 mod_MODA_post_processing_server <- function(input, output, session, inspected_module, selected_module_name, con){
   ns <- session$ns
+  
+  output$tables <- renderUI({
+    tagList(
+      showModal(modalDialog(
+        title = selected_module_name$name,
+        easyClose = TRUE,
+        size = "l",
+        fluidPage(
+          tabsetPanel(id = ns("tabs"),
+                      type = "tabs",
+                      tabPanel(title = "Module genes", 
+                               DT::dataTableOutput(ns("module_genes_table"))),
+                      tabPanel(title = "Group 1 module genes", 
+                               DT::dataTableOutput(ns("group1_modules_table"))),
+                      tabPanel(title = "Group 2 module genes",
+                               DT::dataTableOutput(ns("group2_modules_table"))),
+                      tabPanel(title = "Jaccard table", 
+                               DT::dataTableOutput(ns("jaccard_table_table"))),
+                      tabPanel(title = "Settings table",
+                               DT::dataTableOutput(ns("settings_table"))))),
+        footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
+        ),
+      )
+      )
+    )
+  })
   
   module_genes <- as.matrix(inspected_module$module_genes)
   colnames(module_genes) <- list("Module genes")
