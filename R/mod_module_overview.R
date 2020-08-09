@@ -14,14 +14,23 @@ mod_module_overview_ui <- function(id){
     tags$div(`class`="row",
              tags$div(`class`="col-sm-8", style = "color:black",
              fileInput(ns("module_object"), label = "Upload a module object", accept =  ".rds"),
-             actionButton(ns("inspect"), label = "Inspect the module object"),
-             uiOutput(ns("module_name_chooser"))),
+             tags$div(
+             uiOutput(ns("module_name_chooser")),
+             tags$br()),
+             tags$div(
+             actionButton(ns("inspect"), label = "Inspect the module object")),
              tags$br(),
+             tags$div(
+             uiOutput(ns("post_process_ui")))
+             ),
+             tags$br(),
+             
              tags$div(`class`="col-sm-4", style = "text-align:right", id ="buttons_module_overview",
                       downloadButton(ns("download_module"), "Download"),
                       actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true")))),
     uiOutput(ns("inspected_results")),
-    uiOutput(ns("disable"))
+    uiOutput(ns("disable")),
+    useShinyjs()
   )
 }
 
@@ -77,7 +86,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
                                                   selection = list(selected = c(1)))
   })
   
-  module_objects <- MODifieRDB::get_available_module_objects(con)
+  module_objects <<- MODifieRDB::get_available_module_objects(con)
   # Render DT
   output$module_overview <- DT::renderDataTable(module_objects,
                                                 rownames = FALSE,
@@ -161,6 +170,9 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   })
   
   # Inspect current module
+  
+  
+  
   observeEvent(input$inspect, {
     
     selected <- input$module_overview_rows_selected
@@ -182,6 +194,29 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     }
     
   })
+  
+  output$post_process_ui <- renderUI({
+    tagList(
+      actionButton(ns("post_process"),
+                   label = "Post-process"),
+    )
+    
+  })
+
+  #Listening the the module_type that is being selected in the DT.
+  observeEvent(module_objects$module_type[input$module_overview_rows_selected],{
+    
+    selected_module_type <- module_objects$module_type[input$module_overview_rows_selected]
+    
+      if (length(selected_module_type) == 1) {
+        req(selected_module_type %in% c("Correlation_clique", "DIAMOnD", "DiffCoEx", "Mcode", "MODA", "WGCNA"))
+          shinyjs::enable("post_process")
+       } else {
+         shinyjs::disable("post_process")   
+       }
+
+  })
+  
   return(module_overview_module)
 }
 

@@ -17,8 +17,9 @@
 ## Add one line by package you want to add as dependency
 usethis::use_package( "thinkr" )
 usethis::use_package("MODifieR")
-usethis::use_package("plotly")
 usethis::use_package("ggplot2")
+usethis::use_package("plotly")
+usethis::use_package("shinyjs")
 usethis::use_package("rintrojs")
 
 ## Add modules ----
