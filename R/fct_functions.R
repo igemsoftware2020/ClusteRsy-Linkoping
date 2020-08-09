@@ -116,7 +116,7 @@ gene_heatmap <- function(CPobj, NP, NG, plot_title, pval_color) {
 
 #Inspected module object function.
 
-inspect_module <- function(inspected_module, ns, con) {
+inspect_module <- function(inspected_module, selected_module_name, ns, con) {
   UseMethod("inspect_module", inspected_module)
 }
 
@@ -212,13 +212,13 @@ inspect_module.WGCNA <- function(inspected_module, ns, con) {
   
 }
 
-inspect_module.MODA <- function(inspected_module, ns, con) {
+inspect_module.MODA <- function(inspected_module, selected_module_name, ns, con) {
   
   ui_output <- renderUI({
     mod_MODA_post_processing_ui(ns("MODA_post_processing_ui_1"))
   })
   
-  server_output <- callModule(mod_MODA_post_processing_server, "MODA_post_processing_ui_1", inspected_module, con = con)
+  server_output <- callModule(mod_MODA_post_processing_server, "MODA_post_processing_ui_1", inspected_module, selected_module_name, con = con)
   
   return(ui_output)
   return(server_output)

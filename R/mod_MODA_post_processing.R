@@ -10,18 +10,35 @@
 mod_MODA_post_processing_ui <- function(id){
   ns <- NS(id)
   tagList(
-  DT::dataTableOutput(ns("module_genes_table")),
-  DT::dataTableOutput(ns("group1_modules_table")),
-  DT::dataTableOutput(ns("group2_modules_table")),
-  DT::dataTableOutput(ns("jaccard_table_table")),
-  DT::dataTableOutput(ns("settings_table"))
+    showModal(modalDialog(
+      title = selected_module_name,
+      easyClose = TRUE,
+      size = "l",
+    fluidPage(
+      tabsetPanel(id = ns("tabs"),
+                  type = "tabs",
+                     tabPanel(title = "Module genes", 
+                              DT::dataTableOutput(ns("module_genes_table"))),
+                      tabPanel(title = "Group 1 module genes", 
+                               DT::dataTableOutput(ns("group1_modules_table"))),
+                     tabPanel(title = "Group 2 module genes",
+                              DT::dataTableOutput(ns("group2_modules_table"))),
+                      tabPanel(title = "Jaccard table", 
+                               DT::dataTableOutput(ns("jaccard_table_table"))),
+                      tabPanel(title = "Settings table",
+                               DT::dataTableOutput(ns("settings_table"))))),
+    footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
+                      ),
+
+    
   )
+    ))
 }
     
 #' MODA_post_processing Server Function
 #'
 #' @noRd 
-mod_MODA_post_processing_server <- function(input, output, session, inspected_module, con){
+mod_MODA_post_processing_server <- function(input, output, session, inspected_module, selected_module_name, con){
   ns <- session$ns
   
   module_genes <- as.matrix(inspected_module$module_genes)
@@ -38,15 +55,103 @@ mod_MODA_post_processing_server <- function(input, output, session, inspected_mo
   settings <- as.matrix(inspected_module$settings)
   colnames(settings) <- list("Settings used")
   
-  output$module_genes_table <- DT::renderDataTable({module_genes})
+  output$module_genes_table <- DT::renderDataTable({module_genes},
+                                                   extensions = c('Buttons'),
+                                                   options = list(
+                                                     dom = "lfrtipB",
+                                                     scrollX = TRUE,
+                                                     scrollY = TRUE,
+                                                     pageLength = 10,
+                                                     paging = TRUE,
+                                                     searching = TRUE,
+                                                     lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")) ,
+                                                     buttons = 
+                                                       list('copy', 
+                                                            list(
+                                                              extend = 'collection',
+                                                              buttons = c('pdf', 'csv', 'excel'),
+                                                              text = 'Download'
+                                                            ))
+                                                   ))
   
-  output$group1_modules_table <- DT::renderDataTable({group1_genes})
+  output$group1_modules_table <- DT::renderDataTable({group1_genes},
+                                                     extensions = c('Buttons'),
+                                                     options = list(
+                                                       dom = "lfrtipB",
+                                                       scrollX = TRUE,
+                                                       scrollY = TRUE,
+                                                       pageLength = 10,
+                                                       paging = TRUE,
+                                                       searching = TRUE,
+                                                       lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")) ,
+                                                       buttons = 
+                                                         list('copy', 
+                                                              list(
+                                                                extend = 'collection',
+                                                                buttons = c('pdf', 'csv', 'excel'),
+                                                                text = 'Download'
+                                                              ))
+                                                     ))
+                                                                  
   
-  output$group2_modules_table <- DT::renderDataTable({group2_genes})
+  output$group2_modules_table <- DT::renderDataTable({group2_genes},
+                                                     extensions = c('Buttons'),
+                                                     options = list(
+                                                       dom = "lfrtipB",
+                                                       scrollX = TRUE,
+                                                       scrollY = TRUE,
+                                                       pageLength = 10,
+                                                       paging = TRUE,
+                                                       searching = TRUE,
+                                                       lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")) ,
+                                                       buttons = 
+                                                         list('copy', 
+                                                              list(
+                                                                extend = 'collection',
+                                                                buttons = c('pdf', 'csv', 'excel'),
+                                                                text = 'Download'
+                                                              ))
+                                                     ))
+                                                     
+                                                                   
   
-  output$jaccard_table_table <- DT::renderDataTable({jaccard_table})
+  output$jaccard_table_table <- DT::renderDataTable({jaccard_table},
+                                                    extensions = c('Buttons'),
+                                                    options = list(
+                                                      dom = "lfrtipB",
+                                                      scrollX = TRUE,
+                                                      scrollY = TRUE,
+                                                      pageLength = 10,
+                                                      paging = TRUE,
+                                                      searching = TRUE,
+                                                      lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")) ,
+                                                      buttons = 
+                                                        list('copy', 
+                                                             list(
+                                                               extend = 'collection',
+                                                               buttons = c('pdf', 'csv', 'excel'),
+                                                               text = 'Download'
+                                                             ))
+                                                    ))
   
-  output$settings_table <- DT::renderDataTable({settings})
+  output$settings_table <- DT::renderDataTable({settings},
+                                               extensions = c('Buttons'),
+                                               options = list(
+                                                 dom = "lfrtipB",
+                                                 scrollX = TRUE,
+                                                 scrollY = TRUE,
+                                                 pageLength = 10,
+                                                 paging = TRUE,
+                                                 searching = TRUE,
+                                                 lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")) ,
+                                                 buttons = 
+                                                   list('copy', 
+                                                        list(
+                                                          extend = 'collection',
+                                                          buttons = c('pdf', 'csv', 'excel'),
+                                                          text = 'Download'
+                                                        ))
+                                               ))
 }
     
 ## To be copied in the UI
