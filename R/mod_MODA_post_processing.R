@@ -61,6 +61,7 @@ mod_MODA_post_processing_server <- function(input, output, session, inspected_mo
   colnames(settings) <- list("Settings used")
   
   output$module_genes_table <- DT::renderDataTable({module_genes},
+                                                   filter = "top",
                                                    extensions = c('Buttons'),
                                                    options = list(
                                                      dom = "lfrtipB",
@@ -121,6 +122,7 @@ mod_MODA_post_processing_server <- function(input, output, session, inspected_mo
                                                                    
   
   output$jaccard_table_table <- DT::renderDataTable({jaccard_table},
+                                                    filter = "top",
                                                     extensions = c('Buttons'),
                                                     options = list(
                                                       dom = "lfrtipB",

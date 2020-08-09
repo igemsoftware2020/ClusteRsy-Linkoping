@@ -52,6 +52,7 @@ mod_Correlation_clique_post_processing_server <- function(input, output, session
   colnames(settings) <- list("Settings used")
   
   output$module_genes_table <- DT::renderDataTable({module_genes},
+                                                   filter = "top",
                                                    extensions = c('Buttons'),
                                                    options = list(
                                                      dom = "lfrtipB",
@@ -71,6 +72,7 @@ mod_Correlation_clique_post_processing_server <- function(input, output, session
                                                    ))
   
   output$frequency_table <- DT::renderDataTable({frequency_table},
+                                                filter = "top",
                                                 extensions = c('Buttons'),
                                                 options = list(
                                                   dom = "lfrtipB",

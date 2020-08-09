@@ -121,13 +121,13 @@ inspect_module <- function(inspected_module, selected_module_name, ns, con) {
 }
 
 
-inspect_module.Mcode <- function(inspected_module, ns, con) {
+inspect_module.Mcode <- function(inspected_module, selected_module_name, ns, con) {
   
   ui_ouput <- renderUI({
     mod_Mcode_post_processing_ui(ns("Mcode_post_processing_ui_1"))
   })
   
-  server_output <- callModule(mod_Mcode_post_processing_server, "Mcode_post_processing_ui_1", inspected_module, con = con)
+  server_output <- callModule(mod_Mcode_post_processing_server, "Mcode_post_processing_ui_1", inspected_module, selected_module_name, con = con)
   
   return(ui_ouput)
   return(server_output)
@@ -147,65 +147,65 @@ inspect_module.Correlation_clique <- function(inspected_module, selected_module_
   
 }
 
-inspect_module.DIAMOnD <- function(inspected_module, ns, con) {
+inspect_module.DIAMOnD <- function(inspected_module, selected_module_name, ns, con) {
   
   ui_output <- renderUI({
     mod_DIAMoND_post_processing_ui(ns("DIAMoND_post_processing_ui_1"))
   })
   
-  server_output <- callModule(mod_DIAMoND_post_processing_server, "DIAMoND_post_processing_ui_1", inspected_module, con = con)
+  server_output <- callModule(mod_DIAMoND_post_processing_server, "DIAMoND_post_processing_ui_1", inspected_module, selected_module_name, con = con)
   
   return(ui_output)
   return(server_output)
   
 }
 
-inspect_module.module_discoverer <- function(inspected_module, ns, con) {
+inspect_module.module_discoverer <- function(inspected_module, selected_module_name, ns, con) {
   
   ui_output <- renderUI({
     mod_module_discoverer_post_processing_ui(ns("module_discoverer_post_processing_ui_1"))
   })
   
-  server_output <- callModule(mod_module_discoverer_post_processing_server, "module_discoverer_post_processing_ui_1", inspected_module, con = con)
+  server_output <- callModule(mod_module_discoverer_post_processing_server, "module_discoverer_post_processing_ui_1", inspected_module, selected_module_name, con = con)
   
   return(ui_output)
   return(server_output)
   
 }
 
-inspect_module.Clique_Sum_permutation <- function(inspected_module, ns, con) {
+inspect_module.Clique_Sum_permutation <- function(inspected_module, selected_module_name, ns, con) {
   
   ui_output <- renderUI({                       
     mod_CliqueSum_post_processing_ui(ns("CliqueSum_post_processing_ui_1"))
   })
   
-  server_output <- callModule(mod_CliqueSum_post_processing_server, "CliqueSum_post_processing_ui_1", inspected_module, con = con)
+  server_output <- callModule(mod_CliqueSum_post_processing_server, "CliqueSum_post_processing_ui_1", inspected_module, selected_module_name, con = con)
   
   return(ui_output)
   return(server_output)
   
 }
 
-inspect_module.DiffCoEx <- function(inspected_module, ns, con) {
+inspect_module.DiffCoEx <- function(inspected_module, selected_module_name, ns, con) {
   
   ui_output <- renderUI({
     mod_DiffCoEx_post_processing_ui(ns("DiffCoEx_post_processing_ui_1"))
   })
   
-  server_output <- callModule(mod_DiffCoEx_post_processing_server, "DiffCoEx_post_processing_ui_1", inspected_module, con = con)
+  server_output <- callModule(mod_DiffCoEx_post_processing_server, "DiffCoEx_post_processing_ui_1", inspected_module, selected_module_name, con = con)
   
   return(ui_output)
   return(server_output)
   
 }
 
-inspect_module.WGCNA <- function(inspected_module, ns, con) {
+inspect_module.WGCNA <- function(inspected_module, selected_module_name, ns, con) {
   
   ui_output <- renderUI({
     mod_WGCNA_post_processing_ui(ns("WGCNA_post_processing_ui_1"))
   })
   
-  server_output <- callModule(mod_WGCNA_post_processing_server, "WGCNA_post_processing_ui_1", inspected_module, con = con)
+  server_output <- callModule(mod_WGCNA_post_processing_server, "WGCNA_post_processing_ui_1", inspected_module, selected_module_name, con = con)
   
   return(ui_output)
   return(server_output)
