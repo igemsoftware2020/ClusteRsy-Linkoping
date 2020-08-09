@@ -50,6 +50,7 @@ mod_WGCNA_post_processing_server <- function(input, output, session, inspected_m
   colnames(module_genes) <- list("Module genes")
   
   info_table <- inspected_module$info_table
+  colnames(info_table) <- list("Gene", "Module Lable", "Module Color")
   
   correlation_to_train_table <- inspected_module$correlation_to_trait_table
   
