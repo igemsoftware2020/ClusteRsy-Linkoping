@@ -167,8 +167,8 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     if (length(selected) > 1) {
       showNotification("Sorry, you can only inspect one object at a time", duration = NULL, closeButton = TRUE, type = "warning")
     } else if (length(selected) == 1 ) {
-      inspected_module <<- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[selected], con = con)
-      selected_module_name <<- module_objects$module_name[selected]
+      inspected_module <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[selected], con = con)
+      selected_module_name <- module_objects$module_name[selected]
       
       if (is.null(inspected_module)) { # Selected is not NULL here, not sure why. 
         showNotification("No module object selected", duration = 10, closeButton = TRUE, type = "warning") 
