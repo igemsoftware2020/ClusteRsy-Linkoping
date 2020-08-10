@@ -46,6 +46,7 @@ mod_CliqueSum_post_processing_server <- function(input, output, session, inspect
   colnames(module_genes) <- list("Module genes")
   
   settings <- as.matrix(inspected_module$settings)
+  settings[1] <- as.character(settings[1])
   colnames(settings) <- list("Settings used")
   
   output$module_genes_table <- DT::renderDataTable({module_genes},
