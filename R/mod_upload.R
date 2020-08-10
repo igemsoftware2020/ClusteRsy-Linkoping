@@ -80,6 +80,7 @@ mod_upload_server <- function(input, output, session, con){
     input$input_name
   })
   
+  # Error handling
   observe({
     if (any(MODifieRDB::get_available_input_objects(con)$input_name == input_name())){
     output$error_name_js <- renderUI({
@@ -99,6 +100,7 @@ mod_upload_server <- function(input, output, session, con){
       output$error_name_descrip <- NULL
   }
     })
+  #####################
   
   group1_label_r <- reactive({
     input$group1
