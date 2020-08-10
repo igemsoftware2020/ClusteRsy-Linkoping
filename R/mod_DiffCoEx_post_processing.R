@@ -53,6 +53,7 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
   colnames(color_vector) <- list("Gene", "Color")
   
   settings <- as.matrix(inspected_module$settings)
+  settings[1] <- as.character(settings[1])
   colnames(settings) <- list("Settings used")
   
   output$module_genes_table <- DT::renderDataTable({module_genes},
