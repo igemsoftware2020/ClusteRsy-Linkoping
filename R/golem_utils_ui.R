@@ -406,6 +406,7 @@ tooltip = T, title = "?", popup = "Help tips", pos = "right") {
             `data-toggle` = "tooltip",
             `data-placement` = pos,
             `data-original-title` = popup,
+            `data-HTML` = TRUE,
             tabindex = "1",
             title
           ),
