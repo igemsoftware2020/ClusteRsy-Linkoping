@@ -67,7 +67,7 @@ mod_Columns_ui <- function(id){
              ),
     htmlOutput(ns("fadein")),
     htmlOutput(ns("fadein1")),
-    introjsUI()
+    rintrojs::introjsUI()
   )
   
 }
@@ -79,9 +79,9 @@ mod_Columns_server <- function(input, output, session, con, module_overview_ui_1
   ns <- session$ns
   
   Columns_module <- reactiveValues()
-
+  
   output$hints <- renderUI({
-    tags$script( onload="introJs().addHints();")
+    tags$script(onload="introJs().addHints();")
   })
   
   upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1", con = con)

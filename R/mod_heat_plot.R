@@ -10,7 +10,7 @@
 mod_heat_plot_ui <- function(id){
   ns <- NS(id)
   tagList(
-    plotlyOutput(ns("heat_plot"), height = '100vh', width = '100%') %>% shinycssloaders::withSpinner(color="#ffbd40", 
+    plotly::plotlyOutput(ns("heat_plot"), height = '100vh', width = '100%') %>% shinycssloaders::withSpinner(color="#ffbd40", 
                                                                 type = 4,
                                                                 size = 0.8)
   )
@@ -35,7 +35,7 @@ mod_heat_plot_server <- function(input, output, session, heat_plot_para_ui_1, se
     return(p)
   }) 
 
-  output$heat_plot <- renderPlotly({
+  output$heat_plot <- plotly::renderPlotly({
     heatplot() 
   })
 }

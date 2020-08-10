@@ -30,7 +30,7 @@ mod_module_overview_ui <- function(id){
                       actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true")))),
     uiOutput(ns("inspected_results")),
     uiOutput(ns("disable")),
-    useShinyjs()
+    shinyjs::useShinyjs()
   )
 }
 

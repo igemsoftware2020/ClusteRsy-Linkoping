@@ -16,8 +16,8 @@ app_server <- function( input, output, session) {
                                       enrichment_method = "enrichDGN", 
                                       con = con)
   # Listen to the beautiful button
-  observeEvent(input$blob_button, {
-    app_servr$blob_button <- input$blob_button
+  observeEvent(input$tool_button, {
+    app_servr$blob_button <- input$tool_button
   })
   
   observeEvent(input$user_guide_btn, {

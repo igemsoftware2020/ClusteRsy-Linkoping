@@ -11,7 +11,7 @@
 #' @importFrom shiny NS tagList 
 #' 
 
-button <- '<button id = "blob_button" class ="front_button">
+tool_button <- '<button id = "tool_button" class ="front_button">
 View app
 </button>'
 #This button doesn't work properly. Needs fix before beta goes live or remove it.
@@ -28,7 +28,7 @@ mod_welcoming_page_ui <- function(id){
   ns <- NS(id)
   tagList(
     # section 1
-    tags$div(style="height: 100vh; width: 100%; background-image: url('www/front_page2.gif');background-repeat:no-repeat;background-size:cover; color:#fff9f9", class= "row",
+    tags$div(style="height: 100vh; width: 100%; background-image: url('www/front_page1.gif');background-repeat:no-repeat;background-size:cover; color:#fff9f9", class= "row",
              tags$div(`class`="container", style = "margin: 17vh 10vw; padding: 0",
                       tags$h1("MODifieRWeb", style = "margin: 0; font-family:Quicksand"),
                       rep_br(2),
@@ -38,7 +38,7 @@ mod_welcoming_page_ui <- function(id){
                       tags$h3("Enlightening", style="font-family:Quicksand"), 
                       tags$h3("Innovative", style="font-family:Quicksand")
                       ),
-             HTML(button, user_guide_button, tutorial_button),
+             HTML(tool_button, user_guide_button, tutorial_button),
              HTML('<a class="button learn" href="#section2">&#8595;</a>'),
              tags$a(icon("github-square", "fa-3x", lib = "font-awesome"), 
                     href = "https://github.com/iGEM-linkoping",
