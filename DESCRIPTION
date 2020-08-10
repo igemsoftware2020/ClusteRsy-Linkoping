@@ -15,7 +15,11 @@ Imports:
     htmltools,
     MODifieR,
     shinyWidgets,
-    pkgload
+    pkgload,
+    ggplot2,
+    plotly,
+    shinyjs,
+    rintrojs
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1

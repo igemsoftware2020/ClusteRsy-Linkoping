@@ -49,10 +49,11 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
   
   module_p_values <- inspected_module$module_p_values
   
-  color_vector <- as.matrix(inspected_module$color_vector)
-  colnames(color_vector) <- list("Gene")
+  color_vector <- data.frame(inspected_module$color_vector, names(inspected_module$color_vector))
+  colnames(color_vector) <- list("Gene", "Color")
   
   settings <- as.matrix(inspected_module$settings)
+  settings[1] <- as.character(settings[1])
   colnames(settings) <- list("Settings used")
   
   output$module_genes_table <- DT::renderDataTable({module_genes},
@@ -96,6 +97,7 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
                                                       ))
  
   output$color_vector_table <- DT::renderDataTable({color_vector},
+                                                   rownames = FALSE,
                                                    filter = "top",
                                                    extensions = c('Buttons'),
                                                    options = list(

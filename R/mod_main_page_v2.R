@@ -57,13 +57,14 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
     updateNavbarPage(session, "navbar", "User guide")
   })
   
-  observeEvent(app_servr$blob_button, {
+  observeEvent(app_servr$tool_button, {
     updateNavbarPage(session, "navbar", "Tools")
   })
   
   observeEvent(app_servr$tutorial_btn, {
     updateNavbarPage(session, "navbar", "Tools")
     showModal(modalDialog(
+      top = "30",
       easyClose = TRUE,
       title = "Welcome to MODifieRWeb!",
       "This tutorial will show you how to use this webtool. You can find and manage the obects you create when using the tool under the Database tab and if you need more help you can find more detailed instructions in the User guide.",
@@ -80,10 +81,8 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
     removeModal()
   })
   observeEvent(app_servr$tutorial_start_btn, {
-    introjs(session)
+    rintrojs::introjs(session)
   })
-  
- 
   
   observeEvent(app_servr$loaded, {
     output$loaded <- renderUI({

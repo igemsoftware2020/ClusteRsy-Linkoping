@@ -34,7 +34,7 @@ mod_WGCNA_post_processing_server <- function(input, output, session, inspected_m
                       tabPanel(title = "Info table",
                                DT::dataTableOutput(ns("info_table_table"))),
                       tabPanel(title = "Correlation to trait table",
-                               DT::dataTableOutput(ns("correlation_to_trait_table_table"))),
+                               DT::dataTableOutput(ns("correlation_to_trait_table_table"), width = 'auto')),
                       tabPanel(title = "Settings table",
                                DT::dataTableOutput(ns("settings_table"))))),
         footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
@@ -55,6 +55,7 @@ mod_WGCNA_post_processing_server <- function(input, output, session, inspected_m
   correlation_to_train_table <- inspected_module$correlation_to_trait_table
   
   settings <- as.matrix(inspected_module$settings)
+  settings[1] <- as.character(settings[1])
   colnames(settings) <- list("Settings used")
   
   output$module_genes_table <- DT::renderDataTable({module_genes},

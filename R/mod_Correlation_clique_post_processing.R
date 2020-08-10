@@ -49,6 +49,8 @@ mod_Correlation_clique_post_processing_server <- function(input, output, session
   colnames(frequency_table) <- list("Frequency")
   
   settings <- as.matrix(inspected_module$settings)
+  settings[1] <- as.character(settings[1])
+  settings[2] <- as.character(settings[2])
   colnames(settings) <- list("Settings used")
   
   output$module_genes_table <- DT::renderDataTable({module_genes},

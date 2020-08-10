@@ -31,8 +31,6 @@ mod_Mcode_post_processing_server <- function(input, output, session, inspected_m
                       type = "tabs",
                       tabPanel(title = "Module genes",
                                DT::dataTableOutput(ns("module_genes_table"))),
-                      tabPanel(title = "Modules table",
-                               DT::dataTableOutput(ns("modules_table"))),
                       tabPanel(title = "Module score table",
                                DT::dataTableOutput(ns("module_score_table"))),
                       tabPanel(title = "Settings table",
@@ -49,13 +47,13 @@ mod_Mcode_post_processing_server <- function(input, output, session, inspected_m
   module_genes <- as.matrix(inspected_module$module_genes)
   colnames(module_genes) <- list("Module genes")
   
-  modules <- as.matrix(inspected_module$modules)
-  colnames(modules) <- list("Modules")
   
-  module_score <- data.frame(inspected_module$module_scores)
-  colnames(module_score) <- list("Module Score")
+  module_score <- data.frame(inspected_module$module_scores, lengths(inspected_module$modules))
+  colnames(module_score) <- list("Module Score", "Number of genes in the module")
   
   settings <- as.matrix(inspected_module$settings)
+  settings[1] <- as.character(settings[1])
+  settings[2] <- as.character(settings[2])
   colnames(settings) <- list("Settings used")
   
   output$module_genes_table <- DT::renderDataTable({module_genes},
@@ -78,27 +76,9 @@ mod_Mcode_post_processing_server <- function(input, output, session, inspected_m
                                                             ))
                                                    ))
   
-  output$modules_table <- DT::renderDataTable({modules},
-                                              filter = "top",
-                                              extensions = c('Buttons'),
-                                              options = list(
-                                                dom = "lfrtipB",
-                                                scrollX = TRUE,
-                                                scrollY = TRUE,
-                                                pageLength = 10,
-                                                paging = TRUE,
-                                                searching = TRUE,
-                                                lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")) ,
-                                                buttons = 
-                                                  list('copy', 
-                                                       list(
-                                                         extend = 'collection',
-                                                         buttons = c('pdf', 'csv', 'excel'),
-                                                         text = 'Download'
-                                                       ))
-                                              ))
   
   output$module_score_table <- DT::renderDataTable({module_score},
+                                                   rownames = FALSE,
                                                    filter = "top",
                                                    extensions = c('Buttons'),
                                                    options = list(
