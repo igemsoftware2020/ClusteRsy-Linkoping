@@ -10,7 +10,7 @@ function loading_modal_close(){
 $( document ).ready(function() {
   // Change position of tabs
   var i;
-  for (i=0; i<6; i++){
+  for (i=0; i<3; i++){
       document.getElementsByClassName('tab-pane')[i].style.paddingTop = '70px';
   }
   // Change color of tab
@@ -26,9 +26,9 @@ $( document ).ready(function() {
   });
   
   // Update welcom button
-  $('#blob_button').click(function(){
+  $('#tool_button').click(function(){
         i++;
-        Shiny.setInputValue("blob_button", i);
+        Shiny.setInputValue("tool_button", i);
     });
   $('#user_guide_btn').click(function(){
         i++;
