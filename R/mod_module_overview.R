@@ -171,29 +171,29 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   
   # Inspect current module
   
+  observeEvent(module_objects$module_type[input$module_overview_rows_selected],{
+    selected_module_type <- module_objects$module_type[input$module_overview_rows_selected]
   
-  
-  observeEvent(input$inspect, {
-    
-    selected <- input$module_overview_rows_selected
-    
-    if (length(selected) > 1) {
-      showNotification("Sorry, you can only inspect one object at a time", duration = NULL, closeButton = TRUE, type = "warning")
-    } else if (length(selected) == 1 ) {
-      inspected_module <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[selected], con = con)
-      
-      selected_module_name$name <- module_objects$module_name[selected]
-      
-      if (is.null(inspected_module)) { # Selected is not NULL here, not sure why. 
-        showNotification("No module object selected", duration = 10, closeButton = TRUE, type = "warning") 
-      } else {
-        #Function, in the fct_functions.R, to call the different module objects tables.
-        output$inspected_results <- inspect_module(inspected_module, selected_module_name, ns, con) 
-      }
-      
+    if (length(selected_module_type) == 1) {
+      shinyjs::enable("inspect")
+    } else {
+      shinyjs::disable("inspect")
     }
     
   })
+  
+  observeEvent(input$inspect, {
+    selected <- input$module_overview_rows_selected
+    inspected_module <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[selected], con = con)
+    selected_module_name$name <- module_objects$module_name[selected]
+    
+    if (is.null(inspected_module)) {
+      showNotification("No module objects in the database", duration = 10, closeButton = TRUE, type = "warning") 
+    } else {
+    output$inspected_results <- inspect_module(inspected_module, selected_module_name, ns, con)
+    }
+  })
+  
   
   output$post_process_ui <- renderUI({
     tagList(
