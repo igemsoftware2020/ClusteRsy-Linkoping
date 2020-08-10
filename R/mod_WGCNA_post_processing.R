@@ -34,7 +34,7 @@ mod_WGCNA_post_processing_server <- function(input, output, session, inspected_m
                       tabPanel(title = "Info table",
                                DT::dataTableOutput(ns("info_table_table"))),
                       tabPanel(title = "Correlation to trait table",
-                               DT::dataTableOutput(ns("correlation_to_trait_table_table"))),
+                               DT::dataTableOutput(ns("correlation_to_trait_table_table"), width = 'auto')),
                       tabPanel(title = "Settings table",
                                DT::dataTableOutput(ns("settings_table"))))),
         footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),

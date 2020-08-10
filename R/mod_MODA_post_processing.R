@@ -31,12 +31,6 @@ mod_MODA_post_processing_server <- function(input, output, session, inspected_mo
                       type = "tabs",
                       tabPanel(title = "Module genes", 
                                DT::dataTableOutput(ns("module_genes_table"))),
-                      tabPanel(title = "Group 1 module genes", 
-                               DT::dataTableOutput(ns("group1_modules_table"))),
-                      tabPanel(title = "Group 2 module genes",
-                               DT::dataTableOutput(ns("group2_modules_table"))),
-                      tabPanel(title = "Jaccard table", 
-                               DT::dataTableOutput(ns("jaccard_table_table"))),
                       tabPanel(title = "Settings table",
                                DT::dataTableOutput(ns("settings_table"))))),
         footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
@@ -48,14 +42,6 @@ mod_MODA_post_processing_server <- function(input, output, session, inspected_mo
   
   module_genes <- as.matrix(inspected_module$module_genes)
   colnames(module_genes) <- list("Module genes")
-  
-  group1_genes <- as.matrix(inspected_module$group1_modules)
-  colnames(group1_genes) <- list("Group 1 genes")
-  
-  group2_genes <- as.matrix(inspected_module$group2_modules)
-  colnames(group2_genes) <- list("Group 2 genes")
-  
-  jaccard_table <- inspected_module$jaccard_table
   
   settings <- as.matrix(inspected_module$settings)
   settings[1] <- as.character(settings[1])
@@ -80,67 +66,6 @@ mod_MODA_post_processing_server <- function(input, output, session, inspected_mo
                                                               text = 'Download'
                                                             ))
                                                    ))
-  
-  output$group1_modules_table <- DT::renderDataTable({group1_genes},
-                                                     extensions = c('Buttons'),
-                                                     options = list(
-                                                       dom = "lfrtipB",
-                                                       scrollX = TRUE,
-                                                       scrollY = TRUE,
-                                                       pageLength = 10,
-                                                       paging = TRUE,
-                                                       searching = TRUE,
-                                                       lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")) ,
-                                                       buttons = 
-                                                         list('copy', 
-                                                              list(
-                                                                extend = 'collection',
-                                                                buttons = c('pdf', 'csv', 'excel'),
-                                                                text = 'Download'
-                                                              ))
-                                                     ))
-                                                                  
-  
-  output$group2_modules_table <- DT::renderDataTable({group2_genes},
-                                                     extensions = c('Buttons'),
-                                                     options = list(
-                                                       dom = "lfrtipB",
-                                                       scrollX = TRUE,
-                                                       scrollY = TRUE,
-                                                       pageLength = 10,
-                                                       paging = TRUE,
-                                                       searching = TRUE,
-                                                       lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")) ,
-                                                       buttons = 
-                                                         list('copy', 
-                                                              list(
-                                                                extend = 'collection',
-                                                                buttons = c('pdf', 'csv', 'excel'),
-                                                                text = 'Download'
-                                                              ))
-                                                     ))
-                                                     
-                                                                   
-  
-  output$jaccard_table_table <- DT::renderDataTable({jaccard_table},
-                                                    filter = "top",
-                                                    extensions = c('Buttons'),
-                                                    options = list(
-                                                      dom = "lfrtipB",
-                                                      scrollX = TRUE,
-                                                      scrollY = TRUE,
-                                                      pageLength = 10,
-                                                      paging = TRUE,
-                                                      searching = TRUE,
-                                                      lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")) ,
-                                                      buttons = 
-                                                        list('copy', 
-                                                             list(
-                                                               extend = 'collection',
-                                                               buttons = c('pdf', 'csv', 'excel'),
-                                                               text = 'Download'
-                                                             ))
-                                                    ))
   
   output$settings_table <- DT::renderDataTable({settings},
                                                extensions = c('Buttons'),
