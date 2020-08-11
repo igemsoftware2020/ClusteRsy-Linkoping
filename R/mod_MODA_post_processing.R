@@ -10,16 +10,19 @@
 mod_MODA_post_processing_ui <- function(id){
   ns <- NS(id)
   tagList(
-  uiOutput(ns("tables"))
+    uiOutput(ns("tables")),
+    uiOutput(ns("post_processing"))
   )
 }
     
 #' MODA_post_processing Server Function
 #'
 #' @noRd 
-mod_MODA_post_processing_server <- function(input, output, session, inspected_module, selected_module_name, con){
+mod_MODA_post_processing_server <- function(input, output, session, inspected_module, selected_module_name, inspect_button, post_process_button, con){
   ns <- session$ns
   
+  observeEvent(inspect_button, {
+    req(inspect_button)
   output$tables <- renderUI({
     tagList(
       showModal(modalDialog(
@@ -38,6 +41,23 @@ mod_MODA_post_processing_server <- function(input, output, session, inspected_mo
       )
       )
     )
+  })
+  
+  })
+  
+  observeEvent(post_process_button, {
+    req(post_process_button)
+    output$post_processing <- renderUI({
+      tagList(
+        showModal(modalDialog(
+          title = selected_module_name$name,
+          easyClose = TRUE,
+          size = "l",
+          footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
+          )
+        ))
+      )
+    })
   })
   
   module_genes <- as.matrix(inspected_module$module_genes)

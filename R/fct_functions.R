@@ -121,46 +121,49 @@ inspect_module <- function(inspected_module, selected_module_name, inspect_butto
 }
 
 
-inspect_module.Mcode <- function(inspected_module, selected_module_name, ns, con) {
+inspect_module.Mcode <- function(inspected_module, selected_module_name, inspect_button, post_process_button, ns, con) {
   
   ui_ouput <- renderUI({
     mod_Mcode_post_processing_ui(ns("Mcode_post_processing_ui_1"))
   })
   
-  server_output <- callModule(mod_Mcode_post_processing_server, "Mcode_post_processing_ui_1", inspected_module, selected_module_name, con = con)
+  server_output <- callModule(mod_Mcode_post_processing_server, "Mcode_post_processing_ui_1", inspected_module, selected_module_name, inspect_button, post_process_button, con = con)
   
   return(ui_ouput)
   return(server_output)
   
 }
 
-inspect_module.Correlation_clique <- function(inspected_module, selected_module_name, ns, con) {
+inspect_module.Correlation_clique <- function(inspected_module, selected_module_name, inspect_button, post_process_button, ns, con) {
   
   ui_output <- renderUI({
     mod_Correlation_clique_post_processing_ui(ns("Correlation_clique_post_processing_ui_1"))
   })
   
-  server_output <- callModule(mod_Correlation_clique_post_processing_server, "Correlation_clique_post_processing_ui_1", inspected_module, selected_module_name, con = con)
+  server_output <- callModule(mod_Correlation_clique_post_processing_server, "Correlation_clique_post_processing_ui_1", inspected_module, selected_module_name, inspect_button, post_process_button, con = con)
   
   return(ui_output)
   return(server_output)
   
 }
 
-inspect_module.DIAMOnD <- function(inspected_module, selected_module_name, ns, con) {
+inspect_module.DIAMOnD <- function(inspected_module, selected_module_name, inspect_button, post_process_button, ns, con) {
   
   ui_output <- renderUI({
     mod_DIAMoND_post_processing_ui(ns("DIAMoND_post_processing_ui_1"))
   })
   
-  server_output <- callModule(mod_DIAMoND_post_processing_server, "DIAMoND_post_processing_ui_1", inspected_module, selected_module_name, con = con)
+  server_output <- callModule(mod_DIAMoND_post_processing_server, "DIAMoND_post_processing_ui_1", inspected_module, selected_module_name, inspect_button, post_process_button, con = con)
   
   return(ui_output)
   return(server_output)
   
 }
 
-inspect_module.module_discoverer <- function(inspected_module, selected_module_name, ns, con) {
+inspect_module.module_discoverer <- function(inspected_module, selected_module_name, inspect_button, post_process_button, ns, con) {
+  #No post processing avialable, buttons not used.
+  inspect_button <- NULL
+  post_process_button <- NULL
   
   ui_output <- renderUI({
     mod_module_discoverer_post_processing_ui(ns("module_discoverer_post_processing_ui_1"))
@@ -173,7 +176,10 @@ inspect_module.module_discoverer <- function(inspected_module, selected_module_n
   
 }
 
-inspect_module.Clique_Sum_permutation <- function(inspected_module, selected_module_name, ns, con) {
+inspect_module.Clique_Sum_permutation <- function(inspected_module, selected_module_name, inspect_button, post_process_button, ns, con) {
+  #No post processing avialable, buttons not used.
+  inspect_button <- NULL
+  post_process_button <- NULL
   
   ui_output <- renderUI({                       
     mod_CliqueSum_post_processing_ui(ns("CliqueSum_post_processing_ui_1"))
@@ -199,26 +205,26 @@ inspect_module.DiffCoEx <- function(inspected_module, selected_module_name, insp
   
 }
 
-inspect_module.WGCNA <- function(inspected_module, selected_module_name, ns, con) {
+inspect_module.WGCNA <- function(inspected_module, selected_module_name, inspect_button, post_process_button, ns, con) {
   
   ui_output <- renderUI({
     mod_WGCNA_post_processing_ui(ns("WGCNA_post_processing_ui_1"))
   })
   
-  server_output <- callModule(mod_WGCNA_post_processing_server, "WGCNA_post_processing_ui_1", inspected_module, selected_module_name, con = con)
+  server_output <- callModule(mod_WGCNA_post_processing_server, "WGCNA_post_processing_ui_1", inspected_module, selected_module_name, inspect_button, post_process_button, con = con)
   
   return(ui_output)
   return(server_output)
   
 }
 
-inspect_module.MODA <- function(inspected_module, selected_module_name, ns, con) {
+inspect_module.MODA <- function(inspected_module, selected_module_name, inspect_button, post_process_button, ns, con) {
   
   ui_output <- renderUI({
     mod_MODA_post_processing_ui(ns("MODA_post_processing_ui_1"))
   })
   
-  server_output <- callModule(mod_MODA_post_processing_server, "MODA_post_processing_ui_1", inspected_module, selected_module_name, con = con)
+  server_output <- callModule(mod_MODA_post_processing_server, "MODA_post_processing_ui_1", inspected_module, selected_module_name, inspect_button, post_process_button, con = con)
   
   return(ui_output)
   return(server_output)

@@ -205,7 +205,8 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     }
   })
   
-
+#Post processing of current module
+  
   #Listening the the module_type that is being selected in the DT.
   observeEvent(module_objects$module_type[input$module_overview_rows_selected],{
     
