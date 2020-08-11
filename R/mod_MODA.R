@@ -17,6 +17,7 @@ mod_MODA_ui <- function(id){
     uiOutput(ns("error_name_js")),
     
     tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_mod', "href"='#advanced_mod',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+    tags$br(),
     tags$div(id = "advanced_mod", class = "collapse",
              tags$div(
     radioButtons(

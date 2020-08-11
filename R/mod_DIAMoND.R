@@ -18,6 +18,7 @@ mod_DIAMoND_ui <- function(id){
     uiOutput(ns("error_name_js")),
     
     tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_mod', "href"='#advanced_mod',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+    tags$br(),
     tags$div(id = "advanced_mod", class = "collapse",
              tags$div(
     sliderInput(ns("seed_weight"), label = "Select Seed Weight", min = 0, max = 50, value = 25, popup = "Additional numeric parameter to assign weight for the seed genes."),

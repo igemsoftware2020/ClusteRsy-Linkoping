@@ -22,6 +22,7 @@ mod_CliqueSum_ui <- function(id){
           
     tags$div(`data-intro`="You can also adjust the parameters of the inference method under Advanced settings", `data-step`=4,
           tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_mod', "href"='#advanced_mod',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+          tags$br(),
           tags$div(id = "advanced_mod", class = "collapse",
                    tags$div(
           sliderInput(ns("clique_significance"), label = "Clique significance", min = 0, max = 1, value = 0.05, popup ="P-value for cliques to be considered significant"),

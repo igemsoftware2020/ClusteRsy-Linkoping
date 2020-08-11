@@ -18,6 +18,7 @@ mod_CClique_ui <- function(id){
     uiOutput(ns("error_name_js")),
     
     tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_mod', "href"='#advanced_mod',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+    tags$br(),
     tags$div(id = "advanced_mod", class = "collapse",
              tags$div(
     sliderInput(ns("frequency_cutoff"), label = "Select frequency cutoff", min = 0, max = 1, value = 0.5, popup = "Fraction of the number of times a gene should be present in the iterations"),
