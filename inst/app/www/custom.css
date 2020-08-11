@@ -7335,6 +7335,7 @@ a.button.learn:hover:after, a.button.learn:hover:before{
 
 /* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {
+  .sidenav {padding-top: 60px;}
   .sidenav a {font-size: 18px;}
 }
 
