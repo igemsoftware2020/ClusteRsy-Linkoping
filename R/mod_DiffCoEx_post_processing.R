@@ -167,6 +167,12 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
     split_module <- MODifieR::diffcoex_split_module_by_color(inspected_module)
 
     for (i in 1:length(split_module)) {
+      
+      if (i == 1) {
+        id <- showNotification("Saving module objects to database", duration = NULL, closeButton = FALSE, type = "warning")
+      }
+      
+      
       module_name <- paste(selected_module_name$name, names(split_module[i]), Sys.time())
       split_module_input <- split_module[[i]]
 
@@ -175,9 +181,11 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
                                         con = con))
     }
     
+    on.exit(removeNotification(id), add = TRUE)
     })
   
 }
+
     
 ## To be copied in the UI
 # mod_DiffCoEx_post_processing_ui("DiffCoEx_post_processing_ui_1")
