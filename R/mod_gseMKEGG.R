@@ -13,6 +13,7 @@ mod_gseMKEGG_ui <- function(id){
     uiOutput(ns("module_input")),
     
     tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_enrich', "href"='#advanced_enrich',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+    tags$br(),
     tags$div(id = "advanced_enrich", class = "collapse",
              tags$div(
     selectInput(ns("keytype"), 

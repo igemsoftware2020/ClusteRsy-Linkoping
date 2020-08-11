@@ -7,6 +7,7 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
+#' @import ggplot2
 mod_heat_plot_ui <- function(id){
   ns <- NS(id)
   tagList(

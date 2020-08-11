@@ -27,6 +27,7 @@ app_ui <- function(request) {
       # Main module
       tags$div(style = "-webkit-animation: fadein 0.8s; -moz-animation: fadein 0.8s; -ms-animation: fadein 0.8s;-o-animation: fadein 0.8s; animation: fadein 0.8s;",
                mod_main_page_v2_ui("main_page_v2_ui_1")),
+      tags$script(src = "www/tooltip.js")
     )
   )
 }
