@@ -161,6 +161,22 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
                                                           text = 'Download'
                                                         ))
                                                ))
+  
+  observeEvent(input$split_module_by_color, {
+    
+    split_module <- MODifieR::diffcoex_split_module_by_color(inspected_module)
+
+    for (i in 1:length(split_module)) {
+      module_name <- paste(selected_module_name$name, names(split_module[i]), Sys.time())
+      split_module_input <- split_module[[i]]
+
+      try(MODifieRDB::MODifieR_object_to_db(split_module_input,
+                                        object_name =  module_name,
+                                        con = con))
+    }
+    
+    })
+  
 }
     
 ## To be copied in the UI
