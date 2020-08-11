@@ -14,10 +14,6 @@ $( document ).ready(function() {
       document.getElementsByClassName('tab-pane')[i].style.paddingTop = '65px';
   }
   
-<<<<<<< HEAD
-=======
-
->>>>>>> b40d7080b1bdda2ab45d98be795837094a17df50
   // Change color of tab
   $(document).on('shiny:inputchanged', function(event) {
     if (event.name === 'main_page_v2_ui_1-navbar') {
