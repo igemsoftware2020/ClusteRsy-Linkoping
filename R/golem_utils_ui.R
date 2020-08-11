@@ -306,7 +306,7 @@ textInput <- function(inputId, label, value = "", width = NULL,
       if (tooltip){
         tags$span(
           tags$button(
-            style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative;",
+            style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; outline:none;",
             class = "badge badge-pill badge-warning",
             type = "button",
             `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
