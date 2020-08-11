@@ -7353,3 +7353,13 @@ a[aria-expanded='false'] > .expand_caret {
 .dataTables_wrapper {
   padding-top: 5px;
 }
+
+/* Hint button color */
+.introjs-helperNumberLayer {
+  background: linear-gradient(to bottom,#ffbd40 0,#e8a119 100%) !important;
+}
+
+.introjs-button:active, .introjs-button:focus{
+  outline: none;
+  text-decoration: none;
+}
