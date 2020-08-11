@@ -116,7 +116,7 @@ gene_heatmap <- function(CPobj, NP, NG, plot_title, pval_color) {
 
 #Inspected module object function.
 
-inspect_module <- function(inspected_module, selected_module_name, ns, con) {
+inspect_module <- function(inspected_module, selected_module_name, inspect_button, post_process_button, ns, con) {
   UseMethod("inspect_module", inspected_module)
 }
 
@@ -186,13 +186,13 @@ inspect_module.Clique_Sum_permutation <- function(inspected_module, selected_mod
   
 }
 
-inspect_module.DiffCoEx <- function(inspected_module, selected_module_name, ns, con) {
+inspect_module.DiffCoEx <- function(inspected_module, selected_module_name, inspect_button, post_process_button, ns, con) {
   
   ui_output <- renderUI({
     mod_DiffCoEx_post_processing_ui(ns("DiffCoEx_post_processing_ui_1"))
   })
   
-  server_output <- callModule(mod_DiffCoEx_post_processing_server, "DiffCoEx_post_processing_ui_1", inspected_module, selected_module_name, con = con)
+  server_output <- callModule(mod_DiffCoEx_post_processing_server, "DiffCoEx_post_processing_ui_1", inspected_module, selected_module_name, inspect_button, post_process_button, con = con)
   
   return(ui_output)
   return(server_output)
