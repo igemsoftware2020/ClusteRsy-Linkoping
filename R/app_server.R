@@ -17,7 +17,7 @@ app_server <- function( input, output, session) {
                                       con = con)
   # Listen to the beautiful button
   observeEvent(input$tool_button, {
-    app_servr$blob_button <- input$tool_button
+    app_servr$tool_button <- input$tool_button
   })
   
   observeEvent(input$user_guide_btn, {
@@ -30,6 +30,12 @@ app_server <- function( input, output, session) {
   
   observeEvent(input$tutorial_start_btn, {
     app_servr$tutorial_start_btn <- input$tutorial_start_btn
+  })
+  
+  # DT double click for input
+  observeEvent(input$input_dbclick, {
+    app_servr$input_dbclick <- input$input_dbclick
+    app_servr$input_name <- input$input_name
   })
   
   # List the first level call Modules here

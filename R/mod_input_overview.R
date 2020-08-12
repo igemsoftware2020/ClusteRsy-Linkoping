@@ -19,14 +19,15 @@ mod_input_overview_ui <- function(id){
              tags$div(`class`="col-sm-2", style = "text-align:right", id ="buttons_input_overview",
                       downloadButton(ns("download_input"), "Download"),
                       actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true")))),
-    uiOutput(ns("disable"))
+    uiOutput(ns("disable")),
+    uiOutput(ns("inspect"))
   )
 }
 
 #' input_overview Server Function
 #'
 #' @noRd 
-mod_input_overview_server <- function(input, output, session, con, Columns_ui_1){
+mod_input_overview_server <- function(input, output, session, con, Columns_ui_1, app_servr){
   ns <- session$ns
   input_overview_module <- reactiveValues()
   
@@ -78,14 +79,29 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1)
   # Render DT
   output$input_overview <- DT::renderDataTable(input_objects,
                                                rownames = FALSE,
-                                               selection = list(selected = c(1)))
+                                               selection = list(selected = c(1)),
+                                               callback = DT::JS('
+                                                            var dbclick = 0
+                                                            table.on("dblclick.dt","tr", function() {
+                                                              var data=table.row(this).data();
+                                                              dbclick++;
+                                                              Shiny.setInputValue("input_name", data[0]);
+                                                              Shiny.setInputValue("input_dbclick", dbclick);
+                                                             });'))
   
   # Refresh DT
   observeEvent(Columns_ui_1$input_name, {
     input_objects <- MODifieRDB::get_available_input_objects(con)
     output$input_overview <- DT::renderDataTable(input_objects,
                                                  rownames = FALSE,
-                                                 selection = list(selected = c(1)))
+                                                 selection = list(selected = c(1)),
+                                                 callback = DT::JS('
+                                                            table.on("dblclick.dt","tr", function() {
+                                                              var data=table.row(this).data();
+                                                              dbclick++;
+                                                              Shiny.setInputValue("input_name", data[0]);
+                                                              Shiny.setInputValue("input_dbclick", dbclick);
+                                                             });'))
   })
   
   # Refresh DT
@@ -93,7 +109,14 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1)
     input_objects <- MODifieRDB::get_available_input_objects(con)
     output$input_overview <- DT::renderDataTable(input_objects,
                                                  rownames = FALSE,
-                                                 selection = list(selected = c(1)))
+                                                 selection = list(selected = c(1)),
+                                                 callback = DT::JS('
+                                                            table.on("dblclick.dt","tr", function() {
+                                                              var data=table.row(this).data();
+                                                              dbclick++;
+                                                              Shiny.setInputValue("input_name", data[0]);
+                                                              Shiny.setInputValue("input_dbclick", dbclick);
+                                                             });'))
   })
   
   # Choose multiple options
@@ -145,7 +168,14 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1)
     input_objects <- MODifieRDB::get_available_input_objects(con)
     output$input_overview <- DT::renderDataTable(input_objects,
                                                  rownames = FALSE,
-                                                 selection = list(selected = c(1)))
+                                                 selection = list(selected = c(1)),
+                                                 callback = DT::JS('
+                                                            table.on("dblclick.dt","tr", function() {
+                                                              var data=table.row(this).data();
+                                                              dbclick++;
+                                                              Shiny.setInputValue("input_name", data[0]);
+                                                              Shiny.setInputValue("input_dbclick", dbclick);
+                                                             });'))
     
     
     # Delete
@@ -160,12 +190,85 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1)
     input_objects <- MODifieRDB::get_available_input_objects(con)
     output$input_overview <- DT::renderDataTable(input_objects,
                                                  rownames = FALSE,
-                                                 selection = list(selected = c(1)))
+                                                 selection = list(selected = c(1)),
+                                                 callback = DT::JS('
+                                                            table.on("dblclick.dt","tr", function() {
+                                                              var data=table.row(this).data();
+                                                              dbclick++;
+                                                              Shiny.setInputValue("input_name", data[0]);
+                                                              Shiny.setInputValue("input_dbclick", dbclick);
+                                                             });'))
     
     # Send refresh
     input_overview_module$delete <- input$delete
   })
- return(input_overview_module)
+  
+  # Observer doubleclick
+  observeEvent(app_servr$input_dbclick, {
+    input_obj <- MODifieRDB::MODifieR_input_from_db(input_name = app_servr$input_name, con = con)
+    output$inspect <- renderUI({
+      tagList(
+        showModal(modalDialog(
+          title = app_servr$input_name,
+          easyClose = TRUE,
+          size = "l",
+          fluidPage(
+            tabsetPanel(id = ns("tabs"),
+                        type = "tabs",
+                        tabPanel(title = "Result",
+                                 DT::dataTableOutput(ns("result"))),
+                        tabPanel(title = "Settings",
+                                 DT::dataTableOutput(ns("settings"))))),
+          footer = tagList(tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
+          )
+        ))
+      )
+    })
+    output$result <- DT::renderDataTable(
+      as.matrix(input_obj$edgeR_deg_table),
+      filter = "top",
+      extensions = c('Buttons'),
+      options = list(
+        dom = "lfrtipB",
+        scrollX = TRUE,
+        scrollY = TRUE,
+        pageLength = 10,
+        paging = TRUE,
+        searching = TRUE,
+        lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")) ,
+        buttons = 
+          list('copy', 
+               list(
+                 extend = 'collection',
+                 buttons = c('pdf', 'csv', 'excel'),
+                 text = 'Download'
+               ))
+      )
+    )
+    output$settings <- DT::renderDataTable(
+      as.matrix(input_obj$settings[2:7]),
+      extensions = c('Buttons'),
+      options = list(
+        dom = "lfrtipB",
+        scrollX = TRUE,
+        scrollY = TRUE,
+        pageLength = 10,
+        paging = TRUE,
+        searching = TRUE,
+        lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")) ,
+        buttons = 
+          list('copy', 
+               list(
+                 extend = 'collection',
+                 buttons = c('pdf', 'csv', 'excel'),
+                 text = 'Download'
+               ))
+      )
+    )
+  })
+  
+  
+  return(input_overview_module)
 }
 
 ## To be copied in the UI
