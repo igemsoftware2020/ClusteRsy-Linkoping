@@ -54,14 +54,13 @@ mod_enrichment_map_para_server <- function(input, output, session, selected, con
       paste0("enrichment_map_plot.pdf")
     },
     content = function(file) {
-      pdf(file)
       erichment_object <- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
-      enrichplot::emapplot(x = enrichment_object,
+      p <-enrichplot::emapplot(x = enrichment_object,
                           showCategory = enrichment_map_para_module$showcategory,
                           color = enrichment_map_para_module$color,
                           layout = enrichment_map_para_module$layout
       ) + ggplot2::ggtitle(enrichment_map_para_module$title)
-      dev.off()
+      ggplot2::ggsave(file, plot = p, device = "pdf")
     }
   )
   

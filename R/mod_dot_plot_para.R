@@ -51,14 +51,13 @@ mod_dot_plot_para_server <- function(input, output, session, selected, con){
       paste0("dot_plot.pdf")
     },
     content = function(file) {
-      pdf(file)
       erichment_object <- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
-      clusterProfiler::dotplot(enrichment_object,
+      p <- clusterProfiler::dotplot(enrichment_object,
                                x=dot_plot_para_module$xaxis,
                                showCategory = dot_plot_para_module$showcategory,
                                color = dot_plot_para_module$color,
                                title = dot_plot_para_module$title)
-      dev.off()
+      ggplot2::ggsave(file, plot = p, device = "pdf")
     }
   )
   

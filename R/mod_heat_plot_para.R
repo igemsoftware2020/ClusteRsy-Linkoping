@@ -52,14 +52,13 @@ mod_heat_plot_para_server <- function(input, output, session, selected, con){
       paste0("heat_plot.pdf", sep="")
     },
     content = function(file) {
-      pdf(file)
       enrichment_object <- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
-      gene_heatmap(CPobj = enrichment_object,
+      p <- gene_heatmap(CPobj = enrichment_object,
                    NP = heat_plot_para_module$pathways_displayed,
                    NG = heat_plot_para_module$genes_displayed,
                    plot_title = heat_plot_para_module$title,
                    pval_color = heat_plot_para_module$pvalue_displayed)
-      dev.off()
+      ggplot2::ggsave(file, plot = p, device = "pdf")
     }
   )
   
