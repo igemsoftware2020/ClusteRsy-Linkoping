@@ -15,6 +15,8 @@ mod_upload_ui <- function(id){
                 popup = paste("This is an ", shinyLink(label = "example")))),
       uiOutput(ns("sample_chooser")),
       tags$div(id = "hide_rds",
+               `data-hint`="If you alreday have formated input data you can upload it here!",
+               `data-hintPosition`="top-right",
       fileInput(ns("input_object_rds"), label = "Upload an input object", accept = ".rds")),
       uiOutput(ns("input_name_chooser")),
       htmlOutput(ns("error_name_js")),

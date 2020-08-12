@@ -26,7 +26,8 @@ mod_main_page_v2_ui <- function(id){
                 #Hide this with Javascirpt
     ),
     tags$script(HTML("element = document.getElementsByTagName('a')[5]; element.style.display = 'none'")), #Change the number according to the tabPanel order
-    htmlOutput(ns("loaded"))
+    htmlOutput(ns("loaded")),
+    htmlOutput(ns("hidehints"))
   )
 }
 
@@ -81,6 +82,16 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
   })
   observeEvent(app_servr$tutorial_start_btn, {
     rintrojs::introjs(session)
+  })
+  
+  observeEvent(input$navbar, {
+    if (input$navbar == "Tools"){
+      hintjs(session)}
+    else{
+      output$hidehints <- renderUI({
+        tags$script("introJs().hideHints();")
+      })
+    }
   })
   
   observeEvent(app_servr$loaded, {

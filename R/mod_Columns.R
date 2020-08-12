@@ -10,7 +10,6 @@
 mod_Columns_ui <- function(id){
   ns <- NS(id)
   tagList(
-    uiOutput(ns("hints")),
     # Number container
     tags$div(`class`="row", style = "margin-right:-15px; margin-left:-15px;",
              tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
@@ -79,10 +78,6 @@ mod_Columns_server <- function(input, output, session, con, module_overview_ui_1
   ns <- session$ns
   
   Columns_module <- reactiveValues()
-  
-  output$hints <- renderUI({
-    tags$script(onload="introJs().addHints();")
-  })
   
   upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1", con = con)
   Description1_ui_1 <- callModule(mod_Description1_server, "Description1_ui_1", con = con, upload_ui_1, input_overview_ui_1, ppi_networks_ui_1)
