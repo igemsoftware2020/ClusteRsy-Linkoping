@@ -11,8 +11,6 @@ mod_CliqueSum_post_processing_ui <- function(id){
   ns <- NS(id)
   tagList(
     uiOutput(ns("tables"))
-    
-   
   )
 }
     
