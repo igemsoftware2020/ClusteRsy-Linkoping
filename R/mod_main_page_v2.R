@@ -86,7 +86,7 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
   
   observeEvent(input$navbar, {
     if (input$navbar == "Tools"){
-      hintjs(session)}
+      rintrojs::hintjs(session)}
     else{
       output$hidehints <- renderUI({
         tags$script("introJs().hideHints();")

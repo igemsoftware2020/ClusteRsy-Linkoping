@@ -26,13 +26,17 @@ mod_heat_plot_server <- function(input, output, session, heat_plot_para_ui_1, se
     enrichment_object <- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
 
     #gene_heatmap can be found within fct_functions.R     
-    p <- gene_heatmap(CPobj = enrichment_object,
+    p <- try(gene_heatmap(CPobj = enrichment_object,
                       NP = heat_plot_para_ui_1$pathways_displayed,
                       NG = heat_plot_para_ui_1$genes_displayed,
                       plot_title = heat_plot_para_ui_1$title,
-                      pval_color = heat_plot_para_ui_1$pvalue_displayed)
-    plotly::ggplotly(p)
-    return(p)
+                      pval_color = heat_plot_para_ui_1$pvalue_displayed))
+    if (class(p)[1] == "try-error"){
+      NULL
+      }
+    else {
+      return(p) 
+    }
   }) 
 
   output$heat_plot <- plotly::renderPlotly({

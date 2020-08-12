@@ -29,6 +29,7 @@ mod_visual_ui <- function(id){
                     DT::dataTableOutput(ns("enrichment_overview"), width = "auto", height = "auto")), #Data table for plot output
           tags$div(style = "text-align:center",
                   actionButton(ns("analyze"), label = "Analyze")),
+          
           uiOutput(ns("disable")),
           #Renders the parameters when analyzed is triggered.
           uiOutput(ns("parameters")) 
@@ -111,7 +112,7 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
       } else if (input$tabs == "Heatmap") {
         mod_heat_plot_para_ui(ns("heat_plot_para_ui_1"))
       } else if (input$tabs == "Results") {
-        
+        NULL
       }
     }) 
   })
