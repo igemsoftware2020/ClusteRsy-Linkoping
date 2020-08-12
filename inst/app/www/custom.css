@@ -3007,6 +3007,7 @@ select[multiple].input-lg {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  outline: none;
 }
 .btn:focus,
 .btn:active:focus,
@@ -3051,6 +3052,7 @@ fieldset[disabled] a.btn {
   color: #fff9f9;
   background-color: #798d8f;
   border-color: #566566;
+  outline: none;
 }
 .btn-default:hover {
   color: #fff9f9;
@@ -7359,11 +7361,15 @@ a[aria-expanded='false'] > .expand_caret {
   background: linear-gradient(to bottom,#ffbd40 0,#e8a119 100%) !important;
 }
 
-.introjs-button:active, .introjs-button:focus{
+.introjs-button:active, .introjs-button:focus, .introjs-button:hover{
   outline: none;
   text-decoration: none;
+  color: black;
 }
 
+.introjs-tooltiptext {
+  color: black;
+}
 
 .introjs-hint:hover > .introjs-hint-pulse {
   border: 5px solid rgba(255, 128, 0, 0.77) !important;
