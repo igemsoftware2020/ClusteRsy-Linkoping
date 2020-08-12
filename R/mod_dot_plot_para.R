@@ -26,14 +26,16 @@ mod_dot_plot_para_ui <- function(id){
                   label = "Number of enriched terms to display",
                   min = 5,
                   max = 50,
-                  value = 10)
+                  value = 10),
+      tags$div(style = "text-align:center",
+               downloadButton(ns("download_graph"), "PDF"))
 )
 }
     
 #' dot_plot_para Server Function
 #'
 #' @noRd 
-mod_dot_plot_para_server <- function(input, output, session){
+mod_dot_plot_para_server <- function(input, output, session, selected, con){
   ns <- session$ns
   dot_plot_para_module <- reactiveValues()
   observe({
@@ -42,6 +44,23 @@ mod_dot_plot_para_server <- function(input, output, session){
     dot_plot_para_module$showcategory <- input$showcategory
     dot_plot_para_module$title <- input$title
   })
+  
+  # Download function
+  output$download_graph <- downloadHandler(
+    filename = function() {
+      paste0("dot_plot.pdf")
+    },
+    content = function(file) {
+      pdf(file)
+      erichment_object <- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
+      clusterProfiler::dotplot(enrichment_object,
+                               x=dot_plot_para_module$xaxis,
+                               showCategory = dot_plot_para_module$showcategory,
+                               color = dot_plot_para_module$color,
+                               title = dot_plot_para_module$title)
+      dev.off()
+    }
+  )
   
   return(dot_plot_para_module)
 }

@@ -34,14 +34,16 @@ mod_cnet_plot_para_ui <- function(id){
                  status = "warning"),
     selectInput(ns("node_label"),
                 label = "Node labels",
-                choices = c("all", "gene", "category", "none"))
+                choices = c("all", "gene", "category", "none")),
+    tags$div(style = "text-align:center",
+             downloadButton(ns("download_graph"), "PDF"))
   )
 }
 
 #' cnet_plot_para Server Function
 #'
 #' @noRd 
-mod_cnet_plot_para_server <- function(input, output, session){
+mod_cnet_plot_para_server <- function(input, output, session, selected, con){
   ns <- session$ns
   
   cnet_plot_para_module <- reactiveValues()
@@ -53,6 +55,28 @@ mod_cnet_plot_para_server <- function(input, output, session){
     cnet_plot_para_module$node_label <- input$node_label
     cnet_plot_para_module$title <- input$title
   })
+  
+  # Download function
+  output$download_graph <- downloadHandler(
+    filename = function() {
+      paste0("cnet_plot.pdf", sep="")
+    },
+    content = function(file) {
+      pdf(file)
+      enrichment_object <<- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
+      enrichment_object_readable <- DOSE::setReadable(enrichment_object, OrgDb = 'org.Hs.eg.db', keyType = "ENTREZID") #Not sure if KeyType should be selected from the enrichment object
+      
+      enrichplot::cnetplot(x = enrichment_object_readable,
+                           showCategory = cnet_plot_para_module$showcategory,
+                           foldChange = enrichment_object,
+                           layout = cnet_plot_para_module$layout,
+                           circular = cnet_plot_para_module$circular,
+                           colorEdge = cnet_plot_para_module$colorEdge,
+                           node_label = cnet_plot_para_module$node_label,
+      ) + ggplot2::ggtitle(label = cnet_plot_para_module$title)
+      dev.off()
+    }
+  )
   
   return(cnet_plot_para_module)
 }
