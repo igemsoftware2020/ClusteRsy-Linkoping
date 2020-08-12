@@ -88,11 +88,11 @@ gene_heatmap <- function(CPobj, NP, NG, plot_title, pval_color) {
     test_df <<-  as.data.frame(as.table(as.matrix(test_matrix[1:NG,1:NP])))
     colnames(test_df) <- c("Genes" , "Pathways" , "P.val")
     
-    p <- ggplot(test_df, aes(Genes,Pathways)) + 
-      geom_tile(aes(fill = P.val), colour = "white") + 
-      scale_fill_gradient(low = "white", high = "steelblue", name = "-log10(P-val)") +
-      theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) +
-      ggtitle(plot_title)
+    p <- ggplot2::ggplot(test_df, ggplot2::aes(Genes,Pathways)) + 
+      ggplot2::geom_tile(ggplot2::aes(fill = P.val), colour = "white") + 
+      ggplot2::scale_fill_gradient(low = "white", high = "steelblue", name = "-log10(P-val)") +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 0.5, hjust=1)) +
+      ggplot2::ggtitle(plot_title)
   
    } else if (pval_color == FALSE) {
     for (i in 1:ncol(test_matrix)) {
@@ -104,12 +104,12 @@ gene_heatmap <- function(CPobj, NP, NG, plot_title, pval_color) {
     test_df <<-  as.data.frame(as.table(as.matrix(test_matrix[1:NG,1:NP])))
     colnames(test_df) <- c("Genes" , "Pathways" , "P.val")
     
-    p <- ggplot(test_df, aes(Genes,Pathways)) + 
-      geom_tile(aes(fill = P.val), colour = "white") + 
-      scale_fill_gradient(low = "white", high = "steelblue") +
-      theme(legend.position="none") +
-      theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) +
-      ggtitle(plot_title)
+    p <- ggplot2::ggplot(test_df, ggplot2::aes(Genes,Pathways)) + 
+      ggplot2::geom_tile(ggplot2::aes(fill = P.val), colour = "white") + 
+      ggplot2::scale_fill_gradient(low = "white", high = "steelblue") +
+      ggplot2::theme(legend.position="none") +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 0.5, hjust=1)) +
+      ggplot2::ggtitle(plot_title)
   }
   
 }

@@ -14,6 +14,8 @@ mod_dot_plot_para_ui <- function(id){
       tags$h3(class = "text-center",
               "Parameters"),
       #Dot plot
+      textInput(ns("title"), 
+                label = "Title"),
       selectInput(ns("xaxis"),
                   label = "X-axis",
                   choices = c("GeneRatio", "Count")),
@@ -24,10 +26,7 @@ mod_dot_plot_para_ui <- function(id){
                   label = "Number of enriched terms to display",
                   min = 5,
                   max = 50,
-                  value = 10),
-      textInput(ns("title"), 
-                label = "Title")
-    
+                  value = 10)
 )
 }
     

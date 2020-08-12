@@ -12,6 +12,8 @@ mod_heat_plot_para_ui <- function(id){
   tagList(
     tags$h3(class = "text-center",
             "Parameters"),
+    textInput(ns("title"), 
+              label = "Title"),
     sliderInput(ns("pathways_displayed"), 
                 label = "Number of pathways dispayled",
                 min = 5,
@@ -25,9 +27,7 @@ mod_heat_plot_para_ui <- function(id){
     prettySwitch(ns("pvalue_displayed"),
                  label = "P-value as color",
                  value = TRUE,
-                 status = "warning"),
-    textInput(ns("title"), 
-              label = "Title")
+                 status = "warning")
   )
 }
     

@@ -14,6 +14,8 @@ mod_cnet_plot_para_ui <- function(id){
     tags$h3(class = "text-center",
             "Parameters"),
     #Cnet plot
+    textInput(ns("title"), 
+              label = "Title"),
     sliderInput(ns("showcategory"), 
                 label = "Number of enriched terms to display",
                 min = 3,
@@ -32,10 +34,7 @@ mod_cnet_plot_para_ui <- function(id){
                  status = "warning"),
     selectInput(ns("node_label"),
                 label = "Node labels",
-                choices = c("all", "gene", "category", "none")),
-    textInput(ns("title"), 
-              label = "Title")
-    
+                choices = c("all", "gene", "category", "none"))
   )
 }
 

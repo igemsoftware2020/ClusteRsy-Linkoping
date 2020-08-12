@@ -27,7 +27,8 @@ mod_visual_ui <- function(id){
           tags$h3(class = "text-center", "Visualization"),
           tags$form(`class` = "well", style = "background-color:#FFFFFF;",
                     DT::dataTableOutput(ns("enrichment_overview"), width = "auto", height = "auto")), #Data table for plot output
-          actionButton(ns("analyze"), label = "Analyze"),
+          tags$div(style = "text-align:center",
+                  actionButton(ns("analyze"), label = "Analyze")),
           uiOutput(ns("disable")),
           #Renders the parameters when analyzed is triggered.
           uiOutput(ns("parameters")) 
