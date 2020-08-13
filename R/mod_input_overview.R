@@ -71,7 +71,14 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
     input_objects <- MODifieRDB::get_available_input_objects(con)
     output$input_overview <- DT::renderDataTable(input_objects,
                                                  rownames = FALSE,
-                                                 selection = list(selected = c(1)))
+                                                 selection = list(selected = c(1)),
+                                                 callback = DT::JS('
+                                                            table.on("dblclick.dt","tr", function() {
+                                                              var data=table.row(this).data();
+                                                              dbclick++;
+                                                              Shiny.setInputValue("input_name", data[0]);
+                                                              Shiny.setInputValue("input_dbclick", dbclick);
+                                                             });'))
     
   })
   
@@ -81,7 +88,6 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
                                                rownames = FALSE,
                                                selection = list(selected = c(1)),
                                                callback = DT::JS('
-                                                            var dbclick = 0
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
                                                               dbclick++;
@@ -95,13 +101,14 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
     output$input_overview <- DT::renderDataTable(input_objects,
                                                  rownames = FALSE,
                                                  selection = list(selected = c(1)),
-                                                 callback = DT::JS('
-                                                            table.on("dblclick.dt","tr", function() {
-                                                              var data=table.row(this).data();
-                                                              dbclick++;
-                                                              Shiny.setInputValue("input_name", data[0]);
-                                                              Shiny.setInputValue("input_dbclick", dbclick);
-                                                             });'))
+                                                  callback = DT::JS('
+                                                             table.on("dblclick.dt","tr", function() {
+                                                               var data=table.row(this).data();;
+                                                               dbclick++;
+                                                               Shiny.setInputValue("input_name", data[0]);
+                                                               Shiny.setInputValue("input_dbclick", dbclick);
+                                                              });')
+                                                 )
   })
   
   # Refresh DT
@@ -199,7 +206,7 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
                                                               Shiny.setInputValue("input_dbclick", dbclick);
                                                              });'))
     
-    # Send refresh
+    # Send refresh to Description1_ui_1
     input_overview_module$delete <- input$delete
   })
   
@@ -225,7 +232,7 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
       )
     })
     output$result <- DT::renderDataTable(
-      as.matrix(input_obj$edgeR_deg_table),
+      as.matrix(apply(input_obj$edgeR_deg_table, 2, formatC, format="E")),
       filter = "top",
       extensions = c('Buttons'),
       options = list(

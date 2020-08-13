@@ -7,6 +7,9 @@ function loading_modal_close(){
        	$('#loading_modal').modal('hide');
 }
 
+//define dbclick variable for observing dbclick in input overview
+var dbclick = 0;
+
 $( document ).ready(function() {
   // Change position of tabs
   var i;
