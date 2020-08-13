@@ -149,7 +149,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: transparent;
+  background-color: #1c1c1c;
   pointer-events: none;
 }
 .tpd-no-shadow .tpd-skin .tpd-background-shadow {
@@ -336,6 +336,7 @@
   border-right-color: #fff;
   border-right-style: solid;
   border-right-width: 0;
+  display: none;
 }
 
 .tpd-stem-border-corner {
