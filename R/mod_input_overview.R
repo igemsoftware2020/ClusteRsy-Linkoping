@@ -105,7 +105,7 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
       tags$script('
                   $("#main_page_v2_ui_1-input_overview_ui_1-input_overview").find("tr").eq(1).attr("id", "DT_tooltip");
                   Tipped.create("#DT_tooltip",
-                  "Double clicked me to inspect the object!",
+                  "Double-click me to inspect the object!",
                   {shadow: false});
                   Tipped.show("#DT_tooltip");
                   ')

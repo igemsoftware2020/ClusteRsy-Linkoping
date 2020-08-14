@@ -217,10 +217,10 @@ inspect_module.MODA <- function(inspected_module, selected_module_name, inspect_
 }
 
 # shinyLink
-shinyLink <- function(label) {
-  tags$a(
+shinyLink <- function(label, target) {
+  tags$a( 
     class = "shiny__link",
-    href="javascript:shinyLink()",
+    href= paste0("javascript:shinyLink('", target, "')"),
     label
   )
 }
