@@ -16,11 +16,12 @@ mod_main_page_v2_ui <- function(id){
                tabPanel("Tools", mod_Columns_ui(ns("Columns_ui_1"))),
                tabPanel("Visualization", mod_visual_ui(ns("visual_ui_1"))),
                 tabPanel("Database",
-                          tabsetPanel(
-                          tabPanel("Input objects", mod_input_overview_ui(ns("input_overview_ui_1"))),
-                          tabPanel("Module objects", mod_module_overview_ui(ns("module_overview_ui_1"))),
-                          tabPanel("Enrichment objects", mod_enrichment_overview_ui(ns("enrichment_overview_ui_1"))),
-                          tabPanel("PPI networks", mod_ppi_networks_ui(ns("ppi_networks_ui_1"))))),
+                          tabsetPanel(id = ns("tabs"),
+                                      type = "tabs",
+                                      tabPanel("Input objects", mod_input_overview_ui(ns("input_overview_ui_1"))),
+                                      tabPanel("Module objects", mod_module_overview_ui(ns("module_overview_ui_1"))),
+                                      tabPanel("Enrichment objects", mod_enrichment_overview_ui(ns("enrichment_overview_ui_1"))),
+                                      tabPanel("PPI networks", mod_ppi_networks_ui(ns("ppi_networks_ui_1"))))),
                tabPanel("User guide", mod_user_guide_ui(ns("user_guide_ui_1"))),
                tabPanel(" ", mod_welcoming_page_ui(ns("welcoming_page_ui_1")))
                 #Hide this with Javascirpt
@@ -107,6 +108,19 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
       })
     }
   })
+  
+  observeEvent(input$tabs, {
+    output$hidehints1 <- renderUI({
+      if (input$tabs == "Input objects") {
+        NULL
+      }
+      else {
+        tags$script("Tipped.hide('#DT_tooltip');")
+      }
+    })
+  })
+  
+  ##############################################
   
   observeEvent(app_servr$loaded, {
     output$loaded <- renderUI({
