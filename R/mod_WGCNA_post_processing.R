@@ -21,6 +21,8 @@ mod_WGCNA_post_processing_ui <- function(id){
 mod_WGCNA_post_processing_server <- function(input, output, session, inspected_module, selected_module_name, inspect_button, post_process_button, con){
   ns <- session$ns
   
+  WGCNA_post_process <- reactiveValues()
+  
   observeEvent(inspect_button, {
     req(inspect_button)
   output$tables <- renderUI({
@@ -157,7 +159,18 @@ mod_WGCNA_post_processing_server <- function(input, output, session, inspected_m
                                                           text = 'Download'
                                                         ))
                                                ))
+  post_process_module_object <- reactive({
+    input$post_process_module_object
+  })
   
+  
+  observeEvent(input$post_process_module_object, {
+    req(post_process_button)
+    post_process_module_object <- post_process_module_object()
+    WGCNA_post_process$post_process_module_object <- post_process_module_object
+  })
+  
+  return(WGCNA_post_process)
   
 }
     
