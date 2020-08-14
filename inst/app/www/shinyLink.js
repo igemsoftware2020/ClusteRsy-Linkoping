@@ -1,4 +1,4 @@
-function shinyLink() {
+function shinyLink(target1) {
     var target = $('a[data-value="User guide"]');
 
     // does the link exist?
@@ -10,6 +10,11 @@ function shinyLink() {
         if ($(target).parent().parent().hasClass("navbar-nav")) {
             $(target).click();
             window.scrollTo(0, 0,);
+            setTimeout(function() {
+                $('html, body').animate({
+                scrollTop: $(target1).offset().top
+                });
+            }, 100);
         }
 
         // if the parent ul of the matching link has the class `.nav-tabs`,
@@ -30,13 +35,15 @@ function shinyLink() {
             // activate destination tab
             target.click();
             window.scrollTo(0, 0,);
+            $('html, body').animate({
+                scrollTop: $(target1).offset().top
+            }, 2000);
 
         }
 
     } else {
         console.error("No matching link found. Is the destination correct?");
     }
-
 }
 
 

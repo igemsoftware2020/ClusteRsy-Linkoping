@@ -27,7 +27,8 @@ mod_main_page_v2_ui <- function(id){
     ),
     tags$script(HTML("element = document.getElementsByTagName('a')[5]; element.style.display = 'none'")), #Change the number according to the tabPanel order
     htmlOutput(ns("loaded")),
-    htmlOutput(ns("hidehints"))
+    htmlOutput(ns("hidehints")),
+    htmlOutput(ns("hidehints1"))
   )
 }
 
@@ -84,12 +85,25 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
     rintrojs::introjs(session)
   })
   
+  # Hide hints
   observeEvent(input$navbar, {
     if (input$navbar == "Tools"){
-      rintrojs::hintjs(session)}
+      rintrojs::hintjs(session)
+      }
     else{
       output$hidehints <- renderUI({
         tags$script("introJs().hideHints();")
+      })
+    }
+  })
+  
+  observeEvent(input$navbar, {
+    if (input$navbar == "Database"){
+      output$hidehints1 <- renderUI({})
+      }
+    else{
+      output$hidehints1 <- renderUI({
+        tags$script("Tipped.hide('#DT_tooltip');")
       })
     }
   })
