@@ -21,6 +21,8 @@ mod_DiffCoEx_post_processing_ui <- function(id){
 mod_DiffCoEx_post_processing_server <- function(input, output, session, inspected_module, selected_module_name, inspect_button, post_process_button, con){
   ns <- session$ns
   
+  DiffCoEx_post_process <- reactiveValues()
+  
   observeEvent(inspect_button, {
     req(inspect_button)
   output$tables <- renderUI({
@@ -161,8 +163,15 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
                                                           text = 'Download'
                                                         ))
                                                ))
+
+  split_module_by_color <- reactive({
+    input$split_module_by_color
+  })
   
   observeEvent(input$split_module_by_color, {
+    
+    split_module_by_color <- split_module_by_color()
+    DiffCoEx_post_process$split_module_by_color <- split_module_by_color
     
     split_module <- MODifieR::diffcoex_split_module_by_color(inspected_module)
 
@@ -172,19 +181,27 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
         id <- showNotification("Saving module objects to database", duration = NULL, closeButton = FALSE, type = "warning")
       }
       
-      
       module_name <- paste(selected_module_name$name, names(split_module[i]), Sys.time())
       split_module_input <- split_module[[i]]
 
       try(MODifieRDB::MODifieR_object_to_db(split_module_input,
                                         object_name =  module_name,
                                         con = con))
+      
+      
     }
+    
+      
+      
     
     on.exit(removeNotification(id), add = TRUE)
     })
   
+ 
+  
+  return(DiffCoEx_post_process)
 }
+
 
     
 ## To be copied in the UI

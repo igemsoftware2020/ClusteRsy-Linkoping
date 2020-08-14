@@ -194,14 +194,15 @@ inspect_module.Clique_Sum_permutation <- function(inspected_module, selected_mod
 
 inspect_module.DiffCoEx <- function(inspected_module, selected_module_name, inspect_button, post_process_button, ns, con) {
   
-  ui_output <- renderUI({
-    mod_DiffCoEx_post_processing_ui(ns("DiffCoEx_post_processing_ui_1"))
-  })
+ # ui_output <- renderUI({
+  ui_output <-  mod_DiffCoEx_post_processing_ui(ns("DiffCoEx_post_processing_ui_1"))
+  #})
   
   server_output <- callModule(mod_DiffCoEx_post_processing_server, "DiffCoEx_post_processing_ui_1", inspected_module, selected_module_name, inspect_button, post_process_button, con = con)
   
-  return(ui_output)
-  return(server_output)
+  return(list("ui_output" = ui_output,
+              "server_output" = server_output))
+  #return(server_output)
   
 }
 
