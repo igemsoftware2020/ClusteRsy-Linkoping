@@ -42,7 +42,8 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
                                DT::dataTableOutput(ns("color_vector_table"))),
                       tabPanel(title = "Settings table",
                                DT::dataTableOutput(ns("settings_table"))))),
-        footer = actionButton(ns("close_modal"), label = "Close")
+        footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
+        )
         
                       ))
     )
@@ -64,7 +65,8 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
           tags$br(),
           actionButton(ns("post_process_module_object"),
                        label = "Split module"),
-          footer = actionButton(ns("close_modal"), label = "Close")
+          footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
+          )
           
         ))
       )
@@ -181,7 +183,7 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
         id <- showNotification("Saving module objects to database", duration = NULL, closeButton = FALSE, type = "warning")
       }
       
-      module_name <- paste(selected_module_name$name, names(split_module[i]), Sys.time())
+      module_name <- paste(selected_module_name$name, names(split_module[i]), Sys.time(), sep = "_")
       split_module_input <- split_module[[i]]
 
       try(MODifieRDB::MODifieR_object_to_db(split_module_input,
@@ -193,6 +195,7 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
     
     on.exit(removeModal())
     on.exit(removeNotification(id), add = TRUE)
+    
     })
   
 
