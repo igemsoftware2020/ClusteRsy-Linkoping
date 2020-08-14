@@ -42,9 +42,8 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
                                DT::dataTableOutput(ns("color_vector_table"))),
                       tabPanel(title = "Settings table",
                                DT::dataTableOutput(ns("settings_table"))))),
+        footer = actionButton(ns("close_modal"), label = "Close")
         
-        footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
-        ),
                       ))
     )
   })
@@ -63,10 +62,10 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
           tags$p("This method will split the original DiffCoEx object into a series of DiffCoEx objects by color.", style = "color:#2c3e50"),
           tags$p("Every significant color in the module will be it's own DiffCoEx module object", style = "color:#2c3e50"),
           tags$br(),
-          actionButton(ns("split_module_by_color"),
+          actionButton(ns("post_process_module_object"),
                        label = "Split module"),
-          footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
-          )
+          footer = actionButton(ns("close_modal"), label = "Close")
+          
         ))
       )
     })
@@ -164,14 +163,15 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
                                                         ))
                                                ))
 
-  split_module_by_color <- reactive({
-    input$split_module_by_color
+  post_process_module_object <- reactive({
+    input$post_process_module_object
   })
   
-  observeEvent(input$split_module_by_color, {
-    
-    split_module_by_color <- split_module_by_color()
-    DiffCoEx_post_process$split_module_by_color <- split_module_by_color
+  
+  observeEvent(input$post_process_module_object, {
+    req(post_process_button)
+    post_process_module_object <- post_process_module_object()
+    DiffCoEx_post_process$post_process_module_object <- post_process_module_object
     
     split_module <- MODifieR::diffcoex_split_module_by_color(inspected_module)
 
@@ -191,13 +191,11 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
       
     }
     
-      
-      
-    
+    on.exit(removeModal())
     on.exit(removeNotification(id), add = TRUE)
     })
   
- 
+
   
   return(DiffCoEx_post_process)
 }
