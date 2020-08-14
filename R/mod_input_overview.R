@@ -20,7 +20,8 @@ mod_input_overview_ui <- function(id){
                       downloadButton(ns("download_input"), "Download"),
                       actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true")))),
     uiOutput(ns("disable")),
-    uiOutput(ns("inspect"))
+    uiOutput(ns("inspect")),
+    uiOutput(ns("DT_tooltip"))
   )
 }
 
@@ -83,6 +84,7 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
   })
   
   input_objects <- MODifieRDB::get_available_input_objects(con)
+  
   # Render DT
   output$input_overview <- DT::renderDataTable(input_objects,
                                                rownames = FALSE,
@@ -93,7 +95,22 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
                                                               dbclick++;
                                                               Shiny.setInputValue("input_name", data[0]);
                                                               Shiny.setInputValue("input_dbclick", dbclick);
-                                                             });'))
+                                                             });
+                                                             Shiny.setInputValue("DT_tooltip", "DT_tooltip");
+                                                                 '))
+  
+  # Observer when DT is loaded
+  observeEvent(app_servr$DT_tooltip, {
+    print("hi")
+    output$DT_tooltip <- renderUI({
+      tags$script('
+                  $("#main_page_v2_ui_1-input_overview_ui_1-input_overview").find("tr").eq(1).attr("id", "DT_tooltip");
+                  Tipped.create("#DT_tooltip",
+                  "Double clicked me to inspect the object!",
+                  {shadow: false});
+                  ')
+    })
+  })
   
   # Refresh DT
   observeEvent(Columns_ui_1$input_name, {
@@ -107,7 +124,8 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
                                                                dbclick++;
                                                                Shiny.setInputValue("input_name", data[0]);
                                                                Shiny.setInputValue("input_dbclick", dbclick);
-                                                              });')
+                                                              });
+                                                                    ')
                                                  )
   })
   

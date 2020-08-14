@@ -38,6 +38,11 @@ app_server <- function( input, output, session) {
     app_servr$input_name <- input$input_name
   })
   
+  # DT tooltip
+  observeEvent(input$DT_tooltip, {
+    app_servr$DT_tooltip <- input$DT_tooltip
+  })
+  
   # List the first level call Modules here
   callModule(mod_main_page_v2_server, "main_page_v2_ui_1", con = con, app_servr = app_servr)
 }
