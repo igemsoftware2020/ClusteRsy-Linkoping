@@ -70,7 +70,7 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
   })
   
   
-  # Observe if valid to download
+  # Observe if valid to analyze
   observe({
     if(is.null(input$enrichment_overview_rows_selected)) {
       output$disable <- renderUI({

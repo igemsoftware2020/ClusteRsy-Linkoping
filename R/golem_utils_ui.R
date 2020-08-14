@@ -312,7 +312,8 @@ textInput <- function(inputId, label, value = "", width = NULL,
             `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
             `data-content` = popup,
             header
-          ))
+          ),
+          tags$script(src="www/tooltip.js"))
       },
       tags$input(id = inputId, type="text", class="form-control", value=value,
                  placeholder = placeholder)
@@ -347,7 +348,8 @@ numericInput <- function(inputId, label, value, min = NA, max = NA, step = NA,
             `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
             `data-content` = popup,
             header
-          ))
+          ),
+          tags$script(src="www/tooltip.js"))
       },
       inputTag
   )
@@ -452,7 +454,8 @@ radioButtons <- function(inputId, label, choices = NULL, selected = NULL,
                  `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
                  `data-content` = popup,
                  header
-               ))
+               ),
+               tags$script(src="www/tooltip.js"))
            },
            options
   )
@@ -571,7 +574,8 @@ sliderInput <- function(inputId, label, min, max, value, step = NULL,
                          `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
                          `data-content` = popup,
                          header
-                       ))
+                       ),
+                       tags$script(src="www/tooltip.js"))
                    },
                    do.call(tags$input, sliderProps)
   )
@@ -661,7 +665,8 @@ selectInput <- function(inputId, label, choices, selected = NULL,
           `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
           `data-content` = popup,
           header
-        ))
+        ),
+        tags$script(src="www/tooltip.js"))
     },
     div(selectTag)
   )
@@ -744,7 +749,8 @@ prettySwitch <- function(inputId, label, value = FALSE, status = "default",
               `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
               `data-content` = popup,
               header
-            ))
+            ),
+            tags$script(src="www/tooltip.js"))
         }
       )
     )
