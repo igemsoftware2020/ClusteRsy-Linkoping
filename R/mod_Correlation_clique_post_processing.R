@@ -75,7 +75,6 @@ mod_Correlation_clique_post_processing_server <- function(input, output, session
   
     output$selected_method <- renderUI({
       if (input$post_process_choices == "Adjust frequency cutoff") {
-        print("freq")
         tagList(
           tags$p("This method will allow you to change the fraction of the number of times a gene should be present in it's iterations.", style = "color:#2c3e50"),
           tags$p("The default is set to 0.5, meaning the gene has to be present in at least 50 percent of iterations", style = "color:#2c3e50"),
@@ -87,7 +86,6 @@ mod_Correlation_clique_post_processing_server <- function(input, output, session
                       value = 0.5),
         )
       } else if (input$post_process_choices == "Adjust module size") {
-        print("module")
         tagList(
           tags$p("This method will allow you to change the module size", style = "color:#2c3e50"),
           tags$br(),
