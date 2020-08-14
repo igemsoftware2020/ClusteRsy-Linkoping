@@ -24,7 +24,7 @@ mod_Correlation_clique_post_processing_server <- function(input, output, session
   Correlation_clique_post_process <- reactiveValues()
   
   observeEvent(inspect_button, {
-    req(inspect_button)
+    req(is.null(post_process_button))
   output$tables <- renderUI({
     tagList(
       showModal(modalDialog(
@@ -50,17 +50,54 @@ mod_Correlation_clique_post_processing_server <- function(input, output, session
   })
   
   observeEvent(post_process_button, {
-    req(post_process_button)
+    req(is.null(inspect_button))
     output$post_processing <- renderUI({
       tagList(
         showModal(modalDialog(
           title = selected_module_name$name,
           easyClose = TRUE,
           size = "l",
+          tags$h3("Choose between adjusting the frequency cutoff or adjusting the module size", style = "color:#2c3e50"),
+          selectInput(ns("post_process_choices"),
+                      label = "Pick a post-processing method",
+                      choices = c("Adjust frequency cutoff",
+                                  "Adjust module size")),
+          uiOutput(ns("selected_method")),
+          actionButton(ns("post_process_module_object"), 
+                       label = "Process module"),
           footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
           )
+        
         ))
       )
+    })
+    
+  
+    output$selected_method <- renderUI({
+      if (input$post_process_choices == "Adjust frequency cutoff") {
+        print("freq")
+        tagList(
+          tags$p("This method will allow you to change the fraction of the number of times a gene should be present in it's iterations.", style = "color:#2c3e50"),
+          tags$p("The default is set to 0.5, meaning the gene has to be present in at least 50 percent of iterations", style = "color:#2c3e50"),
+          tags$br(),
+          sliderInput(ns("frequency_cutoff"), 
+                      label = "Frequency Cuttoff",
+                      min = 0,
+                      max = 1,
+                      value = 0.5),
+        )
+      } else if (input$post_process_choices == "Adjust module size") {
+        print("module")
+        tagList(
+          tags$p("This method will allow you to change the module size", style = "color:#2c3e50"),
+          tags$br(),
+          sliderInput(ns("module_size"),
+                      label = "Module size",
+                      min = 1,
+                      max = length(module_genes),
+                      value = (length(module_genes))/2),
+        )
+      }
     })
   })
   
@@ -133,6 +170,8 @@ mod_Correlation_clique_post_processing_server <- function(input, output, session
                                                           text = 'Download'
                                                         ))
                                                ))
+  
+  
   post_process_module_object <- reactive({
     input$post_process_module_object
   })
@@ -142,8 +181,38 @@ mod_Correlation_clique_post_processing_server <- function(input, output, session
     req(post_process_button)
     post_process_module_object <- post_process_module_object()
     Correlation_clique_post_process$post_process_module_object <- post_process_module_object
-  })
+    id <- showNotification("Saving module objects to database", duration = NULL, closeButton = FALSE, type = "warning")
     
+    if (input$post_process_choices == "Adjust frequency cutoff") {
+
+      correlation_adjust_cutoff <- MODifieR::correlation_adjust_cutoff(frequency_cutoff =  input$frequency_cutoff,
+                                                                       inspected_module)
+      module_name <- paste(selected_module_name$name, "adjusted_frequency_cutoff", paste0(sample(letters, size = 10), collapse = ""), sep = "_") %>% 
+        gsub(" ", "_", .)
+      
+      
+      print(class(module_name))
+      print(module_name)
+      try(MODifieRDB::MODifieR_object_to_db(correlation_adjust_cutoff,
+                                            object_name =  module_name,
+                                            con = con))
+      
+    } else if (input$post_process_choices == "Adjust module size") {
+
+      correlation_set_module_size <- MODifieR::correlation_set_module_size(size = input$module_size,
+                                                                           inspected_module)
+      
+      module_name <- paste(selected_module_name$name, "adjusted_module_size", Sys.date(), sep = "_") %>% 
+        gsub(" ", "_", .)
+      
+      try(MODifieRDB::MODifieR_object_to_db(correlation_set_module_size,
+                                            object_name =  module_name,
+                                            con = con))
+    }
+    
+    on.exit(removeModal())
+    on.exit(removeNotification(id), add = TRUE)
+  })
   
   return(Correlation_clique_post_process)
  
