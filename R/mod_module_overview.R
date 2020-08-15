@@ -180,36 +180,40 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   # Inspect current module
   
   inspected_result_list <- reactiveValues()
+  module_objects_inspected <- MODifieRDB::get_available_module_objects(con) #This value is needed in order to retrieve the actual contet that is being displayed in the DT
   
   #Refresh
   observeEvent(inspected_result_list$list$server_output$post_process_module_object, { 
-    ##### Important: This nees too be double arrowed in order for it too work! #####
-    module_objects <<- MODifieRDB::get_available_module_objects(con) 
+    ##### Important: This needs too be double arrowed in order for it too work! #####
+    module_objects_inspected <<- MODifieRDB::get_available_module_objects(con) 
     
-    output$module_overview <- DT::renderDataTable(module_objects,
+    output$module_overview <- DT::renderDataTable(module_objects_inspected,
                                                   rownames = FALSE,
                                                   selection = list(selected = c(1)))
   })
   
-  
+  #Listening the the module_type that is being selected in the DT.
+  #This observeEvent use module_objects due to observers for new input data above.
   observeEvent(module_objects$module_type[input$module_overview_rows_selected],{
     selected_module_type <- module_objects$module_type[input$module_overview_rows_selected]
-  
+
     if (length(selected_module_type) == 1) {
       shinyjs::enable("inspect")
     } else {
       shinyjs::disable("inspect")
     }
-    
+
   })
+  
   
   observeEvent(input$inspect, {
     post_process_button <- NULL
     inspect_button <- 1
     
+    module_objects_inspected <- MODifieRDB::get_available_module_objects(con) 
     selected <- input$module_overview_rows_selected
-    inspected_module <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[selected], con = con)
-    selected_module_name$name <- module_objects$module_name[selected]
+    inspected_module <- MODifieRDB::MODifieR_module_from_db(module_objects_inspected$module_name[selected], con = con)
+    selected_module_name$name <- module_objects_inspected$module_name[selected]
     
     if (is.null(inspected_module)) {
       showNotification("No module objects in the database", duration = 10, closeButton = TRUE, type = "warning") 
@@ -227,6 +231,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
 #Post processing of current module
   
   #Listening the the module_type that is being selected in the DT.
+  #This observeEvent use module_objects due to observers for new input data above.
   observeEvent(module_objects$module_type[input$module_overview_rows_selected],{
     
     selected_module_type <- module_objects$module_type[input$module_overview_rows_selected]
@@ -246,15 +251,13 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     post_process_button <- 1
     
     selected <- input$module_overview_rows_selected
-    module_objects <- MODifieRDB::get_available_module_objects(con)
-    inspected_module <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[selected], con = con)
-    selected_module_name$name <- module_objects$module_name[selected]
+    module_objects_inspected <- MODifieRDB::get_available_module_objects(con)
+    inspected_module <- MODifieRDB::MODifieR_module_from_db(module_objects_inspected$module_name[selected], con = con)
+    selected_module_name$name <- module_objects_inspected$module_name[selected]
     
     if (is.null(inspected_module)) {
-      print("post_process")
       showNotification("No module objects in the database", duration = 10, closeButton = TRUE, type = "warning") 
     } else {
-     print("post_process_else")
       
       inspected_result_list$list <- inspect_module(inspected_module, selected_module_name, inspect_button, post_process_button, ns, con)
       

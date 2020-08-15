@@ -185,12 +185,12 @@ mod_Correlation_clique_post_processing_server <- function(input, output, session
 
       correlation_adjust_cutoff <- MODifieR::correlation_adjust_cutoff(frequency_cutoff =  input$frequency_cutoff,
                                                                        inspected_module)
-      module_name <- paste(selected_module_name$name, "adjusted_frequency_cutoff", paste0(sample(letters, size = 10), collapse = ""), sep = "_") %>% 
-        gsub(" ", "_", .)
-      
-      
-      print(class(module_name))
-      print(module_name)
+      module_name <- paste(selected_module_name$name, 
+                           "adjusted_frequency_cutoff",
+                           paste0(sample(letters, size = 10), 
+                                  collapse = ""), 
+                           sep = "_") %>%  gsub(" ", "_", .)
+       
       try(MODifieRDB::MODifieR_object_to_db(correlation_adjust_cutoff,
                                             object_name =  module_name,
                                             con = con))
@@ -200,8 +200,11 @@ mod_Correlation_clique_post_processing_server <- function(input, output, session
       correlation_set_module_size <- MODifieR::correlation_set_module_size(size = input$module_size,
                                                                            inspected_module)
       
-      module_name <- paste(selected_module_name$name, "adjusted_module_size", Sys.date(), sep = "_") %>% 
-        gsub(" ", "_", .)
+      module_name <- paste(selected_module_name$name,
+                           "adjusted_module_size", 
+                           Sys.date(), 
+                           sep = "_") %>% gsub(" ", "_", .)
+        
       
       try(MODifieRDB::MODifieR_object_to_db(correlation_set_module_size,
                                             object_name =  module_name,
