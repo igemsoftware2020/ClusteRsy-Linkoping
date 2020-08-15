@@ -7382,8 +7382,15 @@ a[aria-expanded='false'] > .expand_caret {
 
 .introjs-hint-dot {
    border: 10px solid rgba(255, 214, 51, 0.36) !important;
+}
 
 /* Notification box*/
 .plotly-notifier .notifier-note {
   background-color: black !important;
   border-color: black !important;
+}
+
+/* DT filter color */
+.noUi-connect{
+  background: #2c3e50 !important;
+}

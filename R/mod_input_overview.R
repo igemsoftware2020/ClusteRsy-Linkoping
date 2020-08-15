@@ -250,7 +250,7 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
       )
     })
     output$result <- DT::renderDataTable(
-      as.matrix(apply(input_obj$edgeR_deg_table, 2, formatC, format="E")),
+      input_obj$edgeR_deg_table,
       filter = "top",
       extensions = c('Buttons'),
       options = list(
@@ -267,7 +267,13 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
                  extend = 'collection',
                  buttons = c('pdf', 'csv', 'excel'),
                  text = 'Download'
-               ))
+               )),
+        rowCallback = DT::JS(
+          "function(row, data) {",
+          "for (i = 1; i < data.length; i++) {",
+          "$('td:eq('+i+')', row).html(data[i].toExponential(3));",
+          "}",
+          "}")
       )
     )
     output$settings <- DT::renderDataTable(
