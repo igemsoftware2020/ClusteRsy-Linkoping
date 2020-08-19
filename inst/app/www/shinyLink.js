@@ -14,7 +14,7 @@ function shinyLink(target1) {
                 $('html, body').animate({
                 scrollTop: $(target1).offset().top
                 });
-            }, 100);
+            }, 60);
         }
 
         // if the parent ul of the matching link has the class `.nav-tabs`,
