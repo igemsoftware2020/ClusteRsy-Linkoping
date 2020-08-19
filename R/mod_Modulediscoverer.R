@@ -90,20 +90,23 @@ mod_Modulediscoverer_server <- function(input, output, session, con, upload_ui_1
   })
   
    observeEvent(input$load_input, {
-    id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
-    on.exit(removeNotification(id), add = TRUE)
-    output$error_p_value <- NULL # I CANNOT REMOVE THIS BUG, SO THIS IS A FEATURE NOW :)
-    module_object <- try(MODifieRDB::modulediscoverer_db(input_name = input$input_object, 
-                                          ppi_name = input$ppi_object, 
-                                          permutations = input$permutations,
-                                          deg_cutoff = input$deg_cutoff,
-                                          repeats = input$repeats,
-                                          clique_cutoff = input$clique_cutoff,
-                                          module_name = input$module_name,
-                                          n_cores = input$n_cores,
-                                          con = con)
-                 )
-    
+     id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
+     on.exit(removeNotification(id), add = TRUE)
+     
+     output$error_p_value <- NULL 
+     output$adv_settings <- renderUI({})
+     
+     module_object <- try(MODifieRDB::modulediscoverer_db(input_name = input$input_object, 
+                                           ppi_name = input$ppi_object, 
+                                           permutations = input$permutations,
+                                           deg_cutoff = input$deg_cutoff,
+                                           repeats = input$repeats,
+                                           clique_cutoff = input$clique_cutoff,
+                                           module_name = input$module_name,
+                                           n_cores = input$n_cores,
+                                           con = con)
+                          )
+      
     if (class(module_object) == "try-error"){
       output$adv_settings <- renderUI({
         tags$script("if ($('.collapsible.btn.btn-primary.btn-block').eq(0).attr('aria-expanded') === 'false') {

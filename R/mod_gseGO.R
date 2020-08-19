@@ -126,6 +126,7 @@ mod_gseGO_server <- function(input, output, session, con, Description1_ui_1, mod
     on.exit(removeNotification(id), add = TRUE)
     
     output$error <- renderUI({})
+    output$adv_settings <- renderUI({})
     
     gene_list <- try(get_sorted_module_genes(input$module_object, con = con))
     

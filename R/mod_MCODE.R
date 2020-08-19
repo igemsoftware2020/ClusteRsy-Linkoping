@@ -161,8 +161,11 @@ mod_MCODE_server <- function(input, output, session, con, upload_ui_1, input_ove
   observeEvent(input$load_input, {
     id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
+    
+    output$adv_settings <- renderUI({})
     output$error_p_value <- NULL 
     output$error_name_descrip <- NULL
+    
     module_object <- try(MODifieRDB::mcode_db(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
                                           hierarchy = as.numeric(input$hierarchy),

@@ -53,11 +53,6 @@ mod_CliqueSum_server <- function(input, output, session, con, upload_ui_1, input
     input$module_name
   })
   
-  # observeEvent(input$advanced, {
-  #   advanced <-  tags$button(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced',  tags$div(class= "glyphicon glyphicon-menu-down"))
-  # })
-  
-  
   # Check for module object names
   observe({
     if (any(MODifieRDB::get_available_module_objects(con)$module_name == module_name())){
@@ -105,6 +100,9 @@ mod_CliqueSum_server <- function(input, output, session, con, upload_ui_1, input
   observeEvent(input$load_input, {
     id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
+    
+    output$adv_settings <- renderUI({})
+    
     module_object <- try(MODifieRDB::clique_sum_db(input_name = input$input_object,
                                                ppi_name = input$ppi_object,
                                                n_iterations = input$n_iterations,

@@ -97,6 +97,9 @@ mod_MODA_server <- function(input, output, session, con, upload_ui_1, input_over
   observeEvent(input$load_input,  {
     id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
+    
+    output$adv_settings <- renderUI({})
+    
     module_object <- try(MODifieRDB::moda_db(input_name = input$input_object, 
                                           group_of_interest = as.numeric(input$group_of_interest),
                                           cutmethod = input$cutmethod,

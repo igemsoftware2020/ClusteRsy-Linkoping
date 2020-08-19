@@ -123,6 +123,9 @@ mod_DiffCoEx_server <- function(input, output, session, con, upload_ui_1, input_
   observeEvent(input$load_input, {
     id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
+    
+    output$adv_settings <- renderUI({})
+    
     module_object <- try(MODifieRDB::diffcoex_db(input_name = input$input_object,
                                           cluster_method = input$cluster_method,
                                           cor_method = input$cor_method,

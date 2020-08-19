@@ -91,7 +91,10 @@ mod_DIAMoND_server <- function(input, output, session, con, upload_ui_1, input_o
   observeEvent(input$load_input, {
     id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
-    output$error_p_value <- NULL # I CANNOT REMOVE THIS BUG, SO THIS IS A FEATURE NOW :)
+    
+    output$adv_settings <- renderUI({})
+    output$error_p_value <- NULL 
+    
     module_object <- try(MODifieRDB::diamond_db(input_name = input$input_object, 
                                           ppi_name = input$ppi_object, 
                                           deg_cutoff = input$deg_cutoff,

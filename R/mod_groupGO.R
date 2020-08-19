@@ -82,6 +82,7 @@ mod_groupGO_server <- function(input, output, session, con, Description1_ui_1, m
     on.exit(removeNotification(id), add = TRUE)
     
     output$error <- renderUI({})
+    output$adv_settings <- renderUI({})
     
     module_genes <- try(get_module_genes(input$module_object, con = con))
     
