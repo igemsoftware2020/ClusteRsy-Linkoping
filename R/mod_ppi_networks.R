@@ -10,12 +10,17 @@
 mod_ppi_networks_ui <- function(id){
   ns <- NS(id)
   tagList(
+    tags$div(style= "margin-left: 10px; margin-right: 10px",
+             tags$h1(style= "color: #2b3e50", "PPI Networks"),
+             actionLink(inputId = "information_btn_ppi", label = "Learn More"),
+             tags$br(),
+             tags$br(),
     DT::dataTableOutput(ns("ppi_overview")),
     tags$div(`class`="row",
              tags$div(`class`="col-sm-8", style = "color:black",
              fileInput(ns("ppi_network"), label = "Upload a PPI network"),
              uiOutput(ns("ppi_name_chooser"))))
-  )
+  ))
 }
 
 #' ppi_networks Server Function

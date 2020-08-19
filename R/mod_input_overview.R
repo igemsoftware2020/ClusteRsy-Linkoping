@@ -10,6 +10,11 @@
 mod_input_overview_ui <- function(id){
   ns <- NS(id)
   tagList(
+    tags$div(style= "margin-left: 10px; margin-right: 10px",
+             tags$h1(style= "color: #2b3e50", "Input Objects"),
+             actionLink(inputId = "information_btn_input", label = "Learn More"),
+             tags$br(),
+             tags$br(),
     DT::dataTableOutput(ns("input_overview")),
     tags$div(`class`="row",
              tags$div(`class`="col-sm-10", style = "color:black",
@@ -22,7 +27,7 @@ mod_input_overview_ui <- function(id){
     uiOutput(ns("disable")),
     uiOutput(ns("inspect")),
     uiOutput(ns("DT_tooltip"))
-  )
+  ))
 }
 
 #' input_overview Server Function

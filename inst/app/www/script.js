@@ -46,4 +46,24 @@ $( document ).ready(function() {
         i++;
         Shiny.setInputValue("tutorial_start_btn", i);
     });
+    
+  //information popups in data-tab
+$('#information_btn_input').click(function(){
+        i++;
+        Shiny.setInputValue("information_btn_input", i);
+    });
+$('#information_btn_module').click(function(){
+        i++;
+        Shiny.setInputValue("information_btn_module", i);
+    });
+$('#information_btn_enrichment').click(function(){
+        i++;
+        Shiny.setInputValue("information_btn_enrichment", i);
+    });
+$('#information_btn_ppi').click(function(){
+        i++;
+        Shiny.setInputValue("information_btn_ppi", i);
+    });  
+    
 });
+

@@ -10,6 +10,11 @@
 mod_module_overview_ui <- function(id){
   ns <- NS(id)
   tagList(
+    tags$div(style= "margin-left: 10px; margin-right: 10px",
+            tags$h1(style= "color: #2b3e50; ", "Module Objects"),
+            actionLink(inputId = "information_btn_module", label = "Learn More"),
+            tags$br(),
+            tags$br(),
     DT::dataTableOutput(ns("module_overview")),
     tags$div(`class`="row",
              tags$div(`class`="col-sm-8", style = "color:black",
@@ -31,7 +36,7 @@ mod_module_overview_ui <- function(id){
     uiOutput(ns("inspected_results")),
     uiOutput(ns("disable")),
     shinyjs::useShinyjs()
-  )
+  ))
 }
 
 #' module_overview Server Function

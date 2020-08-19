@@ -128,6 +128,66 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
     })
   })
   
+  # Information popups in data-tab
+  observeEvent(app_servr$information_btn_ppi, {
+    showModal(modalDialog(
+      top = "30",
+      easyClose = TRUE,
+      title = "PPI Networks",
+      "In the PPI Networks tab all the previously uploaded 
+      PPI Networks can be found. The user can either use the default PPI Network 
+      or upload a custom made for a specific analyse.",
+      style = "color:black; text-align:center;",
+      footer=tagList(
+        tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
+      )
+    ))
+  })
+  observeEvent(app_servr$information_btn_input, {
+    showModal(modalDialog(
+      top = "30",
+      easyClose = TRUE,
+      title = "Input Objects",
+      "In the Input Oblects tab all the previously made 
+       Inputs can be found. The Inputs in the table below can be brought back in 
+       column 3 in the Tools-tab for further analysis.",
+      style = "color:black; text-align:center;",
+      footer=tagList(
+        tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
+      )
+    ))
+  })
+  observeEvent(app_servr$information_btn_module, {
+    showModal(modalDialog(
+      top = "30",
+      easyClose = TRUE,
+      title = "Module Objects",
+      "In the Module Objects tab all the previously made Modules 
+       are saved and stored. The Modules in the table below can be brought  
+       back in column 3 in the Tools-tab for further analysis.",
+      style = "color:black; text-align:center;",
+      footer=tagList(
+        tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
+      )
+    ))
+  })
+  observeEvent(app_servr$information_btn_enrichment, {
+    showModal(modalDialog(
+      top = "30",
+      easyClose = TRUE,
+      title = "Enrichment Objects",
+      "In the Enrichment Objects tab all the previously made 
+       enrichments can be found. the Enrichments in the table below can be brought  
+       back in the Visualisation-tab for further analysis. Note that no Enrichments 
+       will be stored at the end of a session. Download all Enrichments that need 
+       to be saved for later.",
+      style = "color:black; text-align:center;",
+      footer=tagList(
+        tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
+      )
+    ))
+  })
+  
   # Reactive values to record the buttons from all enrich methods
   enrichDGN = reactiveVal("0")
   enrichDO = reactiveVal("0")

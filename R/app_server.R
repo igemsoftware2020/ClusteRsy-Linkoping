@@ -45,5 +45,18 @@ app_server <- function( input, output, session) {
   
   # List the first level call Modules here
   callModule(mod_main_page_v2_server, "main_page_v2_ui_1", con = con, app_servr = app_servr)
+  
+  # information popups in data-tab
+  observeEvent(input$information_btn_input, {
+    app_servr$information_btn_input <- input$information_btn_input
+  })
+  observeEvent(input$information_btn_module, {
+    app_servr$information_btn_module <- input$information_btn_module
+  })
+  observeEvent(input$information_btn_enrichment, {
+    app_servr$information_btn_enrichment <- input$information_btn_enrichment
+  })
+  observeEvent(input$information_btn_ppi, {
+    app_servr$information_btn_ppi <- input$information_btn_ppi
+  })
 }
-
