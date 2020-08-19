@@ -31,7 +31,8 @@ mod_Modulediscoverer_ui <- function(id){
     
     tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer Module discoverer module", onclick="loading_modal_open(); stopWatch()"),
-    htmlOutput(ns("close_loading_modal"))  # Close modal with JS
+    htmlOutput(ns("close_loading_modal")),  # Close modal with JS
+    htmlOutput((ns("adv_settings")))
     )
   )
 }
@@ -104,6 +105,11 @@ mod_Modulediscoverer_server <- function(input, output, session, con, upload_ui_1
                  )
     
     if (class(module_object) == "try-error"){
+      output$adv_settings <- renderUI({
+        tags$script("if ($('.collapsible.btn.btn-primary.btn-block').eq(0).attr('aria-expanded') === 'false') {
+                            $('.collapsible.btn.btn-primary.btn-block').eq(0).click();
+                    }")
+      })
       if (grepl("Name", module_object)) {
         output$error_name_descrip <- renderUI({
           tags$p(class = "text-danger", tags$b("Error:"), module_object,

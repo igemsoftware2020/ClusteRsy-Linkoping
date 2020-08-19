@@ -44,7 +44,8 @@ mod_MODA_ui <- function(id){
     
     tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer MODA module", onclick="loading_modal_open(); stopWatch()"),
-    htmlOutput(ns("close_loading_modal"))  # Close modal with JS
+    htmlOutput(ns("close_loading_modal")),  # Close modal with JS
+    htmlOutput((ns("adv_settings")))
     )
   )
   
@@ -106,6 +107,11 @@ mod_MODA_server <- function(input, output, session, con, upload_ui_1, input_over
     )
     
     if (class(module_object) == "try-error"){
+      output$adv_settings <- renderUI({
+        tags$script("if ($('.collapsible.btn.btn-primary.btn-block').eq(0).attr('aria-expanded') === 'false') {
+                            $('.collapsible.btn.btn-primary.btn-block').eq(0).click();
+                    }")
+      })
       output$error_name_descrip <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), module_object,
                style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")

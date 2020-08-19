@@ -91,7 +91,8 @@ mod_gseGO_ui <- function(id){
     
     tags$div( style = "text-align:center",
               actionButton(ns("load_input"), label = "Enrich", onclick="loading_modal_open(); stopWatch();"),
-              htmlOutput(ns("close_loading_modal"))  # Close modal with JS 
+              htmlOutput(ns("close_loading_modal")),  # Close modal with JS 
+              htmlOutput((ns("adv_settings")))
     )
   )
 }
@@ -143,6 +144,11 @@ mod_gseGO_server <- function(input, output, session, con, Description1_ui_1, mod
                                                     by = input$by
     ))
     if (any(c(class(gse_object), class(gene_list)) == "try-error")){
+      output$adv_settings <- renderUI({
+        tags$script("if ($('.collapsible.btn.btn-primary.btn-block').eq(1).attr('aria-expanded') === 'false') {
+                            $('.collapsible.btn.btn-primary.btn-block').eq(1).click();
+                    }")
+      })
       output$error <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), gse_object,
                style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
