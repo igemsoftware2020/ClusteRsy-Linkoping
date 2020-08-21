@@ -10,7 +10,7 @@
 mod_dot_plot_ui <- function(id){
   ns <- NS(id)
   tagList(
-    plotly::plotlyOutput(ns("dot_plot"), height = '100vh', width = '100%') %>% shinycssloaders::withSpinner(color="#ffbd40", 
+    plotOutput(ns("dot_plot"), height = '100vh', width = '100%') %>% shinycssloaders::withSpinner(color="#ffbd40", 
                                                                                                   type = 4,
                                                                                                   size = 0.8)
   )
@@ -38,7 +38,7 @@ mod_dot_plot_server <- function(input, output, session, dot_plot_para_ui_1, sele
       }
     })
   
-    output$dot_plot <- plotly::renderPlotly({
+    output$dot_plot <- renderPlot({
       dotplot() #calling the reactive plot
     })
 }
