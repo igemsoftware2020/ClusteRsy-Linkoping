@@ -31,8 +31,11 @@ mod_module_overview_ui <- function(id){
              tags$br(),
              
              tags$div(`class`="col-sm-4", style = "text-align:right", id ="buttons_module_overview",
+                      downloadButton(ns("download_module_cytoscape"), "Cytoscape", onclick="loading_modal_open(); stopWatch();"),
                       downloadButton(ns("download_module"), "Download"),
-                      actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true")))),
+                      actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true")),
+                      htmlOutput(ns("close_loading_modal")) # Close modal with JS 
+                      )),
     uiOutput(ns("inspected_results")),
     uiOutput(ns("disable")),
     shinyjs::useShinyjs()
@@ -121,6 +124,26 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   }
   
   # Download function
+  output$download_module_cytoscape <- downloadHandler(
+    filename = function() {
+      paste0("module_genes_interaction.tsv")
+    },
+    content = function(file) {
+      module_genes <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[input$module_overview_rows_selected], con = con)$module_genes
+      PPI_network <- read.delim("./inst/app/www/PPI_network.txt")
+      module_genes_list <- c()
+      for(i in 1:length(module_genes)){
+        module_genes_list <- append(module_genes_list, grep(module_genes[i], PPI_network[,1]))
+      }
+      # Close loading modal
+      output$close_loading_modal <- renderUI({
+        tags$script("loading_modal_close(); reset();")
+      })
+      write.table(PPI_network[module_genes_list,], file=file, quote=FALSE, sep='\t', row.names = F)
+    }
+  )
+  
+  
   output$download_module <- downloadHandler(
     filename = function() {
       paste0("module_set_", Sys.Date(), ".rds", sep="")
@@ -204,8 +227,10 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
 
     if (length(selected_module_type) == 1) {
       shinyjs::enable("inspect")
+      shinyjs::enable("download_module_cytoscape")
     } else {
       shinyjs::disable("inspect")
+      shinyjs::disable("download_module_cytoscape")
     }
 
   })
