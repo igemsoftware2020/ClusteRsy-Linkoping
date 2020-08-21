@@ -30,12 +30,12 @@ set_background_genes.Mcode <- function(module, con) {
   unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
 }
 
-set_background_genes.correlation_clique <- function(module, con) {
+set_background_genes.Correlation_clique <- function(module, con) {
   ppi_name <- as.character(module$settings$ppi_network)
   unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
 }
 
-set_background_genes.diamond <- function(module, con) {
+set_background_genes.DIAMOnD <- function(module, con) {
   ppi_name <- as.character(module$settings$ppi_network)
   unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
 }

@@ -106,7 +106,7 @@ mod_disease_analysis_server <- function(input, output, session, con, Description
                           `data-toggle` = "modal",
                           `data-target` = "#descrip_enrich"),
               tags$div(`class` = "modal fade", `id` = "descrip_enrich", `role` = "dialog", `tabindex` = "-1", `aria-hidden` = "true", `style` = "display:none;",
-                       tags$div(`class` = "modal-dialog", style="top:25%",
+                       tags$div(`class` = "modal-dialog", style="top:20%",
                                 tags$div(`class` = "modal-content",
                                          tags$div(`class` = "modal-header",
                                                   tags$button("×", type = "button", class = "close", `data-dismiss` = "modal", `aria-hidden` = "true"),
