@@ -56,6 +56,14 @@ mod_Mcode_post_processing_server <- function(input, output, session, inspected_m
           title = selected_module_name$name,
           easyClose = TRUE,
           size = "l",
+          tags$h3("Two post-processing functions are available for MCODE, you can either change the module score or split the module into different submodules above the cut off treshold", style = "color:#2c3e50"),
+          selectInput(ns("post_process_choices"),
+                      label = "Pick a post-processing method",
+                      choices = c("Module Score", 
+                                  "Split Module")),
+          uiOutput(ns("selected_method")),
+          actionButton(ns("post_process_module_object"), 
+                       label = "Process module"),
           footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
           )
         ))
@@ -63,7 +71,30 @@ mod_Mcode_post_processing_server <- function(input, output, session, inspected_m
     })
   })
  
- 
+  output$selected_method <- renderUI({
+   if (input$post_process_choices == "Module Score") {
+     tagList(
+       tags$p("Select a module score"),
+       sliderInput(ns("module_score"),
+                   label = "Module Scure",
+                   min = 1,
+                   max = 50,
+                   value = 12)
+     )
+     
+   } else if (input$post_process_choices == "Split Module") {
+     tagList(
+       tags$p("Select a cut off for the treshold"),
+       sliderInput(ns("module_cutoff"),
+                   label = "Module cut off",
+                   min = 1,
+                   max = 10,
+                   value = 3)
+     )
+     
+   }
+  
+ })
  
   
   module_genes <- as.matrix(inspected_module$module_genes)
@@ -148,7 +179,46 @@ mod_Mcode_post_processing_server <- function(input, output, session, inspected_m
     req(post_process_button)
     post_process_module_object <- post_process_module_object()
     Mcode_post_process$post_process_module_object <- post_process_module_object
+    id <- showNotification("Saving module objects to database", duration = NULL, closeButton = FALSE, type = "warning")
     
+    if (input$post_process_choices == "Module Score") {
+      
+      mcode_module_score <- MODifieR:::mcode_adjust_score(module_cutoff = input$module_score,
+                                                         inspected_module)
+      
+      module_name <- paste(selected_module_name$name, 
+                           "adjusted_module_score",
+                           Sys.time(), 
+                           sep = "_") %>%  gsub(" ", "_", .)
+      
+      try(MODifieRDB::MODifieR_object_to_db(mcode_module_score,
+                                            object_name =  module_name,
+                                            con = con))
+      
+    } else if (input$post_process_choices == "Split Module") {
+      
+      mcode_split_modules <<- MODifieR:::mcode_split_modules(module_cutoff = input$module_cutoff,
+                                                           inspected_module)
+      
+      for (i in 1:length(mcode_split_modules)) {
+        
+        module_name <- paste(selected_module_name$name, 
+                             "splitted_module",
+                             i,
+                             Sys.time(), sep = "_") %>%  gsub(" ", "_", .)
+        
+        mcode_splitted_modules <- mcode_split_modules[[i]]
+        
+        try(MODifieRDB::MODifieR_object_to_db(mcode_splitted_modules,
+                                             object_name =  module_name,
+                                             con = con))
+        
+        
+      }
+    }
+    
+    on.exit(removeModal())
+    on.exit(removeNotification(id), add = TRUE)
   })
   
   return(Mcode_post_process)
