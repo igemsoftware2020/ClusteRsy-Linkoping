@@ -62,7 +62,7 @@ mod_DIAMoND_post_processing_server <- function(input, output, session, inspected
           title = selected_module_name$name,
           easyClose = TRUE,
           size = "l",
-          tags$h3("You can choose between adding seed genes or removing seed genes"),
+          tags$h3("You can choose between adding seed genes or removing seed genes", style = "color:#2c3e50"),
           selectInput(ns("post_processing_choises"),
                       label = "Select add seed genes or remove seed genes",
                       choices = c("Add seed genes",
