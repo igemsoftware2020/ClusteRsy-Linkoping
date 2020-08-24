@@ -56,7 +56,7 @@ mod_Mcode_post_processing_server <- function(input, output, session, inspected_m
           title = selected_module_name$name,
           easyClose = TRUE,
           size = "l",
-          tags$h3("Two post-processing functions are available for MCODE, you can either change the module score or split the module into different submodules above the cut off treshold", style = "color:#2c3e50"),
+          tags$h3("Two post-processing functions are available for MCODE, you can either change the module score or split the module into different submodules above the cut off threshold", style = "color:#2c3e50"),
           selectInput(ns("post_process_choices"),
                       label = "Pick a post-processing method",
                       choices = c("Module Score", 
@@ -84,7 +84,7 @@ mod_Mcode_post_processing_server <- function(input, output, session, inspected_m
      
    } else if (input$post_process_choices == "Split Module") {
      tagList(
-       tags$p("Select a cut off for the treshold"),
+       tags$p("Select a cut off for the threshold"),
        sliderInput(ns("module_cutoff"),
                    label = "Module cut off",
                    min = 1,
@@ -197,7 +197,7 @@ mod_Mcode_post_processing_server <- function(input, output, session, inspected_m
       
     } else if (input$post_process_choices == "Split Module") {
       
-      mcode_split_modules <<- MODifieR:::mcode_split_modules(module_cutoff = input$module_cutoff,
+      mcode_split_modules <- MODifieR:::mcode_split_modules(module_cutoff = input$module_cutoff,
                                                            inspected_module)
       
       for (i in 1:length(mcode_split_modules)) {
