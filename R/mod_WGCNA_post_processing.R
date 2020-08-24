@@ -58,6 +58,20 @@ mod_WGCNA_post_processing_server <- function(input, output, session, inspected_m
           title = selected_module_name$name,
           easyClose = TRUE,
           size = "l",
+          tags$h3("WGCNA offers four different post-processing functions.", style = "color:#2c3e50"),
+          tags$p("Adjust significance allows to adjust the p-value for the inclusion of co-expression modules into the final disease module. The boolean parameter unadjusted denotes if the adjusted (FDR correction) or unadjusted p-value is to be used", style = "color:#2c3e50"),
+          tags$p("The Get Modules Genes by Sign function returns a module object that either consists of co-expression colors positively or negatively correlated to the trait.  To get only colors positively correlated to trait in the resulting module, set the Mode parameter to Positive and to get only negatively correlated colors set Mode to Negative.", style = "color:#2c3e50"),
+          tags$p("In the wgcna algorithm, co-expression modules are denoted by color. The final disease module can be composed of multiple colors. The function Split Module by color allows to split each of these colors into separate MODifieR module objects. Only colors significantly associated to the trait will be used.", style = "color:#2c3e50"),
+          tags$p("The last method post-processing function Module Size allows for changing the module size", style = "color:#2c3e50"),
+          selectInput(ns("post_process_choices"),
+                      label = "Pick a post-processing method",
+                      choices = c("Adjust significance", 
+                                  "Get Modules Genes by Sign",
+                                  "Split Module by color",
+                                  "Module Size")),
+          uiOutput(ns("selected_method")),
+          actionButton(ns("post_process_module_object"), 
+                       label = "Process module"),
           footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
           )
         ))
@@ -65,7 +79,42 @@ mod_WGCNA_post_processing_server <- function(input, output, session, inspected_m
     })
   })
   
-  
+  output$selected_method <- renderUI({
+    if (input$post_process_choices == "Adjust significance") {
+      tagList(
+        sliderInput(ns("pval_cutoff"),
+                    label = "P-value cut off",
+                    max = 1,
+                    min = 0.0001,
+                    value = 0.005),
+        prettySwitch(ns("use_unadjusted"),
+                     label = "Adjusted p-value",
+                     value = FALSE,
+                     status = "warning",
+                     popup = "Default is set to false meaning that a unadjusted p-value will be used")
+      )
+    } else if (input$post_process_choices == "Get Modules Genes by Sign") {
+      tagList(
+        radioButtons(ns("mode"),
+                     label = "Select between positive and negative correlation",
+                     choiceNames = c("Positive", "Negative"),
+                     choiceValues = c("p", "n"))
+      )
+    } else if (input$post_process_choices == "Split Module by color") {
+      tagList(
+        tags$p("By pressing Process module the module will get splitted by color into submodules")
+      )
+    } else if (input$post_process_choices == "Module Size") {
+      tagList(
+        sliderInput(ns("size"),
+                    label = "Select the module size",
+                    min = 1,
+                    max = length(inspected_module$module_genes),
+                    value = 50)
+      )
+    }
+    
+  })
   
   
   module_genes <- as.matrix(inspected_module$module_genes)
@@ -168,6 +217,71 @@ mod_WGCNA_post_processing_server <- function(input, output, session, inspected_m
     req(post_process_button)
     post_process_module_object <- post_process_module_object()
     WGCNA_post_process$post_process_module_object <- post_process_module_object
+    id <- showNotification("Saving module objects to database", duration = NULL, closeButton = FALSE, type = "warning")
+    
+    if (input$post_process_choices == "Adjust significance") {
+      
+      wgcna_adjust_significance <- MODifieR::wgcna_adjust_significance(pval_cutoff = input$pval_cutoff,
+                                                                       wgcna_module = inspected_module,
+                                                                       use_unadjusted = input$use_unadjusted)
+      
+      module_name <- module_name <- paste(selected_module_name$name, 
+                                          "adjusted_significance",
+                                          Sys.time(), sep = "_") %>%  gsub(" ", "_", .)
+      
+      try(MODifieRDB::MODifieR_object_to_db(wgcna_adjust_significance,
+                                            object_name = module_name,
+                                            con = con))
+      
+    } else if (input$post_process_choices == "Get Modules Genes by Sign") {
+      
+      wgcna_get_module_genes_by_sign <- MODifieR::wgcna_get_module_genes_by_sign(wgcna_module = inspected_module,
+                                                                                  mode = input$mode)
+      
+      module_name <- module_name <- paste(selected_module_name$name, 
+                                          "module_genes_by_sign",
+                                          input$mode,
+                                          Sys.time(), sep = "_") %>%  gsub(" ", "_", .)
+      
+      try(MODifieRDB::MODifieR_object_to_db(wgcna_get_module_genes_by_sign,
+                                            object_name = module_name,
+                                            con = con))
+      
+    } else if (input$post_process_choices == "Split Module by color") {
+      
+      wgcna_split_module_by_color <- MODifieR::wgcna_split_module_by_color(inspected_module)
+      
+      for (i in 1:length(wgcna_split_module_by_color)) {
+        
+        module_name <- paste(selected_module_name$name, 
+                             "splitted_module_by_color",
+                             i,
+                             Sys.time(), sep = "_") %>%  gsub(" ", "_", .)
+        
+        wgcna_split_module_by_color_modules <- wgcna_split_module_by_color[[i]]
+
+        try(MODifieRDB::MODifieR_object_to_db(wgcna_split_module_by_color_modules,
+                                              object_name =  module_name,
+                                              con = con))
+      }
+      
+    } else if (input$post_process_choices == "Module Size") {
+      
+      wgcna_set_module_size <- MODifieR::wgcna_set_module_size(size = input$size,
+                                                               inspected_module)
+      
+      module_name <- paste(selected_module_name$name, 
+                           "adjusted_module_size",
+                           Sys.time(), sep = "_") %>%  gsub(" ", "_", .)
+      
+      try(MODifieRDB::MODifieR_object_to_db(wgcna_set_module_size,
+                                            object_name =  module_name,
+                                            con = con))
+      
+    }
+    
+    on.exit(removeModal())
+    on.exit(removeNotification(id), add = TRUE)
   })
   
   return(WGCNA_post_process)
