@@ -23,9 +23,6 @@ mod_module_overview_ui <- function(id){
              uiOutput(ns("module_name_chooser")),
              tags$br()),
              tags$div(
-             actionButton(ns("inspect"), label = "Inspect the module object")),
-             tags$br(),
-             tags$div(
              uiOutput(ns("post_process_ui")))
              ),
              tags$br(),
@@ -38,6 +35,7 @@ mod_module_overview_ui <- function(id){
                       )),
     uiOutput(ns("inspected_results")),
     uiOutput(ns("disable")),
+    uiOutput(ns("DT_tooltip")),
     shinyjs::useShinyjs()
   ))
 }
@@ -45,7 +43,7 @@ mod_module_overview_ui <- function(id){
 #' module_overview Server Function
 #'
 #' @noRd 
-mod_module_overview_server <- function(input, output, session, con, Columns_ui_1){
+mod_module_overview_server <- function(input, output, session, con, Columns_ui_1, app_servr){
   ns <- session$ns
   module_overview_module <- reactiveValues()
   selected_module_name <- reactiveValues()
@@ -91,21 +89,41 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     module_objects <- MODifieRDB::get_available_module_objects(con)
     output$module_overview <- DT::renderDataTable(module_objects,
                                                   rownames = FALSE,
-                                                  selection = list(selected = c(1)))
+                                                  callback = DT::JS('
+                                                            table.on("dblclick.dt","tr", function() {
+                                                              var data=table.row(this).data();
+                                                              dbclick++;
+                                                              Shiny.setInputValue("input_name", data[0]);
+                                                              Shiny.setInputValue("input_dbclick", dbclick);
+                                                             });'))
   })
   
   module_objects <- MODifieRDB::get_available_module_objects(con)
   # Render DT
   output$module_overview <- DT::renderDataTable(module_objects,
                                                 rownames = FALSE,
-                                                selection = list(selected = c(1)))
+                                                callback = DT::JS('
+                                                            table.on("dblclick.dt","tr", function() {
+                                                              var data=table.row(this).data();
+                                                              dbclick++;
+                                                              Shiny.setInputValue("input_name", data[0]);
+                                                              Shiny.setInputValue("input_dbclick", dbclick);
+                                                             });Shiny.setInputValue("DT_tooltip", "DT_tooltip");
+                                                                 '))
+  
   
   # Refresh DT
   observeEvent(Columns_ui_1$module_name, {
     module_objects <- MODifieRDB::get_available_module_objects(con)
     output$module_overview <- DT::renderDataTable(module_objects,
                                                   rownames = FALSE,
-                                                  selection = list(selected = c(1)))
+                                                  callback = DT::JS('
+                                                            table.on("dblclick.dt","tr", function() {
+                                                              var data=table.row(this).data();
+                                                              dbclick++;
+                                                              Shiny.setInputValue("input_name", data[0]);
+                                                              Shiny.setInputValue("input_dbclick", dbclick);
+                                                             });'))
   })
   
   # Choose multiple options
@@ -178,7 +196,13 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     module_objects <- MODifieRDB::get_available_module_objects(con)
     output$module_overview <- DT::renderDataTable(module_objects,
                                                   rownames = FALSE,
-                                                  selection = list(selected = c(1)))
+                                                  callback = DT::JS('
+                                                            table.on("dblclick.dt","tr", function() {
+                                                              var data=table.row(this).data();
+                                                              dbclick++;
+                                                              Shiny.setInputValue("input_name", data[0]);
+                                                              Shiny.setInputValue("input_dbclick", dbclick);
+                                                             });'))
     
     # Delete
     selected <- input$module_overview_rows_selected
@@ -192,7 +216,13 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     module_objects <- MODifieRDB::get_available_module_objects(con)
     output$module_overview <- DT::renderDataTable(module_objects,
                                                   rownames = FALSE,
-                                                  selection = list(selected = c(1)))
+                                                  callback = DT::JS('
+                                                            table.on("dblclick.dt","tr", function() {
+                                                              var data=table.row(this).data();
+                                                              dbclick++;
+                                                              Shiny.setInputValue("input_name", data[0]);
+                                                              Shiny.setInputValue("input_dbclick", dbclick);
+                                                             });'))
     # Send refresh
     module_overview_module$delete <- input$delete
   })
@@ -205,10 +235,44 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     
   })
   
+  #Listening the the module_type that is being selected in the DT.
+  #This observeEvent use module_objects due to observers for new input data above.
+  observeEvent(module_objects$module_type[input$module_overview_rows_selected],{
+    selected_module_type <- module_objects$module_type[input$module_overview_rows_selected]
+    if (length(selected_module_type) == 1) {
+      shinyjs::enable("download_module_cytoscape")
+      shinyjs::enable("download_module")
+      shinyjs::enable("delete")
+      req(module_objects$module_type[input$module_overview_rows_selected] %in% c("Correlation_clique", "DIAMOnD", "DiffCoEx", "Mcode", "MODA", "WGCNA"))
+      shinyjs::enable("post_process")
+    } else {
+      shinyjs::disable("download_module_cytoscape")
+      shinyjs::disable("post_process")
+      shinyjs::disable("download_module")
+      shinyjs::disable("delete")
+    }
+    
+  })
+  
   # Inspect current module
   
   inspected_result_list <- reactiveValues()
   module_objects_inspected <- MODifieRDB::get_available_module_objects(con) #This value is needed in order to retrieve the actual contet that is being displayed in the DT
+  post_process_button <- NULL
+  inspect_button <- NULL
+  
+  # Observer when DT is loaded
+  observeEvent(app_servr$DT_tooltip, {
+    output$DT_tooltip <- renderUI({
+      tags$script('
+                  $("#main_page_v2_ui_1-module_overview_ui_1-module_overview").find("tr").eq(1).attr("id", "DT_tooltip");
+                  Tipped.create("#DT_tooltip",
+                  "Double-click me to inspect the object!",
+                  {shadow: false});
+                  Tipped.show("#DT_tooltip");
+                  ')
+    })
+  })
   
   #Refresh
   observeEvent(inspected_result_list$list$server_output$post_process_module_object, { 
@@ -217,33 +281,29 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     
     output$module_overview <- DT::renderDataTable(module_objects_inspected,
                                                   rownames = FALSE,
-                                                  selection = list(selected = c(1)))
-  })
-  
-  #Listening the the module_type that is being selected in the DT.
-  #This observeEvent use module_objects due to observers for new input data above.
-  observeEvent(module_objects$module_type[input$module_overview_rows_selected],{
-    selected_module_type <- module_objects$module_type[input$module_overview_rows_selected]
-
-    if (length(selected_module_type) == 1) {
-      shinyjs::enable("inspect")
-      shinyjs::enable("download_module_cytoscape")
-    } else {
-      shinyjs::disable("inspect")
-      shinyjs::disable("download_module_cytoscape")
-    }
-
+                                                  selection = list(selected = c(1)),
+                                                  callback = DT::JS('
+                                                            table.on("dblclick.dt","tr", function() {
+                                                              var data=table.row(this).data();
+                                                              dbclick++;
+                                                              Shiny.setInputValue("input_name", data[0]);
+                                                              Shiny.setInputValue("input_dbclick", dbclick);
+                                                             });'))
   })
   
   
-  observeEvent(input$inspect, {
+  observeEvent(app_servr$input_dbclick, {
     post_process_button <- NULL
     inspect_button <- 1
     
+    if (length(module_objects$module_type[input$module_overview_rows_selected]) == 1 ) {
     module_objects_inspected <- MODifieRDB::get_available_module_objects(con) 
     selected <- input$module_overview_rows_selected
     inspected_module <- MODifieRDB::MODifieR_module_from_db(module_objects_inspected$module_name[selected], con = con)
     selected_module_name$name <- module_objects_inspected$module_name[selected]
+    } else {
+      return(NULL)
+    }
     
     if (is.null(inspected_module)) {
       showNotification("No module objects in the database", duration = 10, closeButton = TRUE, type = "warning") 
@@ -260,22 +320,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   
 #Post processing of current module
   
-  #Listening the the module_type that is being selected in the DT.
-  #This observeEvent use module_objects due to observers for new input data above.
-  observeEvent(module_objects$module_type[input$module_overview_rows_selected],{
-    
-    selected_module_type <- module_objects$module_type[input$module_overview_rows_selected]
-    
-      if (length(selected_module_type) == 1) {
-        req(selected_module_type %in% c("Correlation_clique", "DIAMOnD", "DiffCoEx", "Mcode", "MODA", "WGCNA"))
-          shinyjs::enable("post_process")
-       } else {
-         shinyjs::disable("post_process")   
-       }
 
-  })
-  
-  
   observeEvent(input$post_process, {
     inspect_button <- NULL
     post_process_button <- 1
