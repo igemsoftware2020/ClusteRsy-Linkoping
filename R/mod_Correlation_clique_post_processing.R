@@ -187,8 +187,7 @@ mod_Correlation_clique_post_processing_server <- function(input, output, session
                                                                        inspected_module)
       module_name <- paste(selected_module_name$name, 
                            "adjusted_frequency_cutoff",
-                           paste0(sample(letters, size = 10), 
-                                  collapse = ""), 
+                           Sys.time(), 
                            sep = "_") %>%  gsub(" ", "_", .)
        
       try(MODifieRDB::MODifieR_object_to_db(correlation_adjust_cutoff,

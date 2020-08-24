@@ -183,7 +183,10 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
         id <- showNotification("Saving module objects to database", duration = NULL, closeButton = FALSE, type = "warning")
       }
       
-      module_name <- paste(selected_module_name$name, names(split_module[i]), Sys.time(), sep = "_")
+      module_name <- paste(selected_module_name$name, 
+                           names(split_module[i]), 
+                           Sys.time(), sep = "_") %>%  gsub(" ", "_", .)
+      
       split_module_input <- split_module[[i]]
 
       try(MODifieRDB::MODifieR_object_to_db(split_module_input,
