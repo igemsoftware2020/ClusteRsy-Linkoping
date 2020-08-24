@@ -20,6 +20,8 @@ mod_module_discoverer_post_processing_ui <- function(id){
 mod_module_discoverer_post_processing_server <- function(input, output, session, inspected_module, selected_module_name, con){
   ns <- session$ns
   
+  module_discoverer_post_process <- reactiveValues()
+  
   output$tables <- renderUI({
     tagList(
       showModal(modalDialog(
@@ -85,6 +87,8 @@ mod_module_discoverer_post_processing_server <- function(input, output, session,
                                                           text = 'Download'
                                                         ))
                                                ))
+  
+  return(module_discoverer_post_process)
  
 }
     

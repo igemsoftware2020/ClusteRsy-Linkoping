@@ -20,6 +20,8 @@ mod_CliqueSum_post_processing_ui <- function(id){
 mod_CliqueSum_post_processing_server <- function(input, output, session, inspected_module, selected_module_name, con){
   ns <- session$ns
   
+  CliqueSum_post_process <- reactiveValues()
+  
   output$tables <- renderUI({
     tagList(
       showModal(modalDialog(
@@ -39,6 +41,7 @@ mod_CliqueSum_post_processing_server <- function(input, output, session, inspect
       )
     )
   })
+  
   
   module_genes <- as.matrix(inspected_module$module_genes)
   colnames(module_genes) <- list("Module genes")
@@ -84,6 +87,9 @@ mod_CliqueSum_post_processing_server <- function(input, output, session, inspect
                                                           text = 'Download'
                                                         ))
                                                ))
+  
+  return(CliqueSum_post_process)
+  
 }
     
 ## To be copied in the UI
