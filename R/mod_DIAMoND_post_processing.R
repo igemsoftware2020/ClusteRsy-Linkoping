@@ -62,6 +62,13 @@ mod_DIAMoND_post_processing_server <- function(input, output, session, inspected
           title = selected_module_name$name,
           easyClose = TRUE,
           size = "l",
+          tags$h3("You can choose between adding seed genes or removing seed genes"),
+          selectInput(ns("post_processing_choises"),
+                      label = "Select add seed genes or remove seed genes",
+                      choices = c("Add seed genes",
+                                  "Remove seed genes")),
+          actionButton(ns("post_process_module_object"), 
+                       label = "Process module"),
           footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
           )
         ))
@@ -192,6 +199,38 @@ mod_DIAMoND_post_processing_server <- function(input, output, session, inspected
     req(post_process_button)
     post_process_module_object <- post_process_module_object()
     DIAMoND_post_process$post_process_module_object <- post_process_module_object
+    id <- showNotification("Saving module objects to database", duration = NULL, closeButton = FALSE, type = "warning")
+    
+    if (input$post_processing_choises == "Add seed genes") {
+      
+      diamond_add_seed_genes <- MODifieR::diamond_add_seed_genes(inspected_module)
+      
+      module_name <- paste(selected_module_name$name, 
+                           "added_seed_genes",
+                           Sys.time(), 
+                           sep = "_") %>%  gsub(" ", "_", .)
+      
+      try(MODifieRDB::MODifieR_object_to_db(diamond_add_seed_genes,
+                                            object_name =  module_name,
+                                            con = con))
+      
+    } else if (input$post_processing_choises == "Remove seed genes") {
+      
+      diamond_remove_seed_genes <- MODifieR::diamond_remove_seed_genes(inspected_module)
+      
+      module_name <- paste(selected_module_name$name, 
+                           "removed_seed_genes",
+                           Sys.time(), 
+                           sep = "_") %>%  gsub(" ", "_", .)
+      
+      try(MODifieRDB::MODifieR_object_to_db(diamond_add_seed_genes,
+                                            object_name =  module_name,
+                                            con = con))
+      
+    }
+    
+    on.exit(removeModal())
+    on.exit(removeNotification(id), add = TRUE)
   })
   
   return(DIAMoND_post_process)
