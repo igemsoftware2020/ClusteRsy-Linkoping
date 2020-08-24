@@ -55,6 +55,14 @@ mod_MODA_post_processing_server <- function(input, output, session, inspected_mo
           title = selected_module_name$name,
           easyClose = TRUE,
           size = "l",
+          tags$h3("Change the threshold for specific Theta", style = "color:#2c3e50"), 
+          sliderInput(ns("specific_theta"),
+                      label = "Specific Theta",
+                      min = 0.001,
+                      max = 1,
+                      value = 0.05),
+          actionButton(ns("post_process_module_object"), 
+                       label = "Process module"),
           footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
           )
         ))
@@ -116,6 +124,21 @@ mod_MODA_post_processing_server <- function(input, output, session, inspected_mo
     req(post_process_button)
     post_process_module_object <- post_process_module_object()
     MODA_post_process$post_process_module_object <- post_process_module_object
+    id <- showNotification("Saving module objects to database", duration = NULL, closeButton = FALSE, type = "warning")
+    
+    module_name <- paste(selected_module_name$name, 
+                         "adjusted_specific_theta",
+                         Sys.time(), sep = "_") %>%  gsub(" ", "_", .)
+    
+    moda_changed_specific_threshold <- MODifieR::moda_change_specific_threshold(inspected_module,
+                                                                                specificTheta = input$specific_theta)
+    
+    try(MODifieRDB::MODifieR_object_to_db(moda_changed_specific_threshold,
+                                          object_name = module_name,
+                                          con = con))
+    
+    on.exit(removeModal())
+    on.exit(removeNotification(id), add = TRUE)
   })
   
   return(MODA_post_process)
