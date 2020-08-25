@@ -265,7 +265,6 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     
     output$module_overview <- DT::renderDataTable(module_objects_inspected,
                                                   rownames = FALSE,
-                                                  selection = list(selected = c(1)),
                                                   callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -282,11 +281,15 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
 
     selected <- input$module_overview_rows_selected
     inspected_module <- MODifieRDB::MODifieR_module_from_db(app_servr$module_name, con = con)
+    if (is.null(inspected_module$module_genes)) {
+      showNotification("This module doesn't contain any genes", duration = 10, closeButton = TRUE, type = "warning")
+    } else {
     selected_module_name$name <- app_servr$module_name
     inspected_result_list$list <- inspect_module(inspected_module, selected_module_name, inspect_button, post_process_button, ns, con)
     output$inspected_results <- renderUI({
       inspected_result_list$list$ui_output
     })
+  }
   })
   
 #Post processing of current module
