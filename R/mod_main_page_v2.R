@@ -112,10 +112,14 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
   observeEvent(input$tabs, {
     output$hidehints1 <- renderUI({
       if (input$tabs == "Input objects") {
-        NULL
+        tags$script("Tipped.hide('#DT_tooltip1');")
+      }
+      if (input$tabs == "Module objects") {
+        tags$script("Tipped.hide('#DT_tooltip');")
       }
       else {
-        tags$script("Tipped.hide('#DT_tooltip');")
+        tags$script("Tipped.hide('#DT_tooltip');
+                    Tipped.hide('#DT_tooltip1');")
       }
     })
   })

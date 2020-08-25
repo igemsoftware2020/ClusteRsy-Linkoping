@@ -38,9 +38,20 @@ app_server <- function( input, output, session) {
     app_servr$input_name <- input$input_name
   })
   
+  # DT double click for module
+  observeEvent(input$module_dbclick, {
+    app_servr$module_dbclick <- input$module_dbclick
+    app_servr$module_name <- input$module_name
+  })
+  
   # DT tooltip
   observeEvent(input$DT_tooltip, {
     app_servr$DT_tooltip <- input$DT_tooltip
+  })
+  
+  # DT tooltip1
+  observeEvent(input$DT_tooltip1, {
+    app_servr$DT_tooltip1 <- input$DT_tooltip1
   })
   
   # List the first level call Modules here
