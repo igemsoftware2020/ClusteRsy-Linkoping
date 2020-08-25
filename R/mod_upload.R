@@ -12,12 +12,12 @@ mod_upload_ui <- function(id){
     tagList(
       tags$div(`data-intro`="Begin by uploading an expression matrix here! Then you can create an input object further down.", `data-step`=1, id = "hide_matrix",
       fileInput(ns("expression_matrix"), label = "Upload an expression matrix", accept = c("text/csv", "text/plain", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/tab-separated-values", ".rds"),
-                popup = paste("Let's go to the ", shinyLink(label = "Database", target = "#section9")))),
+                popup = paste("Here you can upload an expression matrix, read more about the format of the input in our ", shinyLink(label = "User guide", target = "section1")))),
       uiOutput(ns("sample_chooser")),
       tags$div(id = "hide_rds",
                `data-hint`="If you alreday have formated input data you can upload it here!",
                `data-hintPosition`="top-right",
-      fileInput(ns("input_object_rds"), label = "Upload an input object", accept = ".rds", popup = paste("Let's go to the ", shinyLink(label = "Input Data", target = "#top")))),
+      fileInput(ns("input_object_rds"), label = "Upload an input object", accept = ".rds", popup = paste("If you have previously downloaded input data you can upload it to the database from here. Learn more about this in our", shinyLink(label = "User guide", target = "#section9")))),
       uiOutput(ns("input_name_chooser")),
       htmlOutput(ns("error_name_js")),
 
