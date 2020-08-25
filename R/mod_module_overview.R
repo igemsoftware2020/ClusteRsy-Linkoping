@@ -17,17 +17,12 @@ mod_module_overview_ui <- function(id){
             tags$br(),
     DT::dataTableOutput(ns("module_overview")),
     tags$div(`class`="row",
-             tags$div(`class`="col-sm-8", style = "color:black",
-             fileInput(ns("module_object"), label = "Upload a module object", accept =  ".rds"),
-             tags$div(
-             uiOutput(ns("module_name_chooser")),
-             tags$br()),
-             tags$div(
-             uiOutput(ns("post_process_ui")))
-             ),
+             tags$div(`class`="col-sm-4", style = "color:black",
+             fileInput(ns("module_object"), label = "Upload a module object", accept =  ".rds")),
+             tags$div(uiOutput(ns("module_name_chooser"))),
              tags$br(),
-             
-             tags$div(`class`="col-sm-4", style = "text-align:right", id ="buttons_module_overview",
+             tags$div(`class`="col-sm-8", style = "text-align:right", id ="buttons_module_overview",
+                      actionButton(ns("post_process"), label = "Post-process"),
                       downloadButton(ns("download_module_cytoscape"), "Cytoscape", onclick="loading_modal_open(); stopWatch();"),
                       downloadButton(ns("download_module"), "Download"),
                       actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true")),
@@ -93,8 +88,8 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
                                                               dbclick++;
-                                                              Shiny.setInputValue("input_name", data[0]);
-                                                              Shiny.setInputValue("input_dbclick", dbclick);
+                                                              Shiny.setInputValue("module_name", data[0]);
+                                                              Shiny.setInputValue("module_dbclick", dbclick);
                                                              });'))
   })
   
@@ -106,9 +101,10 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
                                                               dbclick++;
-                                                              Shiny.setInputValue("input_name", data[0]);
-                                                              Shiny.setInputValue("input_dbclick", dbclick);
-                                                             });Shiny.setInputValue("DT_tooltip", "DT_tooltip");
+                                                              Shiny.setInputValue("module_name", data[0]);
+                                                              Shiny.setInputValue("module_dbclick", dbclick);
+                                                             });
+                                                             Shiny.setInputValue("DT_tooltip1", "DT_tooltip1");
                                                                  '))
   
   
@@ -121,8 +117,8 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
                                                               dbclick++;
-                                                              Shiny.setInputValue("input_name", data[0]);
-                                                              Shiny.setInputValue("input_dbclick", dbclick);
+                                                              Shiny.setInputValue("module_name", data[0]);
+                                                              Shiny.setInputValue("module_dbclick", dbclick);
                                                              });'))
   })
   
@@ -200,8 +196,8 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
                                                               dbclick++;
-                                                              Shiny.setInputValue("input_name", data[0]);
-                                                              Shiny.setInputValue("input_dbclick", dbclick);
+                                                              Shiny.setInputValue("module_name", data[0]);
+                                                              Shiny.setInputValue("module_dbclick", dbclick);
                                                              });'))
     
     # Delete
@@ -220,19 +216,11 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
                                                               dbclick++;
-                                                              Shiny.setInputValue("input_name", data[0]);
-                                                              Shiny.setInputValue("input_dbclick", dbclick);
+                                                              Shiny.setInputValue("module_name", data[0]);
+                                                              Shiny.setInputValue("module_dbclick", dbclick);
                                                              });'))
     # Send refresh
     module_overview_module$delete <- input$delete
-  })
-  
-  output$post_process_ui <- renderUI({
-    tagList(
-      actionButton(ns("post_process"),
-                   label = "Post-process"),
-    )
-    
   })
   
   #Listening the the module_type that is being selected in the DT.
@@ -258,14 +246,14 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   inspect_button <- NULL
   
   # Observer when DT is loaded
-  observeEvent(app_servr$DT_tooltip, {
+  observeEvent(app_servr$DT_tooltip1, {
     output$DT_tooltip <- renderUI({
       tags$script('
-                  $("#main_page_v2_ui_1-module_overview_ui_1-module_overview").find("tr").eq(1).attr("id", "DT_tooltip");
-                  Tipped.create("#DT_tooltip",
+                  $("#main_page_v2_ui_1-module_overview_ui_1-module_overview").find("tr").eq(1).attr("id", "DT_tooltip1");
+                  Tipped.create("#DT_tooltip1",
                   "Double-click me to inspect the object!",
                   {shadow: false});
-                  Tipped.show("#DT_tooltip");
+                  Tipped.show("#DT_tooltip1");
                   ')
     })
   })
@@ -282,36 +270,23 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
                                                               dbclick++;
-                                                              Shiny.setInputValue("input_name", data[0]);
-                                                              Shiny.setInputValue("input_dbclick", dbclick);
+                                                              Shiny.setInputValue("module_name", data[0]);
+                                                              Shiny.setInputValue("module_dbclick", dbclick);
                                                              });'))
   })
   
   
-  observeEvent(app_servr$input_dbclick, {
+  observeEvent(app_servr$module_dbclick, {
     post_process_button <- NULL
     inspect_button <- 1
-    
-    if (length(module_objects$module_type[input$module_overview_rows_selected]) == 1 ) {
-    module_objects_inspected <- MODifieRDB::get_available_module_objects(con) 
+
     selected <- input$module_overview_rows_selected
-    inspected_module <- MODifieRDB::MODifieR_module_from_db(module_objects_inspected$module_name[selected], con = con)
-    selected_module_name$name <- module_objects_inspected$module_name[selected]
-    } else {
-      return(NULL)
-    }
-    
-    if (is.null(inspected_module)) {
-      showNotification("No module objects in the database", duration = 10, closeButton = TRUE, type = "warning") 
-    } else {
-      inspected_result_list$list <- inspect_module(inspected_module, selected_module_name, inspect_button, post_process_button, ns, con)
-      
-      output$inspected_results <- renderUI({
-        inspected_result_list$list$ui_output
-      })
-  
-      
-    }
+    inspected_module <- MODifieRDB::MODifieR_module_from_db(app_servr$module_name, con = con)
+    selected_module_name$name <- app_servr$module_name
+    inspected_result_list$list <- inspect_module(inspected_module, selected_module_name, inspect_button, post_process_button, ns, con)
+    output$inspected_results <- renderUI({
+      inspected_result_list$list$ui_output
+    })
   })
   
 #Post processing of current module
