@@ -241,15 +241,11 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     selected_module_type <- module_objects$module_type[input$module_overview_rows_selected]
     if (length(selected_module_type) == 1) {
       shinyjs::enable("download_module_cytoscape")
-      shinyjs::enable("download_module")
-      shinyjs::enable("delete")
       req(module_objects$module_type[input$module_overview_rows_selected] %in% c("Correlation_clique", "DIAMOnD", "DiffCoEx", "Mcode", "MODA", "WGCNA"))
       shinyjs::enable("post_process")
     } else {
       shinyjs::disable("download_module_cytoscape")
       shinyjs::disable("post_process")
-      shinyjs::disable("download_module")
-      shinyjs::disable("delete")
     }
     
   })
