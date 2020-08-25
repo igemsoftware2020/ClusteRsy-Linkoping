@@ -140,7 +140,8 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   # Download function
   output$download_module_cytoscape <- downloadHandler(
     filename = function() {
-      paste0("module_genes_interaction.tsv")
+      
+      paste0(current_modules(), "_module_genes_interaction_", Sys.Date(), ".tsv")
     },
     content = function(file) {
       module_genes <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[input$module_overview_rows_selected], con = con)$module_genes
