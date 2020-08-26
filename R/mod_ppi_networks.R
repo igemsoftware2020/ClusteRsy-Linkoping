@@ -69,23 +69,26 @@ mod_ppi_networks_server <- function(input, output, session, con){
   
   ppi_networks <- as.data.frame(MODifieRDB::get_available_networks(con))
   
+  
   # Create Deafault network
-  if (is.data.frame(ppi_networks) && nrow(ppi_networks)==0) {
-    MODifieRDB::ppi_network_to_db(ppi_network = MODifieR::ppi_network,
-                                  ppi_name = "Default", 
+  if (any(ppi_networks == "Default_string_700")) {
+    ppi_networks <- as.data.frame(MODifieRDB::get_available_networks(con))
+    colnames(ppi_networks) <- "PPI networks"
+    output$ppi_overview <- DT::renderDataTable(ppi_networks,
+                                               rownames = FALSE,
+                                               selection = list(selected = c(1)))
+  } else {
+    PPI_network <- read.delim("./inst/app/www/PPI_network.txt")
+    MODifieRDB::ppi_network_to_db(PPI_network,
+                                  ppi_name = "Default_string_700",
                                   con = con)
     ppi_networks <- as.data.frame(MODifieRDB::get_available_networks(con))
     colnames(ppi_networks) <- "PPI networks"
     output$ppi_overview <- DT::renderDataTable(ppi_networks,
                                                rownames = FALSE,
                                                selection = list(selected = c(1)))
-  } else if (any(ppi_networks == "Default")) {
-    ppi_networks <- as.data.frame(MODifieRDB::get_available_networks(con))
-    colnames(ppi_networks) <- "PPI networks"
-    output$ppi_overview <- DT::renderDataTable(ppi_networks,
-                                               rownames = FALSE,
-                                               selection = list(selected = c(1)))
   }
+  
   
   # Create Deafault Clique SLQ
   if (nrow(MODifieRDB::get_available_db_networks(con))==0 ) {
