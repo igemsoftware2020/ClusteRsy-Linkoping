@@ -25,7 +25,7 @@ mod_module_overview_ui <- function(id){
              tags$div(`class`="col-sm-8", style = "text-align:right", id ="buttons_module_overview",
                       downloadButton(ns("download_module_cytoscape"), label = "dumby", style = "visibility: hidden;"),
                       actionButton(ns("post_process"), label = "Post-process"),
-                      actionButton(ns("download_cytoscape_trigger"), label = "Cytoscape", icon = icon("download")), #This triggers the downloadButton below
+                      actionButton(ns("download_cytoscape_trigger"), label = "Cytoscape", icon = icon("download")), #This triggers the downloadButton download_module_cytoscape
                       downloadButton(ns("download_module"), "Download"),
                       actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true")),
                       htmlOutput(ns("close_loading_modal")) # Close modal with JS 
@@ -151,7 +151,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
 
     module_object <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[input$module_overview_rows_selected], con = con)
 
-    if (module_objects$module_type[input$module_overview_rows_selected] %in% c("Clique_Sum_permutation","Mcode", "Correlation_clique", "DIAMOnD", "module_discoverer")) {
+    if (module_objects$module_type[input$module_overview_rows_selected] %in% c("Mcode", "Correlation_clique", "DIAMOnD", "module_discoverer")) {
       shinyjs::runjs("loading_modal_open(); stopWatch();")
       ppi_name <- as.character(module_object$settings$ppi_network)
       ppi_network <- MODifieRDB::ppi_network_from_db(ppi_name = ppi_name, con = con)
@@ -161,6 +161,17 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
       
       shinyjs::runjs("document.getElementById('main_page_v2_ui_1-module_overview_ui_1-download_module_cytoscape').click();")
 
+    } else if (module_objects$module_type[input$module_overview_rows_selected] == "Clique_Sum_permutation") {
+      
+      shinyjs::runjs("loading_modal_open(); stopWatch();")
+      ppi_name <- MODifieRDB::match_db_loc_to_ppi(module_object$settings$db, con = con)
+      ppi_network <- MODifieRDB::ppi_network_from_db(ppi_name = ppi_name, con = con)
+      module_genes <- module_object$module_genes
+      
+      subset_module_genes(dplyr::filter(ppi_network, ppi_network[,1] %in% module_genes & ppi_network[,2] %in% module_genes))
+      
+      shinyjs::runjs("document.getElementById('main_page_v2_ui_1-module_overview_ui_1-download_module_cytoscape').click();")
+      
     } else {
       ppi_networks <- MODifieRDB::get_available_networks(con)
 
