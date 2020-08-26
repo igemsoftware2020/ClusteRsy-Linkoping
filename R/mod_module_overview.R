@@ -10,6 +10,7 @@
 mod_module_overview_ui <- function(id){
   ns <- NS(id)
   tagList(
+    shinyjs::useShinyjs(),
     tags$div(style= "margin-left: 10px; margin-right: 10px",
             tags$h1(style= "color: #2b3e50; ", "Module Objects"),
             actionLink(inputId = "information_btn_module", label = "Learn More"),
@@ -22,8 +23,9 @@ mod_module_overview_ui <- function(id){
              tags$div(uiOutput(ns("module_name_chooser"))),
              tags$br(),
              tags$div(`class`="col-sm-8", style = "text-align:right", id ="buttons_module_overview",
+                      downloadButton(ns("download_module_cytoscape"), label = "dumby", style = "visibility: hidden;"),
                       actionButton(ns("post_process"), label = "Post-process"),
-                      downloadButton(ns("download_module_cytoscape"), "Cytoscape", onclick="loading_modal_open(); stopWatch();"),
+                      actionButton(ns("download_cytoscape_trigger"), label = "Cytoscape", icon = icon("download")), #This triggers the downloadButton below
                       downloadButton(ns("download_module"), "Download"),
                       actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true")),
                       htmlOutput(ns("close_loading_modal")) # Close modal with JS 
@@ -31,7 +33,8 @@ mod_module_overview_ui <- function(id){
     uiOutput(ns("inspected_results")),
     uiOutput(ns("disable")),
     uiOutput(ns("DT_tooltip")),
-    shinyjs::useShinyjs()
+    uiOutput(ns("modal_ppi_network")),
+    
   ))
 }
 
@@ -137,28 +140,78 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     }
   }
   
+  
   # Download function
-  output$download_module_cytoscape <- downloadHandler(
-    filename = function() {
+  
+  subset_module_genes <- reactiveVal()
+  
+  #Prepare data for cytoscape download.
+  
+  observeEvent(input$download_cytoscape_trigger, {
+
+    module_object <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[input$module_overview_rows_selected], con = con)
+
+    if (module_objects$module_type[input$module_overview_rows_selected] %in% c("Clique_Sum_permutation","Mcode", "Correlation_clique", "DIAMOnD", "module_discoverer")) {
+      shinyjs::runjs("loading_modal_open(); stopWatch();")
+      ppi_name <- as.character(module_object$settings$ppi_network)
+      ppi_network <- MODifieRDB::ppi_network_from_db(ppi_name = ppi_name, con = con)
+      module_genes <- module_object$module_genes
       
+      subset_module_genes(dplyr::filter(ppi_network, ppi_network[,1] %in% module_genes & ppi_network[,2] %in% module_genes))
+      
+      shinyjs::runjs("document.getElementById('main_page_v2_ui_1-module_overview_ui_1-download_module_cytoscape').click();")
+
+    } else {
+      ppi_networks <- MODifieRDB::get_available_networks(con)
+
+      output$modal_ppi_network <- renderUI({
+        tagList(
+          showModal(modalDialog(
+            title = "Select a PPI Network",
+            easyClose = TRUE,
+            size = "l",
+            tags$p("This MODifieR object doesn't contain any PPI Network, please select one from the database"),
+            selectInput(ns("selected_ppi_network"),
+                        label = "Select a PPI network",
+                        choices = ppi_networks),
+            actionButton(ns("download_cytoscape_object"), label = "Download cytoscape object"),
+            footer = tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
+          ))
+        )
+      })
+
+      observeEvent(input$download_cytoscape_object, {
+
+        removeModal()
+        shinyjs::runjs("loading_modal_open(); stopWatch();")
+        
+        ppi_network <- MODifieRDB::ppi_network_from_db(input$selected_ppi_network, con = con)
+        module_genes <- module_object$module_genes
+        
+        subset_module_genes(dplyr::filter(ppi_network, ppi_network[,1] %in% module_genes & ppi_network[,2] %in% module_genes))
+        
+        shinyjs::runjs("document.getElementById('main_page_v2_ui_1-module_overview_ui_1-download_module_cytoscape').click();")
+
+        })
+
+    }
+
+  })
+  
+  #Download cytoscape object
+  output$download_module_cytoscape <- downloadHandler(
+
+    filename = function() {
       paste0(current_modules(), "_module_genes_interaction_", Sys.Date(), ".tsv")
     },
+
     content = function(file) {
-      module_genes <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[input$module_overview_rows_selected], con = con)$module_genes
-      PPI_network <- read.delim("./inst/app/www/PPI_network.txt")
-      module_genes_list <- c()
-      for(i in 1:length(module_genes)){
-        module_genes_list <- append(module_genes_list, grep(module_genes[i], PPI_network[,1]))
-      }
-      # Close loading modal
-      output$close_loading_modal <- renderUI({
-        tags$script("loading_modal_close(); reset();")
-      })
-      write.table(PPI_network[module_genes_list,], file=file, quote=FALSE, sep='\t', row.names = F)
+      shinyjs::runjs("loading_modal_close(); reset();")
+      write.table(subset_module_genes(), file=file, quote=FALSE, sep='\t', row.names = F)
     }
   )
   
-  
+  #Download module object
   output$download_module <- downloadHandler(
     filename = function() {
       paste0("module_set_", Sys.Date(), ".rds", sep="")
@@ -229,11 +282,11 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   observeEvent(module_objects$module_type[input$module_overview_rows_selected],{
     selected_module_type <- module_objects$module_type[input$module_overview_rows_selected]
     if (length(selected_module_type) == 1) {
-      shinyjs::enable("download_module_cytoscape")
+      shinyjs::enable("download_cytoscape_trigger")
       req(module_objects$module_type[input$module_overview_rows_selected] %in% c("Correlation_clique", "DIAMOnD", "DiffCoEx", "Mcode", "MODA", "WGCNA"))
       shinyjs::enable("post_process")
     } else {
-      shinyjs::disable("download_module_cytoscape")
+      shinyjs::disable("download_cytoscape_trigger")
       shinyjs::disable("post_process")
     }
     
