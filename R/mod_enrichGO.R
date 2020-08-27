@@ -12,6 +12,11 @@ mod_enrichGO_ui <- function(id){
   tagList(
     uiOutput(
       ns("module_input")),
+    
+    tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_enrich',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+    tags$br(),
+    tags$div(id = "advanced_enrich", class = "collapse",
+             tags$div(
     selectInput(
       ns("keytype"),
       label = "Select the type of gene input",
@@ -76,10 +81,12 @@ mod_enrichGO_ui <- function(id){
       status = "warning",
       popup = "Need to be switch on if all subontologies are chosen"
       ),
+             )),
     
     tags$div( style = "text-align:center",
               actionButton(ns("load_input"), label = "Enrich", onclick="loading_modal_open(); stopWatch();"),
-              htmlOutput(ns("close_loading_modal"))  # Close modal with JS 
+              htmlOutput(ns("close_loading_modal")),  # Close modal with JS 
+              htmlOutput((ns("adv_settings")))
     )
   )
 }
@@ -112,6 +119,7 @@ mod_enrichGO_server <- function(input, output, session, con, Description1_ui_1, 
     on.exit(removeNotification(id), add = TRUE)
     
     output$error <- renderUI({})
+    output$adv_settings <- renderUI({})
     
     module_genes <- try(get_module_genes(input$module_object, con = con))
     background_genes <- try(get_background_genes(input$module_object, con = con))
@@ -130,6 +138,11 @@ mod_enrichGO_server <- function(input, output, session, con, Description1_ui_1, 
                                                        pool = input$pool
     ))
     if (any(c(class(enrichment_object), class(background_genes), class(module_genes)) == "try-error")){
+      output$adv_settings <- renderUI({
+        tags$script("if ($('.collapsible.btn.btn-primary.btn-block').eq(1).attr('aria-expanded') === 'false') {
+                            $('.collapsible.btn.btn-primary.btn-block').eq(1).click();
+                    }")
+      })
       output$error <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), enrichment_object,
                style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")

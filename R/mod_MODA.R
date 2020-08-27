@@ -15,6 +15,11 @@ mod_MODA_ui <- function(id){
     textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods.", placeholder = "Module name")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
+    
+    tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_mod',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+    tags$br(),
+    tags$div(id = "advanced_mod", class = "collapse",
+             tags$div(
     radioButtons(
       ns("group_of_interest"),
       label = "Group of Interest",
@@ -35,10 +40,12 @@ mod_MODA_ui <- function(id){
     
     sliderInput(ns("specificTheta"), label = "Select specific theta", min = 0, max = 1, value = 0.5, popup = "The lowest value assumed that can still be considered a condition specific module."),
     sliderInput(ns("conservedTheta"), label = "Select conserved theta", min = 0, max = 1, value = 0.5, popup = "The highest value assumed that can still be considered a condition conserved module."),
+             )),
     
     tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer MODA module", onclick="loading_modal_open(); stopWatch()"),
-    htmlOutput(ns("close_loading_modal"))  # Close modal with JS
+    htmlOutput(ns("close_loading_modal")),  # Close modal with JS
+    htmlOutput((ns("adv_settings")))
     )
   )
   
@@ -90,6 +97,9 @@ mod_MODA_server <- function(input, output, session, con, upload_ui_1, input_over
   observeEvent(input$load_input,  {
     id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
+    
+    output$adv_settings <- renderUI({})
+    
     module_object <- try(MODifieRDB::moda_db(input_name = input$input_object, 
                                           group_of_interest = as.numeric(input$group_of_interest),
                                           cutmethod = input$cutmethod,
@@ -100,6 +110,11 @@ mod_MODA_server <- function(input, output, session, con, upload_ui_1, input_over
     )
     
     if (class(module_object) == "try-error"){
+      output$adv_settings <- renderUI({
+        tags$script("if ($('.collapsible.btn.btn-primary.btn-block').eq(0).attr('aria-expanded') === 'false') {
+                            $('.collapsible.btn.btn-primary.btn-block').eq(0).click();
+                    }")
+      })
       output$error_name_descrip <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), module_object,
                style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")

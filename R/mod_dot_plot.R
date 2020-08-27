@@ -23,15 +23,19 @@ mod_dot_plot_server <- function(input, output, session, dot_plot_para_ui_1, sele
   ns <- session$ns
  
     dotplot <- reactive({
-      
-    enrichment_object <- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
-      
-    p <- try(clusterProfiler::dotplot(enrichment_object,
-                                  x=dot_plot_para_ui_1$xaxis,
-                                  showCategory = dot_plot_para_ui_1$showcategory,
-                                  color = dot_plot_para_ui_1$color,
-                                  title = dot_plot_para_ui_1$title))
-     return(p)
+      enrichment_object <- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
+
+      p <- try(clusterProfiler::dotplot(object = enrichment_object,
+                                    x=dot_plot_para_ui_1$xaxis,
+                                    showCategory = dot_plot_para_ui_1$showcategory,
+                                    color = dot_plot_para_ui_1$color,
+                                    title = dot_plot_para_ui_1$title))
+      if (class(p)[1] == "try-error"){
+        NULL
+      }
+      else {
+        return(p) 
+      }
     })
   
     output$dot_plot <- renderPlot({

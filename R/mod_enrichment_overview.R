@@ -10,6 +10,11 @@
 mod_enrichment_overview_ui <- function(id){
   ns <- NS(id)
   tagList(
+    tags$div(style= "margin-left: 10px; margin-right: 10px",
+             tags$h1(style= "color: #2b3e50; ", "Enrichment Objects"),
+             actionLink(inputId = "information_btn_enrichment", label = "Learn More"),
+             tags$br(),
+             tags$br(),
     DT::dataTableOutput(ns("enrichment_overview")),
     tags$div(`class`="row",
              tags$div(`class`="col-sm-10", style = "color:black",
@@ -19,7 +24,7 @@ mod_enrichment_overview_ui <- function(id){
              tags$div(`class`="col-sm-2", style = "text-align:right", id ="buttons_enrichment_overview",
                       downloadButton(ns("download_enrichment"), "Download"))),
     uiOutput(ns("disable"))
-  )
+  ))
 }
 
 #' enrichment_overview Server Function

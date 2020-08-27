@@ -14,6 +14,8 @@ mod_enrichment_map_para_ui <- function(id){
     tags$h3(class = "text-center",
             "Parameters"),
    #Enrichment_map 
+   textInput(ns("title"),
+             label = "Title"),
     selectInput(ns("color"),
                 label = "Color",
                 choices = c("pvalue", "p.adjust", "qvalue")),
@@ -26,8 +28,8 @@ mod_enrichment_map_para_ui <- function(id){
                 label = "Layout",
                 choices = c("kk",
                             "nicely")),
-   textInput(ns("title"),
-             label = "Title")
+   tags$div(style = "text-align:center",
+            downloadButton(ns("download_graph"), "PDF"))
               
   )
   
@@ -36,7 +38,7 @@ mod_enrichment_map_para_ui <- function(id){
 #' enrichment_map_para Server Function
 #'
 #' @noRd 
-mod_enrichment_map_para_server <- function(input, output, session){
+mod_enrichment_map_para_server <- function(input, output, session, selected, con){
   ns <- session$ns
   enrichment_map_para_module <- reactiveValues()
   observe({
@@ -45,6 +47,22 @@ mod_enrichment_map_para_server <- function(input, output, session){
     enrichment_map_para_module$layout <- input$layout
     enrichment_map_para_module$title <- input$title
   })
+  
+  # Download function
+  output$download_graph <- downloadHandler(
+    filename = function() {
+      paste0("enrichment_map_plot.pdf")
+    },
+    content = function(file) {
+      erichment_object <- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
+      p <-enrichplot::emapplot(x = enrichment_object,
+                          showCategory = enrichment_map_para_module$showcategory,
+                          color = enrichment_map_para_module$color,
+                          layout = enrichment_map_para_module$layout
+      ) + ggplot2::ggtitle(enrichment_map_para_module$title)
+      ggplot2::ggsave(file, plot = p, device = "pdf")
+    }
+  )
   
   return(enrichment_map_para_module)
 }

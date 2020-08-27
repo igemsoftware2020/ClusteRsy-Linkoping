@@ -16,6 +16,10 @@ mod_WGCNA_ui <- function(id){
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
     
+    tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_mod',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+    tags$br(),
+    tags$div(id = "advanced_mod", class = "collapse",
+             tags$div(
     radioButtons(
       ns("group_of_interest"), 
       label= "Select group of interest", 
@@ -103,10 +107,12 @@ mod_WGCNA_ui <- function(id){
       max=1, 
       value = 0.1, 
       popup = "This is only used when the corType is Bicor. Specifies maximum percentile of the separate outliers data on either side of the median."),
+             )),
     
     tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer WGCNA trait-based module", onclick="loading_modal_open(); stopWatch()"),
-    htmlOutput(ns("close_loading_modal"))  # Close modal with JS
+    htmlOutput(ns("close_loading_modal")),  # Close modal with JS
+    htmlOutput((ns("adv_settings")))
     )
   )
 }
@@ -163,6 +169,9 @@ mod_WGCNA_server <- function(input, output, session, con, upload_ui_1, input_ove
   observeEvent(input$load_input, {
     id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
+    
+    output$adv_settings <- renderUI({})
+    
     module_object <- try(MODifieRDB::wgcna_db(input_name = input$input_object, 
                                           group_of_interest = input$group_of_interest,
                                           minModuleSize = input$minModuleSize,
@@ -180,6 +189,11 @@ mod_WGCNA_server <- function(input, output, session, con, upload_ui_1, input_ove
                                           con = con)
     )
     if (class(module_object) == "try-error"){
+      output$adv_settings <- renderUI({
+        tags$script("if ($('.collapsible.btn.btn-primary.btn-block').eq(0).attr('aria-expanded') === 'false') {
+                            $('.collapsible.btn.btn-primary.btn-block').eq(0).click();
+                    }")
+      })
       output$error_name_descrip <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), module_object,
                style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")

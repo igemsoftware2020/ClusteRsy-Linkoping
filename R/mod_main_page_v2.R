@@ -13,17 +13,23 @@ mod_main_page_v2_ui <- function(id){
     navbarPage(id = ns("navbar"), title = actionLink(ns("title"), tags$i(class = "fa fa-home", `aria-hidden`="true"), type = "heading"),
                position = "fixed-top",
                collapsible = TRUE, selected = " ",
-               tabPanel("Input data", mod_Columns_ui(ns("Columns_ui_1"))),
+               tabPanel("Tools", mod_Columns_ui(ns("Columns_ui_1"))),
                tabPanel("Visualization", mod_visual_ui(ns("visual_ui_1"))),
-               tabPanel("Input objects", mod_input_overview_ui(ns("input_overview_ui_1"))),
-               tabPanel("Module objects", mod_module_overview_ui(ns("module_overview_ui_1"))),
-               tabPanel("Enrichment objects", mod_enrichment_overview_ui(ns("enrichment_overview_ui_1"))),
-               tabPanel("PPI networks", mod_ppi_networks_ui(ns("ppi_networks_ui_1"))),
+                tabPanel("Database",
+                          tabsetPanel(id = ns("tabs"),
+                                      type = "tabs",
+                                      tabPanel("Input objects", mod_input_overview_ui(ns("input_overview_ui_1"))),
+                                      tabPanel("Module objects", mod_module_overview_ui(ns("module_overview_ui_1"))),
+                                      tabPanel("Enrichment objects", mod_enrichment_overview_ui(ns("enrichment_overview_ui_1"))),
+                                      tabPanel("PPI networks", mod_ppi_networks_ui(ns("ppi_networks_ui_1"))))),
                tabPanel("User guide", mod_user_guide_ui(ns("user_guide_ui_1"))),
-               tabPanel(" ", mod_welcoming_page_ui(ns("welcoming_page_ui_1"))) #Hide this with Javascirpt
+               tabPanel(" ", mod_welcoming_page_ui(ns("welcoming_page_ui_1")))
+                #Hide this with Javascirpt
     ),
-    tags$script(HTML("element = document.getElementsByTagName('a')[8]; element.style.display = 'none'")), #Change the number according to the tabPanel order
-    htmlOutput(ns("loaded"))
+    tags$script(HTML("element = document.getElementsByTagName('a')[5]; element.style.display = 'none'")), #Change the number according to the tabPanel order
+    htmlOutput(ns("loaded")),
+    htmlOutput(ns("hidehints")),
+    htmlOutput(ns("hidehints1"))
   )
 }
 
@@ -39,8 +45,8 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
   ppi_networks_ui_1 <- reactiveValues()
   
   Columns_ui_1 <- callModule(mod_Columns_server, "Columns_ui_1", con = con, module_overview_ui_1, input_overview_ui_1, ppi_networks_ui_1)
-  module_overview_ui_1$delete <- callModule(mod_module_overview_server, "module_overview_ui_1", con = con, Columns_ui_1)
-  input_overview_ui_1$delete <- callModule(mod_input_overview_server, "input_overview_ui_1", con = con, Columns_ui_1)
+  module_overview_ui_1$delete <- callModule(mod_module_overview_server, "module_overview_ui_1", con = con, Columns_ui_1, app_servr)
+  input_overview_ui_1$delete <- callModule(mod_input_overview_server, "input_overview_ui_1", con = con, Columns_ui_1, app_servr)
   ppi_networks_ui_1$upload_ppi <- callModule(mod_ppi_networks_server, "ppi_networks_ui_1", con = con)
   callModule(mod_user_guide_server, "user_guide_ui_1")
   
@@ -53,16 +59,137 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
     updateNavbarPage(session, "navbar", "User guide")
   })
   
-  observeEvent(app_servr$blob_button, {
-    updateNavbarPage(session, "navbar", "Input data")
+  observeEvent(app_servr$tool_button, {
+    updateNavbarPage(session, "navbar", "Tools")
   })
   
- 
+  observeEvent(app_servr$tutorial_btn, {
+    updateNavbarPage(session, "navbar", "Tools")
+    showModal(modalDialog(
+      top = "30",
+      easyClose = TRUE,
+      title = "Welcome to MODifieRWeb!",
+      "This tutorial will show you how to use this webtool. You can find and manage the obects you create when using the tool under the Database tab and if you need more help you can find more detailed instructions in the User guide.",
+      style = "color:black; text-align:center;",
+      footer=tagList(
+        tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
+        tutorial_start_button <- actionButton(inputId = "tutorial_start_btn", label = "Start the tutorial!", style = "background-color: #2c3e50;border-color:#2c3e50;")
+      )
+    ))
+  })
+  
+  
+  observeEvent(app_servr$tutorial_start_btn, {
+    removeModal()
+  })
+  observeEvent(app_servr$tutorial_start_btn, {
+    rintrojs::introjs(session)
+  })
+  
+  # Hide hints
+  observeEvent(input$navbar, {
+    if (input$navbar == "Tools"){
+      rintrojs::hintjs(session)
+      }
+    else{
+      output$hidehints <- renderUI({
+        tags$script("introJs().hideHints();")
+      })
+    }
+  })
+  
+  observeEvent(input$navbar, {
+    if (input$navbar == "Database"){
+      output$hidehints1 <- renderUI({})
+      }
+    else{
+      output$hidehints1 <- renderUI({
+        tags$script("Tipped.hide('#DT_tooltip');")
+      })
+    }
+  })
+  
+  observeEvent(input$tabs, {
+    output$hidehints1 <- renderUI({
+      if (input$tabs == "Input objects") {
+        tags$script("Tipped.hide('#DT_tooltip1');")
+      }
+      if (input$tabs == "Module objects") {
+        tags$script("Tipped.hide('#DT_tooltip');")
+      }
+      else {
+        tags$script("Tipped.hide('#DT_tooltip');
+                    Tipped.hide('#DT_tooltip1');")
+      }
+    })
+  })
+  
+  ##############################################
   
   observeEvent(app_servr$loaded, {
     output$loaded <- renderUI({
       tags$script("$('body').toggleClass('loaded');")
     })
+  })
+  
+  # Information popups in data-tab
+  observeEvent(app_servr$information_btn_ppi, {
+    showModal(modalDialog(
+      top = "30",
+      easyClose = TRUE,
+      title = "PPI Networks",
+      "In the PPI Networks tab all the previously uploaded 
+      PPI Networks can be found. The user can either use the default PPI Network 
+      or upload a custom made for a specific analyse.",
+      style = "color:black; text-align:center;",
+      footer=tagList(
+        tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
+      )
+    ))
+  })
+  observeEvent(app_servr$information_btn_input, {
+    showModal(modalDialog(
+      top = "30",
+      easyClose = TRUE,
+      title = "Input Objects",
+      "In the Input Oblects tab all the previously made 
+       Inputs can be found. The Inputs in the table below can be brought back in 
+       column 3 in the Tools-tab for further analysis.",
+      style = "color:black; text-align:center;",
+      footer=tagList(
+        tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
+      )
+    ))
+  })
+  observeEvent(app_servr$information_btn_module, {
+    showModal(modalDialog(
+      top = "30",
+      easyClose = TRUE,
+      title = "Module Objects",
+      "In the Module Objects tab all the previously made Modules 
+       are saved and stored. The Modules in the table below can be brought  
+       back in column 3 in the Tools-tab for further analysis.",
+      style = "color:black; text-align:center;",
+      footer=tagList(
+        tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
+      )
+    ))
+  })
+  observeEvent(app_servr$information_btn_enrichment, {
+    showModal(modalDialog(
+      top = "30",
+      easyClose = TRUE,
+      title = "Enrichment Objects",
+      "In the Enrichment Objects tab all the previously made 
+       enrichments can be found. the Enrichments in the table below can be brought  
+       back in the Visualisation-tab for further analysis. Note that no Enrichments 
+       will be stored at the end of a session. Download all Enrichments that need 
+       to be saved for later.",
+      style = "color:black; text-align:center;",
+      footer=tagList(
+        tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
+      )
+    ))
   })
   
   # Reactive values to record the buttons from all enrich methods

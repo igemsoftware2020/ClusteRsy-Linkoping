@@ -16,6 +16,11 @@ mod_CClique_ui <- function(id){
     textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods", placeholder = "Module name")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
+    
+    tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_mod',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+    tags$br(),
+    tags$div(id = "advanced_mod", class = "collapse",
+             tags$div(
     sliderInput(ns("frequency_cutoff"), label = "Select frequency cutoff", min = 0, max = 1, value = 0.5, popup = "Fraction of the number of times a gene should be present in the iterations"),
     sliderInput(ns("fraction_of_interactions"), label = "Fraction of interactions", min = 0, max = 1, value = 0.4, popup = "Fraction of interactions from the original network that will be used in each iteration"),
     sliderInput(ns("deg_cutoff"), label = "P-value cutoff", min = 0, max = 1, value = 0.05, popup = "P-value cutoff for differentially expressed genes"),
@@ -25,9 +30,12 @@ mod_CClique_ui <- function(id){
     numericInput(ns("iteration"), label = "Number of iterations", value = 50, max = 100, min = 0, popup = "Number of iterations performed"),
     numericInput(ns("n_cores"), label = "Number of cores", value = 3, max = 50, min = 0, popup = "If one parallellizes iteratios how many cores will the process be run on"),
     prettySwitch(ns("multiple_cores"), label = "Parallellize iterations", value = TRUE, status = "warning", popup = "Should the process run parallel using multiple CPU cores?"),
+             )),
+             
     tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer Correlation clique module", onclick="loading_modal_open(); stopWatch()"),
-    htmlOutput(ns("close_loading_modal")) # Close modal with JS
+    htmlOutput(ns("close_loading_modal")), # Close modal with JS
+    htmlOutput((ns("adv_settings")))
     )
   )
 }
@@ -87,7 +95,10 @@ mod_CClique_server <- function(input, output, session, con, upload_ui_1, input_o
   observeEvent(input$load_input, {
     id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
-    output$error_p_value <- NULL # I CANNOT REMOVE THIS BUG, SO THIS IS A FEATURE NOW :)
+    
+    output$error_p_value <- NULL
+    output$adv_settings <- renderUI({})
+    
     module_object <- try(MODifieRDB::correlation_clique_db(input_name = input$input_object, 
                                                           ppi_name = input$ppi_object, 
                                                           frequency_cutoff = input$frequency_cutoff,
@@ -104,7 +115,13 @@ mod_CClique_server <- function(input, output, session, con, upload_ui_1, input_o
     
     
     if (class(module_object) == "try-error"){
+      output$adv_settings <- renderUI({
+        tags$script("if ($('.collapsible.btn.btn-primary.btn-block').eq(0).attr('aria-expanded') === 'false') {
+                            $('.collapsible.btn.btn-primary.btn-block').eq(0).click();
+                    }")
+      })
       if (grepl("Name", module_object)) {
+        
         output$error_name_descrip <- renderUI({
           tags$p(class = "text-danger", tags$b("Error:"), module_object,
                  style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")

@@ -10,12 +10,17 @@
 mod_ppi_networks_ui <- function(id){
   ns <- NS(id)
   tagList(
+    tags$div(style= "margin-left: 10px; margin-right: 10px",
+             tags$h1(style= "color: #2b3e50", "PPI Networks"),
+             actionLink(inputId = "information_btn_ppi", label = "Learn More"),
+             tags$br(),
+             tags$br(),
     DT::dataTableOutput(ns("ppi_overview")),
     tags$div(`class`="row",
              tags$div(`class`="col-sm-8", style = "color:black",
              fileInput(ns("ppi_network"), label = "Upload a PPI network"),
              uiOutput(ns("ppi_name_chooser"))))
-  )
+  ))
 }
 
 #' ppi_networks Server Function
@@ -64,17 +69,19 @@ mod_ppi_networks_server <- function(input, output, session, con){
   
   ppi_networks <- as.data.frame(MODifieRDB::get_available_networks(con))
   
+  
   # Create Deafault network
-  if (is.data.frame(ppi_networks) && nrow(ppi_networks)==0) {
-    MODifieRDB::ppi_network_to_db(ppi_network = MODifieR::ppi_network,
-                                  ppi_name = "Default", 
-                                  con = con)
+  if (any(ppi_networks == "Default_string_700")) {
     ppi_networks <- as.data.frame(MODifieRDB::get_available_networks(con))
     colnames(ppi_networks) <- "PPI networks"
     output$ppi_overview <- DT::renderDataTable(ppi_networks,
                                                rownames = FALSE,
                                                selection = list(selected = c(1)))
-  } else if (any(ppi_networks == "Default")) {
+  } else {
+    PPI_network <- read.delim("./inst/app/www/PPI_network.txt")
+    MODifieRDB::ppi_network_to_db(PPI_network,
+                                  ppi_name = "Default_string_700",
+                                  con = con)
     ppi_networks <- as.data.frame(MODifieRDB::get_available_networks(con))
     colnames(ppi_networks) <- "PPI networks"
     output$ppi_overview <- DT::renderDataTable(ppi_networks,
@@ -82,11 +89,12 @@ mod_ppi_networks_server <- function(input, output, session, con){
                                                selection = list(selected = c(1)))
   }
   
+  
   # Create Deafault Clique SLQ
   if (nrow(MODifieRDB::get_available_db_networks(con))==0 ) {
-    clique_db <- MODifieRDB::build_clique_db_db(ppi_name = "Default",
+    clique_db <- MODifieRDB::build_clique_db_db(ppi_name = "String_700",
                                                 db_folder =  "./data_example" , 
-                                                db_name = "Clique_db",
+                                                db_name = "igem_db",
                                                 con = con)
   }
   return(ppi_networks_module)

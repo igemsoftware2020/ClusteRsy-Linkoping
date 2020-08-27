@@ -16,15 +16,23 @@ mod_Modulediscoverer_ui <- function(id){
     textInput(ns("module_name"), "Module object name", popup = "Object that is produced by the disease module inference methods", placeholder = "Module name")),
     uiOutput(ns("error_name_descrip")),
     uiOutput(ns("error_name_js")),
+    
+    tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_mod',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+    tags$br(),
+    tags$div(id = "advanced_mod", class = "collapse",
+             tags$div(
     sliderInput(ns("permutations"), label= "Permutations", min = 0, max = 10000, value = 5000, popup = "Number of permutations to perform to identify the community structure"),
     sliderInput(ns("deg_cutoff"), label = "P-value cutoff for differentialy expressed genes", min = 0, max = 1, value = 0.05, popup = "P-value cutoff for differentially expressed genes"),
     uiOutput(ns("error_p_value")),
     sliderInput(ns("repeats"), label = "Repeats", min = 0, max = 30, value = 15, popup = "Number of times the algorithm is repeated"),
     sliderInput(ns("clique_cutoff"), label = "P-value cutoff for significant cliques", min = 0, max = 1, value = 0.01, popup="Cutoff P-value for significant cliques"),
     numericInput(ns("n_cores"), label = "N cores", value = 4, max = 10, min = 1, popup = "Number of CPU cores used"),
+             )),
+    
     tags$div(style = "text-align:center",
     actionButton(ns("load_input"), "Infer Module discoverer module", onclick="loading_modal_open(); stopWatch()"),
-    htmlOutput(ns("close_loading_modal"))  # Close modal with JS
+    htmlOutput(ns("close_loading_modal")),  # Close modal with JS
+    htmlOutput((ns("adv_settings")))
     )
   )
 }
@@ -82,21 +90,29 @@ mod_Modulediscoverer_server <- function(input, output, session, con, upload_ui_1
   })
   
    observeEvent(input$load_input, {
-    id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
-    on.exit(removeNotification(id), add = TRUE)
-    output$error_p_value <- NULL # I CANNOT REMOVE THIS BUG, SO THIS IS A FEATURE NOW :)
-    module_object <- try(MODifieRDB::modulediscoverer_db(input_name = input$input_object, 
-                                          ppi_name = input$ppi_object, 
-                                          permutations = input$permutations,
-                                          deg_cutoff = input$deg_cutoff,
-                                          repeats = input$repeats,
-                                          clique_cutoff = input$clique_cutoff,
-                                          module_name = input$module_name,
-                                          n_cores = input$n_cores,
-                                          con = con)
-                 )
-    
+     id <- showNotification("Infering method", duration = NULL, closeButton = FALSE, type = "warning")
+     on.exit(removeNotification(id), add = TRUE)
+     
+     output$error_p_value <- NULL 
+     output$adv_settings <- renderUI({})
+     
+     module_object <- try(MODifieRDB::modulediscoverer_db(input_name = input$input_object, 
+                                           ppi_name = input$ppi_object, 
+                                           permutations = input$permutations,
+                                           deg_cutoff = input$deg_cutoff,
+                                           repeats = input$repeats,
+                                           clique_cutoff = input$clique_cutoff,
+                                           module_name = input$module_name,
+                                           n_cores = input$n_cores,
+                                           con = con)
+                          )
+      
     if (class(module_object) == "try-error"){
+      output$adv_settings <- renderUI({
+        tags$script("if ($('.collapsible.btn.btn-primary.btn-block').eq(0).attr('aria-expanded') === 'false') {
+                            $('.collapsible.btn.btn-primary.btn-block').eq(0).click();
+                    }")
+      })
       if (grepl("Name", module_object)) {
         output$error_name_descrip <- renderUI({
           tags$p(class = "text-danger", tags$b("Error:"), module_object,

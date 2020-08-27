@@ -10,7 +10,7 @@
 mod_heat_plot_ui <- function(id){
   ns <- NS(id)
   tagList(
-    plotOutput(ns("heat_plot"), height = '100vh', width = '100%') %>% shinycssloaders::withSpinner(color="#ffbd40", 
+    plotly::plotlyOutput(ns("heat_plot"), height = '100vh', width = '100%') %>% shinycssloaders::withSpinner(color="#ffbd40", 
                                                                 type = 4,
                                                                 size = 0.8)
   )
@@ -23,18 +23,23 @@ mod_heat_plot_server <- function(input, output, session, heat_plot_para_ui_1, se
   ns <- session$ns
   
   heatplot <- reactive({
-    
-    enrichment_object <<- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
-    
-    p <- try(clusterProfiler::heatplot(
-                                      x = enrichment_object,
-                                      showCategory = heat_plot_para_ui_1$showcategory
-                                      ) + ggplot2::ggtitle(label = heat_plot_para_ui_1$title)
-             )
-    return(p)
-  })
-  
-  output$heat_plot <- renderPlot({
+    enrichment_object <- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
+
+    #gene_heatmap can be found within fct_functions.R     
+    p <- try(gene_heatmap(CPobj = enrichment_object,
+                      NP = heat_plot_para_ui_1$pathways_displayed,
+                      NG = heat_plot_para_ui_1$genes_displayed,
+                      plot_title = heat_plot_para_ui_1$title,
+                      pval_color = heat_plot_para_ui_1$pvalue_displayed))
+    if (class(p)[1] == "try-error"){
+      NULL
+      }
+    else {
+      return(p) 
+    }
+  }) 
+
+  output$heat_plot <- plotly::renderPlotly({
     heatplot() 
   })
 }

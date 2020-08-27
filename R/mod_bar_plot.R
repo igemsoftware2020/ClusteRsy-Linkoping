@@ -10,7 +10,7 @@
 mod_bar_plot_ui <- function(id){
   ns <- NS(id)
   tagList(
-    plotOutput(ns("bar_plot"))
+    plotly::plotlyOutput(ns("bar_plot"))
   )
 }
     
@@ -32,7 +32,7 @@ mod_bar_plot_server <- function(input, output, session, bar_plot_para_ui_1, sele
     return(p)
   })
  
-  output$bar_plot <- renderPlot({
+  output$bar_plot <- plotly::renderPlotly({
     barplot() #calling the reactive plot
   })
   

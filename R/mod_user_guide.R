@@ -21,7 +21,7 @@ mod_user_guide_server <- function(input, output, session){
   ns <- session$ns
  output$user_guide <- renderUI({
    tagList(
-   tags$div(`class`="sidenav", style = "margin: 7vh 0vw;", 
+   tags$div(`class`="sidenav", 
             tags$a("1.Input Data", href="#top"),
             tags$a("1.1 Upload", href="#section2", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),
             tags$a("1.2 Inference Method", href="#section3", style= "font-size: 20px; padding: 6px 8px 1px 35px;"),

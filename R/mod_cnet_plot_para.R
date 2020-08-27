@@ -14,6 +14,8 @@ mod_cnet_plot_para_ui <- function(id){
     tags$h3(class = "text-center",
             "Parameters"),
     #Cnet plot
+    textInput(ns("title"), 
+              label = "Title"),
     sliderInput(ns("showcategory"), 
                 label = "Number of enriched terms to display",
                 min = 3,
@@ -33,16 +35,15 @@ mod_cnet_plot_para_ui <- function(id){
     selectInput(ns("node_label"),
                 label = "Node labels",
                 choices = c("all", "gene", "category", "none")),
-    textInput(ns("title"), 
-              label = "Title")
-    
+    tags$div(style = "text-align:center",
+             downloadButton(ns("download_graph"), "PDF"))
   )
 }
 
 #' cnet_plot_para Server Function
 #'
 #' @noRd 
-mod_cnet_plot_para_server <- function(input, output, session){
+mod_cnet_plot_para_server <- function(input, output, session, selected, con){
   ns <- session$ns
   
   cnet_plot_para_module <- reactiveValues()
@@ -54,6 +55,26 @@ mod_cnet_plot_para_server <- function(input, output, session){
     cnet_plot_para_module$node_label <- input$node_label
     cnet_plot_para_module$title <- input$title
   })
+  
+  # Download function
+  output$download_graph <- downloadHandler(
+    filename = function() {
+      paste0("cnet_plot.pdf", sep="")
+    },
+    content = function(file) {
+      enrichment_object <<- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
+      enrichment_object_readable <- DOSE::setReadable(enrichment_object, OrgDb = 'org.Hs.eg.db', keyType = "ENTREZID")
+      p <- enrichplot::cnetplot(x = enrichment_object_readable,
+                           showCategory = cnet_plot_para_module$showcategory,
+                           foldChange = enrichment_object,
+                           layout = cnet_plot_para_module$layout,
+                           circular = cnet_plot_para_module$circular,
+                           colorEdge = cnet_plot_para_module$colorEdge,
+                           node_label = cnet_plot_para_module$node_label,
+      ) + ggplot2::ggtitle(label = cnet_plot_para_module$title)
+      ggplot2::ggsave(file, plot = p, device = "pdf")
+    }
+  )
   
   return(cnet_plot_para_module)
 }

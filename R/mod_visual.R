@@ -27,7 +27,9 @@ mod_visual_ui <- function(id){
           tags$h3(class = "text-center", "Visualization"),
           tags$form(`class` = "well", style = "background-color:#FFFFFF;",
                     DT::dataTableOutput(ns("enrichment_overview"), width = "auto", height = "auto")), #Data table for plot output
-          actionButton(ns("analyze"), label = "Analyze"),
+          tags$div(style = "text-align:center",
+                  actionButton(ns("analyze"), label = "Analyze")),
+          
           uiOutput(ns("disable")),
           #Renders the parameters when analyzed is triggered.
           uiOutput(ns("parameters")) 
@@ -68,7 +70,7 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
   })
   
   
-  # Observe if valid to download
+  # Observe if valid to analyze
   observe({
     if(is.null(input$enrichment_overview_rows_selected)) {
       output$disable <- renderUI({
@@ -110,7 +112,7 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
       } else if (input$tabs == "Heatmap") {
         mod_heat_plot_para_ui(ns("heat_plot_para_ui_1"))
       } else if (input$tabs == "Results") {
-        
+        NULL
       }
     }) 
   })
@@ -118,10 +120,10 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
  
   
   #Parameter modules server call
-  dot_plot_para_ui_1 <- callModule(mod_dot_plot_para_server, "dot_plot_para_ui_1")
-  enrichment_map_para_ui_1 <- callModule(mod_enrichment_map_para_server, "enrichment_map_para_ui_1")
-  cnet_plot_para_ui_1 <- callModule(mod_cnet_plot_para_server, "cnet_plot_para_ui_1")
-  heat_plot_para_ui_1 <- callModule(mod_heat_plot_para_server, "heat_plot_para_ui_1")
+  dot_plot_para_ui_1 <- callModule(mod_dot_plot_para_server, "dot_plot_para_ui_1", selected, con)
+  enrichment_map_para_ui_1 <- callModule(mod_enrichment_map_para_server, "enrichment_map_para_ui_1", selected, con)
+  cnet_plot_para_ui_1 <- callModule(mod_cnet_plot_para_server, "cnet_plot_para_ui_1", selected, con)
+  heat_plot_para_ui_1 <- callModule(mod_heat_plot_para_server, "heat_plot_para_ui_1", selected, con)
   
   #Plot modules servercall
   callModule(mod_dot_plot_server, "dot_plot_ui_1", dot_plot_para_ui_1, selected, con = con)

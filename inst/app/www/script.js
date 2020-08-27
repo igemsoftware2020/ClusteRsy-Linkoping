@@ -7,12 +7,16 @@ function loading_modal_close(){
        	$('#loading_modal').modal('hide');
 }
 
+//define dbclick variable for observing dbclick in input overview
+var dbclick = 0;
+
 $( document ).ready(function() {
   // Change position of tabs
   var i;
-  for (i=0; i<6; i++){
-      document.getElementsByClassName('tab-pane')[i].style.paddingTop = '70px';
+  for (i=0; i<3; i++){
+      document.getElementsByClassName('tab-pane')[i].style.paddingTop = '65px';
   }
+  
   // Change color of tab
   $(document).on('shiny:inputchanged', function(event) {
     if (event.name === 'main_page_v2_ui_1-navbar') {
@@ -26,12 +30,40 @@ $( document ).ready(function() {
   });
   
   // Update welcom button
-  $('#blob_button').click(function(){
+  $('#tool_button').click(function(){
         i++;
-        Shiny.setInputValue("blob_button", i);
+        Shiny.setInputValue("tool_button", i);
     });
   $('#user_guide_btn').click(function(){
         i++;
         Shiny.setInputValue("user_guide_btn", i);
     });
+  $('#tutorial_btn').click(function(){
+        i++;
+        Shiny.setInputValue("tutorial_btn", i);
+    });
+  $('#tutorial_start_btn').click(function(){
+        i++;
+        Shiny.setInputValue("tutorial_start_btn", i);
+    });
+    
+  //information popups in data-tab
+$('#information_btn_input').click(function(){
+        i++;
+        Shiny.setInputValue("information_btn_input", i);
+    });
+$('#information_btn_module').click(function(){
+        i++;
+        Shiny.setInputValue("information_btn_module", i);
+    });
+$('#information_btn_enrichment').click(function(){
+        i++;
+        Shiny.setInputValue("information_btn_enrichment", i);
+    });
+$('#information_btn_ppi').click(function(){
+        i++;
+        Shiny.setInputValue("information_btn_ppi", i);
+    });  
+    
 });
+

@@ -26,6 +26,8 @@ mod_Columns_ui <- function(id){
                                           href = "javascript:void(0)",
                                           onclick = "col2();",
                                           class="label", "2",
+                                          `data-hint`="If you click here you can skip directly to this column!",
+                                          `data-hintPosition`="top-right",
                                           style = "border-radius: 100%;background-color:#ffbd40;")))),
              tags$div(`class`="col-sm-4", style = "-webkit-animation: fadein 1s; -moz-animation: fadein 1s; -ms-animation: fadein 1s;-o-animation: fadein 1s; animation: fadein 1s;",
                       tags$form(class = "well faded", style = "background-color: inherit",
@@ -63,8 +65,10 @@ mod_Columns_ui <- function(id){
                                 mod_disease_analysis_ui(ns("disease_analysis_ui_1"))))
              ),
     htmlOutput(ns("fadein")),
-    htmlOutput(ns("fadein1"))
+    htmlOutput(ns("fadein1")),
+    rintrojs::introjsUI()
   )
+  
 }
     
 #' Columns Server Function
@@ -74,7 +78,7 @@ mod_Columns_server <- function(input, output, session, con, module_overview_ui_1
   ns <- session$ns
   
   Columns_module <- reactiveValues()
-
+  
   upload_ui_1 <- callModule(mod_upload_server, "upload_ui_1", con = con)
   Description1_ui_1 <- callModule(mod_Description1_server, "Description1_ui_1", con = con, upload_ui_1, input_overview_ui_1, ppi_networks_ui_1)
   disease_analysis_ui_1 <- callModule(mod_disease_analysis_server, "disease_analysis_ui_1", con = con, Description1_ui_1, module_overview_ui_1)
@@ -82,6 +86,10 @@ mod_Columns_server <- function(input, output, session, con, module_overview_ui_1
   observeEvent(upload_ui_1$input_name,{
     Columns_module$input_name <- upload_ui_1$input_name
   })
+
+  observeEvent(upload_ui_1$upload_input_rds,{
+    Columns_module$upload_input_rds <- upload_ui_1$upload_input_rds
+  }) #Is sent to input_overview for refreshing DT
   
   observeEvent(Description1_ui_1$module_name,{
     Columns_module$module_name <- Description1_ui_1$module_name
@@ -92,13 +100,22 @@ mod_Columns_server <- function(input, output, session, con, module_overview_ui_1
   })
   
   # Activate column 2 and 3
-  output$fadein <- renderUI({
-    req(upload_ui_1$input_name) 
+  observeEvent(upload_ui_1$input_name, {
+    output$fadein <- renderUI ({
     tagList(
       tags$script("col2();")
     )
+    })
   })
   
+  observeEvent(upload_ui_1$upload_input_rds, {
+    output$fadein <- renderUI ({
+      tagList(
+        tags$script("col2();")
+      )
+    })
+  })
+
   output$fadein1 <- renderUI({
     req(Description1_ui_1$module_name)
     tagList(

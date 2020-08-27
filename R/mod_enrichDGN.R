@@ -12,6 +12,11 @@ mod_enrichDGN_ui <- function(id){
   tagList(
     #Description of the method "Enrichment analysis based on gene-disease associations from several public data sources and the literature".
     uiOutput(ns("module_input")),
+    
+    tags$a(class="collapsible", "Advanced settings", class = "btn btn-primary btn-block", "data-toggle" = 'collapse', "data-target" = '#advanced_enrich',"aria-expanded" = 'false', tags$div(class= "expand_caret caret")),
+    tags$br(),
+    tags$div(id = "advanced_enrich", class = "collapse",
+              tags$div(
     sliderInput(ns("pvalueCutoff"), label = "P-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value"),
     sliderInput(ns("qvalueCutoff"), label = "Q-value cut-off", min = 0, max = 1, value = 0.05, popup = "Rejecting the null hypothesis for any result with an equal or smaller value. Q-values are false discovery rate (FDR) adjusted p-values"),
     selectInput(ns("pAdjustMethod"), "Select an adjustment method",
@@ -27,9 +32,12 @@ mod_enrichDGN_ui <- function(id){
                 selectize = TRUE),
     sliderInput(ns("mingssize"), label = "Minimum size of each gene set", min = 0, max = 100, value = 10, popup = "Minimum size of each gene set used for analyzing"),
     sliderInput(ns("maxgssize"), label = "Maximal size of each gene set", min = 0,  max = 5000, value = 500, popup = "Maximum size of each gene set used for analyzing"),
+              )),
+    
     tags$div( style = "text-align:center",
     actionButton(ns("load_input"), label = "Enrich", onclick="loading_modal_open(); stopWatch();"),
-    htmlOutput(ns("close_loading_modal"))  # Close modal with JS
+    htmlOutput(ns("close_loading_modal")),  # Close modal with JS
+    htmlOutput((ns("adv_settings")))
     )
   )
 }
@@ -63,7 +71,7 @@ mod_enrichDGN_server <- function(input, output, session, con, Description1_ui_1,
     on.exit(removeNotification(id), add = TRUE)
     
     output$error <- renderUI({})
-    
+    output$adv_settings <- renderUI({})
     
     module_genes <- try(get_module_genes(input$module_object, con = con))
     background_genes <- try(get_background_genes(input$module_object, con = con))
@@ -80,6 +88,11 @@ mod_enrichDGN_server <- function(input, output, session, con, Description1_ui_1,
     )
     )
     if (any(c(class(enrichment_object), class(background_genes), class(module_genes)) == "try-error")){
+      output$adv_settings <- renderUI({
+        tags$script("if ($('.collapsible.btn.btn-primary.btn-block').eq(1).attr('aria-expanded') === 'false') {
+                            $('.collapsible.btn.btn-primary.btn-block').eq(1).click();
+                    }")
+      })
       output$error <- renderUI({
         tags$p(class = "text-danger", tags$b("Error:"), enrichment_object,
                style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
