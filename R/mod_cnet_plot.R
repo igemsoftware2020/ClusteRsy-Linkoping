@@ -24,12 +24,20 @@ mod_cnet_plot_server <- function(input, output, session, cnet_plot_para_ui_1, se
   
   cnetplot <- reactive({
     
-    enrichment_object <<- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
+    enrichment_object <- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
     enrichment_object_readable <- DOSE::setReadable(enrichment_object, OrgDb = 'org.Hs.eg.db', keyType = "ENTREZID") #Not sure if KeyType should be selected from the enrichment object
+    
+   input_name <- MODifieRDB::get_input_name_by_enrichment_row(selected$selected_object, con)
+   edgeR_deg_table <- MODifieRDB::MODifieR_input_from_db(input_name, con)$edgeR_deg_table
+   logFC <- edgeR_deg_table$logFC %>% set_names(. , rownames(edgeR_deg_table))
+   
+   
+   
+   
     
     p <- try(enrichplot::cnetplot(x = enrichment_object_readable,
                               showCategory = cnet_plot_para_ui_1$showcategory,
-                              foldChange = enrichment_object,
+                              foldChange = logFC,
                               layout = cnet_plot_para_ui_1$layout,
                               circular = cnet_plot_para_ui_1$circular,
                               colorEdge = cnet_plot_para_ui_1$colorEdge,
