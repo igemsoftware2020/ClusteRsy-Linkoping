@@ -156,6 +156,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
       ppi_name <- as.character(module_object$settings$ppi_network)
       ppi_network <- MODifieRDB::ppi_network_from_db(ppi_name = ppi_name, con = con)
       module_genes <- module_object$module_genes
+  
       
       subset_module_genes(dplyr::filter(ppi_network, ppi_network[,1] %in% module_genes & ppi_network[,2] %in% module_genes))
       
@@ -213,12 +214,21 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   output$download_module_cytoscape <- downloadHandler(
 
     filename = function() {
-      paste0(current_modules(), "_module_genes_interaction_", Sys.Date(), ".tsv")
+      paste0(current_modules(), "_module_genes_interaction_", Sys.Date(), ".zip")
     },
 
     content = function(file) {
       shinyjs::runjs("loading_modal_close(); reset();")
-      write.table(subset_module_genes(), file=file, quote=FALSE, sep='\t', row.names = F)
+      module_object <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[input$module_overview_rows_selected], con = con)
+      file_subset_edgeR <- retrieve_input_data(module_object, con = con)
+      file_subset_edgeR <- cbind("genes" = rownames(file_subset_edgeR), file_subset_edgeR)
+      file1 <- paste0(current_modules(),".csv")
+      file2 <- paste0(current_modules(),"_edgeR_deg_table.csv")
+      
+      file_network <- write.table(subset_module_genes(), file=file1, quote=FALSE, sep='\t', row.names = F)
+      file_subset_edgeR <- write.table(file_subset_edgeR, file=file2, quote=FALSE, sep='\t', row.names = F)
+      
+      zip(file,c(file1, file2))
     }
   )
   
