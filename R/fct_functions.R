@@ -225,3 +225,13 @@ shinyLink <- function(label, target) {
     label
   )
 }
+
+# Get input data for the used MODifieR object 
+
+retrieve_input_data <- function(module, con) {
+  
+  input_data <- MODifieRDB::MODifieR_input_from_db(module$settings$MODifieR_input, con = con)
+  
+  na.omit(input_data$edgeR_deg_table[module$module_genes, ])
+  
+}
