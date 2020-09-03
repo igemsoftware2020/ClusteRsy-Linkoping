@@ -228,22 +228,21 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     },
 
     content = function(file) {
-      # Choose multiple options
-      current_modules <- function() {
-        selected <- input$module_overview_rows_selected
-        module_objects$module_name[selected]
-      }
-      shinyjs::runjs("loading_modal_close(); reset();")
+      selected <- input$module_overview_rows_selected
       module_object <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[input$module_overview_rows_selected], con = con)
       file_subset_edgeR <- retrieve_input_data(module_object, con = con)
       file_subset_edgeR <- cbind("genes" = rownames(file_subset_edgeR), file_subset_edgeR)
-      file1 <- paste0(current_modules(),".csv")
-      file2 <- paste0(current_modules(),"_edgeR_deg_table.csv")
+      file1 <- paste0(module_objects$module_name[selected],".csv")
+      file2 <- paste0(module_objects$module_name[selected],"_edgeR_deg_table.csv")
       
       file_network <- write.table(subset_module_genes(), file=file1, quote=FALSE, sep='\t', row.names = F)
       file_subset_edgeR <- write.table(file_subset_edgeR, file=file2, quote=FALSE, sep='\t', row.names = F)
-      
       zip(file,c(file1, file2))
+      # Remove file to avoid cloggin up DB
+      file.remove(file1)
+      file.remove(file2)
+      # Close loading modal
+      shinyjs::runjs("loading_modal_close(); reset();")
     }
   )
   
