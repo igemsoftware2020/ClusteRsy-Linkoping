@@ -31,7 +31,6 @@ mod_module_overview_ui <- function(id){
                       htmlOutput(ns("close_loading_modal")) # Close modal with JS 
                       )),
     uiOutput(ns("inspected_results")),
-    uiOutput(ns("disable")),
     uiOutput(ns("DT_tooltip")),
     uiOutput(ns("modal_ppi_network")),
     
@@ -259,17 +258,11 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   # Observe if valid to download
   observe({
     if(is.null(input$module_overview_rows_selected)) { 
-     output$disable <- renderUI({
-       tags$script((HTML("document.getElementById('main_page_v2_ui_1-module_overview_ui_1-download_module').style.pointerEvents = 'none';
-                         document.getElementById('main_page_v2_ui_1-module_overview_ui_1-delete').style.pointerEvents = 'none';
-                         document.getElementById('buttons_module_overview').style.cursor = 'not-allowed';")))
-     }) 
+      shinyjs::disable("download_module")
+      shinyjs::disable("delete")     
     } else {
-      output$disable <- renderUI({
-        tags$script((HTML("document.getElementById('main_page_v2_ui_1-module_overview_ui_1-download_module').style.pointerEvents = 'auto';
-                          document.getElementById('main_page_v2_ui_1-module_overview_ui_1-delete').style.pointerEvents = 'auto';
-                          document.getElementById('buttons_module_overview').style.cursor = 'default';")))
-      }) 
+      shinyjs::enable("download_module")
+      shinyjs::enable("delete")
     }
   })
   

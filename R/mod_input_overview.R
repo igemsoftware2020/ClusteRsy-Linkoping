@@ -24,7 +24,6 @@ mod_input_overview_ui <- function(id){
              tags$div(`class`="col-sm-2", style = "text-align:right", id ="buttons_input_overview",
                       downloadButton(ns("download_input"), "Download"),
                       actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true")))),
-    uiOutput(ns("disable")),
     uiOutput(ns("inspect")),
     uiOutput(ns("DT_tooltip"))
   ))
@@ -175,17 +174,11 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
   
   observe({
     if(is.null(input$input_overview_rows_selected)) {
-      output$disable <- renderUI({
-        tags$script((HTML("document.getElementById('main_page_v2_ui_1-input_overview_ui_1-download_input').style.pointerEvents = 'none';
-                         document.getElementById('main_page_v2_ui_1-input_overview_ui_1-delete').style.pointerEvents = 'none';
-                         document.getElementById('buttons_input_overview').style.cursor = 'not-allowed';")))
-      }) 
+      shinyjs::disable("download_input")
+      shinyjs::disable("delete")
     } else {
-      output$disable <- renderUI({
-        tags$script((HTML("document.getElementById('main_page_v2_ui_1-input_overview_ui_1-download_input').style.pointerEvents = 'auto';
-                          document.getElementById('main_page_v2_ui_1-input_overview_ui_1-delete').style.pointerEvents = 'auto';
-                          document.getElementById('buttons_input_overview').style.cursor = 'default';")))
-      }) 
+      shinyjs::enable("download_input")
+      shinyjs::enable("delete")
     }
   })
   

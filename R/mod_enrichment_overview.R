@@ -23,8 +23,7 @@ mod_enrichment_overview_ui <- function(id){
              tags$br(),
              tags$div(`class`="col-sm-2", style = "text-align:right", id ="buttons_enrichment_overview",
                       downloadButton(ns("download_enrichment"), "Download"),
-                      actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true")))),
-    uiOutput(ns("disable"))
+                      actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true"))))
   ))
 }
 
@@ -113,26 +112,13 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
   # Observe if valid to download
   observe({
     if(is.null(input$enrichment_overview_rows_selected)) {
-      output$disable <- renderUI({
-        tags$script((HTML("document.getElementById('main_page_v2_ui_1-enrichment_overview_ui_1-download_enrichment').style.pointerEvents = 'none';
-                         document.getElementById('buttons_enrichment_overview').style.cursor = 'not-allowed';")))
-      }) 
-    } else {
-      output$disable <- renderUI({
-        tags$script((HTML("document.getElementById('main_page_v2_ui_1-enrichment_overview_ui_1-download_enrichment').style.pointerEvents = 'auto';
-                          document.getElementById('buttons_enrichment_overview').style.cursor = 'default';")))
-      }) 
-    }
-  })
-  
-  observe({
-    if(is.null(input$enrichment_overview_rows_selected)) {
+      shinyjs::disable("download_enrichment")
       shinyjs::disable("delete")
     } else {
+      shinyjs::enable("download_enrichment")
       shinyjs::enable("delete")
     }
   })
-  
   
   # Delete enrichment object
   observeEvent(input$delete, {
