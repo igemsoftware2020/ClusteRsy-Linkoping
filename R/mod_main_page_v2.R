@@ -40,11 +40,13 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
   ns <- session$ns
   
   main_page_v2_module <- reactiveValues()
+  enrichment_overview_ui_1 <- reactiveValues()
   module_overview_ui_1 <- reactiveValues()
   input_overview_ui_1 <- reactiveValues()
   ppi_networks_ui_1 <- reactiveValues()
   
   Columns_ui_1 <- callModule(mod_Columns_server, "Columns_ui_1", con = con, module_overview_ui_1, input_overview_ui_1, ppi_networks_ui_1)
+  enrichment_overview_ui_1$delete <- callModule(mod_enrichment_overview_server, "enrichment_overview_ui_1", con = con, main_page_v2_module)
   module_overview_ui_1$delete <- callModule(mod_module_overview_server, "module_overview_ui_1", con = con, Columns_ui_1, app_servr)
   input_overview_ui_1$delete <- callModule(mod_input_overview_server, "input_overview_ui_1", con = con, Columns_ui_1, app_servr)
   ppi_networks_ui_1$upload_ppi <- callModule(mod_ppi_networks_server, "ppi_networks_ui_1", con = con)
@@ -291,8 +293,7 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
   })
   
   callModule(mod_welcoming_page_server, "welcoming_page_ui_1")
-  callModule(mod_visual_server, "visual_ui_1", con = con, main_page_v2_module)
-  callModule(mod_enrichment_overview_server, "enrichment_overview_ui_1", con = con, main_page_v2_module)
+  callModule(mod_visual_server, "visual_ui_1", con = con, main_page_v2_module, enrichment_overview_ui_1)
   callModule(mod_ppi_networks_server, "ppi_networks_ui_1", con = con)
 }
 

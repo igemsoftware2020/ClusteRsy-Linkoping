@@ -91,12 +91,13 @@ mod_ppi_networks_server <- function(input, output, session, con){
   
   
   # Create Deafault Clique SLQ
-  if (nrow(MODifieRDB::get_available_db_networks(con))==0 ) {
-    clique_db <- MODifieRDB::build_clique_db_db(ppi_name = "String_700",
-                                                db_folder =  "./data_example" , 
-                                                db_name = "igem_db",
-                                                con = con)
-  }
+  # if (nrow(MODifieRDB::get_available_db_networks(con))==0 ) {
+  #   clique_db <- MODifieRDB::build_clique_db_db(ppi_name = "Default",
+  #                                               db_folder =  "./data_example" , 
+  #                                               db_name = "igem",
+  #                                               con = con)
+  #}
+  
   return(ppi_networks_module)
 }
 

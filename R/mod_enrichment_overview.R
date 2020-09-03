@@ -22,7 +22,8 @@ mod_enrichment_overview_ui <- function(id){
                       uiOutput(ns("enrichment_name_chooser"))),
              tags$br(),
              tags$div(`class`="col-sm-2", style = "text-align:right", id ="buttons_enrichment_overview",
-                      downloadButton(ns("download_enrichment"), "Download"))),
+                      downloadButton(ns("download_enrichment"), "Download"),
+                      actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true")))),
     uiOutput(ns("disable"))
   ))
 }
@@ -32,6 +33,8 @@ mod_enrichment_overview_ui <- function(id){
 #' @noRd 
 mod_enrichment_overview_server <- function(input, output, session, con, main_page_v2_module){
   ns <- session$ns
+  
+  enrichment_overview_module <- reactiveValues()
   
   # Create a table
   enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
@@ -122,6 +125,46 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
       }) 
     }
   })
+  
+  observe({
+    if(is.null(input$enrichment_overview_rows_selected)) {
+      shinyjs::disable("delete")
+    } else {
+      shinyjs::enable("delete")
+    }
+  })
+  
+  
+  # Delete enrichment object
+  observeEvent(input$delete, {
+    id <- showNotification("Deleting", duration = NULL, closeButton = FALSE)
+    on.exit(removeNotification(id), add = TRUE)
+    # Required for selecting
+    enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
+    output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
+                                                      rownames = FALSE,
+                                                      selection = list(selected = c(1)))
+    
+    
+    # Delete
+    selected <- input$enrichment_overview_rows_selected
+    if (length(selected) > 1){
+      #lapply(current_enrichment_objects(), MODifieRDB::delete_input_object, con = con)
+    } else {
+      #MODifieRDB::delete_input_object(enrichment_objects$enrichment_name[selected], con = con)
+    }
+    
+    # Refresh
+    enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
+    output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
+                                                      rownames = FALSE,
+                                                      selection = list(selected = c(1)))
+    
+    # Send refresh to Description1_ui_1
+    enrichment_overview_module$delete <- input$delete
+  })
+  
+  return(enrichment_overview_module)
 }
 
 

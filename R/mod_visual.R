@@ -43,7 +43,7 @@ mod_visual_ui <- function(id){
 #' create_input Server Function
 #'
 #' @noRd 
-mod_visual_server <- function(input, output, session, con, main_page_v2_module){
+mod_visual_server <- function(input, output, session, con, main_page_v2_module, enrichment_overview_ui_1){
   ns <- session$ns
   
   selected <- reactiveValues()
@@ -57,8 +57,8 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
                                                     options =  list(scrollX = TRUE,
                                                                     scrollY = TRUE,
                                                                     dom = 't'))
-  # Updating the DT when a new enrichment object is created.
-  observeEvent(main_page_v2_module$enrich, {
+  # Updating the DT when a new enrichment object is created or deleted
+  observeEvent(c(main_page_v2_module$enrich, enrichment_overview_ui_1$delete), {
       enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
       output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
                                                         rownames = FALSE,
