@@ -87,6 +87,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     module_objects <- MODifieRDB::get_available_module_objects(con)
     output$module_overview <- DT::renderDataTable(module_objects,
                                                   rownames = FALSE,
+                                                  selection = list(selected = c(1)),
                                                   callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -100,6 +101,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   # Render DT
   output$module_overview <- DT::renderDataTable(module_objects,
                                                 rownames = FALSE,
+                                                selection = list(selected = c(1)),
                                                 callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -116,6 +118,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     module_objects <- MODifieRDB::get_available_module_objects(con)
     output$module_overview <- DT::renderDataTable(module_objects,
                                                   rownames = FALSE,
+                                                  selection = list(selected = c(1)),
                                                   callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -266,6 +269,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     # Required for selecting
     module_objects <- MODifieRDB::get_available_module_objects(con)
     output$module_overview <- DT::renderDataTable(module_objects,
+                                                  selection = list(selected = c(1)),
                                                   rownames = FALSE,
                                                   callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
@@ -286,6 +290,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     # Refresh
     module_objects <- MODifieRDB::get_available_module_objects(con)
     output$module_overview <- DT::renderDataTable(module_objects,
+                                                  selection = list(selected = c(1)),
                                                   rownames = FALSE,
                                                   callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
@@ -339,6 +344,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     module_objects_inspected <<- MODifieRDB::get_available_module_objects(con) 
     
     output$module_overview <- DT::renderDataTable(module_objects_inspected,
+                                                  selection = list(selected = c(1)),
                                                   rownames = FALSE,
                                                   callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
