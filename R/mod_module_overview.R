@@ -23,7 +23,7 @@ mod_module_overview_ui <- function(id){
              tags$div(uiOutput(ns("module_name_chooser"))),
              tags$br(),
              tags$div(`class`="col-sm-8", style = "text-align:right", id ="buttons_module_overview",
-                      downloadButton(ns("download_module_cytoscape"), label = "dumby", style = "visibility: hidden;"),
+                      downloadButton(ns("download_module_cytoscape"), label = "dummy", style = "visibility: hidden;"),
                       actionButton(ns("post_process"), label = "Post-process"),
                       actionButton(ns("download_cytoscape_trigger"), label = "Cytoscape", icon = icon("download")), #This triggers the downloadButton download_module_cytoscape
                       downloadButton(ns("download_module"), "Download"),
@@ -183,6 +183,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
         tagList(
           showModal(modalDialog(
             title = "Select a PPI Network",
+            top = 25, 
             easyClose = TRUE,
             size = "l",
             tags$p("This MODifieR object doesn't contain any PPI Network, please select one from the database"),
@@ -194,23 +195,21 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
           ))
         )
       })
-
-      observeEvent(input$download_cytoscape_object, {
-
-        removeModal()
-        shinyjs::runjs("loading_modal_open(); stopWatch();")
-        
-        ppi_network <- MODifieRDB::ppi_network_from_db(input$selected_ppi_network, con = con)
-        module_genes <- module_object$module_genes
-        
-        subset_module_genes(dplyr::filter(ppi_network, ppi_network[,1] %in% module_genes & ppi_network[,2] %in% module_genes))
-        
-        shinyjs::runjs("document.getElementById('main_page_v2_ui_1-module_overview_ui_1-download_module_cytoscape').click();")
-
-        })
-
     }
-
+  })
+  
+  observeEvent(input$download_cytoscape_object, {
+    module_object <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[input$module_overview_rows_selected], con = con)
+    removeModal()
+    shinyjs::runjs("loading_modal_open(); stopWatch();")
+    
+    ppi_network <- MODifieRDB::ppi_network_from_db(input$selected_ppi_network, con = con)
+    module_genes <- module_object$module_genes
+    
+    subset_module_genes(dplyr::filter(ppi_network, ppi_network[,1] %in% module_genes & ppi_network[,2] %in% module_genes))
+    
+    shinyjs::runjs("document.getElementById('main_page_v2_ui_1-module_overview_ui_1-download_module_cytoscape').click();")
+    
   })
   
   #Download cytoscape object
