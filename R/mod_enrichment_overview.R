@@ -87,14 +87,13 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
                                                       selection = list(selected = c(1)))
   })
   
-  # Choose multiple options
-  current_enrichment_objects <- function() {
-    selected <- input$enrichment_overview_overview_rows_selected
-  }
-  
   retrieve_enrichment_object <- function(){
     selected <- input$enrichment_overview_rows_selected
     if (length(selected) > 1){
+      # Choose multiple options
+      current_enrichment_objects <- function() {
+        selected <- input$enrichment_overview_overview_rows_selected
+      }
       lapply(current_enrichment_objects(), MODifieRDB::enrichment_object_from_db, con = con)
     } else {
       MODifieRDB::enrichment_object_from_db(selected, con)
@@ -149,6 +148,10 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     # Delete
     selected <- input$enrichment_overview_rows_selected
     if (length(selected) > 1){
+      # Choose multiple options
+      #current_enrichment_objects <- function() {
+      #  selected <- input$enrichment_overview_overview_rows_selected
+      #}
       #lapply(current_enrichment_objects(), MODifieRDB::delete_input_object, con = con)
     } else {
       #MODifieRDB::delete_input_object(enrichment_objects$enrichment_name[selected], con = con)

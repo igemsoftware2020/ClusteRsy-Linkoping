@@ -149,16 +149,15 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
                                                              });'))
   })
   
-  # Choose multiple options
-  current_inputs <- function() {
-    selected <- input$input_overview_rows_selected
-    input_objects$input_name[selected]
-  }
-  
   retrieve_input <- function(){
     selected <- input$input_overview_rows_selected
     if (length(selected) > 1){
-      lapply(current_modules(), MODifieRDB::MODifieR_input_from_db, con = con)
+      # Choose multiple options
+      current_inputs <- function() {
+        selected <- input$input_overview_rows_selected
+        input_objects$input_name[selected]
+      }
+      lapply(current_inputs(), MODifieRDB::MODifieR_input_from_db, con = con)
     } else {
       MODifieRDB::MODifieR_input_from_db(input_objects$input_name[selected], con = con)
     }
@@ -211,6 +210,11 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
     # Delete
     selected <- input$input_overview_rows_selected
     if (length(selected) > 1){
+      # Choose multiple options
+      current_inputs <- function() {
+        selected <- input$input_overview_rows_selected
+        input_objects$input_name[selected]
+      }
       lapply(current_inputs(), MODifieRDB::delete_input_object, con = con)
     } else {
       MODifieRDB::delete_input_object(input_objects$input_name[selected] ,con = con)

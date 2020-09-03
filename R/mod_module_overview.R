@@ -128,15 +128,16 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
                                                              });'))
   })
   
-  # Choose multiple options
-  current_modules <- function() {
-    selected <- input$module_overview_rows_selected
-    module_objects$module_name[selected]
-  }
+  
   
   retrieve_module <- function(){
     selected <- input$module_overview_rows_selected
     if (length(selected) > 1){
+      # Choose multiple options
+      current_modules <- function() {
+        selected <- input$module_overview_rows_selected
+        module_objects$module_name[selected]
+      }
       lapply(current_modules(), MODifieRDB::MODifieR_module_from_db, con = con)
     } else {
       MODifieRDB::MODifieR_module_from_db(module_objects$module_name[selected], con = con)
@@ -217,10 +218,21 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   output$download_module_cytoscape <- downloadHandler(
 
     filename = function() {
+      # Choose multiple options
+      current_modules <- function() {
+        selected <- input$module_overview_rows_selected
+        module_objects$module_name[selected]
+      }
+      
       paste0(current_modules(), "_module_genes_interaction_", Sys.Date(), ".zip")
     },
 
     content = function(file) {
+      # Choose multiple options
+      current_modules <- function() {
+        selected <- input$module_overview_rows_selected
+        module_objects$module_name[selected]
+      }
       shinyjs::runjs("loading_modal_close(); reset();")
       module_object <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[input$module_overview_rows_selected], con = con)
       file_subset_edgeR <- retrieve_input_data(module_object, con = con)
@@ -282,6 +294,11 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     # Delete
     selected <- input$module_overview_rows_selected
     if (length(selected) > 1){
+      # Choose multiple options
+      current_modules <- function() {
+        selected <- input$module_overview_rows_selected
+        module_objects$module_name[selected]
+      }
       lapply(current_modules(), MODifieRDB::delete_module_object, con = con)
     } else {
       MODifieRDB::delete_module_object(module_objects$module_name[selected] ,con = con)
