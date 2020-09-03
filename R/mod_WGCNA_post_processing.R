@@ -29,6 +29,7 @@ mod_WGCNA_post_processing_server <- function(input, output, session, inspected_m
     tagList(
       showModal(modalDialog(
         title = selected_module_name$name,
+        top = 10,
         easyClose = TRUE,
         size = "l",
         fluidPage(
@@ -41,7 +42,8 @@ mod_WGCNA_post_processing_server <- function(input, output, session, inspected_m
                       tabPanel(title = "Correlation to trait table",
                                DT::dataTableOutput(ns("correlation_to_trait_table_table"), width = 'auto')),
                       tabPanel(title = "Settings table",
-                               DT::dataTableOutput(ns("settings_table"))))),
+                               DT::dataTableOutput(ns("settings_table")))),
+          rep_br(2)),
         footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
         ),
       ))

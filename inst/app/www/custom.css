@@ -5851,6 +5851,7 @@ button.close {
 }
 .modal-header .close {
   margin-top: -2px;
+  color: black;
 }
 .modal-title {
   margin: 0;
@@ -5861,6 +5862,7 @@ button.close {
 .modal-body {
   position: relative;
   padding: 20px;
+  color: black;
 }
 .modal-footer {
   padding: 20px;

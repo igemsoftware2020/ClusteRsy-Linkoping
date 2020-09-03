@@ -29,6 +29,7 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
     tagList(
       showModal(modalDialog(
         title = selected_module_name$name,
+        top = 10,
         easyClose = TRUE,
         size = "l",
         fluidPage(
@@ -41,7 +42,8 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
                       tabPanel(title = "Colored vector table",
                                DT::dataTableOutput(ns("color_vector_table"))),
                       tabPanel(title = "Settings table",
-                               DT::dataTableOutput(ns("settings_table"))))),
+                               DT::dataTableOutput(ns("settings_table")))),
+          rep_br(2)),
         footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
         )
         

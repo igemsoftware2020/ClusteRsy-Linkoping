@@ -26,6 +26,7 @@ mod_module_discoverer_post_processing_server <- function(input, output, session,
     tagList(
       showModal(modalDialog(
         title = selected_module_name$name,
+        top = 10,
         easyClose = TRUE,
         size = "l",
         fluidPage(
@@ -34,7 +35,8 @@ mod_module_discoverer_post_processing_server <- function(input, output, session,
                       tabPanel(title = "Module genes",
                                DT::dataTableOutput(ns("module_genes_table"))),
                       tabPanel(title = "Settings table",
-                               DT::dataTableOutput(ns("settings_table"))))),
+                               DT::dataTableOutput(ns("settings_table")))),
+          rep_br(2)),
         footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
         ),
       ))

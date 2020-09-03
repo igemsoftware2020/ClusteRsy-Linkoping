@@ -236,6 +236,7 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
     output$inspect <- renderUI({
       tagList(
         showModal(modalDialog(
+          top = 8,
           title = app_servr$input_name,
           easyClose = TRUE,
           size = "l",
@@ -245,7 +246,8 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
                         tabPanel(title = "Result",
                                  DT::dataTableOutput(ns("result"))),
                         tabPanel(title = "Settings",
-                                 DT::dataTableOutput(ns("settings"))))),
+                                 DT::dataTableOutput(ns("settings")))),
+            rep_br(2)),
           footer = tagList(tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
           )
         ))

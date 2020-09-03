@@ -127,9 +127,9 @@ mod_Description1_server <- function(input, output, session, con, upload_ui_1, in
                                                tags$div(`class` = "modal-content",
                                                         tags$div(`class` = "modal-header",
                                                                 tags$button("×", type = "button", class = "close", `data-dismiss` = "modal", `aria-hidden` = "true"),
-                                                                tags$h4(method ,class = "modal-title", style = "color: black")),
+                                                                tags$h4(method ,class = "modal-title")),
                                                         tags$div(`class` = "modal-body",
-                                                                  tags$p(descrip(method = method), style = "color: black")),
+                                                                  tags$p(descrip(method = method))),
                                                         tags$div(`class` = "modal-footer",
                                                                   tags$button("Close", class = "btn btn-default", `data-dismiss` = "modal"),
                                                                   tags$a("Learn more", class= "btn btn-default", href=hyperlink(method = method), style = "background-color: #2c3e50; border-color: #2c3e50"))))))
