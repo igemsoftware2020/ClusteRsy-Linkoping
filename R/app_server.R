@@ -7,7 +7,7 @@
 app_server <- function( input, output, session) {
   app_servr <- reactiveValues()
   # Loading screen
-  con <- MODifieRDB::connect_to_db("./data_example/igem.db")
+  con <- MODifieRDB::connect_to_db("./data_example/modelling_modules.db")
   app_servr$loaded <- con
   
   if (class(try(MODifieRDB::get_available_enrichment_objects(con = con))) == "try-error") {
@@ -48,14 +48,25 @@ app_server <- function( input, output, session) {
     app_servr$module_name <- input$module_name
   })
   
-  # DT tooltip
+  # DT double click for module 
+  observeEvent(input$enrichment_module_dbclick, {
+    app_servr$enrichment_module_dbclick <- input$enrichment_module_dbclick
+    app_servr$enrichment_module_name <- input$module_name #Not sure what to do here, this doesn't have a unique name as the input 
+  })
+  
+  # DT tooltip used in input_overview
   observeEvent(input$DT_tooltip, {
     app_servr$DT_tooltip <- input$DT_tooltip
   })
   
-  # DT tooltip1
+  # DT tooltip1 used in module_overview
   observeEvent(input$DT_tooltip1, {
     app_servr$DT_tooltip1 <- input$DT_tooltip1
+  })
+  
+  # DT tooltip2 used in enrichment_overview
+  observeEvent(input$DT_tooltip2, {
+    app_servr$DT_tooltip2 <- input$DT_tooltip2
   })
   
   # List the first level call Modules here
