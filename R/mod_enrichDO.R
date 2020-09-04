@@ -73,7 +73,7 @@ mod_enrichDO_server <- function(input, output, session, con, Description1_ui_1, 
     output$error <- renderUI({})
     output$adv_settings <- renderUI({})
     
-    module_genes <- try(et_module_genes(input$module_object, con = con))
+    module_genes <- try(get_module_genes(input$module_object, con = con))
     background_genes <- try(get_background_genes(input$module_object, con = con))
     
     enrichment_object <- try(DOSE::enrichDO(gene = module_genes,
