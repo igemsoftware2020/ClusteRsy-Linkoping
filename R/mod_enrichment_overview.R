@@ -140,7 +140,6 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
       }
       lapply(current_enrichment_objects(), MODifieRDB::delete_enrichment_object, con = con)
     } else {
-      print(enrichment_objects$module_name[selected])
       MODifieRDB::delete_enrichment_object(enrichment_objects$module_name[selected], con = con)
     }
     
