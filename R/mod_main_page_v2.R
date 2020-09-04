@@ -106,7 +106,8 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
       }
     else{
       output$hidehints1 <- renderUI({
-        tags$script("Tipped.hide('#DT_tooltip');")
+        tags$script("Tipped.hide('#DT_tooltip');
+                    Tipped.hide('#DT_tooltip1');")
       })
     }
   })
