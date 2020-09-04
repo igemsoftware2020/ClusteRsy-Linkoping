@@ -135,12 +135,13 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     selected <- input$enrichment_overview_rows_selected
     if (length(selected) > 1){
       # Choose multiple options
-      #current_enrichment_objects <- function() {
-      #  selected <- input$enrichment_overview_overview_rows_selected
-      #}
-      #lapply(current_enrichment_objects(), MODifieRDB::delete_input_object, con = con)
+      current_enrichment_objects <- function() {
+        selected <- input$enrichment_overview_overview_rows_selected
+      }
+      lapply(current_enrichment_objects(), MODifieRDB::delete_enrichment_object, con = con)
     } else {
-      #MODifieRDB::delete_input_object(enrichment_objects$enrichment_name[selected], con = con)
+      print(enrichment_objects$module_name[selected])
+      MODifieRDB::delete_enrichment_object(enrichment_objects$module_name[selected], con = con)
     }
     
     # Refresh
