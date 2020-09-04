@@ -18,7 +18,7 @@ mod_visual_ui <- function(id){
       id = "controls",
       bottom = 20, 
       right = 20, 
-      width = "25%", 
+      width = "30%", 
       height = "60%",
       draggable = TRUE,
       style = "z-index: 25;",
@@ -50,23 +50,33 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module, 
   
   # Create a table
   enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
-  output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
+  output$enrichment_overview <- DT::renderDataTable({enrichment_objects},
                                                     rownames = FALSE,
                                                     class = 'compact hover',
                                                     selection = list(mode = 'single', selected = c(1)),
-                                                    options =  list(scrollX = TRUE,
+                                                    options =  list(paging = TRUE,
+                                                                    lengthMenu = list(c(5,10, -1), c(5,10)),
+                                                                    searching = TRUE,
+                                                                    pageLength = 5,
+                                                                    filtering = TRUE,
+                                                                    scrollX = TRUE,
                                                                     scrollY = TRUE,
-                                                                    dom = 't'))
+                                                                    dom = "lfpt",))
   # Updating the DT when a new enrichment object is created or deleted
   observeEvent(c(main_page_v2_module$enrich, enrichment_overview_ui_1$delete), {
       enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
-      output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
+      output$enrichment_overview <- DT::renderDataTable({enrichment_objects},
                                                         rownames = FALSE,
                                                         class = 'compact hover',
                                                         selection = list(mode = 'single', selected = c(1)),
-                                                        options =  list(scrollX = TRUE,
+                                                        options =  list(paging = TRUE,
+                                                                        lengthMenu = list(c(5,10, -1), c(5,10)),
+                                                                        searching = TRUE,
+                                                                        pageLength = 5,
+                                                                        filtering = TRUE,
+                                                                        scrollX = TRUE,
                                                                         scrollY = TRUE,
-                                                                        dom = 't'))
+                                                                        dom = "lfpt"))
   })
   
   
