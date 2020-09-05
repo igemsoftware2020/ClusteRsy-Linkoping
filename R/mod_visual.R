@@ -61,7 +61,7 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module, 
                                                                     filtering = TRUE,
                                                                     scrollX = TRUE,
                                                                     scrollY = TRUE,
-                                                                    dom = "lfpt",))
+                                                                    dom = "lftp",))
   # Updating the DT when a new enrichment object is created or deleted
   observeEvent(c(main_page_v2_module$enrich, enrichment_overview_ui_1$delete), {
       enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
@@ -76,7 +76,7 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module, 
                                                                         filtering = TRUE,
                                                                         scrollX = TRUE,
                                                                         scrollY = TRUE,
-                                                                        dom = "lfpt"))
+                                                                        dom = "lftp"))
   })
   
   
