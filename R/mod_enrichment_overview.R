@@ -48,7 +48,9 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
                                                               dbclick++;
                                                               Shiny.setInputValue("enrichment_module_name", data[0]);
                                                               Shiny.setInputValue("enrichment_module_dbclick", dbclick);
-                                                             });'))
+                                                             });
+                                                              Shiny.setInputValue("DT_tooltip2", "DT_tooltip2");
+                                                                      '))
   
   #Reactive funciton for fileinput
   upload_enrichment <- reactive({
@@ -192,23 +194,23 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
                                                               Shiny.setInputValue("enrichment_module_name", data[0]);
                                                               Shiny.setInputValue("enrichment_module_dbclick", dbclick);
                                                              });
-                                                              Shiny.setInputValue("DT_tooltip1", "DT_tooltip2");
                                                               '))
-    #Observe when DT is loaded 
-    observeEvent(app_servr$DT_tooltip2, {
-      output$DT_tooltip <- renderUI({
-        tags$script('
-                  $("#main_page_v2_ui_1-module_overview_ui_1-module_overview").find("tr").eq(1).attr("id", "DT_tooltip2");
+    
+    # Send refresh to Description1_ui_1
+    enrichment_overview_module$delete <- input$delete
+  })
+  
+  #Observe when DT is loaded 
+  observeEvent(app_servr$DT_tooltip2, {
+    output$DT_tooltip <- renderUI({
+      tags$script('
+                  $("#main_page_v2_ui_1-enrichment_overview_ui_1-enrichment_overview").find("tr").eq(1).attr("id", "DT_tooltip2");
                   Tipped.create("#DT_tooltip2",
                   "Double-click me to inspect the object!",
                   {shadow: false});
                   Tipped.show("#DT_tooltip2");
                   ')
-      })
     })
-    
-    # Send refresh to Description1_ui_1
-    enrichment_overview_module$delete <- input$delete
   })
   
   observeEvent(app_servr$enrichment_module_dbclick, {

@@ -9,15 +9,13 @@ app_server <- function( input, output, session) {
   # Loading screen
   con <- MODifieRDB::connect_to_db("./data_example/modelling_modules.db")
   app_servr$loaded <- con
-  
-  if (class(try(MODifieRDB::get_available_enrichment_objects(con = con))) == "try-error") {
-    # Load example
-    enrichment_object <- readRDS("./data_example/breast_cancer_example.rds")
-    MODifieRDB::enrichment_object_to_db(enrichment_object,
-                                        module_name = "Breast cancer example", 
-                                        enrichment_method = "enrichDGN", 
-                                        con = con)
-  }
+
+  # Load example
+  # enrichment_object <- readRDS("./data_example/breast_cancer_example.rds")
+  # MODifieRDB::enrichment_object_to_db(enrichment_object,
+  #                                     module_name = "Breast cancer example", 
+  #                                     enrichment_method = "enrichDGN", 
+  #                                       con = con)
   
   # Listen to the beautiful button
   observeEvent(input$tool_button, {
