@@ -122,7 +122,7 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module, 
       } else if (input$tabs == "Heatmap") {
         mod_heat_plot_para_ui(ns("heat_plot_para_ui_1"))
       } else if (input$tabs == "Results") {
-        NULL
+        mod_results_para_ui(ns("results_para_ui_1"))
       }
     }) 
   })
@@ -134,13 +134,14 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module, 
   enrichment_map_para_ui_1 <- callModule(mod_enrichment_map_para_server, "enrichment_map_para_ui_1", selected, con)
   cnet_plot_para_ui_1 <- callModule(mod_cnet_plot_para_server, "cnet_plot_para_ui_1", selected, con)
   heat_plot_para_ui_1 <- callModule(mod_heat_plot_para_server, "heat_plot_para_ui_1", selected, con)
+  results_para_ui_1 <- callModule(mod_results_para_server, "results_para_ui_1")
   
   #Plot modules servercall
   callModule(mod_dot_plot_server, "dot_plot_ui_1", dot_plot_para_ui_1, selected, con = con)
   callModule(mod_enrichment_map_server, "enrichment_map_ui_1",enrichment_map_para_ui_1, selected, con = con)
   callModule(mod_cnet_plot_server, "cnet_plot_ui_1", cnet_plot_para_ui_1, selected, con = con)
   callModule(mod_heat_plot_server, "heat_plot_ui_1", heat_plot_para_ui_1, selected, con = con)
-  callModule(mod_enrichment_results_server, "enrichment_results_ui_1", selected, con = con)
+  callModule(mod_enrichment_results_server, "enrichment_results_ui_1", results_para_ui_1, selected, con = con)
   
 }
 
