@@ -32,7 +32,6 @@ mod_enrichment_results_server <- function(input, output, session, results_para_u
   
   output$enrichment_results <- try(DT::renderDataTable({object()},
                                                    rownames = FALSE,
-                                                   selection = list(selected = c(1)),
                                                    filter = "top", 
                                                    class = 'compact cell-border hover',
                                                    style = "default",
