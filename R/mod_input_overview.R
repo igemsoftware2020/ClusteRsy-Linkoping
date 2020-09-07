@@ -239,6 +239,7 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
   # Observer doubleclick
   observeEvent(app_servr$input_dbclick, {
     input_obj <- MODifieRDB::MODifieR_input_from_db(input_name = app_servr$input_name, con = con)
+    
     output$inspect <- renderUI({
       tagList(
         showModal(modalDialog(
@@ -259,8 +260,12 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
         ))
       )
     })
+    edgeR_deg_table <- input_obj$edgeR_deg_table
+    edgeR_deg_table <- data.frame(Diff_genes = row.names(edgeR_deg_table), edgeR_deg_table)
     output$result <- DT::renderDataTable(
-      input_obj$edgeR_deg_table,
+      edgeR_deg_table,
+      rownames = FALSE,
+      colnames = c("Diff genes", "logFC", "logCPM", "F", "P-value", "FDR"),
       filter = "top",
       extensions = c('Buttons'),
       options = list(
@@ -291,6 +296,7 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
       colnames(DT) <- "Values"
       as.data.frame(DT)},
       extensions = c('Buttons'),
+      colnames = c("Settings used"),
       options = list(
         dom = "lfrtipB",
         scrollX = TRUE,
