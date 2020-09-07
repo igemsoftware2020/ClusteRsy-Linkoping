@@ -73,22 +73,18 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     )
   })
   
-  #Name reactive
-  
-  enrichment_module_name <- reactive({
-    input$enrichment_overview_rows_selected #This will be NULL if no row is selected during double click
-  })
-  
   # Upload enrichment
+  x <- reactiveVal(1)
   observeEvent(input$upload_enrichment, {
     id <- showNotification("Saving module object to database", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     enrichment <- upload_enrichment()
     
-    # MODifieRDB::enrichment_object_to_db(enrichment_object = enrichment,
-    #                                     module_name = module_name, 
-    #                                     enrichment_method = enrichment@ontology, 
-    #                                     con = con)
+    MODifieRDB::enrichment_object_to_db(enrichment_object = enrichment,
+                                        module_name = NULL, 
+                                        enrichment_method = enrichment@ontology, 
+                                        enrichment_name = input$enrichment_module_name,
+                                        con = con)
     
     # Refresh
     enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
@@ -102,6 +98,9 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
                                                               Shiny.setInputValue("enrichment_name", data[0]);
                                                               Shiny.setInputValue("enrichment_module_dbclick", dbclick);
                                                              });'))
+    # Send refresh to Description1_ui_1
+    x(x() + 1)
+    enrichment_overview_module$upload <- x()
   })
   
   # Render DT
@@ -121,6 +120,7 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
   
   retrieve_enrichment_object <- function(){
     selected <- input$enrichment_overview_rows_selected
+    enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
     if (length(selected) > 1){
       # Choose multiple options
       current_enrichment_objects <- function() {
@@ -129,6 +129,7 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
       }
       lapply(current_enrichment_objects(), MODifieRDB::enrichment_object_from_db, con = con)
     } else {
+      print(enrichment_objects$enrichment_name[selected])
       MODifieRDB::enrichment_object_from_db(enrichment_objects$enrichment_name[selected], con)
     }
   }
@@ -180,6 +181,7 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
         selected <- input$enrichment_overview_overview_rows_selected
         enrichment_objects$enrichment_name[selected]
       }
+      print("hi")
       lapply(current_enrichment_objects(), MODifieRDB::delete_enrichment_object, con = con)
     } else {
       MODifieRDB::delete_enrichment_object(enrichment_objects$enrichment_name[selected], con = con) #Tried with selected as well, doesn't work either, probably error in the DB package.
@@ -220,8 +222,8 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     output$inspect <- renderUI({
       tagList(
         showModal(modalDialog(
-          top = 8,
-          title = app_servr$input_name,
+          top = 20,
+          title = app_servr$enrichment_name,
           easyClose = TRUE,
           size = "l",
           fluidPage(
@@ -238,8 +240,8 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     output$settings <- DT::renderDataTable(
       {DT <- data.frame("Values" = c(enrichment_module@pvalueCutoff, enrichment_module@pAdjustMethod, enrichment_module@organism, enrichment_module@ontology, enrichment_module@keytype))
       row.names(DT) <- c("pvalueCutoff", "pAdjustMethod", "Organism", "Ontology", "Keytype")
+      as.data.frame(DT)
       },
-      filter = "top",
       extensions = c('Buttons'),
       options = list(
         dom = "lfrtipB",
@@ -248,7 +250,7 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
         pageLength = 10,
         paging = TRUE,
         searching = TRUE,
-        lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")) ,
+        lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")),
         buttons = 
           list('copy', 
                list(

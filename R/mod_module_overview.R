@@ -71,6 +71,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   })
   
   # Upload module
+  x <- reactiveVal(1)
   observeEvent(input$upload_module, {
     id <- showNotification("Saving module object to database", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
@@ -94,6 +95,9 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
                                                               Shiny.setInputValue("module_name", data[0]);
                                                               Shiny.setInputValue("module_dbclick", dbclick);
                                                              });'))
+    # Send refresh to Description1_ui_1
+    x(x() + 1)
+    module_overview_module$upload <- x()
   })
   
   module_objects <- MODifieRDB::get_available_module_objects(con)
@@ -131,6 +135,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   
   retrieve_module <- function(){
     selected <- input$module_overview_rows_selected
+    module_objects <- MODifieRDB::get_available_module_objects(con)
     if (length(selected) > 1){
       # Choose multiple options
       current_modules <- function() {

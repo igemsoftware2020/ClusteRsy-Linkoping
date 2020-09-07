@@ -50,6 +50,8 @@ mod_ppi_networks_server <- function(input, output, session, con){
     )
   })
   
+  # Upload PPI
+  x <- reactiveVal(1)
   observeEvent(input$upload_ppi, {
     id <- showNotification("Saving PPI to database", duration = NULL, closeButton = FALSE)
     ppi <- upload_ppi()
@@ -64,7 +66,9 @@ mod_ppi_networks_server <- function(input, output, session, con){
     output$ppi_overview <- DT::renderDataTable(ppi_networks,
                                                rownames = FALSE,
                                                selection = list(selected = c(1)))
-    ppi_networks_module$upload_ppi <- input$upload_ppi
+    # Send refresh to Description1_ui_1
+    x(x() + 1)
+    ppi_networks_module$upload_ppi <- x()
   })
   
   ppi_networks <- as.data.frame(MODifieRDB::get_available_networks(con))

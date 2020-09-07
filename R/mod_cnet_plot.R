@@ -23,18 +23,14 @@ mod_cnet_plot_server <- function(input, output, session, cnet_plot_para_ui_1, se
   ns <- session$ns
   
   cnetplot <- reactive({
-    
-    enrichment_object <- MODifieRDB::enrichment_object_from_db(selected$selected_object, con)
+    enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
+    enrichment_object <- MODifieRDB::enrichment_object_from_db(enrichment_objects$enrichment_name[selected$selected_object], con)
     enrichment_object_readable <- DOSE::setReadable(enrichment_object, OrgDb = 'org.Hs.eg.db', keyType = "ENTREZID") #Not sure if KeyType should be selected from the enrichment object
     
-   input_name <- MODifieRDB::get_input_name_by_enrichment_row(selected$selected_object, con)
-   edgeR_deg_table <- MODifieRDB::MODifieR_input_from_db(input_name, con)$edgeR_deg_table
-   logFC <- edgeR_deg_table$logFC %>% set_names(. , rownames(edgeR_deg_table))
-   
-   
-   
-   
-    
+    input_name <- MODifieRDB::get_input_name_by_enrichment_row(enrichment_objects$enrichment_name[selected$selected_object], con)
+    edgeR_deg_table <- MODifieRDB::MODifieR_input_from_db(input_name, con)$edgeR_deg_table
+    logFC <- edgeR_deg_table$logFC %>% set_names(. , rownames(edgeR_deg_table))
+
     p <- try(enrichplot::cnetplot(x = enrichment_object_readable,
                               showCategory = cnet_plot_para_ui_1$showcategory,
                               foldChange = logFC,
@@ -50,15 +46,6 @@ mod_cnet_plot_server <- function(input, output, session, cnet_plot_para_ui_1, se
   output$cnet_plot <- renderPlot({
     cnetplot() #calling the reactive plot
   })
-  
-#   enrichment_overview_ui_1 <- callModule(mod_enrichment_overview_server, "enrichment_overview_ui_1", con = con)
-#   observeEvent(enrichment_overview_ui_1$enrichment_object, {
-#     
-#     enrichment_results <- enrichment_overview_ui_1$enrichment_object@result
-#     output$testplot <- renderPlot({
-#     plot(enrichment_result$pvalue)
-#     })
-# })
 }
     
 ## To be copied in the UI
