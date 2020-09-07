@@ -11,11 +11,15 @@ app_server <- function( input, output, session) {
   app_servr$loaded <- con
 
   # Load example
-  # enrichment_object <- readRDS("./data_example/breast_cancer_example.rds")
-  # MODifieRDB::enrichment_object_to_db(enrichment_object,
-  #                                     module_name = "Breast cancer example", 
-  #                                     enrichment_method = "enrichDGN", 
-  #                                       con = con)
+  if (nrow(MODifieRDB::get_available_enrichment_objects(con))==0){
+    enrichment_object <- readRDS("./data_example/breast_cancer_example.rds")
+    MODifieRDB::enrichment_object_to_db(enrichment_object,
+                                        module_name = "Breast cancer example",
+                                        enrichment_method = "enrichDGN",
+                                        enrichment_name = "Breast cancer",
+                                        con = con)
+  }
+ 
   
   # Listen to the beautiful button
   observeEvent(input$tool_button, {
@@ -46,10 +50,10 @@ app_server <- function( input, output, session) {
     app_servr$module_name <- input$module_name
   })
   
-  # DT double click for module 
+  # DT double click for enrichment 
   observeEvent(input$enrichment_module_dbclick, {
     app_servr$enrichment_module_dbclick <- input$enrichment_module_dbclick
-    app_servr$enrichment_module_name <- input$module_name #Not sure what to do here, this doesn't have a unique name as the input 
+    app_servr$enrichment_name <- input$enrichment_name #Not sure what to do here, this doesn't have a unique name as the input 
   })
   
   # DT tooltip used in input_overview

@@ -25,6 +25,7 @@ mod_enrichment_overview_ui <- function(id){
                       downloadButton(ns("download_enrichment"), "Download"),
                       actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true"))))
   ),
+  uiOutput(ns("inspect")),
   uiOutput(ns("DT_tooltip"))
   )
 }
@@ -38,7 +39,7 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
   enrichment_overview_module <- reactiveValues()
   
   # Create a table
-  enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
+  enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
   output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
                                                     rownames = FALSE,
                                                     selection = list(selected = c(1)),
@@ -46,7 +47,7 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
                                                               dbclick++;
-                                                              Shiny.setInputValue("enrichment_module_name", data[0]);
+                                                              Shiny.setInputValue("enrichment_name", data[0]);
                                                               Shiny.setInputValue("enrichment_module_dbclick", dbclick);
                                                              });
                                                               Shiny.setInputValue("DT_tooltip2", "DT_tooltip2");
@@ -90,7 +91,7 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     #                                     con = con)
     
     # Refresh
-    enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
+    enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
     output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
                                                       rownames = FALSE,
                                                       selection = list(selected = c(1)),
@@ -98,14 +99,14 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
                                                               dbclick++;
-                                                              Shiny.setInputValue("enrichment_module_name", data[0]);
+                                                              Shiny.setInputValue("enrichment_name", data[0]);
                                                               Shiny.setInputValue("enrichment_module_dbclick", dbclick);
                                                              });'))
   })
   
   # Render DT
   observeEvent(main_page_v2_module$enrich, {
-    enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
+    enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
     output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
                                                       rownames = FALSE,
                                                       selection = list(selected = c(1)),
@@ -113,7 +114,7 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
                                                               dbclick++;
-                                                              Shiny.setInputValue("enrichment_module_name", data[0]);
+                                                              Shiny.setInputValue("enrichment_name", data[0]);
                                                               Shiny.setInputValue("enrichment_module_dbclick", dbclick);
                                                              });'))
   })
@@ -124,10 +125,11 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
       # Choose multiple options
       current_enrichment_objects <- function() {
         selected <- input$enrichment_overview_overview_rows_selected
+        enrichment_objects$enrichment_name[selected]
       }
       lapply(current_enrichment_objects(), MODifieRDB::enrichment_object_from_db, con = con)
     } else {
-      MODifieRDB::enrichment_object_from_db(selected, con)
+      MODifieRDB::enrichment_object_from_db(enrichment_objects$enrichment_name[selected], con)
     }
   }
   
@@ -157,7 +159,7 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     id <- showNotification("Deleting", duration = NULL, closeButton = FALSE)
     on.exit(removeNotification(id), add = TRUE)
     # Required for selecting
-    enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
+    enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
     output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
                                                       rownames = FALSE,
                                                       selection = list(selected = c(1)),
@@ -165,7 +167,7 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
                                                               dbclick++;
-                                                              Shiny.setInputValue("enrichment_module_name", data[0]);
+                                                              Shiny.setInputValue("enrichment_name", data[0]);
                                                               Shiny.setInputValue("enrichment_module_dbclick", dbclick);
                                                              });'))
     
@@ -176,14 +178,15 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
       # Choose multiple options
       current_enrichment_objects <- function() {
         selected <- input$enrichment_overview_overview_rows_selected
+        enrichment_objects$enrichment_name[selected]
       }
       lapply(current_enrichment_objects(), MODifieRDB::delete_enrichment_object, con = con)
     } else {
-      MODifieRDB::delete_enrichment_object(enrichment_objects$module_name[selected], con = con) #Tried with selected as well, doesn't work either, probably error in the DB package.
+      MODifieRDB::delete_enrichment_object(enrichment_objects$enrichment_name[selected], con = con) #Tried with selected as well, doesn't work either, probably error in the DB package.
     }
     
     # Refresh
-    enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
+    enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
     output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
                                                       rownames = FALSE,
                                                       selection = list(selected = c(1)),
@@ -191,7 +194,7 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
                                                               dbclick++;
-                                                              Shiny.setInputValue("enrichment_module_name", data[0]);
+                                                              Shiny.setInputValue("enrichment_name", data[0]);
                                                               Shiny.setInputValue("enrichment_module_dbclick", dbclick);
                                                              });
                                                               '))
@@ -200,7 +203,6 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     enrichment_overview_module$delete <- input$delete
   })
   
-  #Observe when DT is loaded 
   observeEvent(app_servr$DT_tooltip2, {
     output$DT_tooltip <- renderUI({
       tags$script('
@@ -214,10 +216,48 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
   })
   
   observeEvent(app_servr$enrichment_module_dbclick, {
-    MODifieRDB::enrichment_object_from_db(selected, con)
-    enrichment_module <<- MODifieRDB::enrichment_object_from_db(app_servr$enrichent_module_name, con = con)
-    
-    
+    enrichment_module <- MODifieRDB::enrichment_object_from_db(app_servr$enrichment_name, con)
+    output$inspect <- renderUI({
+      tagList(
+        showModal(modalDialog(
+          top = 8,
+          title = app_servr$input_name,
+          easyClose = TRUE,
+          size = "l",
+          fluidPage(
+            tabsetPanel(id = ns("tabs"),
+                        type = "tabs",
+                        tabPanel(title = "Settings",
+                                 DT::dataTableOutput(ns("settings")))),
+            rep_br(2)),
+          footer = tagList(tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
+          )
+        ))
+      )
+    })
+    output$settings <- DT::renderDataTable(
+      {DT <- data.frame("Values" = c(enrichment_module@pvalueCutoff, enrichment_module@pAdjustMethod, enrichment_module@organism, enrichment_module@ontology, enrichment_module@keytype))
+      row.names(DT) <- c("pvalueCutoff", "pAdjustMethod", "Organism", "Ontology", "Keytype")
+      },
+      filter = "top",
+      extensions = c('Buttons'),
+      options = list(
+        dom = "lfrtipB",
+        scrollX = TRUE,
+        scrollY = TRUE,
+        pageLength = 10,
+        paging = TRUE,
+        searching = TRUE,
+        lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")) ,
+        buttons = 
+          list('copy', 
+               list(
+                 extend = 'collection',
+                 buttons = c('pdf', 'csv', 'excel'),
+                 text = 'Download'
+               ))
+      )
+    )
     
   })
   

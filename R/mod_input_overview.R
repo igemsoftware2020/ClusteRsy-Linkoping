@@ -286,7 +286,8 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
       )
     )
     output$settings <- DT::renderDataTable(
-      as.matrix(input_obj$settings[2:7]),
+      {DT <- as.matrix(input_obj$settings[2:7])
+      colnames(DT) <- "Values"},
       extensions = c('Buttons'),
       colnames = c("Settings used"),
       options = list(

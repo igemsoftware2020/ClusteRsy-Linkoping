@@ -26,7 +26,8 @@ mod_enrichment_results_server <- function(input, output, session, results_para_u
   ns <- session$ns
     
   object <- reactive({
-    MODifieRDB::enrichment_object_from_db(selected$selected_object,con)@result[c("Description", "GeneRatio", "BgRatio", "pvalue", "p.adjust", "qvalue", "Count")]
+    enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
+    MODifieRDB::enrichment_object_from_db(enrichment_objects$enrichment_name[selected$selected_object], con)@result[c("Description", "GeneRatio", "BgRatio", "pvalue", "p.adjust", "qvalue", "Count")]
   })
     
   
@@ -50,64 +51,64 @@ mod_enrichment_results_server <- function(input, output, session, results_para_u
                                                      lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")))))
   
 
-observe({
-  if (is.null(input$enrichment_results_rows_selected) || length(input$enrichment_results_rows_selected) > 1) {
-    output$disable <- renderUI({
-      tags$script(HTML("document.getElementById('main_page_v2_ui_1-visual_ui_1-results_para_ui_1-inspect_disease').disabled = true;"))
-    })
-  } else {
-    output$disable <- renderUI({
-      tags$script(HTML("document.getElementById('main_page_v2_ui_1-visual_ui_1-results_para_ui_1-inspect_disease').disabled = false;"))
-    })
-  }
-})
-  
-  observeEvent(results_para_ui_1$inspect_disease, {
-    
-    selected <- selected$selected_object
-    selected_enrichment_object <- input$enrichment_results_rows_selected
-    enrichment_object <- MODifieRDB::enrichment_object_from_db(selected,con)
-    
-    output$inspected_disease <- renderUI({
-        tagList(
-          showModal(modalDialog(
-            top = 8,
-            title = paste(paste(enrichment_object@result$Description[selected_enrichment_object], "Genes")),
-            easyClose = TRUE,
-            size = "l",
-            fluidPage(
-              tags$p(paste("Disease ID:", enrichment_object@result$ID[selected_enrichment_object])),
-              DT::dataTableOutput(ns("disease_genes")),
-            ),
-            footer = tagList(tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
-            )
-            
-          ))
-        )
-    })
-  
-    inspected_genes <- data.frame(strsplit(enrichment_object@result$geneID[selected_enrichment_object], "/"))
-    colnames(inspected_genes) <- "Genes"
-    
-    output$disease_genes <- DT::renderDataTable({inspected_genes},
-                                            rownames = FALSE,
-                                            filter = "top",
-                                            class = 'compact cell-border hover',
-                                            style = "default",
-                                            extensions = 'Buttons',
-                                            options = list(
-                                              pageLength = 25,
-                                              paging = TRUE,
-                                              searching = TRUE,
-                                              scrollX = TRUE,
-                                              scrollY = TRUE,
-                                              autoWidth = FALSE,
-                                              ordering = TRUE,
-                                              dom = "lfrtipB",
-                                              buttons = c('copy', 'csv', 'excel'),
-                                              lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")) ))
-
-  })
+  # observe({
+  #   if (is.null(input$enrichment_results_rows_selected) || length(input$enrichment_results_rows_selected) > 1) {
+  #     output$disable <- renderUI({
+  #       tags$script(HTML("document.getElementById('main_page_v2_ui_1-visual_ui_1-results_para_ui_1-inspect_disease').disabled = true;"))
+  #     })
+  #   } else {
+  #     output$disable <- renderUI({
+  #       tags$script(HTML("document.getElementById('main_page_v2_ui_1-visual_ui_1-results_para_ui_1-inspect_disease').disabled = false;"))
+  #     })
+  #   }
+  # })
+#   
+#   observeEvent(results_para_ui_1$inspect_disease, {
+#     selected <- selected$selected_object
+#     enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
+#     selected_enrichment_object <- input$enrichment_results_rows_selected
+#     enrichment_object <- MODifieRDB::enrichment_object_from_db(enrichment_objects$enrichment_name[selected],con)
+#     
+#     output$inspected_disease <- renderUI({
+#         tagList(
+#           showModal(modalDialog(
+#             top = 8,
+#             title = paste(paste(enrichment_object@result$Description[selected_enrichment_object], "Genes")),
+#             easyClose = TRUE,
+#             size = "l",
+#             fluidPage(
+#               tags$p(paste("Disease ID:", enrichment_object@result$ID[selected_enrichment_object])),
+#               DT::dataTableOutput(ns("disease_genes")),
+#             ),
+#             footer = tagList(tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
+#             )
+#             
+#           ))
+#         )
+#     })
+#   
+#     inspected_genes <- data.frame(strsplit(enrichment_object@result$geneID[selected_enrichment_object], "/"))
+#     colnames(inspected_genes) <- "Genes"
+#     
+#     output$disease_genes <- DT::renderDataTable({inspected_genes},
+#                                             rownames = FALSE,
+#                                             filter = "top",
+#                                             class = 'compact cell-border hover',
+#                                             style = "default",
+#                                             extensions = 'Buttons',
+#                                             options = list(
+#                                               pageLength = 25,
+#                                               paging = TRUE,
+#                                               searching = TRUE,
+#                                               scrollX = TRUE,
+#                                               scrollY = TRUE,
+#                                               autoWidth = FALSE,
+#                                               ordering = TRUE,
+#                                               dom = "lfrtipB",
+#                                               buttons = c('copy', 'csv', 'excel'),
+#                                               lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")) ))
+# 
+#   })
   
 }
     
