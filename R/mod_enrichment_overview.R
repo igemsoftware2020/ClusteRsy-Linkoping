@@ -124,12 +124,11 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     if (length(selected) > 1){
       # Choose multiple options
       current_enrichment_objects <- function() {
-        selected <- input$enrichment_overview_overview_rows_selected
+        selected <- input$enrichment_overview_rows_selected
         enrichment_objects$enrichment_name[selected]
       }
       lapply(current_enrichment_objects(), MODifieRDB::enrichment_object_from_db, con = con)
     } else {
-      print(enrichment_objects$enrichment_name[selected])
       MODifieRDB::enrichment_object_from_db(enrichment_objects$enrichment_name[selected], con)
     }
   }
@@ -178,10 +177,9 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     if (length(selected) > 1){
       # Choose multiple options
       current_enrichment_objects <- function() {
-        selected <- input$enrichment_overview_overview_rows_selected
+        selected <- input$enrichment_overview_rows_selected
         enrichment_objects$enrichment_name[selected]
       }
-      print("hi")
       lapply(current_enrichment_objects(), MODifieRDB::delete_enrichment_object, con = con)
     } else {
       MODifieRDB::delete_enrichment_object(enrichment_objects$enrichment_name[selected], con = con) #Tried with selected as well, doesn't work either, probably error in the DB package.
