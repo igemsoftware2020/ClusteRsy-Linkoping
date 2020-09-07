@@ -66,8 +66,8 @@ mod_groupGO_server <- function(input, output, session, con, Description1_ui_1, m
   output$module_input <- renderUI({
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     tagList(
-      selectInput(ns("module_object"), label = "Module object", choices = module_objects, 
-                  popup = "The module used for gene set enrichment analysis."),
+      selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for gene set enrichment analysis."),
+      textInput(ns("enrichment_name"), "Module object name", popup = "Object that is produced by the enrichment methods.", placeholder = "Enrichment name"),
       uiOutput(ns("error"))
     )
   })
@@ -111,7 +111,9 @@ mod_groupGO_server <- function(input, output, session, con, Description1_ui_1, m
       MODifieRDB::enrichment_object_to_db(group_object,
                                           module_name = module_name, 
                                           enrichment_method = "groupGO", 
+                                          
                                           con = con)
+      updateTextInput(session, "enrichment_name", value = character(0))
     }
     # Close loading modal
     output$close_loading_modal <- renderUI({

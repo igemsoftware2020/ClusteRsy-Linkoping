@@ -19,8 +19,8 @@ mod_module_overview_ui <- function(id){
     DT::dataTableOutput(ns("module_overview")),
     tags$div(`class`="row",
              tags$div(`class`="col-sm-4", style = "color:black",
-             fileInput(ns("module_object"), label = "Upload a module object", accept =  ".rds")),
-             tags$div(uiOutput(ns("module_name_chooser"))),
+             fileInput(ns("module_object"), label = "Upload a module object", accept =  ".rds"),
+             uiOutput(ns("module_name_chooser"))),
              tags$br(),
              tags$div(`class`="col-sm-8", style = "text-align:right", id ="buttons_module_overview",
                       downloadButton(ns("download_module_cytoscape"), label = "dummy", style = "visibility: hidden;"),
@@ -78,7 +78,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     module_name <- module_name()
     
     
-    MODifieRDB::MODifieR_object_to_db(MODifieR_object = module,
+    MODifieRDB::MODifieR_object_to_db(module,
                                       object_name = module_name,
                                       con = con)
     
@@ -288,7 +288,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
       # Choose multiple options
       current_modules <- function() {
         selected <- input$module_overview_rows_selected
-        module_objects$module_name[selected]
+        enrichment_objects$enrichment_name[selected]
       }
       lapply(current_modules(), MODifieRDB::delete_module_object, con = con)
     } else {
