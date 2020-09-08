@@ -72,7 +72,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   })
   
   
-  #function to sen a set of modules uploaded to DB
+  #function to send a set of modules to DB
   multiple_modules_to_db <- function(module) {
     if (check_settings(module, con)) { #check_settings found in fct_functions.
       module_name <- paste0(module$settings$MODifieR_input, sep = "_", class(module)[2], sep = "_", "uploaded", sep = "_", Sys.time()) %>%  gsub(" ", "_", .)
@@ -91,7 +91,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     id <- showNotification("Saving module object to database", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     
-    module <<- upload_module()
+    module <- upload_module()
     module_name <- module_name()
     
     if (length(module)==3 || length(module) ==2) {
