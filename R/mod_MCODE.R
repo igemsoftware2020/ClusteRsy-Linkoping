@@ -118,7 +118,7 @@ mod_MCODE_server <- function(input, output, session, con, upload_ui_1, input_ove
     selectInput(ns("input_object"), label = "Input object", choices = input_objects,popup = "The input used for analyzation.")
   })
   
-  observeEvent(c(upload_ui_1$input_name, input_overview_ui_1$delete$delete), {
+  observeEvent(c(upload_ui_1$input_name, input_overview_ui_1$value$delete, input_overview_ui_1$value$upload), {
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
     updateSelectInput(session, "input_object", choices = input_objects)
   })

@@ -62,6 +62,7 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
   })
   
   # Upload input object
+  x <- reactiveVal(1)
   observeEvent(input$upload_input, {
     id <- showNotification("Saving input object to database", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
@@ -84,6 +85,9 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
                                                               Shiny.setInputValue("input_name", data[0]);
                                                               Shiny.setInputValue("input_dbclick", dbclick);
                                                              });'))
+    # Send refresh to Description1_ui_1
+    x(x() + 1)
+    input_overview_module$upload <- x()
     
   })
   
@@ -150,6 +154,7 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
   
   retrieve_input <- function(){
     selected <- input$input_overview_rows_selected
+    input_objects <- MODifieRDB::get_available_input_objects(con)
     if (length(selected) > 1){
       # Choose multiple options
       current_inputs <- function() {
@@ -158,6 +163,7 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
       }
       lapply(current_inputs(), MODifieRDB::MODifieR_input_from_db, con = con)
     } else {
+      print(input_objects$input_name[selected])
       MODifieRDB::MODifieR_input_from_db(input_objects$input_name[selected], con = con)
     }
   }
@@ -207,6 +213,7 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
       current_inputs <- function() {
         selected <- input$input_overview_rows_selected
         input_objects$input_name[selected]
+        print(input_objects$input_name[selected])
       }
       lapply(current_inputs(), MODifieRDB::delete_input_object, con = con)
     } else {
@@ -285,7 +292,10 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
           "}")
       )
     )
-    output$settings <- DT::renderDataTable({as.matrix(input_obj$settings[2:7])},
+    output$settings <- DT::renderDataTable(
+      {DT <- as.matrix(input_obj$settings[2:7])
+      colnames(DT) <- "Values"
+      as.data.frame(DT)},
       extensions = c('Buttons'),
       colnames = c("Settings used"),
       options = list(

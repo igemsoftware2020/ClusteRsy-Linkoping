@@ -110,7 +110,7 @@ mod_enrichGO_server <- function(input, output, session, con, Description1_ui_1, 
     )
   })
   
-  observeEvent(c(Description1_ui_1$module_name, module_overview_ui_1$delete$delete), {
+  observeEvent(c(Description1_ui_1$module_name, module_overview_ui_1$value$delete, module_overview_ui_1$value$upload), {
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     updateSelectInput(session, "module_object", choices = module_objects)
   })
