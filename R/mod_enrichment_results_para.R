@@ -13,8 +13,8 @@ mod_enrichment_results_para_ui <- function(id){
     
     tags$div(style = "text-align:center",
              tags$br(),
-             tags$h4("Please go to the database tab to inspect the object further"),
-#             actionButton(ns("inspect_disease"), label = "Inspect disease or pathway")
+             tags$h4("Here you can inspect which genes that are invovled with a disease or pathway selected from the table"),
+             actionButton(ns("inspect_disease"), label = "Inspect disease or pathway")
     )
   )
 }
@@ -24,14 +24,14 @@ mod_enrichment_results_para_ui <- function(id){
 #' @noRd 
 mod_enrichment_results_para_server <- function(input, output, session, selected_enrichment_object){
   ns <- session$ns
-  
-  # results_para_module <- reactiveValues()
-  #  
-  # observeEvent(input$inspect_disease, {
-  # results_para_module$inspect_disease <- input$inspect_disease
-  # })
-  # 
-  # return(results_para_module)
+
+  results_para_module <- reactiveValues()
+
+  observeEvent(input$inspect_disease, {
+  results_para_module$inspect_disease <- input$inspect_disease
+  })
+
+  return(results_para_module)
 }
     
 ## To be copied in the UI
