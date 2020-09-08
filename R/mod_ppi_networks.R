@@ -69,6 +69,12 @@ mod_ppi_networks_server <- function(input, output, session, con){
     # Send refresh to Description1_ui_1
     x(x() + 1)
     ppi_networks_module$upload_ppi <- x()
+    
+    #Create new clique_db when a new ppi_network is loaded
+    try(MODifieRDB::build_clique_db_db(ppi_name = input$ppi_name,
+                                       db_folder =  "./data_example" ,
+                                       db_name = "igem",
+                                       con = con))
   })
   
   
