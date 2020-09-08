@@ -302,19 +302,19 @@ textInput <- function(inputId, label, value = "", width = NULL,
   
   div(class = "form-group shiny-input-container",
       style = if (!is.null(width)) paste0("width: ", validateCssUnit(width), ";"),
-      shiny:::shinyInputLabel(inputId, label),
-      if (tooltip){
-        tags$span(
-          tags$button(
-            style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; outline:none;",
-            class = "badge badge-pill badge-warning",
-            type = "button",
-            `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
-            `data-content` = popup,
-            header
-          ),
-          tags$script(src="www/tooltip.js"))
-      },
+      shiny:::shinyInputLabel(inputId, tagList(label,
+                                               if (tooltip){
+                                                 tags$span(
+                                                   tags$button(
+                                                     style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; outline:none;",
+                                                     class = "badge badge-pill badge-warning",
+                                                     type = "button",
+                                                     `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
+                                                     `data-content` = popup,
+                                                     header
+                                                   ),
+                                                   tags$script(src="www/tooltip.js"))
+                                               })),
       tags$input(id = inputId, type="text", class="form-control", value=value,
                  placeholder = placeholder)
   )
@@ -338,19 +338,19 @@ numericInput <- function(inputId, label, value, min = NA, max = NA, step = NA,
   
   div(class = "form-group shiny-input-container",
       style = if (!is.null(width)) paste0("width: ", validateCssUnit(width), ";"),
-      shiny:::shinyInputLabel(inputId, label),
-      if (tooltip){
-        tags$span(
-          tags$button(
-            style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; outline:none;",
-            class = "badge badge-pill badge-warning",
-            type = "button",
-            `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
-            `data-content` = popup,
-            header
-          ),
-          tags$script(src="www/tooltip.js"))
-      },
+      shiny:::shinyInputLabel(inputId, tagList(label,
+                                               if (tooltip){
+                                                 tags$span(
+                                                   tags$button(
+                                                     style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; outline:none;",
+                                                     class = "badge badge-pill badge-warning",
+                                                     type = "button",
+                                                     `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
+                                                     `data-content` = popup,
+                                                     header
+                                                   ),
+                                                   tags$script(src="www/tooltip.js"))
+                                               })),
       inputTag
   )
 }
@@ -388,18 +388,18 @@ fileInput <- function(inputId, label, multiple = FALSE, accept = NULL,
   
   div(class = "form-group shiny-input-container",
       style = if (!is.null(width)) paste0("width: ", validateCssUnit(width), ";"),
-      shiny:::shinyInputLabel(inputId, label),
-      if (tooltip){
-        tags$span(
-          tags$button(
-            style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; outline:none;",
-            class = "badge badge-pill badge-warning",
-            type = "button",
-            `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
-            `data-content` = popup,
-            header
-          ))
-      },
+      shiny:::shinyInputLabel(inputId, tagList(label,
+                                               if (tooltip){
+                                                 tags$span(
+                                                   tags$button(
+                                                     style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; outline:none;",
+                                                     class = "badge badge-pill badge-warning",
+                                                     type = "button",
+                                                     `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
+                                                     `data-content` = popup,
+                                                     header
+                                                   ))
+                                               })),
       
       div(class = "input-group",
           tags$label(class = "input-group-btn",
@@ -444,19 +444,19 @@ radioButtons <- function(inputId, label, choices = NULL, selected = NULL,
   tags$div(id = inputId,
            style = if (!is.null(width)) paste0("width: ", validateCssUnit(width), ";"),
            class = divClass,
-           shiny:::shinyInputLabel(inputId, label),
-           if (tooltip){
-             tags$span(
-               tags$button(
-                 style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; outline:none;",
-                 class = "badge badge-pill badge-warning",
-                 type = "button",
-                 `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
-                 `data-content` = popup,
-                 header
-               ),
-               tags$script(src="www/tooltip.js"))
-           },
+           shiny:::shinyInputLabel(inputId, tagList(label,
+                                                    if (tooltip){
+                                                      tags$span(
+                                                        tags$button(
+                                                          style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; outline:none;",
+                                                          class = "badge badge-pill badge-warning",
+                                                          type = "button",
+                                                          `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
+                                                          `data-content` = popup,
+                                                          header
+                                                        ),
+                                                        tags$script(src="www/tooltip.js"))
+                                                    })),
            options
   )
 }
@@ -564,19 +564,19 @@ sliderInput <- function(inputId, label, min, max, value, step = NULL,
   
   sliderTag <- div(class = "form-group shiny-input-container",
                    style = if (!is.null(width)) paste0("width: ", validateCssUnit(width), ";"),
-                   shiny:::shinyInputLabel(inputId, label),
-                   if (tooltip){
-                     tags$span(
-                       tags$button(
-                         style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; outline:none;",
-                         class = "badge badge-pill badge-warning",
-                         type = "button",
-                         `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
-                         `data-content` = popup,
-                         header
-                       ),
-                       tags$script(src="www/tooltip.js"))
-                   },
+                   shiny:::shinyInputLabel(inputId, tagList(label,
+                                                            if (tooltip){
+                                                              tags$span(
+                                                                tags$button(
+                                                                  style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; outline:none;",
+                                                                  class = "badge badge-pill badge-warning",
+                                                                  type = "button",
+                                                                  `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
+                                                                  `data-content` = popup,
+                                                                  header
+                                                                ),
+                                                                tags$script(src="www/tooltip.js"))
+                                                            })),
                    do.call(tags$input, sliderProps)
   )
   
@@ -655,19 +655,20 @@ selectInput <- function(inputId, label, choices, selected = NULL,
     class = "form-group shiny-input-container",
     
     style = if (!is.null(width)) paste0("width: ", validateCssUnit(width), ";"),
-    shiny:::shinyInputLabel(inputId, label),
-    if (tooltip){
-      tags$span(
-        tags$button(
-          style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; outline:none;",
-          class = "badge badge-pill badge-warning",
-          type = "button",
-          `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
-          `data-content` = popup,
-          header
-        ),
-        tags$script(src="www/tooltip.js"))
-    },
+    shiny:::shinyInputLabel(inputId, tagList(label,
+                            if (tooltip){
+                              tags$span(
+                                tags$button(
+                                  style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; outline:none;",
+                                  class = "badge badge-pill badge-warning",
+                                  type = "button",
+                                  `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
+                                  `data-content` = popup,
+                                  header
+                                ),
+                                tags$script(src="www/tooltip.js"))
+                            })),
+    
     div(selectTag)
   )
   
@@ -699,8 +700,8 @@ selectizeIt <- function(inputId, select, options, nonempty = FALSE) {
   
   
   # Insert script on same level as <select> tag
-  select$children[[3]] <- tagAppendChild(
-    select$children[[3]],
+  select$children[[2]] <- tagAppendChild(
+    select$children[[2]],
     tags$script(
       type = 'application/json',
       `data-for` = inputId, `data-nonempty` = if (nonempty) '',
@@ -739,19 +740,20 @@ prettySwitch <- function(inputId, label, value = FALSE, status = "default",
       tags$div(
         class="state",
         class=if(status != "default") paste0("p-", status),
-        tags$label(tags$span(label)),
-        if (tooltip){
-          tags$span(
-            tags$button(
-              style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; outline:none;",
-              class = "badge badge-pill badge-warning",
-              type = "button",
-              `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
-              `data-content` = popup,
-              header
-            ),
-            tags$script(src="www/tooltip.js"))
-        }
+        tags$label(tags$span(label,
+                             if (tooltip){
+                               tags$span(
+                                 tags$button(
+                                   style ="border:none; left:2px; padding: 1px 4px; font-size:11px; background-color:#798D8F; position:relative; outline:none;",
+                                   class = "badge badge-pill badge-warning",
+                                   type = "button",
+                                   `data-tipped-options` = paste("position:'", pos, "'", sep = ""),
+                                   `data-content` = popup,
+                                   header
+                                 ),
+                                 tags$script(src="www/tooltip.js"))
+                             })),
+        
       )
     )
   )

@@ -60,7 +60,7 @@ mod_Correlation_clique_post_processing_server <- function(input, output, session
           easyClose = TRUE,
           top = 15,
           size = "l",
-          tags$h3("Choose between adjusting the frequency cutoff or adjusting the module size", style = "color:#2c3e50"),
+          tags$h4("Choose between adjusting the frequency cutoff or adjusting the module size", style = "color:#2c3e50; text-align:center;"),
           selectInput(ns("post_process_choices"),
                       label = "Pick a post-processing method",
                       choices = c("Adjust frequency cutoff",
@@ -79,8 +79,8 @@ mod_Correlation_clique_post_processing_server <- function(input, output, session
     output$selected_method <- renderUI({
       if (input$post_process_choices == "Adjust frequency cutoff") {
         tagList(
-          tags$p("This method will allow you to change the fraction of the number of times a gene should be present in it's iterations.", style = "color:#2c3e50"),
-          tags$p("The default is set to 0.5, meaning the gene has to be present in at least 50 percent of iterations", style = "color:#2c3e50"),
+          tags$p("This method will allow you to change the fraction of the number of times a gene should be present in it's iterations.", style = "color:#2c3e50; text-align:center;"),
+          tags$p("The default is set to 0.5, meaning the gene has to be present in at least 50 percent of iterations", style = "color:#2c3e50; text-align:center;"),
           tags$br(),
           sliderInput(ns("frequency_cutoff"), 
                       label = "Frequency Cuttoff",
@@ -90,7 +90,7 @@ mod_Correlation_clique_post_processing_server <- function(input, output, session
         )
       } else if (input$post_process_choices == "Adjust module size") {
         tagList(
-          tags$p("This method will allow you to change the module size", style = "color:#2c3e50"),
+          tags$p("This method will allow you to change the module size", style = "color:#2c3e50; text-align:center;"),
           tags$br(),
           sliderInput(ns("module_size"),
                       label = "Module size",
