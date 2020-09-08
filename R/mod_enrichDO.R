@@ -57,7 +57,10 @@ mod_enrichDO_server <- function(input, output, session, con, Description1_ui_1, 
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     tagList(
       selectInput(ns("module_object"), label = "Module object", choices = module_objects, popup = "The module used for enrichment analysis."),
-      textInput(ns("enrichment_name"), "Module object name", popup = "Object that is produced by the enrichment methods.", placeholder = "Enrichment name"),
+      tags$div(id = "error_name_enrichDO_js",
+              textInput(ns("enrichment_name"), "Module object name", popup = "Object that is produced by the enrichment methods.", placeholder = "Enrichment name")),
+      uiOutput(ns("error_name_descrip")),
+      uiOutput(ns("error_name_js")),
       uiOutput(ns("error"))
     )
   })
@@ -65,6 +68,31 @@ mod_enrichDO_server <- function(input, output, session, con, Description1_ui_1, 
   observeEvent(c(Description1_ui_1$module_name, module_overview_ui_1$value$delete, module_overview_ui_1$value$upload), {
     module_objects <- unlist(MODifieRDB::get_available_module_objects(con)$module_name)
     updateSelectInput(session, "module_object", choices = module_objects)
+  })
+  
+  enrichment_name <- reactive({
+    input$enrichment_name
+  })
+  
+  # Check name
+  observe({
+    if (any(MODifieRDB::get_available_enrichment_objects(con)$enrichment_name == enrichment_name())){
+      output$error_name_js <- renderUI({
+        tags$script(HTML("element = document.getElementById('error_name_enrichDO_js');
+                       element.classList.add('has-error');
+                       document.getElementById('main_page_v2_ui_1-Columns_ui_1-disease_analysis_ui_1-enrichDO_ui_1-load_input').disabled = true;"))
+      })
+      output$error_name_descrip <- renderUI({
+        tags$p(class = "text-danger", tags$b("Error:"), "This name has been taken. Please try again!",
+               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
+      })
+    } else {
+      output$error_name_js <- renderUI({
+        tags$script(HTML("document.getElementById('error_name_enrichDO_js').classList.remove('has-error');
+                         document.getElementById('main_page_v2_ui_1-Columns_ui_1-disease_analysis_ui_1-enrichDO_ui_1-load_input').disabled = false;"))
+      })
+      output$error_name_descrip <- NULL
+    }
   })
   
   observeEvent(input$load_input, {

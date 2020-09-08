@@ -11,14 +11,14 @@ app_server <- function( input, output, session) {
   app_servr$loaded <- con
 
   # Load example
-  if (nrow(MODifieRDB::get_available_enrichment_objects(con))==0){
-    enrichment_object <- readRDS("./data_example/breast_cancer_example.rds")
-    MODifieRDB::enrichment_object_to_db(enrichment_object,
-                                        module_name = "Breast cancer example",
-                                        enrichment_method = "enrichDGN",
-                                        enrichment_name = "Breast cancer",
-                                        con = con)
-  }
+  # if (nrow(MODifieRDB::get_available_enrichment_objects(con))==0){
+  #   enrichment_object <- readRDS("./data_example/breast_cancer_example.rds")
+  #   MODifieRDB::enrichment_object_to_db(enrichment_object,
+  #                                       module_name = "Breast cancer example",
+  #                                       enrichment_method = "enrichDGN",
+  #                                       enrichment_name = "Breast cancer",
+  #                                       con = con)
+  # }
  
   
   # Listen to the beautiful button
