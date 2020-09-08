@@ -58,6 +58,7 @@ mod_Mcode_post_processing_server <- function(input, output, session, inspected_m
           title = selected_module_name$name,
           easyClose = TRUE,
           size = "l",
+          top = 15, 
           tags$h3("Two post-processing functions are available for MCODE, you can either change the module score or split the module into different submodules above the cut off threshold", style = "color:#2c3e50"),
           selectInput(ns("post_process_choices"),
                       label = "Pick a post-processing method",

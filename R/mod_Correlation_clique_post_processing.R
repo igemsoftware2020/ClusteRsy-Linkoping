@@ -58,6 +58,7 @@ mod_Correlation_clique_post_processing_server <- function(input, output, session
         showModal(modalDialog(
           title = selected_module_name$name,
           easyClose = TRUE,
+          top = 15,
           size = "l",
           tags$h3("Choose between adjusting the frequency cutoff or adjusting the module size", style = "color:#2c3e50"),
           selectInput(ns("post_process_choices"),

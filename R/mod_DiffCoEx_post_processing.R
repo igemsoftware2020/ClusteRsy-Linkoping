@@ -61,6 +61,7 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
           title = selected_module_name$name,
           easyClose = TRUE,
           size = "l",
+          top = 20,
           tags$h3("Split module by color", style = "color:#2c3e50"),
           tags$p("This method will split the original DiffCoEx object into a series of DiffCoEx objects by color.", style = "color:#2c3e50"),
           tags$p("Every significant color in the module will be it's own DiffCoEx module object", style = "color:#2c3e50"),

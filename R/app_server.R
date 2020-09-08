@@ -7,7 +7,7 @@
 app_server <- function( input, output, session) {
   app_servr <- reactiveValues()
   # Loading screen
-  con <- MODifieRDB::connect_to_db("./data_example/igem.db")
+  con <- MODifieRDB::connect_to_db("./data_example/modelling_modules.db")
   app_servr$loaded <- con
 
   # Load example

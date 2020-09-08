@@ -57,6 +57,7 @@ mod_MODA_post_processing_server <- function(input, output, session, inspected_mo
           title = selected_module_name$name,
           easyClose = TRUE,
           size = "l",
+          top = 20,
           tags$h3("Change the threshold for specific Theta", style = "color:#2c3e50"), 
           sliderInput(ns("specific_theta"),
                       label = "Specific Theta",
