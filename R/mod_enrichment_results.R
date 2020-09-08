@@ -22,8 +22,10 @@ mod_enrichment_results_ui <- function(id){
 #' enrichment_results Server Function
 #'
 #' @noRd 
-mod_enrichment_results_server <- function(input, output, session, results_para_ui_1, selected, con){
+mod_enrichment_results_server <- function(input, output, session, enrichment_results_para_ui_1, selected, con){
   ns <- session$ns
+  
+  enrichment_results_module <- reactiveValues()
     
   object <- reactive({
     enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
@@ -51,20 +53,15 @@ mod_enrichment_results_server <- function(input, output, session, results_para_u
                                                      buttons = c('copy', 'csv', 'excel'),
                                                      lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")))))
   
+  observe({
+    if (is.null(input$enrichment_results_rows_selected) || length(input$enrichment_results_rows_selected) > 1) {
+      enrichment_results_module$check <- T
+    } else {
+      enrichment_results_module$check <- F
+    }
+  })
 
-observe({
-  if (is.null(input$enrichment_results_rows_selected) || length(input$enrichment_results_rows_selected) > 1) {
-    output$disable <- renderUI({
-      tags$script(HTML("document.getElementById('main_page_v2_ui_1-visual_ui_1-enrichment_results_para_ui_1-inspect_disease').disabled = true;"))
-    })
-  } else {
-    output$disable <- renderUI({
-      tags$script(HTML("document.getElementById('main_page_v2_ui_1-visual_ui_1-enrichment_results_para_ui_1-inspect_disease').disabled = false;"))
-    })
-  }
-})
-
-  observeEvent(results_para_ui_1$inspect_disease, {
+  observeEvent(enrichment_results_para_ui_1$inspect_disease, {
     selected <- selected$selected_object
     enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
     
@@ -82,6 +79,7 @@ observe({
               tags$p(paste("Disease ID:", enrichment_object@result$ID[selected_enrichment_object])),
               DT::dataTableOutput(ns("disease_genes")),
             ),
+            rep_br(2),
             footer = tagList(tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
             )
 
@@ -112,6 +110,7 @@ observe({
 
   })
   
+  return(enrichment_results_module)
 }
     
 ## To be copied in the UI

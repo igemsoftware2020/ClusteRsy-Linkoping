@@ -110,6 +110,9 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module, 
     })
   
   #Calling the parameters to the absolutePanel
+  
+  enrichment_results_ui_1 <- reactiveValues()
+  
   observeEvent(input$tabs, {
     output$parameters <- renderUI({
       
@@ -122,13 +125,11 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module, 
       } else if (input$tabs == "Heatmap") {
         mod_heat_plot_para_ui(ns("heat_plot_para_ui_1"))
       } else if (input$tabs == "Results") {
-        mod_enrichment_results_para_ui(ns("enrichment_results_para_ui_1"))
+        mod_enrichment_results_para_ui(ns("enrichment_results_para_ui_1"), enrichment_results_ui_1)
       }
     }) 
   })
-  
- 
-  
+
   #Parameter modules server call
   dot_plot_para_ui_1 <- callModule(mod_dot_plot_para_server, "dot_plot_para_ui_1", selected, con)
   enrichment_map_para_ui_1 <- callModule(mod_enrichment_map_para_server, "enrichment_map_para_ui_1", selected, con)
@@ -141,7 +142,7 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module, 
   callModule(mod_enrichment_map_server, "enrichment_map_ui_1",enrichment_map_para_ui_1, selected, con = con)
   callModule(mod_cnet_plot_server, "cnet_plot_ui_1", cnet_plot_para_ui_1, selected, con = con)
   callModule(mod_heat_plot_server, "heat_plot_ui_1", heat_plot_para_ui_1, selected, con = con)
-  callModule(mod_enrichment_results_server, "enrichment_results_ui_1", enrichment_results_para_ui_1, selected, con = con)
+  enrichment_results_ui_1$value <- callModule(mod_enrichment_results_server, "enrichment_results_ui_1", enrichment_results_para_ui_1, selected, con = con)
   
 }
 
