@@ -232,7 +232,6 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
                                  prettySwitch(ns("include_disease_genes"), 
                                               label = "Include disease genes in table",
                                               value = FALSE,
-                                              status = "warning",
                                               popup = "The disease genes will be shown as a string and may be hard to read from. You can either download the table as .xlsx/.csv to manipulate it or visit the Visualization tab to inspect the disease genes"),
                                  DT::dataTableOutput(ns("results"))),
                         tabPanel(title = "Settings",

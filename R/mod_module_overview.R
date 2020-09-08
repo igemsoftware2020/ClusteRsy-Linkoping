@@ -293,7 +293,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
       # Choose multiple options
       current_modules <- function() {
         selected <- input$module_overview_rows_selected
-        enrichment_objects$enrichment_name[selected]
+        module_objects$module_name[selected]
       }
       lapply(current_modules(), MODifieRDB::delete_module_object, con = con)
     } else {

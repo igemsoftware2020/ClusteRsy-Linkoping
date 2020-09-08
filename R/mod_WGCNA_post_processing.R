@@ -92,7 +92,6 @@ mod_WGCNA_post_processing_server <- function(input, output, session, inspected_m
         prettySwitch(ns("use_unadjusted"),
                      label = "Adjusted p-value",
                      value = FALSE,
-                     status = "warning",
                      popup = "Default is set to false meaning that a unadjusted p-value will be used")
       )
     } else if (input$post_process_choices == "Get Modules Genes by Sign") {
