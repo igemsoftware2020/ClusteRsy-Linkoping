@@ -227,6 +227,14 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
           fluidPage(
             tabsetPanel(id = ns("tabs"),
                         type = "tabs",
+                        tabPanel(title = "Results",
+                                 tags$br(),
+                                 prettySwitch(ns("include_disease_genes"), 
+                                              label = "Include disease genes in table",
+                                              value = FALSE,
+                                              status = "warning",
+                                              popup = "The disease genes will be shown as a string and may be hard to read from. You can either download the table as .xlsx/.csv to manipulate it or visit the Visualization tab to inspect the disease genes"),
+                                 DT::dataTableOutput(ns("results"))),
                         tabPanel(title = "Settings",
                                  DT::dataTableOutput(ns("settings")))),
             rep_br(2)),
@@ -235,6 +243,60 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
         ))
       )
     })
+    
+    observeEvent(input$include_disease_genes, {
+      if (input$include_disease_genes == FALSE) {
+        enrichment_results <- enrichment_module@result[c("Description", "GeneRatio", "BgRatio", "pvalue", "p.adjust", "qvalue", "Count")]
+        enrichment_results <- data.frame(Disease_ID = row.names(enrichment_results), enrichment_results)
+        
+        output$results <- DT::renderDataTable({enrichment_results},
+                                              rownames = FALSE,
+                                              colnames = c("Disease ID", "Description", "Gene Ration", "Bg Ration", "P-value", "P-adjusted", "q-value", "Count"),
+                                              filter = "top", 
+                                              class = 'compact cell-border hover',
+                                              style = "default",
+                                              extensions = 'Buttons',
+                                              options = list(
+                                                pageLength = 25,
+                                                paging = TRUE,
+                                                searching = TRUE,
+                                                scrollX = TRUE,
+                                                scrollY = TRUE,
+                                                #fixedColumns = FALSE,
+                                                autoWidth = FALSE,
+                                                ordering = TRUE,
+                                                dom = "lfrtipB",
+                                                buttons = c('copy', 'csv', 'excel'),
+                                                lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All"))))
+      } else {
+        enrichment_results <- enrichment_module@result[c("Description", "GeneRatio", "BgRatio", "pvalue", "p.adjust", "qvalue", "Count", "geneID")]
+        enrichment_results <- data.frame(Disease_ID = row.names(enrichment_results), enrichment_results)
+        
+        output$results <- DT::renderDataTable({enrichment_results},
+                                              rownames = FALSE,
+                                              colnames = c("Disease ID", "Description", "Gene Ration", "Bg Ration", "P-value", "P-adjusted", "q-value", "Count", "Genes"),
+                                              filter = "top", 
+                                              class = 'compact cell-border hover',
+                                              style = "default",
+                                              extensions = 'Buttons',
+                                              options = list(
+                                                pageLength = 25,
+                                                paging = TRUE,
+                                                searching = TRUE,
+                                                scrollX = TRUE,
+                                                scrollY = TRUE,
+                                                #fixedColumns = FALSE,
+                                                autoWidth = FALSE,
+                                                ordering = TRUE,
+                                                dom = "lfrtipB",
+                                                buttons = c('copy', 'csv', 'excel'),
+                                                lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All"))))
+      }
+    })
+    
+    
+                                                              
+    
     output$settings <- DT::renderDataTable(
       {DT <- data.frame("Values" = c(enrichment_module@pvalueCutoff, enrichment_module@pAdjustMethod, enrichment_module@organism, enrichment_module@ontology, enrichment_module@keytype))
       row.names(DT) <- c("pvalueCutoff", "pAdjustMethod", "Organism", "Ontology", "Keytype")

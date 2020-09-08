@@ -13,7 +13,7 @@ mod_enrichment_results_para_ui <- function(id){
     
     tags$div(style = "text-align:center",
              tags$br(),
-             tags$h4("Here you can inspect which genes that are invovled with a disease or pathway selected from the table"),
+             tags$p("Here you can inspect which genes that are invovled in the disease or pathway selected from the table"),
              actionButton(ns("inspect_disease"), label = "Inspect disease or pathway")
     )
   )
