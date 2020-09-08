@@ -235,3 +235,56 @@ retrieve_input_data <- function(module, con) {
   na.omit(input_data$edgeR_deg_table[module$module_genes, ])
   
 }
+
+check_settings <- function(module, con) {
+  UseMethod("check_settings", module)
+}
+
+#Inference method use ppi-network.
+check_settings.Mcode <- function(module, con) {
+  ppi_used <- c(module$settings$ppi_network)
+  input_used <-module$settings$MODifieR_input
+  ppi_used %in% c(MODifieRDB::get_available_db_networks(con)) && input_used %in% MODifieRDB::get_available_input_objects(con)$input_name
+}
+
+check_settings.Correlation_clique <- function(module, con) {
+  ppi_used <- c(module$settings$ppi_network)
+  input_used <-module$settings$MODifieR_input
+  ppi_used %in% c(MODifieRDB::get_available_db_networks(con)) && input_used %in% MODifieRDB::get_available_input_objects(con)$input_name
+}
+
+check_settings.DIAMOnD <- function(module, con) {
+  ppi_used <- c(module$settings$ppi_network)
+  input_used <-module$settings$MODifieR_input
+  ppi_used %in% c(MODifieRDB::get_available_db_networks(con)) && input_used %in% MODifieRDB::get_available_input_objects(con)$input_name
+}
+
+check_settings.module_discoverer <- function(module, con) {
+  ppi_used <- c(module$settings$ppi_network)
+  input_used <-module$settings$MODifieR_input
+  ppi_used %in% c(MODifieRDB::get_available_db_networks(con)) && input_used %in% MODifieRDB::get_available_input_objects(con)$input_name
+}
+
+#Clique_Sum gets it's ppi from the Clique DB (default PPI)
+check_settings.Clique_Sum_permutation <- function(module, con) {
+  input_used <-module$settings$MODifieR_input
+  ppi_used <- as.character(MODifieRDB::match_db_loc_to_ppi(module$settings$db, con = con))
+  ppi_used %in% c(MODifieRDB::get_available_db_networks(con)) && input_used %in% MODifieRDB::get_available_input_objects(con)$input_name
+}
+
+#Inference methods not using ppi-network.  
+check_settings.DiffCoEx <- function(module, con) {
+  input_used <-module$settings$MODifieR_input
+  input_used %in% MODifieRDB::get_available_input_objects(con)$input_name
+}
+
+check_settings.WGCNA <- function(module, con) {
+  input_used <-module$settings$MODifieR_input
+  input_used %in% MODifieRDB::get_available_input_objects(con)$input_name
+}
+
+check_settings.MODA <- function(module, con) {
+  input_used <-module$settings$MODifieR_input
+  input_used %in% MODifieRDB::get_available_input_objects(con)$input_name
+}
+

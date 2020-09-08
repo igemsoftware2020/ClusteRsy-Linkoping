@@ -56,11 +56,12 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     
     readRDS(file = infile)
   })
+  
 
   output$module_name_chooser <- renderUI({
     module <- upload_module() #reactive pop up
     tagList( 
-      textInput(ns("module_name"), "Module object name", placeholder = "Module name"),
+      #textInput(ns("module_name"), "Module object name", placeholder = paste0(module$settings$MODifieR_input, sep = "_", class(module)[2], sep = "_", "uploaded", Sys.time(), sep = "_") %>%  gsub(" ", "_", .)),
       actionButton(ns("upload_module"), "Add module object to database")
     )
   })
@@ -70,18 +71,44 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     input$module_name
   })
   
+  
+  #function to sen a set of modules uploaded to DB
+  multiple_modules_to_db <- function(module) {
+    if (check_settings(module, con)) { #check_settings found in fct_functions.
+      module_name <- paste0(module$settings$MODifieR_input, sep = "_", class(module)[2], sep = "_", "uploaded", sep = "_", Sys.time()) %>%  gsub(" ", "_", .)
+      MODifieRDB::MODifieR_object_to_db(module,
+                                        object_name = module_name,
+                                        con = con)
+    } else {
+      id <- showNotification(paste("Sorry, no input and/or PPI network matched to the uploaded module. You can either upload the input data used named:", module$settings$MODifieR_input, ",that was used for creating this MODifieR object,to the input_data tab.", " And/or the PPI network named:",module$settings$ppi_network, "that was used to create this " ), duration = NULL, closeButton = FALSE, type = "warning")
+      on.exit(removeNotification(id), add = TRUE)
+    }
+  }
+  
   # Upload module
   x <- reactiveVal(1)
   observeEvent(input$upload_module, {
     id <- showNotification("Saving module object to database", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
-    module <- upload_module()
+    
+    module <<- upload_module()
     module_name <- module_name()
     
+    if (length(module)==3 || length(module) ==2) {
+      if (check_settings(module, con)) {
+        module_name <- paste0(module$settings$MODifieR_input, sep = "_", class(module)[2], sep = "_", "uploaded", sep = "_", Sys.time()) %>%  gsub(" ", "_", .)
+        MODifieRDB::MODifieR_object_to_db(module,
+                                          object_name = module_name,
+                                          con = con)
+      } else {
+        id <- showNotification(paste("Sorry, no input and/or PPI network matched to the uploaded module. You can either upload the input data used named:", module$settings$MODifieR_input, ",that was used for creating this MODifieR object,to the input_data tab.", " And/or the PPI network named:",module$settings$ppi_network, "that was used to create this " ), duration = NULL, closeButton = FALSE, type = "warning")
+        on.exit(removeNotification(id), add = TRUE)
+      }
+      
+    } else {
+      sapply(module, multiple_modules_to_db)
+    }
     
-    MODifieRDB::MODifieR_object_to_db(module,
-                                      object_name = module_name,
-                                      con = con)
     
     # Refresh
     module_objects <- MODifieRDB::get_available_module_objects(con)
