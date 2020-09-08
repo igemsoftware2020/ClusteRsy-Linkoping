@@ -33,6 +33,7 @@ mod_enrichment_results_server <- function(input, output, session, results_para_u
   
   output$enrichment_results <- try(DT::renderDataTable({object()},
                                                    rownames = FALSE,
+                                                   selection = list(selected = c(1)),
                                                    filter = "top", 
                                                    class = 'compact cell-border hover',
                                                    style = "default",
@@ -67,7 +68,7 @@ observe({
     selected <- selected$selected_object
     enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
     
-    enrichment_object <<- MODifieRDB::enrichment_object_from_db(enrichment_objects$enrichment_name[selected],con)
+    enrichment_object <- MODifieRDB::enrichment_object_from_db(enrichment_objects$enrichment_name[selected],con)
     selected_enrichment_object <- input$enrichment_results_rows_selected
 
     output$inspected_disease <- renderUI({
@@ -88,7 +89,7 @@ observe({
         )
     })
 
-    inspected_genes <<- data.frame(strsplit(enrichment_object@result$geneID[selected_enrichment_object], "/"))
+    inspected_genes <- data.frame(strsplit(enrichment_object@result$geneID[selected_enrichment_object], "/"))
     colnames(inspected_genes) <- "Genes"
 
     output$disease_genes <- DT::renderDataTable({inspected_genes},
