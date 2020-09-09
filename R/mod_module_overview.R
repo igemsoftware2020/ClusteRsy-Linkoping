@@ -20,7 +20,8 @@ mod_module_overview_ui <- function(id){
     tags$div(`class`="row",
              tags$div(`class`="col-sm-4", style = "color:black",
              fileInput(ns("module_object"), label = "Upload a module object", accept =  ".rds"),
-             uiOutput(ns("module_name_chooser"))),
+             uiOutput(ns("module_name_chooser")),
+             uiOutput(ns("error_upload"))),
              tags$br(),
              tags$div(`class`="col-sm-8", style = "text-align:right", id ="buttons_module_overview",
                       downloadButton(ns("download_module_cytoscape"), label = "dummy", style = "visibility: hidden;"),
@@ -61,7 +62,6 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   output$module_name_chooser <- renderUI({
     module <- upload_module() #reactive pop up
     tagList( 
-      #textInput(ns("module_name"), "Module object name", placeholder = paste0(module$settings$MODifieR_input, sep = "_", class(module)[2], sep = "_", "uploaded", Sys.time(), sep = "_") %>%  gsub(" ", "_", .)),
       actionButton(ns("upload_module"), "Add module object to database")
     )
   })
@@ -72,17 +72,12 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   })
   
   
-  #function to send a set of modules to DB
-  multiple_modules_to_db <- function(module) {
-    if (check_settings(module, con)) { #check_settings found in fct_functions.
-      module_name <- paste0(module$settings$MODifieR_input, sep = "_", class(module)[2], sep = "_", "uploaded", sep = "_", Sys.time()) %>%  gsub(" ", "_", .)
-      MODifieRDB::MODifieR_object_to_db(module,
-                                        object_name = module_name,
-                                        con = con)
-    } else {
-      id <- showNotification(paste("Sorry, no input and/or PPI network matched to the uploaded module. You can either upload the input data used named:", module$settings$MODifieR_input, ",that was used for creating this MODifieR object,to the input_data tab.", " And/or the PPI network named:",module$settings$ppi_network, "that was used to create this " ), duration = NULL, closeButton = FALSE, type = "warning")
-      on.exit(removeNotification(id), add = TRUE)
-    }
+  #function to send a set of modules to DB (sends just one module as well)
+  multiple_modules_to_db <- function(module, module_names) {
+    
+    try(MODifieRDB::MODifieR_object_to_db(module,
+                                        object_name = module_names,
+                                        con = con))
   }
   
   # Upload module
@@ -90,25 +85,14 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   observeEvent(input$upload_module, {
     id <- showNotification("Saving module object to database", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
-    
-    module <- upload_module()
     module_name <- module_name()
+    module <<- upload_module()
     
-    if (length(module)==3 || length(module) ==2) {
-      if (check_settings(module, con)) {
-        module_name <- paste0(module$settings$MODifieR_input, sep = "_", class(module)[2], sep = "_", "uploaded", sep = "_", Sys.time()) %>%  gsub(" ", "_", .)
-        MODifieRDB::MODifieR_object_to_db(module,
-                                          object_name = module_name,
-                                          con = con)
-      } else {
-        id <- showNotification(paste("Sorry, no input and/or PPI network matched to the uploaded module. You can either upload the input data used named:", module$settings$MODifieR_input, ",that was used for creating this MODifieR object,to the input_data tab.", " And/or the PPI network named:",module$settings$ppi_network, "that was used to create this " ), duration = NULL, closeButton = FALSE, type = "warning")
-        on.exit(removeNotification(id), add = TRUE)
-      }
+    #output$error_upload <- renderUI({
       
-    } else {
-      sapply(module, multiple_modules_to_db)
-    }
-    
+      sapply(1:length(module), function(x){multiple_modules_to_db(module[[x]], module_names = names(module)[x])})
+      
+    #})
     
     # Refresh
     module_objects <- MODifieRDB::get_available_module_objects(con)
@@ -162,7 +146,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   })
   
   
-  
+  # Download function 
   retrieve_module <- function(){
     selected <- input$module_overview_rows_selected
     module_objects <- MODifieRDB::get_available_module_objects(con)
@@ -172,14 +156,28 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
         selected <- input$module_overview_rows_selected
         module_objects$module_name[selected]
       }
-      lapply(current_modules(), MODifieRDB::MODifieR_module_from_db, con = con)
+      modules <-lapply(current_modules(), MODifieRDB::MODifieR_module_from_db, con = con)
+      names(modules) <- current_modules()
+      return(modules)
     } else {
-      MODifieRDB::MODifieR_module_from_db(module_objects$module_name[selected], con = con)
+      module <- list(MODifieRDB::MODifieR_module_from_db(module_objects$module_name[selected], con = con))
+      names(module) <- module_objects$module_name[selected]
+      return(module)
     }
   }
   
   
-  # Download function
+
+  
+  #Download module object
+  output$download_module <- downloadHandler(
+    filename = function() {
+      paste0("module_set_", Sys.Date(), ".rds", sep="")
+    },
+    content = function(file) {
+      saveRDS(retrieve_module(), file)
+    }
+  )
   
   subset_module_genes <- reactiveVal()
   
@@ -279,15 +277,6 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     }
   )
   
-  #Download module object
-  output$download_module <- downloadHandler(
-    filename = function() {
-      paste0("module_set_", Sys.Date(), ".rds", sep="")
-    },
-    content = function(file) {
-      saveRDS(retrieve_module(), file)
-    }
-  )
   
   # Observe if valid to download
   observe({
