@@ -112,8 +112,9 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     
     # Refresh
     module_objects <- MODifieRDB::get_available_module_objects(con)
-    output$module_overview <- DT::renderDataTable(module_objects,
+    output$module_overview <- DT::renderDataTable({module_objects},
                                                   rownames = FALSE,
+                                                  colnames = c("Module name", "Number of genes", "Input data used", "Module type", "PPI network used"),
                                                   selection = list(selected = c(1)),
                                                   callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
@@ -129,8 +130,9 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   
   module_objects <- MODifieRDB::get_available_module_objects(con)
   # Render DT
-  output$module_overview <- DT::renderDataTable(module_objects,
+  output$module_overview <- DT::renderDataTable({module_objects},
                                                 rownames = FALSE,
+                                                colnames = c("Module name", "Number of genes", "Input data used", "Module type", "PPI network used"),
                                                 selection = list(selected = c(1)),
                                                 callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
@@ -146,8 +148,9 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   # Refresh DT
   observeEvent(Columns_ui_1$module_name, {
     module_objects <- MODifieRDB::get_available_module_objects(con)
-    output$module_overview <- DT::renderDataTable(module_objects,
+    output$module_overview <- DT::renderDataTable({module_objects},
                                                   rownames = FALSE,
+                                                  colnames = c("Module name", "Number of genes", "Input data used", "Module type", "PPI network used"),
                                                   selection = list(selected = c(1)),
                                                   callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
@@ -303,9 +306,10 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     on.exit(removeNotification(id), add = TRUE)
     # Required for selecting
     module_objects <- MODifieRDB::get_available_module_objects(con)
-    output$module_overview <- DT::renderDataTable(module_objects,
+    output$module_overview <- DT::renderDataTable({module_objects},
                                                   selection = list(selected = c(1)),
                                                   rownames = FALSE,
+                                                  colnames = c("Module name", "Number of genes", "Input data used", "Module type", "PPI network used"),
                                                   callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -329,9 +333,10 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     
     # Refresh
     module_objects <- MODifieRDB::get_available_module_objects(con)
-    output$module_overview <- DT::renderDataTable(module_objects,
+    output$module_overview <- DT::renderDataTable({module_objects},
                                                   selection = list(selected = c(1)),
                                                   rownames = FALSE,
+                                                  colnames = c("Module name", "Number of genes", "Input data used", "Module type", "PPI network used"),
                                                   callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -383,9 +388,10 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     ##### Important: This needs too be double arrowed in order for it too work! #####
     module_objects_inspected <<- MODifieRDB::get_available_module_objects(con) 
     
-    output$module_overview <- DT::renderDataTable(module_objects_inspected,
+    output$module_overview <- DT::renderDataTable({module_objects_inspected},
                                                   selection = list(selected = c(1)),
                                                   rownames = FALSE,
+                                                  colnames = c("Module name", "Number of genes", "Input data used", "Module type", "PPI network used"),
                                                   callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();

@@ -40,9 +40,10 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
   
   # Create a table
   enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
-  output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
+  output$enrichment_overview <- DT::renderDataTable({enrichment_objects},
                                                     rownames = FALSE,
                                                     selection = list(selected = c(1)),
+                                                    colnames = c("Enrichment name", "Module_name", "Enrichment method"),
                                                     callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -88,9 +89,10 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     
     # Refresh
     enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
-    output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
+    output$enrichment_overview <- DT::renderDataTable({enrichment_objects},
                                                       rownames = FALSE,
                                                       selection = list(selected = c(1)),
+                                                      colnames = c("Enrichment name", "Module_name", "Enrichment method"),
                                                       callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -106,9 +108,10 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
   # Render DT
   observeEvent(main_page_v2_module$enrich, {
     enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
-    output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
+    output$enrichment_overview <- DT::renderDataTable({enrichment_objects},
                                                       rownames = FALSE,
                                                       selection = list(selected = c(1)),
+                                                      colnames = c("Enrichment name", "Module_name", "Enrichment method"),
                                                       callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -160,9 +163,10 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     on.exit(removeNotification(id), add = TRUE)
     # Required for selecting
     enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
-    output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
+    output$enrichment_overview <- DT::renderDataTable({enrichment_objects},
                                                       rownames = FALSE,
                                                       selection = list(selected = c(1)),
+                                                      colnames = c("Enrichment name", "Module_name", "Enrichment method"),
                                                       callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -187,9 +191,10 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     
     # Refresh
     enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
-    output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
+    output$enrichment_overview <- DT::renderDataTable({enrichment_objects},
                                                       rownames = FALSE,
                                                       selection = list(selected = c(1)),
+                                                      colnames = c("Enrichment name", "Module_name", "Enrichment method"),
                                                       callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();

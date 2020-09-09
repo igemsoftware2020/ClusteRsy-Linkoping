@@ -75,9 +75,10 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
     
     # Refresh
     input_objects <- MODifieRDB::get_available_input_objects(con)
-    output$input_overview <- DT::renderDataTable(input_objects,
+    output$input_overview <- DT::renderDataTable({input_objects},
                                                  rownames = FALSE,
                                                  selection = list(selected = c(1)),
+                                                 colnames = c("Input name", "Number of genes", "Data type"),
                                                  callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -94,9 +95,10 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
   input_objects <- MODifieRDB::get_available_input_objects(con)
   
   # Render DT
-  output$input_overview <- DT::renderDataTable(input_objects,
+  output$input_overview <- DT::renderDataTable({input_objects},
                                                rownames = FALSE,
                                                selection = list(selected = c(1)),
+                                               colnames = c("Input name", "Number of genes", "Data type"),
                                                callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -123,9 +125,10 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
   # Refresh DT
   observeEvent(Columns_ui_1$input_name, {
     input_objects <- MODifieRDB::get_available_input_objects(con)
-    output$input_overview <- DT::renderDataTable(input_objects,
+    output$input_overview <- DT::renderDataTable({input_objects},
                                                  rownames = FALSE,
                                                  selection = list(selected = c(1)),
+                                                 colnames = c("Input name", "Number of genes", "Data type"),
                                                   callback = DT::JS('
                                                              table.on("dblclick.dt","tr", function() {
                                                                var data=table.row(this).data();;
@@ -140,9 +143,10 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
   # Refresh DT
   observeEvent(Columns_ui_1$upload_input_rds, {
     input_objects <- MODifieRDB::get_available_input_objects(con)
-    output$input_overview <- DT::renderDataTable(input_objects,
+    output$input_overview <- DT::renderDataTable({input_objects},
                                                  rownames = FALSE,
                                                  selection = list(selected = c(1)),
+                                                 colnames = c("Input name", "Number of genes", "Data type"),
                                                  callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -194,9 +198,10 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
     on.exit(removeNotification(id), add = TRUE)
     # Required for selecting
     input_objects <- MODifieRDB::get_available_input_objects(con)
-    output$input_overview <- DT::renderDataTable(input_objects,
+    output$input_overview <- DT::renderDataTable({input_objects},
                                                  rownames = FALSE,
                                                  selection = list(selected = c(1)),
+                                                 colnames = c("Input name", "Number of genes", "Data type"),
                                                  callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -222,9 +227,10 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
     
     # Refresh
     input_objects <- MODifieRDB::get_available_input_objects(con)
-    output$input_overview <- DT::renderDataTable(input_objects,
+    output$input_overview <- DT::renderDataTable({input_objects},
                                                  rownames = FALSE,
                                                  selection = list(selected = c(1)),
+                                                 colnames = c("Input name", "Number of genes", "Data type"),
                                                  callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
