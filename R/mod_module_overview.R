@@ -19,7 +19,7 @@ mod_module_overview_ui <- function(id){
     DT::dataTableOutput(ns("module_overview")),
     tags$div(`class`="row",
              tags$div(`class`="col-sm-4", style = "color:black",
-             fileInput(ns("module_object"), label = "Upload a module object", accept =  ".rds"),
+             fileInput(ns("module_object"), label = "Upload a module object", accept =  ".rds", popup = "You can upload multipe or single modules to our database. If you have MODifieR objects that wans't created by our tool, please pass them to a list and name the list with the module names."),
              uiOutput(ns("module_name_chooser")),
              uiOutput(ns("error_upload"))),
              tags$br(),
@@ -74,10 +74,13 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   
   #function to send a set of modules to DB (sends just one module as well)
   multiple_modules_to_db <- function(module, module_names) {
-    
+    output$error_upload <- renderUI({
+      tags$div(style = "color:#eb4034",
     try(MODifieRDB::MODifieR_object_to_db(module,
                                         object_name = module_names,
                                         con = con))
+      )
+    })
   }
   
   # Upload module
@@ -86,13 +89,14 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     id <- showNotification("Saving module object to database", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     module_name <- module_name()
-    module <<- upload_module()
+    module <- upload_module()
     
-    #output$error_upload <- renderUI({
+    
+     sapply(1:length(module), function(x){multiple_modules_to_db(module[[x]], module_names = names(module)[x])})
       
-      sapply(1:length(module), function(x){multiple_modules_to_db(module[[x]], module_names = names(module)[x])})
       
-    #})
+      
+    
     
     # Refresh
     module_objects <- MODifieRDB::get_available_module_objects(con)
