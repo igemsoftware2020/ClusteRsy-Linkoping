@@ -18,7 +18,7 @@ mod_enrichment_overview_ui <- function(id){
     DT::dataTableOutput(ns("enrichment_overview")),
     tags$div(`class`="row",
              tags$div(`class`="col-sm-10", style = "color:black",
-                      fileInput(ns("enrichment_object"), label = "Upload an enrichment object", accept =  ".rds"),
+                      fileInput(ns("enrichment_object"), label = "Upload an enrichment object", accept =  ".rds", popup = "For now we only include single object upload. If you have downloaded a list of enrichment objects, please save them to multiple .rds files and upload one by one"),
                       uiOutput(ns("enrichment_name_chooser"))),
              tags$br(),
              tags$div(`class`="col-sm-2", style = "text-align:right", id ="buttons_enrichment_overview",
@@ -68,24 +68,84 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
   
   output$enrichment_name_chooser <- renderUI({
     module <- upload_enrichment() #reactive pop up
-    tagList( 
-      textInput(ns("enrichment_module_name"), "Enrichment module name", placeholder = "Enrichment module name"),
-      actionButton(ns("upload_enrichment"), "Add enrichment object to database")
+    enrichment <- upload_enrichment()
+    enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
+    
+    if (length(enrichment) > 1) {
+      tags$p("It seems that you have tried to upload a list of enrichment objects, try to upload a single object instead.", style = "color:#eb4034")
+    
+    } else if (is.null(names(enrichment))) {
+    tagList(
+      showModal(modalDialog(
+        top = 20,
+        title = "Upload a new object to the database",
+        easyClose = F,
+        size = "l",
+              textInput(ns("enrichment_module_name"), "Select an enrichment module name", popup = "Enter a name for this object", placeholder = "Enrichment module name"),
+              textInput(ns("module_name"), "What module was used to produce this object?", placeholder = "Module name"),
+              textInput(ns("enrichment_type"), "What enrichment type was used to produce this object?", placeholder = "Enrichment type"),
+              actionButton(ns("upload_enrichment"), "Add enrichment object to database"),
+        footer = tagList(tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
+        )))
     )
+    } else if (any(enrichment_objects$enrichment_name == names(enrichment))) {
+      tagList(
+        showModal(modalDialog(
+          top = 20,
+          title = paste("Upload an already existing object to the DB"),
+          easyClose = F,
+          size = "l",
+                tags$h3("There was already an object in the database with this name, please select a new name below or delete the object already in the database"),
+                textInput(ns("enrichment_module_name"), "Enrichment module name", popup = "Enter a name for this object", placeholder = "Enrichment module name"),
+                textInput(ns("module_name"), "What module was used to produce this object?", popup= "Name the MODifieR method that was used"),
+                textInput(ns("enrichment_type"), "What enrichment type was used to produce this object?", popup = "Name the enrichment analysis that was used"),
+                actionButton(ns("upload_enrichment"), "Add enrichment object to database"),
+          footer = tagList(tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
+          )))
+      )
+    } else {
+      tagList(
+        showModal(modalDialog(
+          top = 20,
+          title = paste(names(enrichment), "are being loaded to the database"),
+          easyClose = F,
+          size = "l",
+          textInput(ns("module_name"), "What module was used to produce this object?", placeholder = "Module name"),
+          textInput(ns("enrichment_type"), "What enrichment type was used to produce this object?", placeholder = "Enrichment type"),
+          actionButton(ns("upload_enrichment"), "Add enrichment object to database"),
+          footer = tagList(tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
+          )))
+      )
+      
+    }
+    
   })
   
   # Upload enrichment
   x <- reactiveVal(1)
   observeEvent(input$upload_enrichment, {
+    
+    if (is.null(input$enrichment_module_name)) {
+      id <- showNotification("Saving module object to database", duration = NULL, closeButton = FALSE, type = "warning")
+      on.exit(removeNotification(id), add = TRUE)
+      enrichment <- upload_enrichment()
+      
+      try(MODifieRDB::enrichment_object_to_db(enrichment_object = enrichment,
+                                          module_name = input$module_name, 
+                                          enrichment_method = input$enrichment_type, 
+                                          enrichment_name = names(enrichment),
+                                          con = con))
+    } else {
     id <- showNotification("Saving module object to database", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
     enrichment <- upload_enrichment()
     
-    MODifieRDB::enrichment_object_to_db(enrichment_object = enrichment,
-                                        module_name = NULL, 
-                                        enrichment_method = enrichment@ontology, 
+    try(MODifieRDB::enrichment_object_to_db(enrichment_object = enrichment,
+                                        module_name = input$module_name, 
+                                        enrichment_method = input$enrichment_type, 
                                         enrichment_name = input$enrichment_module_name,
-                                        con = con)
+                                        con = con))
+    }
     
     # Refresh
     enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
@@ -130,9 +190,13 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
         selected <- input$enrichment_overview_rows_selected
         enrichment_objects$enrichment_name[selected]
       }
-      lapply(current_enrichment_objects(), MODifieRDB::enrichment_object_from_db, con = con)
+      modules <- lapply(current_enrichment_objects(), MODifieRDB::enrichment_object_from_db, con = con)
+      names(modules) <- current_enrichment_objects()
+      return(modules)
     } else {
-      MODifieRDB::enrichment_object_from_db(enrichment_objects$enrichment_name[selected], con)
+      module <- list(MODifieRDB::enrichment_object_from_db(enrichment_objects$enrichment_name[selected], con))
+      names(module) <- enrichment_objects$enrichment_name[selected]
+      return(module)
     }
   }
   
