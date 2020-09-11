@@ -43,7 +43,7 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
   output$enrichment_overview <- DT::renderDataTable({enrichment_objects},
                                                     rownames = FALSE,
                                                     selection = list(selected = c(1)),
-                                                    colnames = c("Enrichment name", "Module_name", "Enrichment method"),
+                                                    colnames = c("Enrichment name", "Module name", "Enrichment method"),
                                                     callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -127,32 +127,33 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     
     if (is.null(input$enrichment_module_name)) {
       id <- showNotification("Saving module object to database", duration = NULL, closeButton = FALSE, type = "warning")
-      on.exit(removeNotification(id), add = TRUE)
       enrichment <- upload_enrichment()
       
-      try(MODifieRDB::enrichment_object_to_db(enrichment_object = enrichment,
+      try(MODifieRDB::enrichment_object_to_db(enrichment_object = enrichment[[1]],
                                           module_name = input$module_name, 
                                           enrichment_method = input$enrichment_type, 
                                           enrichment_name = names(enrichment),
                                           con = con))
+      on.exit(removeModal())
     } else {
     id <- showNotification("Saving module object to database", duration = NULL, closeButton = FALSE, type = "warning")
-    on.exit(removeNotification(id), add = TRUE)
     enrichment <- upload_enrichment()
     
-    try(MODifieRDB::enrichment_object_to_db(enrichment_object = enrichment,
+    try(MODifieRDB::enrichment_object_to_db(enrichment_object = enrichment[[1]],
                                         module_name = input$module_name, 
                                         enrichment_method = input$enrichment_type, 
                                         enrichment_name = input$enrichment_module_name,
                                         con = con))
+    on.exit(removeModal())
     }
     
+    on.exit(removeNotification(id), add = TRUE)
     # Refresh
     enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
     output$enrichment_overview <- DT::renderDataTable({enrichment_objects},
                                                       rownames = FALSE,
                                                       selection = list(selected = c(1)),
-                                                      colnames = c("Enrichment name", "Module_name", "Enrichment method"),
+                                                      colnames = c("Enrichment name", "Module name", "Enrichment method"),
                                                       callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -171,7 +172,7 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     output$enrichment_overview <- DT::renderDataTable({enrichment_objects},
                                                       rownames = FALSE,
                                                       selection = list(selected = c(1)),
-                                                      colnames = c("Enrichment name", "Module_name", "Enrichment method"),
+                                                      colnames = c("Enrichment name", "Module name", "Enrichment method"),
                                                       callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -230,7 +231,7 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     output$enrichment_overview <- DT::renderDataTable({enrichment_objects},
                                                       rownames = FALSE,
                                                       selection = list(selected = c(1)),
-                                                      colnames = c("Enrichment name", "Module_name", "Enrichment method"),
+                                                      colnames = c("Enrichment name", "Module name", "Enrichment method"),
                                                       callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -258,7 +259,7 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     output$enrichment_overview <- DT::renderDataTable({enrichment_objects},
                                                       rownames = FALSE,
                                                       selection = list(selected = c(1)),
-                                                      colnames = c("Enrichment name", "Module_name", "Enrichment method"),
+                                                      colnames = c("Enrichment name", "Module name", "Enrichment method"),
                                                       callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
