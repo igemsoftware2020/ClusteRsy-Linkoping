@@ -10,6 +10,7 @@
 mod_enrichment_overview_ui <- function(id){
   ns <- NS(id)
   tagList(
+    shinyjs::useShinyjs(),
     tags$div(style= "margin-left: 10px; margin-right: 10px",
              tags$h1(style= "color: #2b3e50; ", "Enrichment Objects"),
              actionLink(inputId = "information_btn_enrichment", label = "Learn More"),
@@ -315,36 +316,13 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     })
     
     observeEvent(input$include_disease_genes, {
-      if (input$include_disease_genes == FALSE) {
-        enrichment_results <- enrichment_module@result[c("Description", "GeneRatio", "BgRatio", "pvalue", "p.adjust", "qvalue", "Count")]
-        enrichment_results <- data.frame(Disease_ID = row.names(enrichment_results), enrichment_results)
-        
-        output$results <- DT::renderDataTable({enrichment_results},
-                                              rownames = FALSE,
-                                              colnames = c("Disease ID", "Description", "Gene Ration", "Bg Ration", "P-value", "P-adjusted", "q-value", "Count"),
-                                              filter = "top", 
-                                              class = 'compact cell-border hover',
-                                              style = "default",
-                                              extensions = 'Buttons',
-                                              options = list(
-                                                pageLength = 25,
-                                                paging = TRUE,
-                                                searching = TRUE,
-                                                scrollX = TRUE,
-                                                scrollY = TRUE,
-                                                #fixedColumns = FALSE,
-                                                autoWidth = FALSE,
-                                                ordering = TRUE,
-                                                dom = "lfrtipB",
-                                                buttons = c('copy', 'csv', 'excel'),
-                                                lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All"))))
-      } else {
+      
+      if (input$include_disease_genes == TRUE) {
         output$separator <- renderUI({
           tagList(
             prettySwitch(ns("separator_used"), label = "Separate geneID by ' / ' or comma separated", value = FALSE)
-          )
+          ) 
         })
-        
         
         observeEvent(input$separator_used, {
           if (input$separator_used == TRUE) {
@@ -398,6 +376,31 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
                                                     lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All"))))
           }
         })
+        
+      } else { 
+      shinyjs::hide("separator_used")
+        enrichment_results <- enrichment_module@result[c("Description", "GeneRatio", "BgRatio", "pvalue", "p.adjust", "qvalue", "Count")]
+        enrichment_results <- data.frame(Disease_ID = row.names(enrichment_results), enrichment_results)
+        
+        output$results <- DT::renderDataTable({enrichment_results},
+                                              rownames = FALSE,
+                                              colnames = c("Disease ID", "Description", "Gene Ration", "Bg Ration", "P-value", "P-adjusted", "q-value", "Count"),
+                                              filter = "top", 
+                                              class = 'compact cell-border hover',
+                                              style = "default",
+                                              extensions = 'Buttons',
+                                              options = list(
+                                                pageLength = 25,
+                                                paging = TRUE,
+                                                searching = TRUE,
+                                                scrollX = TRUE,
+                                                scrollY = TRUE,
+                                                #fixedColumns = FALSE,
+                                                autoWidth = FALSE,
+                                                ordering = TRUE,
+                                                dom = "lfrtipB",
+                                                buttons = c('copy', 'csv', 'excel'),
+                                                lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All"))))
       }
     })
     
