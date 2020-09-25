@@ -82,10 +82,13 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
         title = "Upload a new object to the database",
         easyClose = F,
         size = "l",
-              textInput(ns("enrichment_module_name"), "Select an enrichment module name", popup = "Enter a name for this object", placeholder = "Enrichment module name"),
-              textInput(ns("module_name"), "What module was used to produce this object?", placeholder = "Module name"),
-              textInput(ns("enrichment_type"), "What enrichment type was used to produce this object?", placeholder = "Enrichment type"),
-              actionButton(ns("upload_enrichment"), "Add enrichment object to database"),
+        tags$div(id = "error_name_enrichment_overview_js",
+                 textInput(ns("enrichment_module_name"), "Select an enrichment module name", popup = "Enter a name for this object", placeholder = "Enrichment module name")),
+        uiOutput(ns("error_name_descrip")),
+        uiOutput(ns("error_name_js")),
+        textInput(ns("module_name"), "What module was used to produce this object?", placeholder = "Module name"),
+        textInput(ns("enrichment_type"), "What enrichment type was used to produce this object?", placeholder = "Enrichment type"),
+        actionButton(ns("upload_enrichment"), "Add enrichment object to database"),
         footer = tagList(tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
         )))
     )
@@ -96,11 +99,14 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
           title = paste("Upload an already existing object to the DB"),
           easyClose = F,
           size = "l",
-                tags$h3("There was already an object in the database with this name, please select a new name below or delete the object already in the database"),
-                textInput(ns("enrichment_module_name"), "Enrichment module name", popup = "Enter a name for this object", placeholder = "Enrichment module name"),
-                textInput(ns("module_name"), "What module was used to produce this object?", popup= "Name the MODifieR method that was used"),
-                textInput(ns("enrichment_type"), "What enrichment type was used to produce this object?", popup = "Name the enrichment analysis that was used"),
-                actionButton(ns("upload_enrichment"), "Add enrichment object to database"),
+          tags$h3("There was already an object in the database with this name, please select a new name below or delete the object already in the database"),
+          tags$div(id = "error_name_enrichment_overview_js",
+                  textInput(ns("enrichment_module_name"), "Enrichment module name", popup = "Enter a name for this object", placeholder = "Enrichment module name")),
+          uiOutput(ns("error_name_descrip")),
+          uiOutput(ns("error_name_js")),
+          textInput(ns("module_name"), "What module was used to produce this object?", popup= "Name the MODifieR method that was used"),
+          textInput(ns("enrichment_type"), "What enrichment type was used to produce this object?", popup = "Name the enrichment analysis that was used"),
+          actionButton(ns("upload_enrichment"), "Add enrichment object to database"),
           footer = tagList(tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
           )))
       )
@@ -166,6 +172,32 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     x(x() + 1)
     enrichment_overview_module$upload <- x()
   })
+  
+  
+  enrichment_name <- reactive({
+    input$enrichment_module_name
+  })
+  
+  # Check name
+  observe({
+    if (any(MODifieRDB::get_available_enrichment_objects(con)$enrichment_name == enrichment_name())){
+      output$error_name_js <- renderUI({
+        tags$script(HTML("element = document.getElementById('error_name_enrichment_overview_js');
+                       element.classList.add('has-error');
+                       document.getElementById('main_page_v2_ui_1-enrichment_overview_ui_1-upload_enrichment').disabled = true;"))
+      })
+      output$error_name_descrip <- renderUI({
+        tags$p(class = "text-danger", tags$b("Error:"), "This name has been taken. Please try again!",
+               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
+      })
+    } else {
+      output$error_name_js <- renderUI({
+        tags$script(HTML("document.getElementById('error_name_enrichment_overview_js').classList.remove('has-error');
+                         document.getElementById('main_page_v2_ui_1-enrichment_overview_ui_1-upload_enrichment').disabled = false;"))
+      })
+      output$error_name_descrip <- NULL
+    }
+  }) 
   
   # Render DT
   observeEvent(main_page_v2_module$enrich, {

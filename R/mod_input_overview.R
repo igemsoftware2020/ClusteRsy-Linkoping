@@ -50,8 +50,11 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
   # File input
   output$input_name_chooser <- renderUI({
     input <- upload_input() #reactive pop up
-    tagList( 
-      textInput(ns("input_name"), "Input object name", placeholder = "Input name"),
+    tagList(
+      tags$div(id = "error_name_input_overview_js",
+              textInput(ns("input_name"), "Input object name", placeholder = "Input name")),
+      uiOutput(ns("error_name_descrip")),
+      uiOutput(ns("error_name_js")),
       actionButton(ns("upload_input"), "Add input object to database")
     )
   })
@@ -60,6 +63,28 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
   input_name <- reactive({
     input$input_name
   })
+  
+  # Check name
+  observe({
+    if (any(MODifieRDB::get_available_input_objects(con)$input_name == input_name())){
+      output$error_name_js <- renderUI({
+        tags$script(HTML("element = document.getElementById('error_name_input_overview_js');
+                       element.classList.add('has-error');
+                       document.getElementById('main_page_v2_ui_1-input_overview_ui_1-upload_input').disabled = true;"))
+      })
+      output$error_name_descrip <- renderUI({
+        tags$p(class = "text-danger", tags$b("Error:"), "This name has been taken. Please try again!",
+               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
+      })
+    } else {
+      output$error_name_js <- renderUI({
+        tags$script(HTML("document.getElementById('error_name_input_overview_js').classList.remove('has-error');
+                         document.getElementById('main_page_v2_ui_1-input_overview_ui_1-upload_input').disabled = false;"))
+      })
+      output$error_name_descrip <- NULL
+    }
+  })
+  
   
   # Upload input object
   x <- reactiveVal(1)
@@ -167,7 +192,6 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
       }
       lapply(current_inputs(), MODifieRDB::MODifieR_input_from_db, con = con)
     } else {
-      print(input_objects$input_name[selected])
       MODifieRDB::MODifieR_input_from_db(input_objects$input_name[selected], con = con)
     }
   }
