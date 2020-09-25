@@ -177,9 +177,12 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
       top = "30",
       easyClose = TRUE,
       title = "Module Objects",
+      tags$p(
       "In the Module Objects tab all the previously made Modules 
-       are saved and stored. The Modules in the table below can be brought  
-       back in column 3 in the Tools-tab for further analysis.",
+       are saved and stored. You can inspect the module objects by double clicking the selected module."),
+      tags$br(),
+      tags$p(
+      "You can download one or multiple objects. Note that if you like to upload an module object you have to store it as a list and naming the list and save it as a .Rds file before you can upload it to the database."),
       style = "color:black; text-align:center;",
       footer=tagList(
         tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
@@ -191,11 +194,14 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
       top = "30",
       easyClose = TRUE,
       title = "Enrichment Objects",
+      tags$p(
       "In the Enrichment Objects tab all the previously made 
-       enrichments can be found. the Enrichments in the table below can be brought  
-       back in the Visualisation-tab for further analysis. Note that no Enrichments 
-       will be stored at the end of a session. Download all Enrichments that need 
-       to be saved for later.",
+       enrichments can be found. You can inspect the results by double clicking the selected enrichment object. 
+      If you want to inspect a certain disease from one of the enrichment objects, please visit the Visualization tab and go the results table."),
+      tags$br(),
+      tags$p("You can download multiple or single enrichment objects but as of now we only offer single upload."),
+      tags$br(),
+      tags$p("If you like to upload an enrichment object created elsewhere please store it as a list and save it as a .Rds file before you can upload it to the database"),
       style = "color:black; text-align:center;",
       footer=tagList(
         tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
