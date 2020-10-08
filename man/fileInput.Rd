@@ -13,7 +13,7 @@ fileInput(
   buttonLabel = "Browse...",
   placeholder = "No file selected",
   tooltip = T,
-  title = "?",
+  header = "?",
   popup = "Help tips",
   pos = "right"
 )

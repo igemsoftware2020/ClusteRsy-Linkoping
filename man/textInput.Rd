@@ -11,7 +11,7 @@ textInput(
   width = NULL,
   placeholder = NULL,
   tooltip = T,
-  title = "?",
+  header = "?",
   popup = "Help tips",
   pos = "right"
 )

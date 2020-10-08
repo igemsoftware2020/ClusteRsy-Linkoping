@@ -14,7 +14,7 @@ radioButtons(
   choiceNames = NULL,
   choiceValues = NULL,
   tooltip = T,
-  title = "?",
+  header = "?",
   popup = "Help tips",
   pos = "right"
 )

@@ -24,7 +24,7 @@ sliderInput(
   timezone = NULL,
   dragRange = TRUE,
   tooltip = T,
-  title = "?",
+  header = "?",
   popup = "Help tips",
   pos = "right"
 )
