@@ -4,7 +4,6 @@
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
-#'@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap%27);
 #'
 #' @noRd 
 #'
