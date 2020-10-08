@@ -2,6 +2,7 @@ $( document ).ready(function() {
     var mySwiper = new Swiper('.swiper-container', {
     // Optional parameters
     direction: 'horizontal',
+    autoplay: false,
     loop: true,
     grabCursor: true,
     observer: true,
@@ -15,11 +16,7 @@ $( document ).ready(function() {
       nextEl: '.swiper-button-next',
       prevEl: '.swiper-button-prev',
     },
-    
-    // Auto play
-    autoplay: {
-    delay: 4000,
-    },
+
     
   });
 });

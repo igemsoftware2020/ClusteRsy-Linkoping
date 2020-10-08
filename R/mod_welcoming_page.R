@@ -52,14 +52,18 @@ mod_welcoming_page_ui <- function(id){
              tags$div(`class`="col-sm-8", style = "height:100%",
                    
                       tags$a(class="grid-item", style="background-image:url('www/grid_item1.jpg');",
-                             tags$p("MODifieR", style="font-family:Quicksand")),
+                             tags$p("MODifieR", style="font-family:Quicksand"),
+                             tags$p("This is MODifieR", style="font-family:Quicksand; opacity:0")),
                       tags$a(class="grid-item", style="background-image:url('www/grid_item2.jpg');",
-                             tags$p("Enrichment analysis", style="font-family:Quicksand")),
+                             tags$p("Enrichment analysis", style="font-family:Quicksand"),
+                             tags$p("This is Enrichment analysis", style="font-family:Quicksand; opacity:0")),
              tags$br(),
                       tags$a(class="grid-item", style="background-image:url('www/grid_item3.jpg');",
-                             tags$p("Visualization", style="font-family:Quicksand")),
+                             tags$p("Visualization", style="font-family:Quicksand"),
+                             tags$p("This is Visualization", style="font-family:Quicksand; opacity:0")),
                       tags$a(class="grid-item", style="background-image:url('www/grid_item4.jpg');",
-                            tags$p("Database", style="font-family:Quicksand"))
+                            tags$p("Database", style="font-family:Quicksand"),
+                            tags$p("This is Database", style="font-family:Quicksand; opacity:0"))
                       )),
     tags$br(),
     ## section 3
@@ -79,7 +83,8 @@ mod_welcoming_page_ui <- function(id){
               tags$div(style="height: 57vh; width: 100%; margin-bottom:5%;",`class`="swiper-container",
                        tags$div(`class`="swiper-wrapper",
                                tags$div(`class`="swiper-slide",
-                                        tags$a(class="swiper-item", style="background-image:url('www/swiper_item1.jpg');")),
+                                        tags$a(class="swiper-item", style="background-image:url('www/swiper_item1.jpg');",
+                                               tags$p())),
                                tags$div(`class`="swiper-slide",
                                         tags$a(class="swiper-item", style="background-image:url('www/swiper_item2.jpg');")),
                                tags$div(`class`="swiper-slide",

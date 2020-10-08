@@ -65,5 +65,34 @@ $('#information_btn_ppi').click(function(){
         Shiny.setInputValue("information_btn_ppi", i);
     });  
     
+  //  Grid items
+  $('#section2 a').eq(0).hover(
+    function(){
+      $('#section2 p').eq(1).css("opacity","1")
+      $('#section2 p').eq(0).css("opacity","0")},
+      function(){
+        $('#section2 p').eq(0).css("opacity","1")
+        $('#section2 p').eq(1).css("opacity","0")})
+  $('#section2 a').eq(1).hover(
+    function(){
+      $('#section2 p').eq(3).css("opacity","1")
+      $('#section2 p').eq(2).css("opacity","0")},
+      function(){
+        $('#section2 p').eq(2).css("opacity","1")
+        $('#section2 p').eq(3).css("opacity","0")})
+  $('#section2 a').eq(2).hover(
+    function(){
+      $('#section2 p').eq(5).css("opacity","1")
+      $('#section2 p').eq(4).css("opacity","0")},
+      function(){
+        $('#section2 p').eq(4).css("opacity","1")
+        $('#section2 p').eq(5).css("opacity","0")})
+  $('#section2 a').eq(3).hover(
+    function(){
+      $('#section2 p').eq(7).css("opacity","1")
+      $('#section2 p').eq(6).css("opacity","0")},
+      function(){
+        $('#section2 p').eq(6).css("opacity","1")
+        $('#section2 p').eq(7).css("opacity","0")})  
 });
 
