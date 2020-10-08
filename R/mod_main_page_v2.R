@@ -10,7 +10,7 @@
 mod_main_page_v2_ui <- function(id){
   ns <- NS(id)
   tagList(
-    navbarPage(id = ns("navbar"), title = actionLink(ns("title"), img(src = "/www/clustersylogo.png", style = "height:3.5vh; margin:-18px; margin-left: 1px;"), type = "heading"),
+    navbarPage(id = ns("navbar"), title = actionLink(ns("title"), img(src = "/www/clustersylogo.png", style = "height:3.5vh; margin:-18px; margin-left: 1px; -webkit-animation:spin 10s linear infinite; -moz-animation:spin 10s linear infinite; animation:spin 10s linear infinite;"), type = "heading"),
                position = "fixed-top",
                collapsible = TRUE, selected = " ",
                tabPanel("Tools", mod_Columns_ui(ns("Columns_ui_1"))),
