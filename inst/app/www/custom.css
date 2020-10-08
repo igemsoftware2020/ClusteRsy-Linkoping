@@ -7389,7 +7389,7 @@ nav{
   height: 35%;
   width: 20%;
   position: relative;
-  top: 28%;
+  top: 12%;
   -webkit-transition: all .5s;
   -moz-transition: all .5s;
   -o-transition: all .5s;
@@ -7433,7 +7433,7 @@ a > p:hover {
   -moz-transition: all .5s;
   -o-transition: all .5s;
   transition: all 0.5s;
-  background-size: auto 150%;
+  background-size: auto 120%;
   cursor: pointer;
   opacity: 0.7;
 }
@@ -7443,7 +7443,7 @@ a > p:hover {
   -moz-transition: all .5s;
   -o-transition: all .5s;
   transition: all 0.5s;
-  background-size: auto 160%;
+  background-size: auto 110%;
   opacity: 1;
 }
 
