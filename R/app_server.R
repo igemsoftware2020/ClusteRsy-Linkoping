@@ -7,7 +7,7 @@
 app_server <- function( input, output, session) {
   app_servr <- reactiveValues()
   # Loading screen
-  con <- MODifieRDB::connect_to_db("./data_example/igem.db")
+  con <- MODifieRDB::connect_to_db("./data_example/modeling_new_db.db")
   app_servr$loaded <- con
   
   # Listen to the beautiful button
