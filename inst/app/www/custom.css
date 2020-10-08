@@ -7412,6 +7412,7 @@ a > p {
   font-size: x-large;
   color: #e6e6e6;
   background-color: #2f5c945c;
+  width: 100%;
   height: 100%;
   padding-top: 53%;
 }
