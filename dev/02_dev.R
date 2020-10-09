@@ -21,6 +21,7 @@ usethis::use_package("ggplot2")
 usethis::use_package("plotly")
 usethis::use_package("shinyjs")
 usethis::use_package("rintrojs")
+usethis::use_package("DT")
 
 ## Add modules ----
 ## Create a module infrastructure in R/
