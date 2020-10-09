@@ -83,7 +83,7 @@ If you want to investigate a certain disease you can easily do so in the Results
                             tags$p("We provide a database that stores input data, modules created with MODifieR, Enrichment analysis results as well as PPI networks. You can at any given time upload and download your data. ",
                                    style="font-family:Quicksand; opacity:0; padding:5.5vh 1%; font-size: 1vw;")),
                       )),
-    tags$hr(),
+    tags$hr(style="position:absolute; border:1px solid #3b3d4020; width:80vw; left:20vh; margin:0"),
     ## section 3
     # tags$div(style="height: 50vh; width: 100%; background-color:#fec961;",`class`="row",
     #          tags$div(`class`="col-sm-4 welcom-col",
@@ -97,7 +97,7 @@ If you want to investigate a certain disease you can easily do so in the Results
     #                   tags$div(`class`="container con1",
     #                            tags$h4(`class`="conh3", "Hello World!", style="font-family:Quicksand")))),
     ## section 4
-    tags$div(`class`="row", style="height:110vh;width:100%;padding-top: 35vh;",
+    tags$div(`class`="row", style="height:92vh;width:100%;padding-top: 14vh;",
               tags$div(style="height: 57vh; width: 100%; margin-bottom:5%;",`class`="swiper-container",
                        tags$div(`class`="swiper-wrapper",
                                tags$div(`class`="swiper-slide",
