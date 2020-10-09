@@ -140,10 +140,10 @@ mod_enrichment_results_server <- function(input, output, session, enrichment_res
                                dom = "lfrtipB",
                                buttons = c('copy', 'csv', 'excel'),
                                lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")))) %>% 
-          formatStyle("logFC", backgroundColor = styleInterval(cuts, color_func(length(cuts) +1))) %>% 
-          formatStyle("PValue", background = styleInterval(input$pvalue_color, c("#8cdb9a", "#fc6d6d"))) %>%
-          formatRound(columns = c("logFC", "logCPM", "F", "FDR"), digits = 5) %>% 
-          formatRound(columns = "PValue", digits = 8)
+          DT::formatStyle("logFC", backgroundColor = DT::styleInterval(cuts, color_func(length(cuts) +1))) %>% 
+          DT::formatStyle("PValue", background = DT::styleInterval(input$pvalue_color, c("#8cdb9a", "#fc6d6d"))) %>%
+          DT::formatRound(columns = c("logFC", "logCPM", "F", "FDR"), digits = 5) %>% 
+          DT::formatRound(columns = "PValue", digits = 8)
         
         output$disease_genes <- DT::renderDataTable({dat})
         
@@ -172,8 +172,8 @@ mod_enrichment_results_server <- function(input, output, session, enrichment_res
                              dom = "lfrtipB",
                              buttons = c('copy', 'csv', 'excel'),
                              lengthMenu = list(c(10,25,50,100, -1), c(10,25,50,100, "All")))) %>% 
-        formatRound(columns = c("logFC", "logCPM", "F", "FDR"), digits = 5) %>% 
-        formatRound(columns = "PValue", digits = 8)
+        DT::formatRound(columns = c("logFC", "logCPM", "F", "FDR"), digits = 5) %>% 
+        DT::formatRound(columns = "PValue", digits = 8)
       
       output$disease_genes <- DT::renderDataTable({dat})
        
