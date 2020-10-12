@@ -4,7 +4,15 @@
 ## Welcome to our R shiny based app for transcriptome analysis.
 This tool is developed by the Linköping iGEM team of 2020. Down below you can find all of the dependencies needed to run the developer version of the app.
 
+---
+[<img height="32" width="32" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/youtube.svg" />](https://www.youtube.com/channel/UCLzs3_Txac7oKbWv5Xl6v-w/featured)  Video tutorials on how to use ClusteRsy can be found on our youtube
+
+[<img height="30" width="30" src="https://raw.githubusercontent.com/iconic/open-iconic/master/svg/globe.svg"/>](https://2020.igem.org/Team:Linkoping) Read more about our project on our Wiki
+
+---
+
 We have included MODifieR, a R package for disease module identification. Enrichment analysis such as disease analysis, gene ontology analysis and pathway analysis using the Clusterprofiler package. We also provide visualization of the results as well as a database to store all the input and output data.
+
 
 To run the developer version of this app there are a few dependencies that needs to added.
 
@@ -17,7 +25,7 @@ To run the developer version of this app there are a few dependencies that needs
 
 #### MODifieR
 
-MODifieR requires Python 3 with additional Python libraries scipy, sqlite3, numpy and networkx. They are all included within [Anaconda](https://docs.anaconda.com/anaconda/install/)
+[MODifieR](https://gitlab.com/Gustafsson-lab/MODifieR) requires Python 3 with additional Python libraries scipy, sqlite3, numpy and networkx. They are all included within [Anaconda](https://docs.anaconda.com/anaconda/install/)
 
 In addition to this some R packages are required as well.
 ```R
@@ -64,7 +72,7 @@ For the database to work an extended version of MODifieR needs to be installed f
 devtools::install_git(url = "https://github.com/ddeweerd/MODifieRDB.git")
 ```
 #### Clusterprofiler
-Enrichment analysis is provided with the Clusterprofiler package and can be installed from BiocManager:
+Enrichment analysis is provided with the [Clusterprofiler](https://bioconductor.org/packages/release/bioc/vignettes/clusterProfiler/inst/doc/clusterProfiler.html) package and can be installed from BiocManager:
 
 ```
 if (!requireNamespace("BiocManager", quietly = TRUE))
