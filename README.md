@@ -1,5 +1,5 @@
 # ClusteRsy
-___
+
 
 ## Welcome to our R shiny based app for transcriptome analysis.
 This tool is developed by the Linköping iGEM team of 2020. Down below you can find all of the dependencies needed to run the developer version of the app.
@@ -11,7 +11,7 @@ To run the developer version of this app there are a few dependencies that needs
 
 
 ## __Installation__
-___  
+
 
 ##### This app was developed using R version 3.6.X and is recommended when running the developer version.
 
