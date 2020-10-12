@@ -29,6 +29,7 @@ mod_MODA_post_processing_server <- function(input, output, session, inspected_mo
     tagList(
       showModal(modalDialog(
         title = selected_module_name$name,
+        top = 10,
         easyClose = TRUE,
         size = "l",
         fluidPage(
@@ -37,7 +38,8 @@ mod_MODA_post_processing_server <- function(input, output, session, inspected_mo
                       tabPanel(title = "Module genes", 
                                DT::dataTableOutput(ns("module_genes_table"))),
                       tabPanel(title = "Settings table",
-                               DT::dataTableOutput(ns("settings_table"))))),
+                               DT::dataTableOutput(ns("settings_table")))),
+          rep_br(2)),
         footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
         ),
       )
@@ -55,9 +57,11 @@ mod_MODA_post_processing_server <- function(input, output, session, inspected_mo
           title = selected_module_name$name,
           easyClose = TRUE,
           size = "l",
-          tags$h3("Change the threshold for specific Theta", style = "color:#2c3e50"), 
+          top = 20,
+          tags$h4("Change the threshold for specific Theta", style = "color:#2c3e50; text-align:center;"), 
           sliderInput(ns("specific_theta"),
                       label = "Specific Theta",
+                      popup = "Change the threshold for specific Theta",
                       min = 0.001,
                       max = 1,
                       value = 0.05),

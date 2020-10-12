@@ -29,6 +29,7 @@ mod_WGCNA_post_processing_server <- function(input, output, session, inspected_m
     tagList(
       showModal(modalDialog(
         title = selected_module_name$name,
+        top = 10,
         easyClose = TRUE,
         size = "l",
         fluidPage(
@@ -41,7 +42,8 @@ mod_WGCNA_post_processing_server <- function(input, output, session, inspected_m
                       tabPanel(title = "Correlation to trait table",
                                DT::dataTableOutput(ns("correlation_to_trait_table_table"), width = 'auto')),
                       tabPanel(title = "Settings table",
-                               DT::dataTableOutput(ns("settings_table"))))),
+                               DT::dataTableOutput(ns("settings_table")))),
+          rep_br(2)),
         footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
         ),
       ))
@@ -58,11 +60,12 @@ mod_WGCNA_post_processing_server <- function(input, output, session, inspected_m
           title = selected_module_name$name,
           easyClose = TRUE,
           size = "l",
-          tags$h3("WGCNA offers four different post-processing functions.", style = "color:#2c3e50"),
-          tags$p("Adjust significance allows to adjust the p-value for the inclusion of co-expression modules into the final disease module. The boolean parameter unadjusted denotes if the adjusted (FDR correction) or unadjusted p-value is to be used", style = "color:#2c3e50"),
-          tags$p("The Get Modules Genes by Sign function returns a module object that either consists of co-expression colors positively or negatively correlated to the trait.  To get only colors positively correlated to trait in the resulting module, set the Mode parameter to Positive and to get only negatively correlated colors set Mode to Negative.", style = "color:#2c3e50"),
-          tags$p("In the wgcna algorithm, co-expression modules are denoted by color. The final disease module can be composed of multiple colors. The function Split Module by color allows to split each of these colors into separate MODifieR module objects. Only colors significantly associated to the trait will be used.", style = "color:#2c3e50"),
-          tags$p("The last method post-processing function Module Size allows for changing the module size", style = "color:#2c3e50"),
+          top = 10, 
+          tags$h4("WGCNA offers four different post-processing functions.", style = "color:#2c3e50; text-align:center;"),
+          tags$p("Adjust significance allows to adjust the p-value for the inclusion of co-expression modules into the final disease module. The boolean parameter unadjusted denotes if the adjusted (FDR correction) or unadjusted p-value is to be used", style = "color:#2c3e50; text-align:center;"),
+          tags$p("The Get Modules Genes by Sign function returns a module object that either consists of co-expression colors positively or negatively correlated to the trait.  To get only colors positively correlated to trait in the resulting module, set the Mode parameter to Positive and to get only negatively correlated colors set Mode to Negative.", style = "color:#2c3e50; text-align:center;"),
+          tags$p("In the wgcna algorithm, co-expression modules are denoted by color. The final disease module can be composed of multiple colors. The function Split Module by color allows to split each of these colors into separate MODifieR module objects. Only colors significantly associated to the trait will be used.", style = "color:#2c3e50; text-align:center;"),
+          tags$p("The last method post-processing function Module Size allows for changing the module size", style = "color:#2c3e50; text-align:center;"),
           selectInput(ns("post_process_choices"),
                       label = "Pick a post-processing method",
                       choices = c("Adjust significance", 
@@ -90,7 +93,6 @@ mod_WGCNA_post_processing_server <- function(input, output, session, inspected_m
         prettySwitch(ns("use_unadjusted"),
                      label = "Adjusted p-value",
                      value = FALSE,
-                     status = "warning",
                      popup = "Default is set to false meaning that a unadjusted p-value will be used")
       )
     } else if (input$post_process_choices == "Get Modules Genes by Sign") {
@@ -102,7 +104,7 @@ mod_WGCNA_post_processing_server <- function(input, output, session, inspected_m
       )
     } else if (input$post_process_choices == "Split Module by color") {
       tagList(
-        tags$p("By pressing Process module the module will get splitted by color into submodules")
+        tags$p("By pressing Process module the module will get splitted by color into submodules", style = "color:#2c3e50; text-align:center;")
       )
     } else if (input$post_process_choices == "Module Size") {
       tagList(

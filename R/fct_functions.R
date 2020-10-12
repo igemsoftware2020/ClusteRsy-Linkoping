@@ -47,23 +47,23 @@ set_background_genes.module_discoverer <- function(module, con) {
 
 #Clique_Sum gets it's ppi from the Clique DB (default PPI)
 set_background_genes.Clique_Sum_permutation <- function(module, con) {
-  ppi_name <- as.character(MODifieRDB::match_db_loc_to_ppi(module_object$settings$db, con = con))
+  ppi_name <- as.character(MODifieRDB::match_db_loc_to_ppi(module$settings$db, con = con))
   unique(unlist(MODifieRDB::ppi_network_from_db(ppi_name, con = con)[,1:2]))
 }
 
 #Inference methods not using ppi-network.  
 set_background_genes.DiffCoEx <- function(module, con) {
-  input_name <- as.character(module$settings$input_name)
+  input_name <- as.character(module$settings$MODifieR_input)
   rownames(MODifieRDB::MODifieR_input_from_db(input_name, con = con)$annotated_exprs_matrix)
 }
 
 set_background_genes.WGCNA <- function(module, con) {
-  input_name <- as.character(module$settings$input_name)
+  input_name <- as.character(module$settings$MODifieR_input)
   rownames(MODifieRDB::MODifieR_input_from_db(input_name, con = con)$annotated_exprs_matrix)
 }
 
 set_background_genes.MODA <- function(module, con) {
-  input_name <- as.character(module$settings$input_name)
+  input_name <- as.character(module$settings$MODifieR_input)
   rownames(MODifieRDB::MODifieR_input_from_db(input_name, con = con)$annotated_exprs_matrix)
 }
 
@@ -235,3 +235,4 @@ retrieve_input_data <- function(module, con) {
   na.omit(input_data$edgeR_deg_table[module$module_genes, ])
   
 }
+

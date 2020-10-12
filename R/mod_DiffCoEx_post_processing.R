@@ -29,6 +29,7 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
     tagList(
       showModal(modalDialog(
         title = selected_module_name$name,
+        top = 10,
         easyClose = TRUE,
         size = "l",
         fluidPage(
@@ -41,7 +42,8 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
                       tabPanel(title = "Colored vector table",
                                DT::dataTableOutput(ns("color_vector_table"))),
                       tabPanel(title = "Settings table",
-                               DT::dataTableOutput(ns("settings_table"))))),
+                               DT::dataTableOutput(ns("settings_table")))),
+          rep_br(2)),
         footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
         )
         
@@ -59,9 +61,10 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
           title = selected_module_name$name,
           easyClose = TRUE,
           size = "l",
-          tags$h3("Split module by color", style = "color:#2c3e50"),
-          tags$p("This method will split the original DiffCoEx object into a series of DiffCoEx objects by color.", style = "color:#2c3e50"),
-          tags$p("Every significant color in the module will be it's own DiffCoEx module object", style = "color:#2c3e50"),
+          top = 20,
+          tags$h4("Split module by color", style = "color:#2c3e50; text-align:center;"),
+          tags$p("This method will split the original DiffCoEx object into a series of DiffCoEx objects by color.", style = "color:#2c3e50; text-align:center;"),
+          tags$p("Every significant color in the module will be it's own DiffCoEx module object", style = "color:#2c3e50; text-align:center;"),
           tags$br(),
           actionButton(ns("post_process_module_object"),
                        label = "Split module"),

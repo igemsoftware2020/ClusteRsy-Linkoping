@@ -19,11 +19,12 @@ mod_module_overview_ui <- function(id){
     DT::dataTableOutput(ns("module_overview")),
     tags$div(`class`="row",
              tags$div(`class`="col-sm-4", style = "color:black",
-             fileInput(ns("module_object"), label = "Upload a module object", accept =  ".rds")),
-             tags$div(uiOutput(ns("module_name_chooser"))),
+             fileInput(ns("module_object"), label = "Upload a module object", accept =  ".rds", popup = "You can upload multipe or single modules to our database. If you have MODifieR objects that wans't created by our tool, please pass them to a list and name the list with the module names."),
+             uiOutput(ns("module_name_chooser")),
+             uiOutput(ns("error_upload"))),
              tags$br(),
              tags$div(`class`="col-sm-8", style = "text-align:right", id ="buttons_module_overview",
-                      downloadButton(ns("download_module_cytoscape"), label = "dumby", style = "visibility: hidden;"),
+                      downloadButton(ns("download_module_cytoscape"), label = "dummy", style = "visibility: hidden;"),
                       actionButton(ns("post_process"), label = "Post-process"),
                       actionButton(ns("download_cytoscape_trigger"), label = "Cytoscape", icon = icon("download")), #This triggers the downloadButton download_module_cytoscape
                       downloadButton(ns("download_module"), "Download"),
@@ -31,7 +32,6 @@ mod_module_overview_ui <- function(id){
                       htmlOutput(ns("close_loading_modal")) # Close modal with JS 
                       )),
     uiOutput(ns("inspected_results")),
-    uiOutput(ns("disable")),
     uiOutput(ns("DT_tooltip")),
     uiOutput(ns("modal_ppi_network")),
     
@@ -57,11 +57,11 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     
     readRDS(file = infile)
   })
+  
 
   output$module_name_chooser <- renderUI({
     module <- upload_module() #reactive pop up
     tagList( 
-      textInput(ns("module_name"), "Module object name", placeholder = "Module name"),
       actionButton(ns("upload_module"), "Add module object to database")
     )
   })
@@ -71,22 +71,39 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     input$module_name
   })
   
+  
+  #function to send a set of modules to DB (sends just one module as well)
+  multiple_modules_to_db <- function(module, module_names) {
+    output$error_upload <- renderUI({
+      tags$div(style = "color:#eb4034",
+    try(MODifieRDB::MODifieR_object_to_db(module,
+                                        object_name = module_names,
+                                        con = con))
+      )
+    })
+  }
+  
   # Upload module
+  x <- reactiveVal(1)
   observeEvent(input$upload_module, {
     id <- showNotification("Saving module object to database", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
-    module <- upload_module()
     module_name <- module_name()
+    module <- upload_module()
     
     
-    MODifieRDB::MODifieR_object_to_db(MODifieR_object = module,
-                                      object_name = module_name,
-                                      con = con)
+     sapply(1:length(module), function(x){multiple_modules_to_db(module[[x]], module_names = names(module)[x])})
+      
+      
+      
+    
     
     # Refresh
     module_objects <- MODifieRDB::get_available_module_objects(con)
-    output$module_overview <- DT::renderDataTable(module_objects,
+    output$module_overview <- DT::renderDataTable({module_objects},
                                                   rownames = FALSE,
+                                                  colnames = c("Module name", "Number of genes", "Input data used", "Module type", "PPI network used"),
+                                                  selection = list(selected = c(1)),
                                                   callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -94,12 +111,17 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
                                                               Shiny.setInputValue("module_name", data[0]);
                                                               Shiny.setInputValue("module_dbclick", dbclick);
                                                              });'))
+    # Send refresh to Description1_ui_1
+    x(x() + 1)
+    module_overview_module$upload <- x()
   })
   
   module_objects <- MODifieRDB::get_available_module_objects(con)
   # Render DT
-  output$module_overview <- DT::renderDataTable(module_objects,
+  output$module_overview <- DT::renderDataTable({module_objects},
                                                 rownames = FALSE,
+                                                colnames = c("Module name", "Number of genes", "Input data used", "Module type", "PPI network used"),
+                                                selection = list(selected = c(1)),
                                                 callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -114,8 +136,10 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   # Refresh DT
   observeEvent(Columns_ui_1$module_name, {
     module_objects <- MODifieRDB::get_available_module_objects(con)
-    output$module_overview <- DT::renderDataTable(module_objects,
+    output$module_overview <- DT::renderDataTable({module_objects},
                                                   rownames = FALSE,
+                                                  colnames = c("Module name", "Number of genes", "Input data used", "Module type", "PPI network used"),
+                                                  selection = list(selected = c(1)),
                                                   callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -125,23 +149,39 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
                                                              });'))
   })
   
-  # Choose multiple options
-  current_modules <- function() {
-    selected <- input$module_overview_rows_selected
-    module_objects$module_name[selected]
-  }
   
+  # Download function 
   retrieve_module <- function(){
     selected <- input$module_overview_rows_selected
+    module_objects <- MODifieRDB::get_available_module_objects(con)
     if (length(selected) > 1){
-      lapply(current_modules(), MODifieRDB::MODifieR_module_from_db, con = con)
+      # Choose multiple options
+      current_modules <- function() {
+        selected <- input$module_overview_rows_selected
+        module_objects$module_name[selected]
+      }
+      modules <-lapply(current_modules(), MODifieRDB::MODifieR_module_from_db, con = con)
+      names(modules) <- current_modules()
+      return(modules)
     } else {
-      MODifieRDB::MODifieR_module_from_db(module_objects$module_name[selected], con = con)
+      module <- list(MODifieRDB::MODifieR_module_from_db(module_objects$module_name[selected], con = con))
+      names(module) <- module_objects$module_name[selected]
+      return(module)
     }
   }
   
   
-  # Download function
+
+  
+  #Download module object
+  output$download_module <- downloadHandler(
+    filename = function() {
+      paste0("module_set_", Sys.Date(), ".rds", sep="")
+    },
+    content = function(file) {
+      saveRDS(retrieve_module(), file)
+    }
+  )
   
   subset_module_genes <- reactiveVal()
   
@@ -180,6 +220,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
         tagList(
           showModal(modalDialog(
             title = "Select a PPI Network",
+            top = 25, 
             easyClose = TRUE,
             size = "l",
             tags$p("This MODifieR object doesn't contain any PPI Network, please select one from the database"),
@@ -191,71 +232,64 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
           ))
         )
       })
-
-      observeEvent(input$download_cytoscape_object, {
-
-        removeModal()
-        shinyjs::runjs("loading_modal_open(); stopWatch();")
-        
-        ppi_network <- MODifieRDB::ppi_network_from_db(input$selected_ppi_network, con = con)
-        module_genes <- module_object$module_genes
-        
-        subset_module_genes(dplyr::filter(ppi_network, ppi_network[,1] %in% module_genes & ppi_network[,2] %in% module_genes))
-        
-        shinyjs::runjs("document.getElementById('main_page_v2_ui_1-module_overview_ui_1-download_module_cytoscape').click();")
-
-        })
-
     }
-
+  })
+  
+  observeEvent(input$download_cytoscape_object, {
+    module_object <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[input$module_overview_rows_selected], con = con)
+    removeModal()
+    shinyjs::runjs("loading_modal_open(); stopWatch();")
+    
+    ppi_network <- MODifieRDB::ppi_network_from_db(input$selected_ppi_network, con = con)
+    module_genes <- module_object$module_genes
+    
+    subset_module_genes(dplyr::filter(ppi_network, ppi_network[,1] %in% module_genes & ppi_network[,2] %in% module_genes))
+    
+    shinyjs::runjs("document.getElementById('main_page_v2_ui_1-module_overview_ui_1-download_module_cytoscape').click();")
+    
   })
   
   #Download cytoscape object
   output$download_module_cytoscape <- downloadHandler(
 
     filename = function() {
+      # Choose multiple options
+      current_modules <- function() {
+        selected <- input$module_overview_rows_selected
+        module_objects$module_name[selected]
+      }
+      
       paste0(current_modules(), "_module_genes_interaction_", Sys.Date(), ".zip")
     },
 
     content = function(file) {
-      shinyjs::runjs("loading_modal_close(); reset();")
+      selected <- input$module_overview_rows_selected
       module_object <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[input$module_overview_rows_selected], con = con)
       file_subset_edgeR <- retrieve_input_data(module_object, con = con)
       file_subset_edgeR <- cbind("genes" = rownames(file_subset_edgeR), file_subset_edgeR)
-      file1 <- paste0(current_modules(),".csv")
-      file2 <- paste0(current_modules(),"_edgeR_deg_table.csv")
+      file1 <- paste0(module_objects$module_name[selected],".csv")
+      file2 <- paste0(module_objects$module_name[selected],"_edgeR_deg_table.csv")
       
       file_network <- write.table(subset_module_genes(), file=file1, quote=FALSE, sep='\t', row.names = F)
       file_subset_edgeR <- write.table(file_subset_edgeR, file=file2, quote=FALSE, sep='\t', row.names = F)
-      
       zip(file,c(file1, file2))
+      # Remove file to avoid cloggin up DB
+      file.remove(file1)
+      file.remove(file2)
+      # Close loading modal
+      shinyjs::runjs("loading_modal_close(); reset();")
     }
   )
   
-  #Download module object
-  output$download_module <- downloadHandler(
-    filename = function() {
-      paste0("module_set_", Sys.Date(), ".rds", sep="")
-    },
-    content = function(file) {
-      saveRDS(retrieve_module(), file)
-    }
-  )
   
   # Observe if valid to download
   observe({
     if(is.null(input$module_overview_rows_selected)) { 
-     output$disable <- renderUI({
-       tags$script((HTML("document.getElementById('main_page_v2_ui_1-module_overview_ui_1-download_module').style.pointerEvents = 'none';
-                         document.getElementById('main_page_v2_ui_1-module_overview_ui_1-delete').style.pointerEvents = 'none';
-                         document.getElementById('buttons_module_overview').style.cursor = 'not-allowed';")))
-     }) 
+      shinyjs::disable("download_module")
+      shinyjs::disable("delete")     
     } else {
-      output$disable <- renderUI({
-        tags$script((HTML("document.getElementById('main_page_v2_ui_1-module_overview_ui_1-download_module').style.pointerEvents = 'auto';
-                          document.getElementById('main_page_v2_ui_1-module_overview_ui_1-delete').style.pointerEvents = 'auto';
-                          document.getElementById('buttons_module_overview').style.cursor = 'default';")))
-      }) 
+      shinyjs::enable("download_module")
+      shinyjs::enable("delete")
     }
   })
   
@@ -265,8 +299,10 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     on.exit(removeNotification(id), add = TRUE)
     # Required for selecting
     module_objects <- MODifieRDB::get_available_module_objects(con)
-    output$module_overview <- DT::renderDataTable(module_objects,
+    output$module_overview <- DT::renderDataTable({module_objects},
+                                                  selection = list(selected = c(1)),
                                                   rownames = FALSE,
+                                                  colnames = c("Module name", "Number of genes", "Input data used", "Module type", "PPI network used"),
                                                   callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -278,6 +314,11 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     # Delete
     selected <- input$module_overview_rows_selected
     if (length(selected) > 1){
+      # Choose multiple options
+      current_modules <- function() {
+        selected <- input$module_overview_rows_selected
+        module_objects$module_name[selected]
+      }
       lapply(current_modules(), MODifieRDB::delete_module_object, con = con)
     } else {
       MODifieRDB::delete_module_object(module_objects$module_name[selected] ,con = con)
@@ -285,8 +326,10 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     
     # Refresh
     module_objects <- MODifieRDB::get_available_module_objects(con)
-    output$module_overview <- DT::renderDataTable(module_objects,
+    output$module_overview <- DT::renderDataTable({module_objects},
+                                                  selection = list(selected = c(1)),
                                                   rownames = FALSE,
+                                                  colnames = c("Module name", "Number of genes", "Input data used", "Module type", "PPI network used"),
                                                   callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -338,8 +381,10 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     ##### Important: This needs too be double arrowed in order for it too work! #####
     module_objects_inspected <<- MODifieRDB::get_available_module_objects(con) 
     
-    output$module_overview <- DT::renderDataTable(module_objects_inspected,
+    output$module_overview <- DT::renderDataTable({module_objects_inspected},
+                                                  selection = list(selected = c(1)),
                                                   rownames = FALSE,
+                                                  colnames = c("Module name", "Number of genes", "Input data used", "Module type", "PPI network used"),
                                                   callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();

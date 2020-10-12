@@ -77,11 +77,11 @@ mod_DiffCoEx_server <- function(input, output, session, con, upload_ui_1, input_
       tagList(
       radioButtons(ns("deepSplit"), label = "Sensitivity to cluster splitting", choices = c(1, 2, 3, 4), selected = 2,
                      inline = T),
-      shinyWidgets::prettySwitch(ns("pamRespectsDendro"), label = "PAM respects dendrogram", value = FALSE, status = "warning"))})}
+      prettySwitch(ns("pamRespectsDendro"), label = "PAM respects dendrogram", value = FALSE, status = "warning"))})}
     else {
     output$para <- renderUI({
       tagList(
-      shinyWidgets::prettySwitch(ns("deepSplit"), label = "Sensitivity to cluster splitting", value = FALSE, status = "warning"))})}
+      prettySwitch(ns("deepSplit"), label = "Sensitivity to cluster splitting", value = FALSE, status = "warning"))})}
   })
     
     
@@ -90,7 +90,7 @@ mod_DiffCoEx_server <- function(input, output, session, con, upload_ui_1, input_
     selectInput(ns("input_object"), label = "Input object", choices = input_objects, popup = "The input used for analyzation")
   })
    
-   observeEvent(c(upload_ui_1$input_name, input_overview_ui_1$delete$delete), {
+   observeEvent(c(upload_ui_1$input_name, input_overview_ui_1$value$delete, input_overview_ui_1$value$upload), {
      input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
      updateSelectInput(session, "input_object", choices = input_objects)
    })

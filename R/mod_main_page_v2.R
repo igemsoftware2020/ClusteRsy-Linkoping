@@ -10,7 +10,7 @@
 mod_main_page_v2_ui <- function(id){
   ns <- NS(id)
   tagList(
-    navbarPage(id = ns("navbar"), title = actionLink(ns("title"), tags$i(class = "fa fa-home", `aria-hidden`="true"), type = "heading"),
+    navbarPage(id = ns("navbar"), title = actionLink(ns("title"), img(src = "/www/clustersylogo.png", style = "height:3.5vh; margin:-18px; margin-left: 1px; -webkit-animation:spin 10s linear infinite; -moz-animation:spin 10s linear infinite; animation:spin 10s linear infinite;"), type = "heading"),
                position = "fixed-top",
                collapsible = TRUE, selected = " ",
                tabPanel("Tools", mod_Columns_ui(ns("Columns_ui_1"))),
@@ -40,13 +40,15 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
   ns <- session$ns
   
   main_page_v2_module <- reactiveValues()
+  enrichment_overview_ui_1 <- reactiveValues()
   module_overview_ui_1 <- reactiveValues()
   input_overview_ui_1 <- reactiveValues()
   ppi_networks_ui_1 <- reactiveValues()
   
   Columns_ui_1 <- callModule(mod_Columns_server, "Columns_ui_1", con = con, module_overview_ui_1, input_overview_ui_1, ppi_networks_ui_1)
-  module_overview_ui_1$delete <- callModule(mod_module_overview_server, "module_overview_ui_1", con = con, Columns_ui_1, app_servr)
-  input_overview_ui_1$delete <- callModule(mod_input_overview_server, "input_overview_ui_1", con = con, Columns_ui_1, app_servr)
+  enrichment_overview_ui_1$value <- callModule(mod_enrichment_overview_server, "enrichment_overview_ui_1", con = con, main_page_v2_module, app_servr)
+  module_overview_ui_1$value <- callModule(mod_module_overview_server, "module_overview_ui_1", con = con, Columns_ui_1, app_servr)
+  input_overview_ui_1$value <- callModule(mod_input_overview_server, "input_overview_ui_1", con = con, Columns_ui_1, app_servr)
   ppi_networks_ui_1$upload_ppi <- callModule(mod_ppi_networks_server, "ppi_networks_ui_1", con = con)
   callModule(mod_user_guide_server, "user_guide_ui_1")
   
@@ -104,7 +106,9 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
       }
     else{
       output$hidehints1 <- renderUI({
-        tags$script("Tipped.hide('#DT_tooltip');")
+        tags$script("Tipped.hide('#DT_tooltip');
+                    Tipped.hide('#DT_tooltip1');
+                    Tipped.hide('#DT_tooltip2')")
       })
     }
   })
@@ -112,14 +116,21 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
   observeEvent(input$tabs, {
     output$hidehints1 <- renderUI({
       if (input$tabs == "Input objects") {
-        tags$script("Tipped.hide('#DT_tooltip1');")
+        tags$script("Tipped.hide('#DT_tooltip1');
+                    Tipped.hide('#DT_tooltip2');")
       }
       if (input$tabs == "Module objects") {
-        tags$script("Tipped.hide('#DT_tooltip');")
+        tags$script("Tipped.hide('#DT_tooltip');
+                    Tipped.hide('#DT_tooltip2');")
+      }
+      if (input$tabs == "Enrichment objects") {
+        tags$script("Tipped.hide('#DT_tooltip');
+                    Tipped.hide('#DT_tooltip1');")
       }
       else {
         tags$script("Tipped.hide('#DT_tooltip');
-                    Tipped.hide('#DT_tooltip1');")
+                    Tipped.hide('#DT_tooltip1');
+                    Tipped.hide('#DT_tooltip2');")
       }
     })
   })
@@ -166,9 +177,12 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
       top = "30",
       easyClose = TRUE,
       title = "Module Objects",
+      tags$p(
       "In the Module Objects tab all the previously made Modules 
-       are saved and stored. The Modules in the table below can be brought  
-       back in column 3 in the Tools-tab for further analysis.",
+       are saved and stored. You can inspect the module objects by double clicking the selected module."),
+      tags$br(),
+      tags$p(
+      "You can download one or multiple objects. Note that if you like to upload an module object you have to store it as a list and naming the list and save it as a .Rds file before you can upload it to the database."),
       style = "color:black; text-align:center;",
       footer=tagList(
         tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
@@ -180,11 +194,14 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
       top = "30",
       easyClose = TRUE,
       title = "Enrichment Objects",
+      tags$p(
       "In the Enrichment Objects tab all the previously made 
-       enrichments can be found. the Enrichments in the table below can be brought  
-       back in the Visualisation-tab for further analysis. Note that no Enrichments 
-       will be stored at the end of a session. Download all Enrichments that need 
-       to be saved for later.",
+       enrichments can be found. You can inspect the results by double clicking the selected enrichment object. 
+      If you want to inspect a certain disease from one of the enrichment objects, please visit the Visualization tab and go the results table."),
+      tags$br(),
+      tags$p("You can download multiple or single enrichment objects but as of now we only offer single upload."),
+      tags$br(),
+      tags$p("If you like to upload an enrichment object created elsewhere please store it as a list and save it as a .Rds file before you can upload it to the database"),
       style = "color:black; text-align:center;",
       footer=tagList(
         tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
@@ -291,8 +308,7 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
   })
   
   callModule(mod_welcoming_page_server, "welcoming_page_ui_1")
-  callModule(mod_visual_server, "visual_ui_1", con = con, main_page_v2_module)
-  callModule(mod_enrichment_overview_server, "enrichment_overview_ui_1", con = con, main_page_v2_module)
+  callModule(mod_visual_server, "visual_ui_1", con = con, main_page_v2_module, enrichment_overview_ui_1)
   callModule(mod_ppi_networks_server, "ppi_networks_ui_1", con = con)
 }
 

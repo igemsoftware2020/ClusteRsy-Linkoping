@@ -18,7 +18,7 @@ mod_visual_ui <- function(id){
       id = "controls",
       bottom = 20, 
       right = 20, 
-      width = "25%", 
+      width = "30%", 
       height = "60%",
       draggable = TRUE,
       style = "z-index: 25;",
@@ -43,30 +43,40 @@ mod_visual_ui <- function(id){
 #' create_input Server Function
 #'
 #' @noRd 
-mod_visual_server <- function(input, output, session, con, main_page_v2_module){
+mod_visual_server <- function(input, output, session, con, main_page_v2_module, enrichment_overview_ui_1){
   ns <- session$ns
   
   selected <- reactiveValues()
   
   # Create a table
-  enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
-  output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
+  enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
+  output$enrichment_overview <- DT::renderDataTable({enrichment_objects},
                                                     rownames = FALSE,
                                                     class = 'compact hover',
                                                     selection = list(mode = 'single', selected = c(1)),
-                                                    options =  list(scrollX = TRUE,
+                                                    options =  list(paging = TRUE,
+                                                                    lengthMenu = list(c(5,10, -1), c(5,10, "All")),
+                                                                    searching = TRUE,
+                                                                    pageLength = 5,
+                                                                    filtering = TRUE,
+                                                                    scrollX = TRUE,
                                                                     scrollY = TRUE,
-                                                                    dom = 't'))
-  # Updating the DT when a new enrichment object is created.
-  observeEvent(main_page_v2_module$enrich, {
-      enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)[c("module_name", "enrichment_method")]
-      output$enrichment_overview <- DT::renderDataTable(enrichment_objects,
+                                                                    dom = "lftp"))
+  # Updating the DT when a new enrichment object is created or deleted
+  observeEvent(c(main_page_v2_module$enrich, enrichment_overview_ui_1$value$delete, enrichment_overview_ui_1$value$upload), {
+      enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
+      output$enrichment_overview <- DT::renderDataTable({enrichment_objects},
                                                         rownames = FALSE,
                                                         class = 'compact hover',
                                                         selection = list(mode = 'single', selected = c(1)),
-                                                        options =  list(scrollX = TRUE,
+                                                        options =  list(paging = TRUE,
+                                                                        lengthMenu = list(c(5,10, -1), c(5,10, "All")),
+                                                                        searching = TRUE,
+                                                                        pageLength = 5,
+                                                                        filtering = TRUE,
+                                                                        scrollX = TRUE,
                                                                         scrollY = TRUE,
-                                                                        dom = 't'))
+                                                                        dom = "lftp"))
   })
   
   
@@ -100,6 +110,9 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
     })
   
   #Calling the parameters to the absolutePanel
+  
+  enrichment_results_ui_1 <- reactiveValues()
+  
   observeEvent(input$tabs, {
     output$parameters <- renderUI({
       
@@ -112,25 +125,24 @@ mod_visual_server <- function(input, output, session, con, main_page_v2_module){
       } else if (input$tabs == "Heatmap") {
         mod_heat_plot_para_ui(ns("heat_plot_para_ui_1"))
       } else if (input$tabs == "Results") {
-        NULL
+        mod_enrichment_results_para_ui(ns("enrichment_results_para_ui_1"), enrichment_results_ui_1)
       }
     }) 
   })
-  
- 
-  
+
   #Parameter modules server call
   dot_plot_para_ui_1 <- callModule(mod_dot_plot_para_server, "dot_plot_para_ui_1", selected, con)
   enrichment_map_para_ui_1 <- callModule(mod_enrichment_map_para_server, "enrichment_map_para_ui_1", selected, con)
   cnet_plot_para_ui_1 <- callModule(mod_cnet_plot_para_server, "cnet_plot_para_ui_1", selected, con)
   heat_plot_para_ui_1 <- callModule(mod_heat_plot_para_server, "heat_plot_para_ui_1", selected, con)
+  enrichment_results_para_ui_1 <- callModule(mod_enrichment_results_para_server, "enrichment_results_para_ui_1")
   
   #Plot modules servercall
   callModule(mod_dot_plot_server, "dot_plot_ui_1", dot_plot_para_ui_1, selected, con = con)
   callModule(mod_enrichment_map_server, "enrichment_map_ui_1",enrichment_map_para_ui_1, selected, con = con)
   callModule(mod_cnet_plot_server, "cnet_plot_ui_1", cnet_plot_para_ui_1, selected, con = con)
   callModule(mod_heat_plot_server, "heat_plot_ui_1", heat_plot_para_ui_1, selected, con = con)
-  callModule(mod_enrichment_results_server, "enrichment_results_ui_1", selected, con = con)
+  enrichment_results_ui_1$value <- callModule(mod_enrichment_results_server, "enrichment_results_ui_1", enrichment_results_para_ui_1, selected, con = con)
   
 }
 

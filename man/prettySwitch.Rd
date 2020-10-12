@@ -15,7 +15,7 @@ prettySwitch(
   inline = FALSE,
   width = NULL,
   tooltip = T,
-  title = "?",
+  header = "?",
   popup = "Help tips",
   pos = "right"
 )

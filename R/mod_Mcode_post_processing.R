@@ -29,6 +29,7 @@ mod_Mcode_post_processing_server <- function(input, output, session, inspected_m
     tagList(
       showModal(modalDialog(
         title = selected_module_name$name,
+        top = 10,
         easyClose = TRUE,
         size = "l",
         fluidPage(
@@ -39,7 +40,8 @@ mod_Mcode_post_processing_server <- function(input, output, session, inspected_m
                       tabPanel(title = "Module score table",
                                DT::dataTableOutput(ns("module_score_table"))),
                       tabPanel(title = "Settings table",
-                               DT::dataTableOutput(ns("settings_table"))))),
+                               DT::dataTableOutput(ns("settings_table")))),
+          rep_br(2)),
         footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
         ),
       ))
@@ -56,7 +58,8 @@ mod_Mcode_post_processing_server <- function(input, output, session, inspected_m
           title = selected_module_name$name,
           easyClose = TRUE,
           size = "l",
-          tags$h3("Two post-processing functions are available for MCODE, you can either change the module score or split the module into different submodules above the cut off threshold", style = "color:#2c3e50"),
+          top = 15, 
+          tags$h4("Two post-processing functions are available for MCODE, you can either change the module score or split the module into different submodules above the cut off threshold", style = "color:#2c3e50; text-align:center;"),
           selectInput(ns("post_process_choices"),
                       label = "Pick a post-processing method",
                       choices = c("Module Score", 
@@ -74,8 +77,8 @@ mod_Mcode_post_processing_server <- function(input, output, session, inspected_m
   output$selected_method <- renderUI({
    if (input$post_process_choices == "Module Score") {
      tagList(
-       tags$p("Select a module score"),
        sliderInput(ns("module_score"),
+                   popup = "Select a module score",
                    label = "Module Scure",
                    min = 1,
                    max = 50,
@@ -84,8 +87,8 @@ mod_Mcode_post_processing_server <- function(input, output, session, inspected_m
      
    } else if (input$post_process_choices == "Split Module") {
      tagList(
-       tags$p("Select a cut off for the threshold"),
        sliderInput(ns("module_cutoff"),
+                   popup = "Select a cut off for the threshold",
                    label = "Module cut off",
                    min = 1,
                    max = 10,

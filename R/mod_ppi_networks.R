@@ -50,6 +50,8 @@ mod_ppi_networks_server <- function(input, output, session, con){
     )
   })
   
+  # Upload PPI
+  x <- reactiveVal(1)
   observeEvent(input$upload_ppi, {
     id <- showNotification("Saving PPI to database", duration = NULL, closeButton = FALSE)
     ppi <- upload_ppi()
@@ -64,14 +66,33 @@ mod_ppi_networks_server <- function(input, output, session, con){
     output$ppi_overview <- DT::renderDataTable(ppi_networks,
                                                rownames = FALSE,
                                                selection = list(selected = c(1)))
-    ppi_networks_module$upload_ppi <- input$upload_ppi
+    # Send refresh to Description1_ui_1
+    x(x() + 1)
+    ppi_networks_module$upload_ppi <- x()
+    
+    #Create new clique_db when a new ppi_network is loaded
+    try(MODifieRDB::build_clique_db_db(ppi_name = input$ppi_name,
+                                       db_folder =  "./data_example" ,
+                                       db_name = "igem",
+                                       con = con))
   })
   
+  
   ppi_networks <- as.data.frame(MODifieRDB::get_available_networks(con))
-  
-  
-  # Create Deafault network
-  if (any(ppi_networks == "Default_string_700")) {
+
+  #Check if there's any PPI in a new DT and also check if default is there to avoid error with multiple Default networks
+  if (nrow(ppi_networks) == 0) {
+    PPI_network <- read.delim("./inst/app/www/PPI_network.txt")
+    MODifieRDB::ppi_network_to_db(PPI_network,
+                                  ppi_name = "Default_string_700",
+                                  con = con)
+    ppi_networks <- as.data.frame(MODifieRDB::get_available_networks(con))
+    colnames(ppi_networks) <- "PPI networks"
+    output$ppi_overview <- DT::renderDataTable(ppi_networks,
+                                               rownames = FALSE,
+                                               selection = list(selected = c(1)))
+    
+  } else if (any(ppi_networks == "Default_string_700")) {
     ppi_networks <- as.data.frame(MODifieRDB::get_available_networks(con))
     colnames(ppi_networks) <- "PPI networks"
     output$ppi_overview <- DT::renderDataTable(ppi_networks,
@@ -88,15 +109,16 @@ mod_ppi_networks_server <- function(input, output, session, con){
                                                rownames = FALSE,
                                                selection = list(selected = c(1)))
   }
-  
+
   
   # Create Deafault Clique SLQ
-  if (nrow(MODifieRDB::get_available_db_networks(con))==0 ) {
-    clique_db <- MODifieRDB::build_clique_db_db(ppi_name = "String_700",
-                                                db_folder =  "./data_example" , 
-                                                db_name = "igem_db",
-                                                con = con)
-  }
+  # if (nrow(MODifieRDB::get_available_db_networks(con))==0 ) {
+  #   clique_db <- MODifieRDB::build_clique_db_db(ppi_name = "Default",
+  #                                               db_folder =  "./data_example" ,
+  #                                               db_name = "igem",
+  #                                               con = con)
+  # }
+  
   return(ppi_networks_module)
 }
 

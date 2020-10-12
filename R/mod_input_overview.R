@@ -24,7 +24,6 @@ mod_input_overview_ui <- function(id){
              tags$div(`class`="col-sm-2", style = "text-align:right", id ="buttons_input_overview",
                       downloadButton(ns("download_input"), "Download"),
                       actionButton(ns("delete"), tags$i(class="fa fa-trash-o", `aria-hidden`="true")))),
-    uiOutput(ns("disable")),
     uiOutput(ns("inspect")),
     uiOutput(ns("DT_tooltip"))
   ))
@@ -51,8 +50,11 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
   # File input
   output$input_name_chooser <- renderUI({
     input <- upload_input() #reactive pop up
-    tagList( 
-      textInput(ns("input_name"), "Input object name", placeholder = "Input name"),
+    tagList(
+      tags$div(id = "error_name_input_overview_js",
+              textInput(ns("input_name"), "Input object name", placeholder = "Input name")),
+      uiOutput(ns("error_name_descrip")),
+      uiOutput(ns("error_name_js")),
       actionButton(ns("upload_input"), "Add input object to database")
     )
   })
@@ -62,7 +64,30 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
     input$input_name
   })
   
+  # Check name
+  observe({
+    if (any(MODifieRDB::get_available_input_objects(con)$input_name == input_name())){
+      output$error_name_js <- renderUI({
+        tags$script(HTML("element = document.getElementById('error_name_input_overview_js');
+                       element.classList.add('has-error');
+                       document.getElementById('main_page_v2_ui_1-input_overview_ui_1-upload_input').disabled = true;"))
+      })
+      output$error_name_descrip <- renderUI({
+        tags$p(class = "text-danger", tags$b("Error:"), "This name has been taken. Please try again!",
+               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
+      })
+    } else {
+      output$error_name_js <- renderUI({
+        tags$script(HTML("document.getElementById('error_name_input_overview_js').classList.remove('has-error');
+                         document.getElementById('main_page_v2_ui_1-input_overview_ui_1-upload_input').disabled = false;"))
+      })
+      output$error_name_descrip <- NULL
+    }
+  })
+  
+  
   # Upload input object
+  x <- reactiveVal(1)
   observeEvent(input$upload_input, {
     id <- showNotification("Saving input object to database", duration = NULL, closeButton = FALSE, type = "warning")
     on.exit(removeNotification(id), add = TRUE)
@@ -75,9 +100,10 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
     
     # Refresh
     input_objects <- MODifieRDB::get_available_input_objects(con)
-    output$input_overview <- DT::renderDataTable(input_objects,
+    output$input_overview <- DT::renderDataTable({input_objects},
                                                  rownames = FALSE,
                                                  selection = list(selected = c(1)),
+                                                 colnames = c("Input name", "Number of genes", "Data type"),
                                                  callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -85,15 +111,19 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
                                                               Shiny.setInputValue("input_name", data[0]);
                                                               Shiny.setInputValue("input_dbclick", dbclick);
                                                              });'))
+    # Send refresh to Description1_ui_1
+    x(x() + 1)
+    input_overview_module$upload <- x()
     
   })
   
   input_objects <- MODifieRDB::get_available_input_objects(con)
   
   # Render DT
-  output$input_overview <- DT::renderDataTable(input_objects,
+  output$input_overview <- DT::renderDataTable({input_objects},
                                                rownames = FALSE,
                                                selection = list(selected = c(1)),
+                                               colnames = c("Input name", "Number of genes", "Data type"),
                                                callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -120,9 +150,10 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
   # Refresh DT
   observeEvent(Columns_ui_1$input_name, {
     input_objects <- MODifieRDB::get_available_input_objects(con)
-    output$input_overview <- DT::renderDataTable(input_objects,
+    output$input_overview <- DT::renderDataTable({input_objects},
                                                  rownames = FALSE,
                                                  selection = list(selected = c(1)),
+                                                 colnames = c("Input name", "Number of genes", "Data type"),
                                                   callback = DT::JS('
                                                              table.on("dblclick.dt","tr", function() {
                                                                var data=table.row(this).data();;
@@ -137,9 +168,10 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
   # Refresh DT
   observeEvent(Columns_ui_1$upload_input_rds, {
     input_objects <- MODifieRDB::get_available_input_objects(con)
-    output$input_overview <- DT::renderDataTable(input_objects,
+    output$input_overview <- DT::renderDataTable({input_objects},
                                                  rownames = FALSE,
                                                  selection = list(selected = c(1)),
+                                                 colnames = c("Input name", "Number of genes", "Data type"),
                                                  callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -149,16 +181,16 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
                                                              });'))
   })
   
-  # Choose multiple options
-  current_inputs <- function() {
-    selected <- input$input_overview_rows_selected
-    input_objects$input_name[selected]
-  }
-  
   retrieve_input <- function(){
     selected <- input$input_overview_rows_selected
+    input_objects <- MODifieRDB::get_available_input_objects(con)
     if (length(selected) > 1){
-      lapply(current_modules(), MODifieRDB::MODifieR_input_from_db, con = con)
+      # Choose multiple options
+      current_inputs <- function() {
+        selected <- input$input_overview_rows_selected
+        input_objects$input_name[selected]
+      }
+      lapply(current_inputs(), MODifieRDB::MODifieR_input_from_db, con = con)
     } else {
       MODifieRDB::MODifieR_input_from_db(input_objects$input_name[selected], con = con)
     }
@@ -176,17 +208,11 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
   
   observe({
     if(is.null(input$input_overview_rows_selected)) {
-      output$disable <- renderUI({
-        tags$script((HTML("document.getElementById('main_page_v2_ui_1-input_overview_ui_1-download_input').style.pointerEvents = 'none';
-                         document.getElementById('main_page_v2_ui_1-input_overview_ui_1-delete').style.pointerEvents = 'none';
-                         document.getElementById('buttons_input_overview').style.cursor = 'not-allowed';")))
-      }) 
+      shinyjs::disable("download_input")
+      shinyjs::disable("delete")
     } else {
-      output$disable <- renderUI({
-        tags$script((HTML("document.getElementById('main_page_v2_ui_1-input_overview_ui_1-download_input').style.pointerEvents = 'auto';
-                          document.getElementById('main_page_v2_ui_1-input_overview_ui_1-delete').style.pointerEvents = 'auto';
-                          document.getElementById('buttons_input_overview').style.cursor = 'default';")))
-      }) 
+      shinyjs::enable("download_input")
+      shinyjs::enable("delete")
     }
   })
   
@@ -196,9 +222,10 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
     on.exit(removeNotification(id), add = TRUE)
     # Required for selecting
     input_objects <- MODifieRDB::get_available_input_objects(con)
-    output$input_overview <- DT::renderDataTable(input_objects,
+    output$input_overview <- DT::renderDataTable({input_objects},
                                                  rownames = FALSE,
                                                  selection = list(selected = c(1)),
+                                                 colnames = c("Input name", "Number of genes", "Data type"),
                                                  callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -211,6 +238,12 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
     # Delete
     selected <- input$input_overview_rows_selected
     if (length(selected) > 1){
+      # Choose multiple options
+      current_inputs <- function() {
+        selected <- input$input_overview_rows_selected
+        input_objects$input_name[selected]
+        print(input_objects$input_name[selected])
+      }
       lapply(current_inputs(), MODifieRDB::delete_input_object, con = con)
     } else {
       MODifieRDB::delete_input_object(input_objects$input_name[selected] ,con = con)
@@ -218,9 +251,10 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
     
     # Refresh
     input_objects <- MODifieRDB::get_available_input_objects(con)
-    output$input_overview <- DT::renderDataTable(input_objects,
+    output$input_overview <- DT::renderDataTable({input_objects},
                                                  rownames = FALSE,
                                                  selection = list(selected = c(1)),
+                                                 colnames = c("Input name", "Number of genes", "Data type"),
                                                  callback = DT::JS('
                                                             table.on("dblclick.dt","tr", function() {
                                                               var data=table.row(this).data();
@@ -236,9 +270,11 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
   # Observer doubleclick
   observeEvent(app_servr$input_dbclick, {
     input_obj <- MODifieRDB::MODifieR_input_from_db(input_name = app_servr$input_name, con = con)
+    
     output$inspect <- renderUI({
       tagList(
         showModal(modalDialog(
+          top = 8,
           title = app_servr$input_name,
           easyClose = TRUE,
           size = "l",
@@ -248,14 +284,19 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
                         tabPanel(title = "Result",
                                  DT::dataTableOutput(ns("result"))),
                         tabPanel(title = "Settings",
-                                 DT::dataTableOutput(ns("settings"))))),
+                                 DT::dataTableOutput(ns("settings")))),
+            rep_br(2)),
           footer = tagList(tags$button("Close", class="btn btn-default", `data-dismiss`="modal")
           )
         ))
       )
     })
+    edgeR_deg_table <- input_obj$edgeR_deg_table
+    edgeR_deg_table <- data.frame(Diff_genes = row.names(edgeR_deg_table), edgeR_deg_table)
     output$result <- DT::renderDataTable(
-      input_obj$edgeR_deg_table,
+      edgeR_deg_table,
+      rownames = FALSE,
+      colnames = c("Diff genes", "logFC", "logCPM", "F", "P-value", "FDR"),
       filter = "top",
       extensions = c('Buttons'),
       options = list(
@@ -282,8 +323,11 @@ mod_input_overview_server <- function(input, output, session, con, Columns_ui_1,
       )
     )
     output$settings <- DT::renderDataTable(
-      as.matrix(input_obj$settings[2:7]),
+      {DT <- as.matrix(input_obj$settings[2:7])
+      colnames(DT) <- "Values"
+      as.data.frame(DT)},
       extensions = c('Buttons'),
+      colnames = c("Settings used"),
       options = list(
         dom = "lfrtipB",
         scrollX = TRUE,

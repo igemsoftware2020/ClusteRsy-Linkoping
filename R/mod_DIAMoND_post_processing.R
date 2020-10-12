@@ -29,6 +29,7 @@ mod_DIAMoND_post_processing_server <- function(input, output, session, inspected
     tagList(
       showModal(modalDialog(
         title = selected_module_name$name,
+        top = 10,
         easyClose = TRUE,
         size = "l",
         fluidPage(
@@ -43,7 +44,8 @@ mod_DIAMoND_post_processing_server <- function(input, output, session, inspected
                       tabPanel(title = "Added genes",
                                DT::dataTableOutput(ns("added_genes_table"))),
                       tabPanel(title = "Settings table",
-                               DT::dataTableOutput(ns("settings_table"))))),
+                               DT::dataTableOutput(ns("settings_table")))),
+          rep_br(2)),
                       
                       footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
                       ),
@@ -62,9 +64,10 @@ mod_DIAMoND_post_processing_server <- function(input, output, session, inspected
           title = selected_module_name$name,
           easyClose = TRUE,
           size = "l",
-          tags$h3("You can choose between adding seed genes or removing seed genes", style = "color:#2c3e50"),
+          top = 20,
+          tags$h4("You can choose between adding seed genes or removing seed genes", style = "color:#2c3e50; text-align:center;"),
           selectInput(ns("post_processing_choises"),
-                      label = "Select add seed genes or remove seed genes",
+                      label = "Select add or remove seed genes",
                       choices = c("Add seed genes",
                                   "Remove seed genes")),
           actionButton(ns("post_process_module_object"), 
