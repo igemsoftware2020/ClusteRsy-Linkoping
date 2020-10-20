@@ -11,11 +11,21 @@ This tool was developed by the Linköping iGEM team of 2020. Down below you can 
 
 ---
 
+### __Contributors__
+
+__Adam Lång. Teamleader and full stack developer__
+__Jake. Full stack developer__
+__Alexander Johansson. R-shiny developer__
+__Erika Mattsson. R-shiny developer__
+__Lucas Porcile R-shiny developer__
+__Ronja Höglund HTML/CSS developer__
+__Christina Hedner HTML/CSS developer__
+
+---
 We have included MODifieR, a R package for disease module identification. Enrichment analysis such as disease analysis, gene ontology analysis and pathway analysis using the Clusterprofiler package. We also provide visualization of the results as well as a database to store all the input and output data.
 
 
 To run the developer version of this app there are a few dependencies that needs to added.
-
 
 
 ## __Installation__
