@@ -27,6 +27,7 @@ __Ronja Höglund - HTML/CSS developer__
 
 ---
 
+
 ### __Set up the database__
 We provide a SQL database. You can either create a new empty database or you can use our database that we used during modeling. 
 
@@ -46,6 +47,9 @@ con <- MODifieRDB::connect_to_db("./data_example/YOUR_NAME_OF_THE_DATABASE.db")
   app_servr$loaded <- con
 ``` 
 Now you are done. Please note that the setting up a new database might take a couple of minutes. 
+
+### __Background picture__
+Once you have pulled the repo to your local machine, please visit the ./inst/app/www folder and unzip the front_page1.rar file for the full experience! 
 
 __MODifieR__
 
