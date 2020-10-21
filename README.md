@@ -27,7 +27,7 @@ __Ronja Höglund - HTML/CSS developer__
 
 ---
 
-### __Set up database__
+### __Set up the database__
 We provide a SQL database. You can either create a new empty database or you can use our database that we used during modeling. 
 
 __1. How to set up our database__ 
