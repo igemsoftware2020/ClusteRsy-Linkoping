@@ -32,7 +32,9 @@ We provide a SQL database. You can either create a new empty database or you can
 
 __1. How to set up our database__ 
 
-Here you can [download](https://www.dropbox.com/s/z731ksu1mryfbt6/modeling_new_db.db?dl=0) our database. Once downloaded then put in the folder named data_examples. You are now good to go! 
+Here you can [download](https://www.dropbox.com/s/z731ksu1mryfbt6/modeling_new_db.db?dl=0) our database.
+If you want to access and investigate some of the data you will also need to [download](https://www.dropbox.com/s/x5evjztpypnhw9u/igem.sqlite?dl=0) our SQLite database containing a clique network from the PPI network. 
+Once downloaded create a new folder in the ClusteRsy-Linkoping folder and place the databases here. You are now good to go! 
 
 __2. How to set up a new database__
 
