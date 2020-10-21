@@ -25,8 +25,6 @@ __Lucas Porcile - R shiny developer__
 
 __Ronja Höglund - HTML/CSS developer__
 
-__Christina Hedner - HTML/CSS developer__
-
 ---
 We have included MODifieR, a R package for disease module identification. Enrichment analysis such as disease analysis, gene ontology analysis and pathway analysis using the Clusterprofiler package. We also provide visualization of the results as well as a database to store all the input and output data.
 
