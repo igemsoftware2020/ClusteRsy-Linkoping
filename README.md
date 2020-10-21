@@ -26,6 +26,27 @@ __Lucas Porcile - R shiny developer__
 __Ronja Höglund - HTML/CSS developer__
 
 ---
+
+### __Set up database__
+We provide a SQL database. You can either create a new empty database or you can use our database that we used during modeling. 
+
+__1. How to set up our database__ 
+
+Here you can [download](https://www.dropbox.com/s/z731ksu1mryfbt6/modeling_new_db.db?dl=0) our database. Once downloaded then put in the folder named data_examples. You are now good to go! 
+
+__2. How to set up a new database__
+
+If you want to create your own empty database you can do so by changing a couple of lines in the app_server.R code: 
+
+```R
+#This code is located at line 10 in app_server.R, please replace "YOUR_NAME_OF_THE_DATABASE" with a desired name. 
+con <- MODifieRDB::connect_to_db("./data_example/YOUR_NAME_OF_THE_DATABASE.db")
+  app_servr$loaded <- con
+``` 
+Now you are done. Please note that the setting up a new database might take a couple of minutes. 
+
+__MODifieR__
+
 We have included MODifieR, a R package for disease module identification. Enrichment analysis such as disease analysis, gene ontology analysis and pathway analysis using the Clusterprofiler package. We also provide visualization of the results as well as a database to store all the input and output data.
 
 
