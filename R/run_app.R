@@ -5,9 +5,12 @@
 #' @export
 #' @importFrom shiny shinyApp
 #' @importFrom golem with_golem_options
-run_app <- function(
-  ...
-) {
+run_app <- function(db = NULL,...){ 
+  if (is.null(db)){
+  db <- system.file("database", "igem.db", package = "ClusteRsy")  
+  }
+  db <<- db
+  
   with_golem_options(
     app = shinyApp(
       ui = app_ui, 
