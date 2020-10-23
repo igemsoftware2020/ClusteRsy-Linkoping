@@ -82,7 +82,7 @@ mod_ppi_networks_server <- function(input, output, session, con){
 
   #Check if there's any PPI in a new DT and also check if default is there to avoid error with multiple Default networks
   if (nrow(ppi_networks) == 0) {
-    PPI_network <- read.delim("./app/www/PPI_network.txt")
+    PPI_network <- read.delim(system.file("ppi_networks", "PPI_network.txt",package = "ClusteRsy"))
     MODifieRDB::ppi_network_to_db(PPI_network,
                                   ppi_name = "Default_string_700",
                                   con = con)
@@ -99,7 +99,7 @@ mod_ppi_networks_server <- function(input, output, session, con){
                                                rownames = FALSE,
                                                selection = list(selected = c(1)))
   } else {
-    PPI_network <- read.delim("./app/www/PPI_network.txt")
+    PPI_network <- read.delim(system.file("ppi_networks","PPI_network.txt", package = "ClusteRsy"))
     MODifieRDB::ppi_network_to_db(PPI_network,
                                   ppi_name = "Default_string_700",
                                   con = con)
