@@ -10,6 +10,7 @@ app_server <- function( input, output, session) {
   con <- MODifieRDB::connect_to_db(db)
   app_servr$loaded <- con
   
+  
   # Listen to the beautiful button
   observeEvent(input$tool_button, {
     app_servr$tool_button <- input$tool_button

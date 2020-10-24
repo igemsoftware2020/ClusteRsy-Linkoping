@@ -7,7 +7,7 @@
 #' @importFrom golem with_golem_options
 run_app <- function(db = NULL,...){ 
   if (is.null(db)){
-  db <- system.file("database", "igem.db", package = "ClusteRsy")  
+  db <- system.file("database", "igem.db", package = "ClusteRsy")
   }
   db <<- db
   
