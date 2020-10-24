@@ -27,29 +27,8 @@ __Ronja Höglund - HTML/CSS developer__
 
 ---
 
-
-### __Set up the database__
-We provide a SQL database. You can either create a new empty database or you can use our database that we used during modeling. 
-
-__1. How to set up our database__ 
-
-Here you can [download](https://www.dropbox.com/s/z731ksu1mryfbt6/modeling_new_db.db?dl=0) our database.
-If you want to access and investigate some of the data you will also need to [download](https://www.dropbox.com/s/x5evjztpypnhw9u/igem.sqlite?dl=0) our SQLite database containing all possible Cliques of the PPI network. 
-Once downloaded create a new folder in the ClusteRsy-Linkoping folder and place the databases here. You are now good to go! 
-
-__2. How to set up a new database__
-
-If you want to create your own empty database you can do so by changing a couple of lines in the app_server.R code: 
-
-```R
-#This code is located at line 10 in app_server.R, please replace "YOUR_NAME_OF_THE_DATABASE" with a desired name. 
-con <- MODifieRDB::connect_to_db("./data_example/YOUR_NAME_OF_THE_DATABASE.db")
-  app_servr$loaded <- con
-``` 
-Now you are done. Please note that the setting up a new database might take a couple of minutes. 
-
-### __Background picture__
-Once you have pulled the repo to your local machine, please visit the ./inst/app/www folder and unzip the front_page1.rar file for the full experience! 
+## __Preparation__
+Before the software can be used there are a couple of dependencies that needs to be installed. Please follow the steps in __Installation__ 
 
 __MODifieR__
 
@@ -122,11 +101,29 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("clusterProfiler")
 ```
 
-#### CRAN dependencies
-All of the CRAN dependencies has been taken care of is found in the 02_dev.R file. The only thing you will need to do is to CRAN install golem with
-```
-install.packages("golem")
+It's now time to install the actual software. It's provided as a R-package and it can easily be installed from GitHub within
+
+```R
+devtools::install_git(url = "https://github.com/igemsoftwareadmin/ClusteRsy-Linkoping.git")
 ```
 
-Finally, now your done with all the installation needed to run our App.
-Once you start it up, do an Install and Restart found in the Build tab and then you can start the app using run_app()
+__How to run the app__
+Once everything has been installed you can simply run the following using the console in R. 
+
+```R
+ClusteRsy::run_app()
+```
+
+### __Set up database__
+We provide a SQL database. You can either create a new one or you can use our database that we used during modeling. A PPI network (STRING v.11 filtered to only contain human genes and a score > 700) is included by default.  
+
+__1. How to set up our database__ 
+
+Here you can [download](https://www.dropbox.com/s/z731ksu1mryfbt6/igem.db?dl=0) our database. Once this has been downloaded, go to the ClusteRsy library folder and place it in the database folder. 
+
+__2. How to set up a new database__
+
+If you want to use a new database only containing the default PPI network then simply skip step 1 and use in the R console.
+```R
+ClusteRsy::run_app()
+``` 
