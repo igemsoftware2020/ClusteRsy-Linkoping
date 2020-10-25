@@ -26,7 +26,7 @@ mod_module_discoverer_post_processing_server <- function(input, output, session,
     tagList(
       showModal(modalDialog(
         title = selected_module_name$name,
-        top = 10,
+        top = 7,
         easyClose = TRUE,
         size = "l",
         fluidPage(

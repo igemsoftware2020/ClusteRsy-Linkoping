@@ -40,7 +40,7 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
   enrichment_overview_module <- reactiveValues()
   
   # Create a table
-  enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con)
+  try(enrichment_objects <- MODifieRDB::get_available_enrichment_objects(con))
   output$enrichment_overview <- DT::renderDataTable({enrichment_objects},
                                                     rownames = FALSE,
                                                     selection = list(selected = c(1)),

@@ -113,7 +113,7 @@ mod_ppi_networks_server <- function(input, output, session, con){
   }
   
   #Builde clique_db if the SQLite is empty
-  sqlite_db <- system.file("database", "igem.sqlite", package = "ClusteRsy")
+  sqlite_db <- paste(system.file("database", package = "ClusteRsy"),"/igem.sqlite", sep ="")
   sqlite_con <- MODifieRDB::connect_to_db(sqlite_db) #Could perhaps be moved to run_app
   if (nrow(RSQLite::dbListObjects(sqlite_con)) == 0) {
     sqlite_db <- system.file("database", "igem.sqlite", package = "ClusteRsy")

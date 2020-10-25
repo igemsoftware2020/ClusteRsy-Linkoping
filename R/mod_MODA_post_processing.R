@@ -29,7 +29,7 @@ mod_MODA_post_processing_server <- function(input, output, session, inspected_mo
     tagList(
       showModal(modalDialog(
         title = selected_module_name$name,
-        top = 10,
+        top = 7,
         easyClose = TRUE,
         size = "l",
         fluidPage(
