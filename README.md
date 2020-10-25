@@ -15,7 +15,7 @@ This tool was developed by the Linköping iGEM team of 2020. Down below you can 
 
 __Adam Lång - Teamleader and full stack developer__
 
-__Jake - Full stack developer__
+__Jake P - Full stack developer__
 
 __Alexander Johansson - R shiny developer__
 
