@@ -323,7 +323,7 @@ mod_enrichment_overview_server <- function(input, output, session, con, main_pag
     output$inspect <- renderUI({
       tagList(
         showModal(modalDialog(
-          top = 20,
+          top = 2,
           title = app_servr$enrichment_name,
           easyClose = TRUE,
           size = "l",

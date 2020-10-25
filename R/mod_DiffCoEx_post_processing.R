@@ -29,7 +29,7 @@ mod_DiffCoEx_post_processing_server <- function(input, output, session, inspecte
     tagList(
       showModal(modalDialog(
         title = selected_module_name$name,
-        top = 7,
+        top = 2,
         easyClose = TRUE,
         size = "l",
         fluidPage(
