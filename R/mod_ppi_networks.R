@@ -71,8 +71,10 @@ mod_ppi_networks_server <- function(input, output, session, con){
     ppi_networks_module$upload_ppi <- x()
     
     #Create new clique_db when a new ppi_network is loaded
+    sqlite_db <- system.file("database", "igem.sqlite", package = "ClusteRsy") #Not sure if they can be put in the same SQLite database
+    
     try(MODifieRDB::build_clique_db_db(ppi_name = input$ppi_name,
-                                       db_folder =  "./data_example" ,
+                                       db_folder =  sub(pattern = 'igem.sqlite', replacement = "", sqlite_db),
                                        db_name = "igem",
                                        con = con))
   })
@@ -82,7 +84,7 @@ mod_ppi_networks_server <- function(input, output, session, con){
 
   #Check if there's any PPI in a new DT and also check if default is there to avoid error with multiple Default networks
   if (nrow(ppi_networks) == 0) {
-    PPI_network <- read.delim("./inst/app/www/PPI_network.txt")
+    PPI_network <- read.delim(system.file("ppi_networks", "PPI_network.txt",package = "ClusteRsy"))
     MODifieRDB::ppi_network_to_db(PPI_network,
                                   ppi_name = "Default_string_700",
                                   con = con)
@@ -99,7 +101,7 @@ mod_ppi_networks_server <- function(input, output, session, con){
                                                rownames = FALSE,
                                                selection = list(selected = c(1)))
   } else {
-    PPI_network <- read.delim("./inst/app/www/PPI_network.txt")
+    PPI_network <- read.delim(system.file("ppi_networks","PPI_network.txt", package = "ClusteRsy"))
     MODifieRDB::ppi_network_to_db(PPI_network,
                                   ppi_name = "Default_string_700",
                                   con = con)
@@ -109,15 +111,19 @@ mod_ppi_networks_server <- function(input, output, session, con){
                                                rownames = FALSE,
                                                selection = list(selected = c(1)))
   }
-
   
-  # Create Deafault Clique SLQ
-  # if (nrow(MODifieRDB::get_available_db_networks(con))==0 ) {
-  #   clique_db <- MODifieRDB::build_clique_db_db(ppi_name = "Default",
-  #                                               db_folder =  "./data_example" ,
-  #                                               db_name = "igem",
-  #                                               con = con)
-  # }
+  #Builde clique_db if the SQLite is empty
+  sqlite_db <- system.file("database", "igem.sqlite", package = "ClusteRsy")
+  sqlite_con <- MODifieRDB::connect_to_db(sqlite_db) #Could perhaps be moved to run_app
+  if (nrow(RSQLite::dbListObjects(sqlite_con)) == 0) {
+    sqlite_db <- system.file("database", "igem.sqlite", package = "ClusteRsy")
+    
+    try(MODifieRDB::build_clique_db_db(ppi_name = "Default_string_700",
+                                       db_folder =  sub(pattern = 'igem.sqlite', replacement = "", sqlite_db),
+                                       db_name = "igem",
+                                       con = con))
+    
+  }
   
   return(ppi_networks_module)
 }

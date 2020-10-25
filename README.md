@@ -11,11 +11,31 @@ This tool was developed by the Linköping iGEM team of 2020. Down below you can 
 
 ---
 
+### __Contributors__
+
+__Adam Lång - Teamleader and full stack developer__
+
+__Jake P - Full stack developer__
+
+__Alexander Johansson - R shiny developer__
+
+__Erika Mattsson - R shiny developer__
+
+__Lucas Porcile - R shiny developer__
+
+__Ronja Höglund - HTML/CSS developer__
+
+---
+
+## __Preparation__
+Before the software can be used there are a couple of dependencies that needs to be installed. Please follow the steps in __Installation__ 
+
+__MODifieR__
+
 We have included MODifieR, a R package for disease module identification. Enrichment analysis such as disease analysis, gene ontology analysis and pathway analysis using the Clusterprofiler package. We also provide visualization of the results as well as a database to store all the input and output data.
 
 
 To run the developer version of this app there are a few dependencies that needs to added.
-
 
 
 ## __Installation__
@@ -81,11 +101,29 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("clusterProfiler")
 ```
 
-#### CRAN dependencies
-All of the CRAN dependencies has been taken care of is found in the 02_dev.R file. The only thing you will need to do is to CRAN install golem with
-```
-install.packages("golem")
+It's now time to install the actual software. It's provided as a R-package and it can easily be installed from GitHub within
+
+```R
+devtools::install_git(url = "https://github.com/igemsoftwareadmin/ClusteRsy-Linkoping.git")
 ```
 
-Finally, now your done with all the installation needed to run our App.
-Once you start it up, do an Install and Restart found in the Build tab and then you can start the app using run_app()
+__How to run the app__
+Once everything has been installed you can simply run the following using the console in R. 
+
+```R
+ClusteRsy::run_app()
+```
+
+### __Set up database__
+We provide a SQL database. You can either create a new one or you can use our database that we used during modeling. A PPI network (STRING v.11 filtered to only contain human genes and a score > 700) is included by default.  
+
+__1. How to set up our database__ 
+
+Here you can [download](https://www.dropbox.com/s/z731ksu1mryfbt6/igem.db?dl=0) our database. Once this has been downloaded, go to the ClusteRsy library folder and place it in the database folder. 
+
+__2. How to set up a new database__
+
+If you want to use a new database only containing the default PPI network then simply skip step 1 and use in the R console.
+```R
+ClusteRsy::run_app()
+``` 
