@@ -11,7 +11,7 @@ mod_WGCNA_post_processing_ui <- function(id){
   ns <- NS(id)
   tagList(
     uiOutput(ns("tables")),
-    uiOutput(ns("post_processing"))
+    #uiOutput(ns("post_processing"))
   )
 }
     
@@ -24,7 +24,6 @@ mod_WGCNA_post_processing_server <- function(input, output, session, inspected_m
   WGCNA_post_process <- reactiveValues()
   
   observeEvent(inspect_button, {
-    req(inspect_button)
   output$tables <- renderUI({
     tagList(
       showModal(modalDialog(
@@ -53,8 +52,7 @@ mod_WGCNA_post_processing_server <- function(input, output, session, inspected_m
   })
   
   observeEvent(post_process_button, {
-    req(post_process_button)
-    output$post_processing <- renderUI({
+    output$tables <- renderUI({
       tagList(
         showModal(modalDialog(
           title = selected_module_name$name,

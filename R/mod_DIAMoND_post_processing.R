@@ -11,7 +11,7 @@ mod_DIAMoND_post_processing_ui <- function(id){
   ns <- NS(id)
   tagList(
     uiOutput(ns("tables")),
-    uiOutput(ns("post_processing"))
+    #(ns("post_processing"))
   )
 }
     
@@ -24,41 +24,39 @@ mod_DIAMoND_post_processing_server <- function(input, output, session, inspected
   DIAMoND_post_process <- reactiveValues()
   
   observeEvent(inspect_button, {
-    req(inspect_button)
-  output$tables <- renderUI({
-    tagList(
-      showModal(modalDialog(
-        title = selected_module_name$name,
-        top = 2,
-        easyClose = TRUE,
-        size = "l",
-        fluidPage(
-          tabsetPanel(id = ns("tabs"),
-                      type = "tabs",
-                      tabPanel(title = "Module genes",
-                                DT::dataTableOutput(ns("module_genes_table"))),
-                      tabPanel(title = "Seed genes table",
-                               DT::dataTableOutput(ns("seed_genes_table"))),
-                      tabPanel(title = "Ignored genes",
-                               DT::dataTableOutput(ns("ignored_genes_table"))),
-                      tabPanel(title = "Added genes",
-                               DT::dataTableOutput(ns("added_genes_table"))),
-                      tabPanel(title = "Settings table",
-                               DT::dataTableOutput(ns("settings_table")))),
-          rep_br(2)),
-                      
-                      footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
-                      ),
+    output$tables <- renderUI({
+      tagList(
+        showModal(modalDialog(
+          title = selected_module_name$name,
+          top = 2,
+          easyClose = TRUE,
+          size = "l",
+          fluidPage(
+            tabsetPanel(id = ns("tabs"),
+                        type = "tabs",
+                        tabPanel(title = "Module genes",
+                                  DT::dataTableOutput(ns("module_genes_table"))),
+                        tabPanel(title = "Seed genes table",
+                                 DT::dataTableOutput(ns("seed_genes_table"))),
+                        tabPanel(title = "Ignored genes",
+                                 DT::dataTableOutput(ns("ignored_genes_table"))),
+                        tabPanel(title = "Added genes",
+                                 DT::dataTableOutput(ns("added_genes_table"))),
+                        tabPanel(title = "Settings table",
+                                 DT::dataTableOutput(ns("settings_table")))),
+            rep_br(2)),
+                        
+                        footer = tagList( tags$button("Close", class="btn btn-default", `data-dismiss`="modal"),
+                        ),
+            )
           )
-        )
-    )
-  })
-  
+      )
+    })
   })
   
   observeEvent(post_process_button, {
     req(post_process_button)
-    output$post_processing <- renderUI({
+    output$tables <- renderUI({
       tagList(
         showModal(modalDialog(
           title = selected_module_name$name,
