@@ -61,7 +61,11 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
 
   output$module_name_chooser <- renderUI({
     module <- upload_module() #reactive pop up
-    tagList( 
+    tagList(
+      tags$div(id = "error_name_module_overview_js",
+               textInput(ns("module_name"), "Input object name", placeholder = "Input name")),
+      uiOutput(ns("error_name_descrip")),
+      uiOutput(ns("error_name_js")),
       actionButton(ns("upload_module"), "Add module object to database")
     )
   })
@@ -69,6 +73,27 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   # Name reactive
   module_name <- reactive({
     input$module_name
+  })
+  
+  # Check name
+  observe({
+    if (any(MODifieRDB::get_available_module_objects(con)$module_name == module_name())){
+      output$error_name_js <- renderUI({
+        tags$script(HTML("element = document.getElementById('error_name_module_overview_js');
+                       element.classList.add('has-error');
+                       document.getElementById('main_page_v2_ui_1-module_overview_ui_1-upload_module').disabled = true;"))
+      })
+      output$error_name_descrip <- renderUI({
+        tags$p(class = "text-danger", tags$b("Error:"), "This name has been taken. Please try again!",
+               style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
+      })
+    } else {
+      output$error_name_js <- renderUI({
+        tags$script(HTML("document.getElementById('error_name_module_overview_js').classList.remove('has-error');
+                         document.getElementById('main_page_v2_ui_1-module_overview_ui_1-upload_module').disabled = false;"))
+      })
+      output$error_name_descrip <- NULL
+    }
   })
   
   
@@ -91,8 +116,11 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
     module_name <- module_name()
     module <- upload_module()
     
+    MODifieRDB::MODifieR_object_to_db(module,
+                                      object_name = module_name,
+                                      con = con)
     
-     sapply(1:length(module), function(x){multiple_modules_to_db(module[[x]], module_names = names(module)[x])})
+    #sapply(1:length(module), function(x){multiple_modules_to_db(module[[x]], module_names = names(module)[x])})
       
       
       
