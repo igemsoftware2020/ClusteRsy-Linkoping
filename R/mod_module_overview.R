@@ -134,7 +134,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   
   
   # Refresh DT
-  observeEvent(Columns_ui_1$module_name, {
+  observeEvent(Columns_ui_1$infer, {
     module_objects <- MODifieRDB::get_available_module_objects(con)
     output$module_overview <- DT::renderDataTable({module_objects},
                                                   rownames = FALSE,
@@ -398,7 +398,7 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
   observeEvent(app_servr$module_dbclick, {
     post_process_button <- NULL
     inspect_button <- 1
-
+    
     selected <- input$module_overview_rows_selected
     inspected_module <- MODifieRDB::MODifieR_module_from_db(app_servr$module_name, con = con)
     if (is.null(inspected_module$module_genes)) {

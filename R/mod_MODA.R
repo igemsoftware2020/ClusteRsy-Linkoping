@@ -58,6 +58,7 @@ mod_MODA_server <- function(input, output, session, con, upload_ui_1, input_over
   ns <- session$ns
   
   MODA_module <- reactiveValues()
+  x <- reactiveVal(1)  # Reactive value to record if the input buttion is pressed
   
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
@@ -121,7 +122,8 @@ mod_MODA_server <- function(input, output, session, con, upload_ui_1, input_over
       })
     }
     else {
-      MODA_module$module_name <- module_name()
+      x(x() + 1)
+      MODA_module$infer <- x()
       updateTextInput(session, "module_name", value = character(0))
     }
     output$close_loading_modal <- renderUI({

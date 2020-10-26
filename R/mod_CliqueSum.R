@@ -48,6 +48,7 @@ mod_CliqueSum_server <- function(input, output, session, con, upload_ui_1, input
   ns <- session$ns
   
   CliqueSum_module <- reactiveValues()
+  x <- reactiveVal(1)  # Reactive value to record if the input buttion is pressed
   
   module_name <- reactive({
     input$module_name
@@ -125,7 +126,8 @@ mod_CliqueSum_server <- function(input, output, session, con, upload_ui_1, input
       })
     }
     else {
-      CliqueSum_module$module_name <- module_name()
+      x(x() + 1)
+      CliqueSum_module$infer <- x()
       updateTextInput(session, "module_name", value = character(0))
     }
     output$close_loading_modal <- renderUI({

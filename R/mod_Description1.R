@@ -150,64 +150,64 @@ mod_Description1_server <- function(input, output, session, con, upload_ui_1, in
     if(method == "Clique Sum"){
       output$method <- renderUI({mod_CliqueSum_ui(ns("CliqueSum_ui_1"))
       })
-      observeEvent(CliqueSum_ui_1$module_name,{
-        Description1_module$module_name <- CliqueSum_ui_1$module_name
+      observeEvent(CliqueSum_ui_1$infer,{
+        Description1_module$infer <- CliqueSum_ui_1$infer
       })
     }
     
     if(method == "WGCNA"){
       output$method <- renderUI({mod_WGCNA_ui(ns("WGCNA_ui_1"))
       })
-      observeEvent(WGCNA_ui_1$module_name,{
-        Description1_module$module_name <- WGCNA_ui_1$module_name
+      observeEvent(WGCNA_ui_1$infer,{
+        Description1_module$infer <- WGCNA_ui_1$infer
       })
     }
     
     if(method == "DIAMoND"){
       output$method <- renderUI({mod_DIAMoND_ui(ns("DIAMoND_ui_1"))
       })
-      observeEvent(DIAMoND_ui_1$module_name,{
-        Description1_module$module_name <- DIAMoND_ui_1$module_name
+      observeEvent(DIAMoND_ui_1$infer,{
+        Description1_module$infer <- DIAMoND_ui_1$infer
       })
     }
     
     if(method == "DiffCoEx"){
       output$method <- renderUI({mod_DiffCoEx_ui(ns("DiffCoEx_ui_1"))
       })
-      observeEvent(DiffCoEx_ui_1$module_name,{
-        Description1_module$module_name <- DiffCoEx_ui_1$module_name
+      observeEvent(DiffCoEx_ui_1$infer,{
+        Description1_module$infer <- DiffCoEx_ui_1$infer
       })
     }
     
     if(method == "MCODE"){
       output$method <- renderUI({mod_MCODE_ui(ns("MCODE_ui_1"))
       })
-      observeEvent(MCODE_ui_1$module_name,{
-        Description1_module$module_name <- MCODE_ui_1$module_name
+      observeEvent(MCODE_ui_1$infer,{
+        Description1_module$infer <- MCODE_ui_1$infer
       })
     }
     
     if(method == "MODA"){
       output$method <- renderUI({mod_MODA_ui(ns("MODA_ui_1"))
       })
-      observeEvent(MODA_ui_1$module_name,{
-        Description1_module$module_name <- MODA_ui_1$module_name
+      observeEvent(MODA_ui_1$infer,{
+        Description1_module$infer <- MODA_ui_1$infer
       })
     }
     
     if(method == "Module Discoverer"){
       output$method <- renderUI({mod_Modulediscoverer_ui(ns("Modulediscoverer_ui_1"))
       })
-      observeEvent(Modulediscoverer_ui_1$module_name,{
-        Description1_module$module_name <- Modulediscoverer_ui_1$module_name
+      observeEvent(Modulediscoverer_ui_1$infer,{
+        Description1_module$infer <- Modulediscoverer_ui_1$infer
       })
     }
     
     if(method == "Correlation Clique"){
       output$method <- renderUI({mod_CClique_ui(ns("CClique_ui_1"))
       })
-      observeEvent(CClique_ui_1$module_name,{
-        Description1_module$module_name <- CClique_ui_1$module_name
+      observeEvent(CClique_ui_1$infer,{
+        Description1_module$infer <- CClique_ui_1$infer
       })
     }
   }

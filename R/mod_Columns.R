@@ -91,8 +91,8 @@ mod_Columns_server <- function(input, output, session, con, module_overview_ui_1
     Columns_module$upload_input_rds <- upload_ui_1$upload_input_rds
   }) #Is sent to input_overview for refreshing DT
   
-  observeEvent(Description1_ui_1$module_name,{
-    Columns_module$module_name <- Description1_ui_1$module_name
+  observeEvent(Description1_ui_1$infer,{
+    Columns_module$infer <- Description1_ui_1$infer
   })
   
   observeEvent(disease_analysis_ui_1$enrich, {

@@ -112,6 +112,7 @@ mod_MCODE_server <- function(input, output, session, con, upload_ui_1, input_ove
   ns <- session$ns
   
   MCODE_module <- reactiveValues()
+  x <- reactiveVal(1)  # Reactive value to record if the input buttion is pressed
   
   output$input_choice <- renderUI({
     input_objects <- unlist(MODifieRDB::get_available_input_objects(con)$input_name)
@@ -196,7 +197,8 @@ mod_MCODE_server <- function(input, output, session, con, upload_ui_1, input_ove
         })
       }
     } else {
-      MCODE_module$module_name <- module_name()
+      x(x() + 1)
+      MCODE_module$infer <- x()
       updateTextInput(session, "module_name", value = character(0))
     }
     # Close loading modal

@@ -124,6 +124,7 @@ mod_WGCNA_server <- function(input, output, session, con, upload_ui_1, input_ove
   ns <- session$ns
   
   WGCNA_module <- reactiveValues()
+  x <- reactiveVal(1)  # Reactive value to record if the input buttion is pressed
   
   # This function is used to make TOMType input valid
   decapitalize <- function(str){
@@ -199,7 +200,8 @@ mod_WGCNA_server <- function(input, output, session, con, upload_ui_1, input_ove
                style = "-webkit-animation: fadein 0.5s; -moz-animation: fadein 0.5s; -ms-animation: fadein 0.5s;-o-animation: fadein 0.5s; animation: fadein 0.5s;")
       })
     } else {
-      WGCNA_module$module_name <- module_name()
+      x(x() + 1)
+      WGCNA_module$infer <- x()
       updateTextInput(session, "module_name", value = character(0))
     }
     output$close_loading_modal <- renderUI({
