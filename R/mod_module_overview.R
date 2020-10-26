@@ -54,7 +54,6 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
       
       return(NULL)
     }
-    
     readRDS(file = infile)
   })
   
@@ -192,8 +191,10 @@ mod_module_overview_server <- function(input, output, session, con, Columns_ui_1
       names(modules) <- current_modules()
       return(modules)
     } else {
-      module <- list(MODifieRDB::MODifieR_module_from_db(module_objects$module_name[selected], con = con))
-      names(module) <- module_objects$module_name[selected]
+      # module <- list(MODifieRDB::MODifieR_module_from_db(module_objects$module_name[selected], con = con))
+      # names(module) <- module_objects$module_name[selected]
+      # return(module)
+      module <- MODifieRDB::MODifieR_module_from_db(module_objects$module_name[selected], con = con)
       return(module)
     }
   }
