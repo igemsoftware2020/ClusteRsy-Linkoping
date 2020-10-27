@@ -115,7 +115,7 @@ If you want to investigate a certain disease you can easily do so in the Results
                                                       "My name is Adam",
                                                       br(),
                                                       br(),
-                                                      "I'm a ClusteRsy developer and the team leader of Mathematical modeling and Programming"))),
+                                                      "I'm a ClusteRsy Full stack developer and the team leader of the Mathematical modeling and Programming group"))),
                                tags$div(`class`="swiper-slide",
                                         tags$a(class="swiper-item", style="background-image:url('www/swiper_item3.jpg');",
                                                tags$p(class="Ronja", style=" opacity:0; font-family:Quicksand;padding-top: 5vh;", 
