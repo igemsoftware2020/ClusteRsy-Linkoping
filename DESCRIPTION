@@ -19,7 +19,8 @@ Imports:
     ggplot2,
     plotly,
     shinyjs,
-    rintrojs
+    rintrojs,
+    RSQLite
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
