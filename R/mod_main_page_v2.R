@@ -309,7 +309,6 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
   
   callModule(mod_welcoming_page_server, "welcoming_page_ui_1")
   callModule(mod_visual_server, "visual_ui_1", con = con, main_page_v2_module, enrichment_overview_ui_1)
-  callModule(mod_ppi_networks_server, "ppi_networks_ui_1", con = con)
 }
 
 ## To be copied in the UI
