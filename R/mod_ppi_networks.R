@@ -72,10 +72,10 @@ mod_ppi_networks_server <- function(input, output, session, con){
     
     #Create new clique_db when a new ppi_network is loaded
     sqlite_db <- system.file("database", "igem.sqlite", package = "ClusteRsy") #Not sure if they can be put in the same SQLite database
-    
+    db_name <- paste(sample(letters, 10), collapse = "")#Fine for the Docker
     try(MODifieRDB::build_clique_db_db(ppi_name = input$ppi_name,
                                        db_folder =  sub(pattern = 'igem.sqlite', replacement = "", sqlite_db),
-                                       db_name = "igem",
+                                       db_name = db_name,
                                        con = con))
   })
   
@@ -116,9 +116,7 @@ mod_ppi_networks_server <- function(input, output, session, con){
   sqlite_db <- system.file("database", "igem.sqlite", package = "ClusteRsy")
   sqlite_con <- MODifieRDB::connect_to_db(sqlite_db) #Could perhaps be moved to run_app
   if (nrow(RSQLite::dbListObjects(sqlite_con)) == 0) {
-    sqlite_db <- system.file("database", "igem.sqlite", package = "ClusteRsy")
-    # db_name <- paste(sample(letters, 10), collapse = "")#Fine for the Docker (This causes the clique to be built every time the app is run)
-    print("Building SQLite clique")
+    
     try(MODifieRDB::build_clique_db_db(ppi_name = "Default_string_700",
                                        db_folder =  sub(pattern = 'igem.sqlite', replacement = "", sqlite_db),
                                        db_name = "igem",
