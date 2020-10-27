@@ -27,6 +27,35 @@ __Ronja Höglund - HTML/CSS developer__
 
 ---
 
+# __Docker__
+We have prepared a docker image, this is easy to set up and the software will be up and running in no time at all! Please follow the instructions below. 
+
+### __How to run the docker image__
+
+1.  First you need to [download Docker](https://www.docker.com/get-started) to your local machine. 
+
+2. Open up your terminal then run the following command 
+
+```
+docker pull liuigem/clustersy_app
+```
+
+3. Once the download is complete you can simply run the app by running the following command in the terminal
+
+```
+docker run -d --rm -p 3838:3838 liuigem/clustersy_app
+```
+
+The docker image is now running locally and it can be found either in the docker desktop application or visit your preferred (as long as you don't prefer internet explorer) and the type: 
+
+```
+http://localhost:3838/
+``` 
+ClusteRsy should now be up and running! 
+
+## __Run the app in R__
+It's also possible to run the developers version of the app using R. To do this please follow the instructions below.
+
 ## __Preparation__
 Before the software can be used there are a couple of dependencies that needs to be installed. Please follow the steps in __Installation__ 
 
