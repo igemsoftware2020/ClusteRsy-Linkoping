@@ -70,7 +70,7 @@ mod_main_page_v2_server <- function(input, output, session, con, app_servr){
     showModal(modalDialog(
       top = "30",
       easyClose = TRUE,
-      title = "Welcome to MODifieRWeb!",
+      title = "Welcome to ClusteRsy!",
       "This tutorial will show you how to use this webtool. You can find and manage the obects you create when using the tool under the Database tab and if you need more help you can find more detailed instructions in the User guide.",
       style = "color:black; text-align:center;",
       footer=tagList(

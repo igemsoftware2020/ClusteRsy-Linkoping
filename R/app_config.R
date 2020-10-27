@@ -5,7 +5,7 @@
 #' 
 #' @noRd
 app_sys <- function(...){
-  system.file(..., package = "MODifieRWeb")
+  system.file(..., package = "ClusteRsy")
 }
 
 

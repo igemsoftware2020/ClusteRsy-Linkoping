@@ -1,4 +1,4 @@
 library(testthat)
-library(MODifieRWeb)
+library(ClusteRsy)
 
-test_check("MODifieRWeb")
+test_check("ClusteRsy")
