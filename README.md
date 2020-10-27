@@ -46,7 +46,7 @@ docker pull liuigem/clustersy_app
 docker run -d --rm -p 3838:3838 liuigem/clustersy_app
 ```
 
-The docker image is now running locally and it can be found either in the docker desktop application or visit your preferred (as long as you don't prefer internet explorer) and the type: 
+The docker image is now running locally and it can be found either in the docker desktop application or visit your preferred web browser and the type: 
 
 ```
 http://localhost:3838/
