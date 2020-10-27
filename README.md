@@ -128,4 +128,4 @@ If you want to use a new database only containing the default PPI network then s
 ClusteRsy::run_app()
 ``` 
 
-__Please note that the first time you start the app it will load for a while, this is because a clique database i.e a database containing all of the possible cliques for the PPI network is being built.__
+__Please note that the first time you start the app it will load for a while, this is because a clique database i.e a database containing all of the possible cliques for the PPI network is being built. (approx. ~5mins)__
